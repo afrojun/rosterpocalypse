@@ -1,12 +1,32 @@
 !!! XML
 !!!
 %html
-  %head
-    %title Fantasy HotS
-    = csrf_meta_tags
+    %head
+        %title Fantasy HotS
+        = csrf_meta_tags
 
-    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
-    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+        = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
+        = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
 
-  %body
-    = yield
+    %body
+        %nav.navbar.navbar-static-top.navbar-dark.bg-inverse
+            %a.navbar-brand{href: "#"}
+                Project name
+            %ul.nav.navbar-nav
+                %li.nav-item.active
+                    %a.nav-link{href: "#"} Home
+                    %span.sr-only (current)
+
+                %li.nav-item
+                    %a.nav-link{href: "#"} About
+
+                %li.nav-item
+                    %a.nav-link{href: "#"} Contact
+
+        - if notice
+            %p.alert.alert-success
+                = notice
+        - if alert
+            %p.alert.alert-danger
+                = alert
+        = yield
