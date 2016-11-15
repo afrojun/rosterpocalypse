@@ -19,6 +19,12 @@ gem 'coffee-rails', '~> 4.2'
 
 # Use Haml for cleaner view templates
 gem 'haml'
+# Twitter Bootstrap 4
+gem 'bootstrap', '~> 4.0.0.alpha5'
+# Bootstrap Tooltips and popovers depend on tether for positioning
+source 'https://rails-assets.org' do
+  gem 'rails-assets-tether', '>= 1.1.0'
+end
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
