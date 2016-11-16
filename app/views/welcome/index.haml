@@ -1,31 +1,88 @@
-/ Main jumbotron for a primary marketing message or call to action
-%div.jumbotron
-    %div.container
-        %h1.display-3 Hello, world!
-        %p This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.
-        %p
-            %a.btn.btn-primary.btn-lg{href: "#", role: "button"} Learn more &raquo;
+.jumbotron
+  .container
+    %h1.display-3 Build the best Heroes eSports team!
+    %p Build your dream team from the best professional Heroes of the Storm players to win honour and glory! Choose your roster wisely since you only have a limited pool of points to work with and make sure to keep up with the latest news and results to fine tune your team every week.
+    %p
+      %a.btn.btn-primary.btn-lg{href: "#", role: "button"} Learn more &raquo;
 
 
 
-%div.container
-    / Example row of columns
-    %div.row
-        %div.col-md-4
-            %h2 Heading
-            %p Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-            %p
-                %a.btn.btn-secondary{href: "#", role: "button"} View details &raquo;
+.container
+  .row
+    .col-md-4
+      %h2 Top Players
+      %table.table.table-sm.table-striped
+        %thead
+          %tr
+            %th Name
+            %th Score
+        %tbody
+          %tr
+            %td Fuzz
+            %td 1024
+          %tr
+            %td Waze
+            %td 768
+          %tr
+            %td Clos
+            %td 654
+          %tr
+            %td Buzz
+            %td 592
+          %tr
+            %td Fuzz
+            %td 431
+      %p
+        %a.btn.btn-secondary{href: "#", role: "button"} View more &raquo;
 
-        %div.col-md-4
-            %h2 Heading
-            %p Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
-            %p
-                %a.btn.btn-secondary{href: "#", role: "button"} View details &raquo;
+    .col-md-4
+      %h2 Top Fantasy Teams
+      %table.table.table-sm.table-striped
+        %thead
+          %tr
+            %th Name
+            %th Score
+        %tbody
+          %tr
+            %td Fuzzy's Boys
+            %td 10324
+          %tr
+            %td Plantains
+            %td 8768
+          %tr
+            %td Meerkats
+            %td 7654
+          %tr
+            %td Gin & Juice
+            %td 5492
+          %tr
+            %td Hatters
+            %td 4331
+      %p
+        %a.btn.btn-secondary{href: "#", role: "button"} View more &raquo;
 
-        %div.col-md-4
-            %h2 Heading
-            %p Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-            %p
-                %a.btn.btn-secondary{href: "#", role: "button"} View details &raquo;
-
+    .col-md-4
+      %h2 Upcoming Games
+      %table.table.table-sm.table-striped
+        %thead
+          %tr
+            %th Teams
+            %th Date
+        %tbody
+          %tr
+            %td Liquid vs Fnatic
+            %td 21/11/2016
+          %tr
+            %td Epunks vs Dignitas
+            %td 25/11/2016
+          %tr
+            %td Denial vs Naventic
+            %td 31/11/2016
+          %tr
+            %td MVP Black vs Tempest
+            %td 02/12/2016
+          %tr
+            %td eStar vs ZeroPanda
+            %td 05/12/2016
+      %p
+        %a.btn.btn-secondary{href: "#", role: "button"} View more &raquo;

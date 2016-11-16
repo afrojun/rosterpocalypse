@@ -1,46 +1,46 @@
 !!! XML
 !!!
 %html
-    %head
-        %title= t('title')
-        = csrf_meta_tags
+  %head
+    %title= t('title')
+    = csrf_meta_tags
 
-        = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
-        = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
 
-    %body
-        %nav.navbar.navbar-static-top.navbar-dark.bg-inverse
-            %a.navbar-brand{href: "#"}
-                = t('title')
-            %ul.nav.navbar-nav
-                %li.nav-item.active
-                    %a.nav-link{href: "#"} Home
-                    %span.sr-only (current)
+  %body
+    %nav.navbar.navbar-static-top.navbar-dark.bg-inverse
+      %a.navbar-brand{href: welcome_index_path}= t('title')
+      %ul.nav.navbar-nav
+        %li.nav-item
+          %a.nav-link{href: "#"} About
 
-                %li.nav-item
-                    %a.nav-link{href: "#"} About
+        %span.float-xs-right
+          - if user_signed_in?
+            %li.nav-item.dropdown.float-lg-right
+              %a.nav-link.dropdown-toggle{href: "#", id: "navbarDropdownMenuLink", "data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false"}
+                Logged in as #{current_user.username}
+              .dropdown-menu{"aria-labelledby" => "navbarDropdownMenuLink"}
+                %a.dropdown-item{href: edit_user_registration_path} Edit profile
+                %a.dropdown-item{href: destroy_user_session_path, "data-method" => "delete"} Logout
+          - else
+            %li.nav-item
+              %a.nav-link{href: new_user_registration_path} Sign up
+            %li.nav-item
+              %a.nav-link{href: new_user_session_path} Login
 
-                %li.nav-item
-                    %a.nav-link{href: "#"} Contact
+    - if notice
+      %p.alert.alert-success
+        = notice
+    - if alert
+      %p.alert.alert-danger
+        = alert
 
-                %span.float-xs-right
-                    - if user_signed_in?
-                        %li.nav-item.dropdown.float-lg-right
-                            %a.nav-link.dropdown-toggle{href: "#", id: "navbarDropdownMenuLink", "data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false"}
-                                Logged in as #{current_user.email}
-                            .dropdown-menu{"aria-labelledby" => "navbarDropdownMenuLink"}
-                                %a.dropdown-item{href: edit_user_registration_path} Edit profile
-                                %a.dropdown-item{href: destroy_user_session_path, "data-method" => "delete"} Logout
-                    - else
-                        %li.nav-item
-                            %a.nav-link{href: new_user_registration_path} Sign up
-                        %li.nav-item
-                            %a.nav-link{href: new_user_session_path} Login
+    = yield
 
-        - if notice
-            %p.alert.alert-success
-                = notice
-        - if alert
-            %p.alert.alert-danger
-                = alert
-        = yield
+    %hr
+
+.container
+  .row
+    .col-md-4
+      = link_to "About", href: "#"
