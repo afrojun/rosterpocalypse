@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Map:</strong>
+  <%= @game.map %>
+</p>
+
+<p>
+  <strong>Start date:</strong>
+  <%= @game.start_date %>
+</p>
+
+<p>
+  <strong>Duration s:</strong>
+  <%= @game.duration_s %>
+</p>
+
+<p>
+  <strong>Game hash:</strong>
+  <%= @game.game_hash %>
+</p>
+
+<%= link_to 'Edit', edit_game_path(@game) %> |
+<%= link_to 'Back', games_path %>
