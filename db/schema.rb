@@ -24,7 +24,15 @@ ActiveRecord::Schema.define(version: 20161116112418) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "games_players", id: false, force: :cascade do |t|
+  create_table "heroes", force: :cascade do |t|
+    t.string   "name"
+    t.string   "internal_name"
+    t.string   "classification"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  create_table "player_game_details", id: false, force: :cascade do |t|
     t.integer "player_id",                       null: false
     t.integer "game_id",                         null: false
     t.integer "hero_id"
@@ -33,17 +41,9 @@ ActiveRecord::Schema.define(version: 20161116112418) do
     t.integer "deaths"
     t.integer "time_spent_dead"
     t.boolean "win",             default: false
-    t.index ["game_id", "player_id"], name: "index_games_players_on_game_id_and_player_id", using: :btree
-    t.index ["hero_id"], name: "index_games_players_on_hero_id", using: :btree
-    t.index ["player_id", "game_id"], name: "index_games_players_on_player_id_and_game_id", using: :btree
-  end
-
-  create_table "heroes", force: :cascade do |t|
-    t.string   "name"
-    t.string   "internal_name"
-    t.string   "classification"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.index ["game_id", "player_id"], name: "index_player_game_details_on_game_id_and_player_id", using: :btree
+    t.index ["hero_id"], name: "index_player_game_details_on_hero_id", using: :btree
+    t.index ["player_id", "game_id"], name: "index_player_game_details_on_player_id_and_game_id", using: :btree
   end
 
   create_table "players", force: :cascade do |t|

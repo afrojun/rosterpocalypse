@@ -8,4 +8,6 @@ Rails.application.routes.draw do
   get 'welcome/index'
 
   root 'welcome#index'
+
+  post 'replay_details', to: 'game_stats_ingestion#create'
 end

@@ -8,5 +8,7 @@ class CreateGames < ActiveRecord::Migration[5.0]
 
       t.timestamps
     end
+
+    add_index :games, :game_hash, unique: true
   end
 end
