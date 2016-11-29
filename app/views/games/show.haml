@@ -1,0 +1,23 @@
+- present(@game) do |game|
+  %h3 #{game.map} game took #{distance_of_time_in_words(game.duration_s, 0, include_seconds: true)} on #{game.start_date}
+
+  %table.table.table-sm.table-striped
+    %thead
+      %tr
+        %th
+        %th Player
+        %th Hero
+        %th Kills
+        %th Deaths
+        %th Assists
+        %th Time Spent Dead
+    %tbody
+      - game.game_details.each do |details|
+        %tr
+          %td{class: details.win ? "game-win" : "game-loss"}
+          %td= details.player.name
+          %td= details.hero.name
+          %td= details.solo_kills
+          %td= details.deaths
+          %td= details.assists
+          %td= details.time_spent_dead

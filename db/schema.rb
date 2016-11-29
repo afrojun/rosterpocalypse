@@ -16,12 +16,13 @@ ActiveRecord::Schema.define(version: 20161116112418) do
   enable_extension "plpgsql"
 
   create_table "games", force: :cascade do |t|
-    t.string   "map"
-    t.datetime "start_date"
-    t.integer  "duration_s"
-    t.string   "game_hash"
+    t.string   "map",        null: false
+    t.datetime "start_date", null: false
+    t.integer  "duration_s", null: false
+    t.string   "game_hash",  null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["game_hash"], name: "index_games_on_game_hash", unique: true, using: :btree
   end
 
   create_table "heroes", force: :cascade do |t|
@@ -35,11 +36,12 @@ ActiveRecord::Schema.define(version: 20161116112418) do
   create_table "player_game_details", id: false, force: :cascade do |t|
     t.integer "player_id",                       null: false
     t.integer "game_id",                         null: false
-    t.integer "hero_id"
-    t.integer "solo_kills"
-    t.integer "assists"
-    t.integer "deaths"
-    t.integer "time_spent_dead"
+    t.integer "hero_id",                         null: false
+    t.integer "solo_kills",      default: 0,     null: false
+    t.integer "assists",         default: 0,     null: false
+    t.integer "deaths",          default: 0,     null: false
+    t.integer "time_spent_dead", default: 0,     null: false
+    t.string  "team_colour",                     null: false
     t.boolean "win",             default: false
     t.index ["game_id", "player_id"], name: "index_player_game_details_on_game_id_and_player_id", using: :btree
     t.index ["hero_id"], name: "index_player_game_details_on_hero_id", using: :btree
@@ -60,7 +62,7 @@ ActiveRecord::Schema.define(version: 20161116112418) do
   end
 
   create_table "teams", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",       null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

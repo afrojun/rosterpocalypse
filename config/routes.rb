@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   resources :heroes
-  resources :heros
   resources :games
   resources :teams
   resources :players
@@ -9,5 +8,5 @@ Rails.application.routes.draw do
 
   root 'welcome#index'
 
-  post 'replay_details', to: 'game_stats_ingestion#create'
+  post 'replay_details', to: 'api/game_stats_ingestion#create'
 end

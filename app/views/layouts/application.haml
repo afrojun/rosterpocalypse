@@ -14,6 +14,10 @@
       %ul.nav.navbar-nav
         %li.nav-item
           %a.nav-link{href: players_path} Players
+        %li.nav-item
+          %a.nav-link{href: games_path} Games
+        %li.nav-item
+          %a.nav-link{href: heroes_path} Heroes
 
         %span.float-xs-right
           - if user_signed_in?
