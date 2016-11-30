@@ -1,19 +1,17 @@
-%p#notice= notice
 %h1 Games
-%table
+%table.table.table-sm.table-striped
   %thead
     %tr
       %th Map
-      %th Start date
-      %th Duration s
-      %th{:colspan => "3"}
+      %th Start Date and Time
+      %th Duration
+      %th{:colspan => "2"}
   %tbody
     - @games.each do |game|
       %tr
-        %td= game.map.name
+        %td= link_to game.map.name, game
         %td= game.start_date
-        %td= game.duration_s
-        %td= link_to 'Show', game
+        %td= distance_of_time(game.duration_s)
         %td= link_to 'Edit', edit_game_path(game)
         %td= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' }
 %br/

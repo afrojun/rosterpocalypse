@@ -1,4 +1,5 @@
 - present(@game) do |game|
+  %h1 Game Details
   %h3 #{game.map.name} game took #{distance_of_time_in_words(game.duration_s, 0, include_seconds: true)} on #{game.start_date}
 
   %table.table.table-sm.table-striped

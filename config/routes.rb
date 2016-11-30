@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :maps
   root 'welcome#index'
   get 'welcome/index'
   get 'welcome', to: 'welcome#index'
@@ -7,10 +6,14 @@ Rails.application.routes.draw do
   get 'about/index'
   get 'about', to: 'about#index'
 
+  get 'credits/index'
+  get 'credits', to: 'credits#index'
+
   resources :heroes
   resources :games
   resources :teams
   resources :players
+  resources :maps
 
   devise_for :users
 
