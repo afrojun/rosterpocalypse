@@ -1,5 +1,5 @@
 require 'rails_helper'
 
-RSpec.describe "about/index.html.erb", type: :view do
+RSpec.describe PlayerAlternateName, type: :model do
   pending "add some examples to (or delete) #{__FILE__}"
 end

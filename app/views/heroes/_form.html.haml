@@ -15,6 +15,6 @@
     = f.text_field :internal_name
   .field
     = f.label :classification
-    = f.text_field :classification
+    = f.select :classification, Hero::HERO_CLASSIFICATIONS
   .actions
     = f.submit

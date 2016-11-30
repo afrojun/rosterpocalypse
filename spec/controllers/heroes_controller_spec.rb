@@ -24,11 +24,19 @@ RSpec.describe HeroesController, type: :controller do
   # Hero. As you add validations to Hero, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    {
+      name: "SuperHero",
+      internal_name: "SuperHero",
+      classification: "Warrior"
+    }
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    {
+      name: nil,
+      internal_name: nil,
+      classification: nil
+    }
   }
 
   # This should return the minimal set of values that should be in the session
@@ -37,6 +45,8 @@ RSpec.describe HeroesController, type: :controller do
   let(:valid_session) { {} }
 
   describe "GET #index" do
+    login_user
+
     it "assigns all heroes as @heroes" do
       hero = Hero.create! valid_attributes
       get :index, params: {}, session: valid_session
@@ -45,6 +55,8 @@ RSpec.describe HeroesController, type: :controller do
   end
 
   describe "GET #show" do
+    login_user
+
     it "assigns the requested hero as @hero" do
       hero = Hero.create! valid_attributes
       get :show, params: {id: hero.to_param}, session: valid_session
@@ -53,6 +65,8 @@ RSpec.describe HeroesController, type: :controller do
   end
 
   describe "GET #new" do
+    login_user
+
     it "assigns a new hero as @hero" do
       get :new, params: {}, session: valid_session
       expect(assigns(:hero)).to be_a_new(Hero)
@@ -60,6 +74,8 @@ RSpec.describe HeroesController, type: :controller do
   end
 
   describe "GET #edit" do
+    login_user
+
     it "assigns the requested hero as @hero" do
       hero = Hero.create! valid_attributes
       get :edit, params: {id: hero.to_param}, session: valid_session
@@ -68,6 +84,8 @@ RSpec.describe HeroesController, type: :controller do
   end
 
   describe "POST #create" do
+    login_user
+
     context "with valid params" do
       it "creates a new Hero" do
         expect {
@@ -101,6 +119,8 @@ RSpec.describe HeroesController, type: :controller do
   end
 
   describe "PUT #update" do
+    login_admin
+
     context "with valid params" do
       let(:new_attributes) {
         skip("Add a hash of attributes valid for your model")
@@ -142,6 +162,8 @@ RSpec.describe HeroesController, type: :controller do
   end
 
   describe "DELETE #destroy" do
+    login_user
+
     it "destroys the requested hero" do
       hero = Hero.create! valid_attributes
       expect {

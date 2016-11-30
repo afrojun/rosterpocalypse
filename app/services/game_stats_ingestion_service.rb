@@ -14,20 +14,24 @@ class GameStatsIngestionService
 
           # Many games have player names that include a team name prefix, we need to
           # detect the name so we can strip it from player names.
-          # First, split the player details by team so we can look at the players in
-          # each team separately
+          # First, split the player details by team colour so we can look at the players
+          # in each team separately
           player_details_by_team = get_player_details_by_team json["player_details"]
           team_name_prefix_by_team = get_team_name_prefix_by_team player_details_by_team
 
-          player_details_by_team.each do |team, player_details|
+          player_details_by_team.each do |team_colour, player_details|
+            team = Team.find_or_create_including_alternate_names team_name_prefix_by_team[team_colour]
+
             player_details.each do |player_detail|
-              sanitized_player_name = strip_team_name_from_player_name team_name_prefix_by_team[team], player_detail["name"]
-              player = Player.find_or_create_by name: sanitized_player_name
+              sanitized_player_name = strip_team_name_from_player_name team.name, player_detail["name"]
+
+              player = Player.find_or_create_including_alternate_names sanitized_player_name
+              player.update_attribute(:team, team) if player.team.blank?
+
               hero = Hero.find_or_create_by internal_name: player_detail["hero"] do |h|
                        h.name = player_detail["hero"]
                      end
 
-              puts player.inspect
               player_game_detail = PlayerGameDetail.find_or_initialize_by player: player, game: game
               player_game_detail.update_attributes!(
                 hero: hero,
@@ -35,7 +39,7 @@ class GameStatsIngestionService
                 assists: player_detail["Assists"],
                 deaths: player_detail["Deaths"],
                 time_spent_dead: player_detail["TimeSpentDead"],
-                team_colour: team,
+                team_colour: team_colour,
                 win: player_detail["result"] == "win" ? true : false
               )
             end

@@ -8,6 +8,7 @@ class PlayerGameDetail < ApplicationRecord
   after_create :update_player_cost
   after_update :update_player_cost
   before_save :revert_player_cost
+  before_destroy :revert_player_cost
 
   attr_reader :previous_cost_change
 

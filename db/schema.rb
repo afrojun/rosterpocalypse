@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161116112418) do
+ActiveRecord::Schema.define(version: 20161130122423) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,8 +27,8 @@ ActiveRecord::Schema.define(version: 20161116112418) do
   end
 
   create_table "heroes", force: :cascade do |t|
-    t.string   "name"
-    t.string   "internal_name"
+    t.string   "name",           null: false
+    t.string   "internal_name",  null: false
     t.string   "classification"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
@@ -38,6 +38,14 @@ ActiveRecord::Schema.define(version: 20161116112418) do
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "player_alternate_names", force: :cascade do |t|
+    t.integer  "player_id"
+    t.string   "alternate_name", null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.index ["player_id"], name: "index_player_alternate_names_on_player_id", using: :btree
   end
 
   create_table "player_game_details", force: :cascade do |t|
@@ -70,6 +78,14 @@ ActiveRecord::Schema.define(version: 20161116112418) do
     t.datetime "updated_at",               null: false
     t.index ["name"], name: "index_players_on_name", unique: true, using: :btree
     t.index ["team_id"], name: "index_players_on_team_id", using: :btree
+  end
+
+  create_table "team_alternate_names", force: :cascade do |t|
+    t.integer  "team_id"
+    t.string   "alternate_name", null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.index ["team_id"], name: "index_team_alternate_names_on_team_id", using: :btree
   end
 
   create_table "teams", force: :cascade do |t|

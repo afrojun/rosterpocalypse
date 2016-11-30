@@ -1,20 +1,18 @@
-.container
+= form_for(resource, as: resource_name, url: registration_path(resource_name), html: {class: "form"}) do |f|
+  %h2.form-heading Sign up
+  = devise_error_messages!
 
-  = form_for(resource, as: resource_name, url: registration_path(resource_name), html: {class: "form"}) do |f|
-    %h2.form-heading Sign up
-    = devise_error_messages!
+  = f.label :email, class: "sr-only"
+  = f.email_field :email, autofocus: true, required: true, class: "form-control", placeholder: "Email address"
 
-    = f.label :email, class: "sr-only"
-    = f.email_field :email, autofocus: true, required: true, class: "form-control", placeholder: "Email address"
+  = f.label :username, class: "sr-only"
+  = f.text_field :username, required: true, class: "form-control", placeholder: "Username"
 
-    = f.label :username, class: "sr-only"
-    = f.text_field :username, required: true, class: "form-control", placeholder: "Username"
+  = f.label :password, class: "sr-only"
+  = f.password_field :password, autocomplete: "off", required: true, class: "form-control", placeholder: "Password"
 
-    = f.label :password, class: "sr-only"
-    = f.password_field :password, autocomplete: "off", required: true, class: "form-control", placeholder: "Password"
+  = f.label :password_confirmation, class: "sr-only"
+  = f.password_field :password_confirmation, autocomplete: "off", required: true, class: "form-control", placeholder: "Repeat password"
 
-    = f.label :password_confirmation, class: "sr-only"
-    = f.password_field :password_confirmation, autocomplete: "off", required: true, class: "form-control", placeholder: "Repeat password"
-
-    .actions
-      = f.submit "Sign up", class: "btn btn-lg btn-primary btn-block"
+  .actions
+    = f.submit "Sign up", class: "btn btn-lg btn-primary btn-block"

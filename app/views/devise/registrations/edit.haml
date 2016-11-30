@@ -1,37 +1,35 @@
-.container
+= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "form" }) do |f|
+  %h2.form-heading Edit #{resource_name.to_s.humanize}
+  = devise_error_messages!
 
-  = form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "form" }) do |f|
-    %h2.form-heading Edit #{resource_name.to_s.humanize}
-    = devise_error_messages!
+  .field
+    = f.label :username, class: "sr-only"
+    = f.text_field :username, autofocus: true, class: "form-control", placeholder: "Username"
 
-    .field
-      = f.label :username, class: "sr-only"
-      = f.text_field :username, autofocus: true, class: "form-control", placeholder: "Username"
+  .field
+    = f.label :email, class: "sr-only"
+    = f.email_field :email, class: "form-control", placeholder: "Email address"
 
-    .field
-      = f.label :email, class: "sr-only"
-      = f.email_field :email, class: "form-control", placeholder: "Email address"
+  - if devise_mapping.confirmable? && resource.pending_reconfirmation?
+    %div Currently waiting confirmation for: #{resource.unconfirmed_email}
 
-    - if devise_mapping.confirmable? && resource.pending_reconfirmation?
-      %div Currently waiting confirmation for: #{resource.unconfirmed_email}
+  .field
+    = f.label :password, class: "sr-only"
+    = f.password_field :password, autocomplete: "off", class: "form-control", placeholder: "Change password"
 
-    .field
-      = f.label :password, class: "sr-only"
-      = f.password_field :password, autocomplete: "off", class: "form-control", placeholder: "Change password"
+  .field
+    = f.label :password_confirmation, class: "sr-only"
+    = f.password_field :password_confirmation, autocomplete: "off", class: "form-control", placeholder: "Repeat changed password"
 
-    .field
-      = f.label :password_confirmation, class: "sr-only"
-      = f.password_field :password_confirmation, autocomplete: "off", class: "form-control", placeholder: "Repeat changed password"
+  .field
+    = f.label :current_password, class: "sr-only"
+    = f.password_field :current_password, autocomplete: "off", class: "form-control", placeholder: "Confirm current password"
 
-    .field
-      = f.label :current_password, class: "sr-only"
-      = f.password_field :current_password, autocomplete: "off", class: "form-control", placeholder: "Confirm current password"
-
-    .actions
-      = f.submit "Update", class: "btn btn-lg btn-primary btn-block"
+  .actions
+    = f.submit "Update", class: "btn btn-lg btn-primary btn-block"
 
 .container.form
-  %h3.form-heading Delete my account
+%h3.form-heading Delete my account
 
-  %p This action is irreversible!
-  = button_to "Delete my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "btn btn-lg btn-primary btn-block"
+%p This action is irreversible!
+= button_to "Delete my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "btn btn-lg btn-primary btn-block"

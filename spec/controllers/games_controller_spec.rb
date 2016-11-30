@@ -24,11 +24,21 @@ RSpec.describe GamesController, type: :controller do
   # Game. As you add validations to Game, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    {
+      map_id: FactoryGirl.create(:map).id,
+      start_date: Time.now.utc.to_datetime,
+      duration_s: 1000,
+      game_hash: "abcde"
+    }
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    {
+      map_id: nil,
+      start_date: Time.now.utc.to_datetime,
+      duration_s: 1000,
+      game_hash: nil
+    }
   }
 
   # This should return the minimal set of values that should be in the session
@@ -37,6 +47,8 @@ RSpec.describe GamesController, type: :controller do
   let(:valid_session) { {} }
 
   describe "GET #index" do
+    login_user
+
     it "assigns all games as @games" do
       game = Game.create! valid_attributes
       get :index, params: {}, session: valid_session
@@ -45,6 +57,8 @@ RSpec.describe GamesController, type: :controller do
   end
 
   describe "GET #show" do
+    login_user
+
     it "assigns the requested game as @game" do
       game = Game.create! valid_attributes
       get :show, params: {id: game.to_param}, session: valid_session
@@ -53,6 +67,8 @@ RSpec.describe GamesController, type: :controller do
   end
 
   describe "GET #new" do
+    login_user
+
     it "assigns a new game as @game" do
       get :new, params: {}, session: valid_session
       expect(assigns(:game)).to be_a_new(Game)
@@ -60,6 +76,8 @@ RSpec.describe GamesController, type: :controller do
   end
 
   describe "GET #edit" do
+    login_user
+
     it "assigns the requested game as @game" do
       game = Game.create! valid_attributes
       get :edit, params: {id: game.to_param}, session: valid_session
@@ -68,6 +86,8 @@ RSpec.describe GamesController, type: :controller do
   end
 
   describe "POST #create" do
+    login_admin
+
     context "with valid params" do
       it "creates a new Game" do
         expect {
@@ -101,6 +121,8 @@ RSpec.describe GamesController, type: :controller do
   end
 
   describe "PUT #update" do
+    login_admin
+
     context "with valid params" do
       let(:new_attributes) {
         skip("Add a hash of attributes valid for your model")
@@ -142,6 +164,8 @@ RSpec.describe GamesController, type: :controller do
   end
 
   describe "DELETE #destroy" do
+    login_admin
+
     it "destroys the requested game" do
       game = Game.create! valid_attributes
       expect {

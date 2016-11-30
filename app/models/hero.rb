@@ -3,5 +3,10 @@ class Hero < ApplicationRecord
   has_many :players, through: :player_game_details
   has_many :games, through: :player_game_details
 
-  validates :classification, inclusion: { in: ["Warrior", "Support", "Specialist", "Assassin", "Multiclass"], on: :update }
+  HERO_CLASSIFICATIONS = ["Warrior", "Support", "Specialist", "Assassin", "Multiclass"]
+
+  validates :name, presence: true, uniqueness: true
+  validates :internal_name, presence: true, uniqueness: true
+  validates :classification, inclusion: { in: HERO_CLASSIFICATIONS + ["", nil] }
+
 end
