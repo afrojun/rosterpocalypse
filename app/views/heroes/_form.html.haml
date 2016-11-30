@@ -1,0 +1,20 @@
+= form_for(hero) do |f|
+  - if hero.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(hero.errors.count, "error")
+        prohibited this hero from being saved:
+      %ul
+        - hero.errors.full_messages.each do |message|
+          %li= message
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :internal_name
+    = f.text_field :internal_name
+  .field
+    = f.label :classification
+    = f.text_field :classification
+  .actions
+    = f.submit

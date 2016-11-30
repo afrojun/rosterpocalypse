@@ -1,0 +1,13 @@
+%p#notice= notice
+%p
+  %strong Name:
+  = @hero.name
+%p
+  %strong Internal name:
+  = @hero.internal_name
+%p
+  %strong Classification:
+  = @hero.classification
+= link_to 'Edit', edit_hero_path(@hero)
+|
+= link_to 'Back', heroes_path

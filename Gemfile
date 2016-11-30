@@ -19,6 +19,8 @@ gem 'coffee-rails', '~> 4.2'
 
 # Use Haml for cleaner view templates
 gem 'haml'
+gem 'html2haml'
+
 # Twitter Bootstrap 4
 gem 'bootstrap', '~> 4.0.0.alpha5'
 # Bootstrap Tooltips and popovers depend on tether for positioning
