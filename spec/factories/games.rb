@@ -1,8 +1,10 @@
 FactoryGirl.define do
+  sequence(:game_hash) { |n| "Hash#{n}" }
+
   factory :game do
-    map "MyString"
-    start_date "2016-11-16 12:58:01"
-    duration_s 1
-    game_hash "MyString"
+    map
+    start_date { Time.now.utc }
+    duration_s { rand 300..1500 }
+    game_hash { generate :game_hash }
   end
 end

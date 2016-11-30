@@ -4,39 +4,41 @@ class GameStatsIngestionService
 
     def populate_from_json json
       if json
-        map = Map.find_or_create_by name: json["map_name"]
-        game = Game.find_or_create_by game_hash: json["unique_id"] do |g|
-                 g.map_id = map.id
-                 g.start_date = Time.at(json["start_epoch_time_utc"]).utc.to_datetime
-                 g.duration_s = json["duration"]
-               end
+        ActiveRecord::Base.transaction do
+          map = Map.find_or_create_by name: json["map_name"]
+          game = Game.find_or_create_by game_hash: json["unique_id"] do |g|
+                   g.map_id = map.id
+                   g.start_date = Time.at(json["start_epoch_time_utc"]).utc.to_datetime
+                   g.duration_s = json["duration"]
+                 end
 
-        # Many games have player names that include a team name prefix, we need to
-        # detect the name so we can strip it from player names.
-        # First, split the player details by team so we can look at the players in
-        # each team separately
-        player_details_by_team = get_player_details_by_team json["player_details"]
-        team_name_prefix_by_team = get_team_name_prefix_by_team player_details_by_team
+          # Many games have player names that include a team name prefix, we need to
+          # detect the name so we can strip it from player names.
+          # First, split the player details by team so we can look at the players in
+          # each team separately
+          player_details_by_team = get_player_details_by_team json["player_details"]
+          team_name_prefix_by_team = get_team_name_prefix_by_team player_details_by_team
 
-        player_details_by_team.each do |team, player_details|
-          player_details.each do |player_detail|
-            sanitized_player_name = strip_team_name_from_player_name team_name_prefix_by_team[team], player_detail["name"]
-            player = Player.find_or_create_by name: sanitized_player_name
-            hero = Hero.find_or_create_by internal_name: player_detail["hero"] do |h|
-                     h.name = player_detail["hero"]
-                   end
+          player_details_by_team.each do |team, player_details|
+            player_details.each do |player_detail|
+              sanitized_player_name = strip_team_name_from_player_name team_name_prefix_by_team[team], player_detail["name"]
+              player = Player.find_or_create_by name: sanitized_player_name
+              hero = Hero.find_or_create_by internal_name: player_detail["hero"] do |h|
+                       h.name = player_detail["hero"]
+                     end
 
-            player_game = PlayerGameDetail.create(
-              player: player,
-              game: game,
-              hero: hero,
-              solo_kills: player_detail["SoloKill"],
-              assists: player_detail["Assists"],
-              deaths: player_detail["Deaths"],
-              time_spent_dead: player_detail["TimeSpentDead"],
-              team_colour: team,
-              win: player_detail["result"] == "win" ? true : false
-            )
+              puts player.inspect
+              player_game_detail = PlayerGameDetail.find_or_initialize_by player: player, game: game
+              player_game_detail.update_attributes!(
+                hero: hero,
+                solo_kills: player_detail["SoloKill"],
+                assists: player_detail["Assists"],
+                deaths: player_detail["Deaths"],
+                time_spent_dead: player_detail["TimeSpentDead"],
+                team_colour: team,
+                win: player_detail["result"] == "win" ? true : false
+              )
+            end
           end
         end
       else

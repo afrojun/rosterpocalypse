@@ -1,7 +1,9 @@
 FactoryGirl.define do
+  sequence(:hero_name) { |n| "Hero#{n}" }
+
   factory :hero do
-    name "MyString"
-    internal_name "MyString"
-    classification "MyString"
+    name { generate :hero_name }
+    internal_name { name }
+    classification { ["Warrior", "Support", "Assassin", "Specialist"].sample }
   end
 end

@@ -9,38 +9,41 @@
     = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
 
   %body
-    %nav.navbar.navbar-static-top.navbar-dark.bg-inverse
-      %a.navbar-brand{href: welcome_path}= t('title')
-      %ul.nav.navbar-nav
-        %li.nav-item
-          %a.nav-link{href: players_path} Players
-        %li.nav-item
-          %a.nav-link{href: games_path} Games
-        %li.nav-item
-          %a.nav-link{href: heroes_path} Heroes
+    .container
+      %nav.navbar.navbar-static-top.navbar-dark.bg-inverse
+        %a.navbar-brand{href: welcome_path}= t('title')
+        %ul.nav.navbar-nav
+          %li.nav-item
+            %a.nav-link{href: players_path} Players
+          %li.nav-item
+            %a.nav-link{href: games_path} Games
+          %li.nav-item
+            %a.nav-link{href: heroes_path} Heroes
+          %li.nav-item
+            %a.nav-link{href: maps_path} Maps
 
-        %span.float-xs-right
-          - if user_signed_in?
-            %li.nav-item.dropdown.float-lg-right
-              %a.nav-link.dropdown-toggle{href: "#", id: "navbarDropdownMenuLink", "data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false"}
-                Logged in as #{current_user.username}
-              .dropdown-menu{"aria-labelledby" => "navbarDropdownMenuLink"}
-                %a.dropdown-item{href: edit_user_registration_path} Edit profile
-                %a.dropdown-item{href: destroy_user_session_path, "data-method" => "delete"} Logout
-          - else
-            %li.nav-item
-              %a.nav-link{href: new_user_registration_path} Sign up
-            %li.nav-item
-              %a.nav-link{href: new_user_session_path} Login
+          %span.float-xs-right
+            - if user_signed_in?
+              %li.nav-item.dropdown.float-lg-right
+                %a.nav-link.dropdown-toggle{href: "#", id: "navbarDropdownMenuLink", "data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false"}
+                  Logged in as #{current_user.username}
+                .dropdown-menu{"aria-labelledby" => "navbarDropdownMenuLink"}
+                  %a.dropdown-item{href: edit_user_registration_path} Edit profile
+                  %a.dropdown-item{href: destroy_user_session_path, "data-method" => "delete"} Logout
+            - else
+              %li.nav-item
+                %a.nav-link{href: new_user_registration_path} Sign up
+              %li.nav-item
+                %a.nav-link{href: new_user_session_path} Login
 
-    - if notice
-      %p.alert.alert-success
-        = notice
-    - if alert
-      %p.alert.alert-danger
-        = alert
+      - if notice
+        %p.alert.alert-success
+          = notice
+      - if alert
+        %p.alert.alert-danger
+          = alert
 
-    = yield
+      = yield
 
     %hr
 
@@ -48,3 +51,5 @@
   .row
     .col-md-4
       = link_to "About", about_path
+      |
+      = link_to "Credits", credits_path

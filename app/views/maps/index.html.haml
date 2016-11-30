@@ -1,16 +1,19 @@
-%p#notice= notice
 %h1 Maps
-%table
+%table.table.table-sm.table-striped
   %thead
     %tr
       %th Name
-      %th{:colspan => "3"}
+      %th Games
+      %th Ave. Duration
+      %th{:colspan => "2"}
   %tbody
     - @maps.each do |map|
-      %tr
-        %td= map.name
-        %td= link_to 'Show', map
-        %td= link_to 'Edit', edit_map_path(map)
-        %td= link_to 'Destroy', map, method: :delete, data: { confirm: 'Are you sure?' }
+      - present map do |m|
+        %tr
+          %td= link_to m.name, map
+          %td= m.map_stats[:n_games]
+          %td= distance_of_time_in_words m.map_stats[:ave_game_duration]
+          %td= link_to 'Edit', edit_map_path(map)
+          %td= link_to 'Destroy', map, method: :delete, data: { confirm: 'Are you sure?' }
 %br/
 = link_to 'New Map', new_map_path
