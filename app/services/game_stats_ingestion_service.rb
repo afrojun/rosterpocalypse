@@ -4,8 +4,9 @@ class GameStatsIngestionService
 
     def populate_from_json json
       if json
+        map = Map.find_or_create_by name: json["map_name"]
         game = Game.find_or_create_by game_hash: json["unique_id"] do |g|
-                 g.map = json["map_name"]
+                 g.map_id = map.id
                  g.start_date = Time.at(json["start_epoch_time_utc"]).utc.to_datetime
                  g.duration_s = json["duration"]
                end

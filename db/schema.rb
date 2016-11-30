@@ -16,13 +16,14 @@ ActiveRecord::Schema.define(version: 20161116112418) do
   enable_extension "plpgsql"
 
   create_table "games", force: :cascade do |t|
-    t.string   "map",        null: false
+    t.integer  "map_id",     null: false
     t.datetime "start_date", null: false
     t.integer  "duration_s", null: false
     t.string   "game_hash",  null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["game_hash"], name: "index_games_on_game_hash", unique: true, using: :btree
+    t.index ["map_id"], name: "index_games_on_map_id", using: :btree
   end
 
   create_table "heroes", force: :cascade do |t|
@@ -31,6 +32,12 @@ ActiveRecord::Schema.define(version: 20161116112418) do
     t.string   "classification"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
+  end
+
+  create_table "maps", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "player_game_details", id: false, force: :cascade do |t|
@@ -87,4 +94,5 @@ ActiveRecord::Schema.define(version: 20161116112418) do
     t.index ["username"], name: "index_users_on_username", unique: true, using: :btree
   end
 
+  add_foreign_key "games", "maps"
 end

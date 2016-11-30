@@ -29,6 +29,8 @@ end
 gem 'devise'
 # Access Granted for Authorization
 gem 'access-granted', '~> 1.1.0'
+# Better distance of time in words for Rails
+gem 'dotiw'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'

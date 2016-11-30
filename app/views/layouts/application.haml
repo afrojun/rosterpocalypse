@@ -10,7 +10,7 @@
 
   %body
     %nav.navbar.navbar-static-top.navbar-dark.bg-inverse
-      %a.navbar-brand{href: welcome_index_path}= t('title')
+      %a.navbar-brand{href: welcome_path}= t('title')
       %ul.nav.navbar-nav
         %li.nav-item
           %a.nav-link{href: players_path} Players
@@ -47,4 +47,4 @@
 .container
   .row
     .col-md-4
-      = link_to "About", href: "#"
+      = link_to "About", about_path
