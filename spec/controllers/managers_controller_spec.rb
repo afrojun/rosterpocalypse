@@ -26,7 +26,7 @@ RSpec.describe ManagersController, type: :controller do
   # adjust the attributes here as well.
   let(:valid_attributes) {
     {
-      user_id: FactoryGirl.create(:user).id
+      user_id: User.first.id
     }
   }
 
@@ -45,7 +45,7 @@ RSpec.describe ManagersController, type: :controller do
     it "assigns all managers as @managers" do
       manager = Manager.create! valid_attributes
       get :index, params: {}, session: valid_session
-      expect(assigns(:managers)).to eq([manager])
+      expect(assigns(:managers)).to include(manager)
     end
   end
 

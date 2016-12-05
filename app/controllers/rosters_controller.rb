@@ -64,15 +64,16 @@ class RostersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_roster
-      @roster = Roster.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def roster_params
-      params.require(:roster).permit(:name, :score, :manager_id).tap do |rp|
-        rp[:manager_id] = current_user.manager.id
-      end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_roster
+    @roster = Roster.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def roster_params
+    params.require(:roster).permit(:name).tap do |rp|
+      rp[:manager_id] = current_user.manager.id
     end
+  end
 end

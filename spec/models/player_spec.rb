@@ -1,9 +1,27 @@
 require 'rails_helper'
 
 RSpec.describe Player, type: :model do
-  it "creates an entry in the alternate name table via a callback" do
-    player = FactoryGirl.create :player
-    expect(PlayerAlternateName.where(alternate_name: player.name).first.player).to eq player
+  context "#update_alternate_names" do
+
+    context "after create" do
+
+      it "creates an entry in the alternate name table" do
+        player = FactoryGirl.create :player
+        expect(player.alternate_names.map(&:alternate_name)).to eq [player.name]
+      end
+
+    end
+
+    context "after update" do
+
+      it "adds to the alternate name table if a new name is specified" do
+        player = FactoryGirl.create :player, name: "Joe"
+        player.update_attribute :name, "Bob"
+        expect(player.alternate_names.map(&:alternate_name)).to eq ["Joe", "Bob"]
+      end
+
+    end
+
   end
 
   context "#find_or_create_including_alternate_names" do

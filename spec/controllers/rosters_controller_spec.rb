@@ -26,17 +26,14 @@ RSpec.describe RostersController, type: :controller do
   # adjust the attributes here as well.
   let(:valid_attributes) {
     {
-      manager_id: FactoryGirl.create(:manager).id,
-      name: "AwesomeRoster",
-      score: 323
+      manager_id: Manager.first.id,
+      name: "AwesomeRoster"
     }
   }
 
   let(:invalid_attributes) {
     {
-      manager_id: nil,
-      name: "AwesomeRoster",
-      score: 323
+      name: nil
     }
   }
 

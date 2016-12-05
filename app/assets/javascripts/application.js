@@ -10,6 +10,7 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+//= require webpack-bundle
 //= require jquery
 //= require tether
 //= require bootstrap

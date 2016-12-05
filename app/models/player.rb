@@ -2,12 +2,12 @@ class Player < ApplicationRecord
   has_many :player_game_details, dependent: :destroy
   has_many :games, through: :player_game_details
   has_many :heroes, through: :player_game_details
-  has_many :player_alternate_names, dependent: :destroy
+  has_many :alternate_names, class_name: "PlayerAlternateName", dependent: :destroy
   belongs_to :team
   has_many :rosters, through: :roster_players
 
-  after_create :update_player_alternate_names
-  after_update :update_player_alternate_names
+  after_create :update_alternate_names
+  after_update :update_alternate_names
 
   # This is the maximum and minimum costs that a player can have to
   # ensure that the best players don't become overly expensive and
@@ -15,8 +15,8 @@ class Player < ApplicationRecord
   MIN_COST = 20
   MAX_COST = 250
 
-  def update_player_alternate_names
-    PlayerAlternateName.create(player: self, alternate_name: name) unless player_alternate_names.map(&:alternate_name).include?(name)
+  def update_alternate_names
+    PlayerAlternateName.find_or_create_by(player: self, alternate_name: name)
   end
 
   def self.find_or_create_including_alternate_names player_name

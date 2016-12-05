@@ -1,14 +1,14 @@
 class Team < ApplicationRecord
-  has_many :team_alternate_names, dependent: :destroy
+  has_many :alternate_names, class_name: "TeamAlternateName", dependent: :destroy
   has_many :players
 
   validates :name, presence: true, uniqueness: true
 
-  after_create :update_team_alternate_names
-  after_update :update_team_alternate_names
+  after_create :update_alternate_names
+  after_update :update_alternate_names
 
-  def update_team_alternate_names
-    TeamAlternateName.create(team: self, alternate_name: name) unless team_alternate_names.map(&:alternate_name).include?(name)
+  def update_alternate_names
+    TeamAlternateName.find_or_create_by(team: self, alternate_name: name)
   end
 
   def self.find_or_create_including_alternate_names team_name
