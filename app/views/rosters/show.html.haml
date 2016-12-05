@@ -1,0 +1,10 @@
+%p#notice= notice
+%p
+  %strong Name:
+  = @roster.name
+%p
+  %strong Score:
+  = @roster.score
+= link_to 'Edit', edit_roster_path(@roster)
+|
+= link_to 'Back', rosters_path

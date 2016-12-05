@@ -21,6 +21,9 @@ gem 'coffee-rails', '~> 4.2'
 gem 'haml'
 gem 'html2haml'
 
+# React on Rails
+gem 'react_on_rails', '~>6'
+
 # Twitter Bootstrap 4
 gem 'bootstrap', '~> 4.0.0.alpha5'
 # Bootstrap Tooltips and popovers depend on tether for positioning

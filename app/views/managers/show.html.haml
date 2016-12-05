@@ -1,0 +1,7 @@
+%p#notice= notice
+%p
+  %strong User:
+  = @manager.user
+= link_to 'Edit', edit_manager_path(@manager)
+|
+= link_to 'Back', managers_path

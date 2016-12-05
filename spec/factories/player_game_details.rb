@@ -3,6 +3,7 @@ FactoryGirl.define do
     player
     game
     hero
+    team
     solo_kills { rand 0..10 }
     assists { rand 0..10 }
     deaths { rand 0..10 }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161130122423) do
+ActiveRecord::Schema.define(version: 20161202114842) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,15 @@ ActiveRecord::Schema.define(version: 20161130122423) do
     t.string   "classification"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
+    t.index ["internal_name"], name: "index_heroes_on_internal_name", unique: true, using: :btree
+    t.index ["name"], name: "index_heroes_on_name", unique: true, using: :btree
+  end
+
+  create_table "managers", force: :cascade do |t|
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_managers_on_user_id", using: :btree
   end
 
   create_table "maps", force: :cascade do |t|
@@ -45,6 +54,7 @@ ActiveRecord::Schema.define(version: 20161130122423) do
     t.string   "alternate_name", null: false
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
+    t.index ["alternate_name"], name: "index_player_alternate_names_on_alternate_name", unique: true, using: :btree
     t.index ["player_id"], name: "index_player_alternate_names_on_player_id", using: :btree
   end
 
@@ -52,6 +62,7 @@ ActiveRecord::Schema.define(version: 20161130122423) do
     t.integer  "player_id",                       null: false
     t.integer  "game_id",                         null: false
     t.integer  "hero_id",                         null: false
+    t.integer  "team_id",                         null: false
     t.integer  "solo_kills",      default: 0,     null: false
     t.integer  "assists",         default: 0,     null: false
     t.integer  "deaths",          default: 0,     null: false
@@ -65,6 +76,7 @@ ActiveRecord::Schema.define(version: 20161130122423) do
     t.index ["hero_id"], name: "index_player_game_details_on_hero_id", using: :btree
     t.index ["player_id", "game_id"], name: "index_player_game_details_on_player_id_and_game_id", using: :btree
     t.index ["player_id"], name: "index_player_game_details_on_player_id", using: :btree
+    t.index ["team_id"], name: "index_player_game_details_on_team_id", using: :btree
   end
 
   create_table "players", force: :cascade do |t|
@@ -80,11 +92,29 @@ ActiveRecord::Schema.define(version: 20161130122423) do
     t.index ["team_id"], name: "index_players_on_team_id", using: :btree
   end
 
+  create_table "rosters", force: :cascade do |t|
+    t.string   "name",                   null: false
+    t.integer  "manager_id"
+    t.integer  "score",      default: 0, null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+    t.index ["manager_id"], name: "index_rosters_on_manager_id", using: :btree
+    t.index ["name"], name: "index_rosters_on_name", unique: true, using: :btree
+  end
+
+  create_table "rosters_players", id: false, force: :cascade do |t|
+    t.integer "roster_id", null: false
+    t.integer "player_id", null: false
+    t.index ["player_id", "roster_id"], name: "index_rosters_players_on_player_id_and_roster_id", using: :btree
+    t.index ["roster_id", "player_id"], name: "index_rosters_players_on_roster_id_and_player_id", using: :btree
+  end
+
   create_table "team_alternate_names", force: :cascade do |t|
     t.integer  "team_id"
     t.string   "alternate_name", null: false
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
+    t.index ["alternate_name"], name: "index_team_alternate_names_on_alternate_name", unique: true, using: :btree
     t.index ["team_id"], name: "index_team_alternate_names_on_team_id", using: :btree
   end
 
@@ -115,4 +145,12 @@ ActiveRecord::Schema.define(version: 20161130122423) do
   end
 
   add_foreign_key "games", "maps"
+  add_foreign_key "managers", "users"
+  add_foreign_key "player_alternate_names", "players"
+  add_foreign_key "player_game_details", "games"
+  add_foreign_key "player_game_details", "heroes"
+  add_foreign_key "player_game_details", "players"
+  add_foreign_key "player_game_details", "teams"
+  add_foreign_key "rosters", "managers"
+  add_foreign_key "team_alternate_names", "teams"
 end

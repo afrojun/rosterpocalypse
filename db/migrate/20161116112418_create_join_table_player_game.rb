@@ -1,9 +1,10 @@
 class CreateJoinTablePlayerGame < ActiveRecord::Migration[5.0]
   def change
     create_table :player_game_details do |t|
-      t.references :player,                           null: false
-      t.references :game,                             null: false
-      t.references :hero,                             null: false
+      t.references :player,                           null: false, foreign_key: true
+      t.references :game,                             null: false, foreign_key: true
+      t.references :hero,                             null: false, foreign_key: true
+      t.references :team,                             null: false, foreign_key: true
       t.integer :solo_kills,        default: 0,       null: false
       t.integer :assists,           default: 0,       null: false
       t.integer :deaths,            default: 0,       null: false

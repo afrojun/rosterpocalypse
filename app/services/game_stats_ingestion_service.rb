@@ -35,6 +35,7 @@ class GameStatsIngestionService
               player_game_detail = PlayerGameDetail.find_or_initialize_by player: player, game: game
               player_game_detail.update_attributes!(
                 hero: hero,
+                team: team,
                 solo_kills: player_detail["SoloKill"],
                 assists: player_detail["Assists"],
                 deaths: player_detail["Deaths"],

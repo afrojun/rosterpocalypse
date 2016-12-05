@@ -1,0 +1,15 @@
+%table.table.table-sm.table-striped
+  %thead
+    %tr
+      %th Name
+      %th Score
+      %th{:colspan => "2"}
+  %tbody
+    - rosters.each do |roster|
+      %tr
+        %td= link_to roster.name, roster
+        %td= roster.score
+        %td= link_to 'Edit', edit_roster_path(roster)
+        %td= link_to 'Destroy', roster, method: :delete, data: { confirm: 'Are you sure?' }
+%br/
+= link_to 'New Roster', new_roster_path
