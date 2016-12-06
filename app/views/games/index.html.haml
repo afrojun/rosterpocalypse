@@ -5,14 +5,16 @@
       %th Map
       %th Start Date and Time
       %th Duration
-      %th{:colspan => "2"}
+      - if can? :update, Game
+        %th{:colspan => "2"}
   %tbody
     - @games.each do |game|
       %tr
         %td= link_to game.map.name, game
         %td= game.start_date
         %td= distance_of_time(game.duration_s)
-        %td= link_to 'Edit', edit_game_path(game)
-        %td= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' }
+        - if can? :update, Game
+          %td= link_to 'Edit', edit_game_path(game)
+          %td= link_to 'Destroy', game, method: :delete, data: { confirm: 'Are you sure?' }
 %br/
 = link_to 'New Game', new_game_path

@@ -1,6 +1,5 @@
-class ManagersController < ApplicationController
+class ManagersController < RosterpocalypseController
   before_action :set_manager, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
 
   # GET /managers
   # GET /managers.json

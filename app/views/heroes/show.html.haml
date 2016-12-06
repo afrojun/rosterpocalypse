@@ -7,6 +7,8 @@
 %p
   %strong Classification:
   = @hero.classification
-= link_to 'Edit', edit_hero_path(@hero)
-|
+
+- if can? :update, @hero
+  = link_to 'Edit', edit_hero_path(@hero)
+  |
 = link_to 'Back', heroes_path

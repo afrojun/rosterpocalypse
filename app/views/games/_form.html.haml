@@ -9,12 +9,12 @@
           %li= message
   .field
     = f.label :map
-    = f.text_field :map
+    = f.select(:map_id, Map.all.collect { |m| [m.name, m.id] })
   .field
     = f.label :start_date
     = f.datetime_select :start_date
   .field
-    = f.label :duration_s
+    = f.label "Duration (seconds)"
     = f.number_field :duration_s
   .field
     = f.label :game_hash

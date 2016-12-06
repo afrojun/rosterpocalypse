@@ -1,6 +1,5 @@
-class RostersController < ApplicationController
+class RostersController < RosterpocalypseController
   before_action :set_roster, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
 
   # GET /rosters
   # GET /rosters.json

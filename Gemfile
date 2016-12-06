@@ -75,6 +75,7 @@ group :development do
   gem 'better_errors'
   gem 'guard'
   gem 'guard-rspec'
+  gem 'pry-rails'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

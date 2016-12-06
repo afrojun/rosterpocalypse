@@ -10,56 +10,36 @@
 .container
   .row
     .col-md-4
+      %h2 Top Rosters
+      %table.table.table-sm.table-striped
+        %thead
+          %tr
+            %th Name
+            %th Manager
+            %th Score
+        %tbody
+          - Roster.order("score DESC").limit(5).each do |roster|
+            %tr
+              %td= link_to roster.name, roster
+              %td= link_to roster.manager.user.username, roster.manager
+              %td= roster.score
+      %p
+        %a.btn.btn-secondary{href: rosters_path, role: "button"} View more &raquo;
+
+    .col-md-4
       %h2 Top Players
       %table.table.table-sm.table-striped
         %thead
           %tr
             %th Name
-            %th Score
+            %th Cost
         %tbody
-          %tr
-            %td Fuzz
-            %td 1024
-          %tr
-            %td Waze
-            %td 768
-          %tr
-            %td Clos
-            %td 654
-          %tr
-            %td Buzz
-            %td 592
-          %tr
-            %td Fuzz
-            %td 431
+          - Player.order("cost DESC").limit(5).each do |player|
+            %tr
+              %td= link_to player.name, player
+              %td= player.cost
       %p
-        %a.btn.btn-secondary{href: "#", role: "button"} View more &raquo;
-
-    .col-md-4
-      %h2 Top Fantasy Teams
-      %table.table.table-sm.table-striped
-        %thead
-          %tr
-            %th Name
-            %th Score
-        %tbody
-          %tr
-            %td Fuzzy's Boys
-            %td 10324
-          %tr
-            %td Plantains
-            %td 8768
-          %tr
-            %td Meerkats
-            %td 7654
-          %tr
-            %td Gin & Juice
-            %td 5492
-          %tr
-            %td Hatters
-            %td 4331
-      %p
-        %a.btn.btn-secondary{href: "#", role: "button"} View more &raquo;
+        %a.btn.btn-secondary{href: players_path, role: "button"} View more &raquo;
 
     .col-md-4
       %h2 Upcoming Games

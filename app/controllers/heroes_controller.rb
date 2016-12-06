@@ -1,6 +1,5 @@
-class HeroesController < ApplicationController
+class HeroesController < RosterpocalypseController
   before_action :set_hero, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
 
   # GET /heroes
   # GET /heroes.json
@@ -41,6 +40,7 @@ class HeroesController < ApplicationController
   # PATCH/PUT /heroes/1
   # PATCH/PUT /heroes/1.json
   def update
+
     respond_to do |format|
       if @hero.update(hero_params)
         format.html { redirect_to @hero, notice: 'Hero was successfully updated.' }
@@ -55,6 +55,7 @@ class HeroesController < ApplicationController
   # DELETE /heroes/1
   # DELETE /heroes/1.json
   def destroy
+
     @hero.destroy
     respond_to do |format|
       format.html { redirect_to heroes_url, notice: 'Hero was successfully destroyed.' }

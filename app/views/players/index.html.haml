@@ -6,7 +6,8 @@
       %th Team
       %th Role
       %th Cost
-      %th{:colspan => "2"}
+      - if can? :update, Player
+        %th{:colspan => "2"}
   %tbody
     - @players.each do |player|
       %tr
@@ -14,7 +15,8 @@
         %td= player.team.try :name
         %td= player.role
         %td= player.cost
-        %td= link_to 'Edit', edit_player_path(player)
-        %td= link_to 'Destroy', player, method: :delete, data: { confirm: 'Are you sure?' }
+        - if can? :update, Player
+          %td= link_to 'Edit', edit_player_path(player)
+          %td= link_to 'Destroy', player, method: :delete, data: { confirm: 'Are you sure?' }
 %br/
 = link_to 'New Player', new_player_path

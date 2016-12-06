@@ -8,7 +8,8 @@
       %th Wins
       %th Losses
       %th Win %
-      %th{:colspan => "2"}
+      - if can? :update, Hero
+        %th{:colspan => "2"}
   %tbody
     - @heroes.each do |hero|
       - present hero do |h|
@@ -19,7 +20,8 @@
           %td= h.hero_stats[:wins]
           %td= h.hero_stats[:losses]
           %td= h.hero_stats[:win_percent]
-          %td= link_to 'Edit', edit_hero_path(hero)
-          %td= link_to 'Destroy', hero, method: :delete, data: { confirm: 'Are you sure?' }
+          - if can? :update, Hero
+            %td= link_to 'Edit', edit_hero_path(hero)
+            %td= link_to 'Destroy', hero, method: :delete, data: { confirm: 'Are you sure?' }
 %br/
 = link_to 'New Hero', new_hero_path

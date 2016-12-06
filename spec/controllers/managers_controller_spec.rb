@@ -19,7 +19,8 @@ require 'rails_helper'
 # that an instance is receiving a specific message.
 
 RSpec.describe ManagersController, type: :controller do
-  login_user
+  # FIXME
+  login_admin
 
   # This should return the minimal set of attributes required to create a valid
   # Manager. As you add validations to Manager, be sure to

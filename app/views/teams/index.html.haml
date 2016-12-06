@@ -4,13 +4,15 @@
     %tr
       %th Name
       %th Alternate Names
-      %th{:colspan => "2"}
+      - if can? :update, Team
+        %th{:colspan => "2"}
   %tbody
     - @teams.each do |team|
       %tr
         %td= link_to team.name, team
-        %td= team.team_alternate_names.map(&:alternate_name).to_sentence(two_words_connector: ", ", last_word_connector: ", ")
-        %td= link_to 'Edit', edit_team_path(team)
-        %td= link_to 'Destroy', team, method: :delete, data: { confirm: 'Are you sure?' }
+        %td= team.alternate_names.map(&:alternate_name).to_sentence(two_words_connector: ", ", last_word_connector: ", ")
+        - if can? :update, Team
+          %td= link_to 'Edit', edit_team_path(team)
+          %td= link_to 'Destroy', team, method: :delete, data: { confirm: 'Are you sure?' }
 %br/
 = link_to 'New Team', new_team_path

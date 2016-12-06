@@ -19,4 +19,16 @@ class User < ApplicationRecord
     Manager.create user: self
   end
 
+  def admin?
+    admin
+  end
+
+  def registered?
+    self.persisted?
+  end
+
+  def owner?
+    username == admin && email == "arj.rdh@gmail.com"
+  end
+
 end

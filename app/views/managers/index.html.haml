@@ -4,13 +4,14 @@
   %thead
     %tr
       %th User
-      %th{:colspan => "3"}
+      - if can? :update, Manager
+        %th{:colspan => "2"}
   %tbody
     - @managers.each do |manager|
       %tr
-        %td= manager.user
-        %td= link_to 'Show', manager
-        %td= link_to 'Edit', edit_manager_path(manager)
-        %td= link_to 'Destroy', manager, method: :delete, data: { confirm: 'Are you sure?' }
+        %td= link_to manager.user, manager
+        - if can? :update, Manager
+          %td= link_to 'Edit', edit_manager_path(manager)
+          %td= link_to 'Destroy', manager, method: :delete, data: { confirm: 'Are you sure?' }
 %br/
 = link_to 'New Manager', new_manager_path

@@ -5,7 +5,8 @@
       %th Name
       %th Games
       %th Ave. Duration
-      %th{:colspan => "2"}
+      - if can? :update, Map
+        %th{:colspan => "2"}
   %tbody
     - @maps.each do |map|
       - present map do |m|
@@ -13,7 +14,8 @@
           %td= link_to m.name, map
           %td= m.map_stats[:n_games]
           %td= distance_of_time_in_words m.map_stats[:ave_game_duration]
-          %td= link_to 'Edit', edit_map_path(map)
-          %td= link_to 'Destroy', map, method: :delete, data: { confirm: 'Are you sure?' }
+          - if can? :update, Map
+            %td= link_to 'Edit', edit_map_path(map)
+            %td= link_to 'Destroy', map, method: :delete, data: { confirm: 'Are you sure?' }
 %br/
 = link_to 'New Map', new_map_path

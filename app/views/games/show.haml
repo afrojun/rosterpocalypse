@@ -12,6 +12,8 @@
         %th Deaths
         %th Assists
         %th Time Spent Dead
+        - if can?(:update, Game) && can?(:update, PlayerGameDetail)
+          %th{:colspan => "2"}
     %tbody
       - game.game_details.each do |details|
         %tr
@@ -22,3 +24,6 @@
           %td= details.deaths
           %td= details.assists
           %td= details.time_spent_dead
+          - if can?(:update, Game) && can?(:update, PlayerGameDetail)
+            %td= link_to 'Edit', edit_player_game_details_path(details)
+            %td= link_to 'Destroy', details, method: :delete, data: { confirm: 'Are you sure?' }

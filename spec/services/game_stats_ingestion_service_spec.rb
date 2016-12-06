@@ -121,7 +121,7 @@ describe GameStatsIngestionService do
 
     it "populates game data correctly" do
       GameStatsIngestionService.populate_from_json game_stats_json
-      expect(Player.all.map(&:name)).to eq ["KyoCha", "Sign", "Rich", "Sake", "merryday", "Bakery", "JayPL", "Snitch", "Athero", "Mene"]
+      expect(Player.all.map(&:name).sort).to eq ["KyoCha", "Sign", "Rich", "Sake", "merryday", "Bakery", "JayPL", "Snitch", "Athero", "Mene"].sort
       expect(Game.first.game_hash).to eq "31af3b750df2b90e51121833672747969fdd3a89c8bfa1303abd6fec9a8c7758"
       expect(PlayerGameDetail.all.size).to eq 10
     end
