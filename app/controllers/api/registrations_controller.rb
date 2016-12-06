@@ -1,4 +1,4 @@
-class Api::RegistrationsController < Api::BaseController
+class Api::RegistrationsController < Api::BaseApiController
 
   respond_to :json
   def create
