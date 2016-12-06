@@ -1,6 +1,5 @@
 class Api::SessionsController < Api::BaseApiController
   prepend_before_filter :equire_no_authentication, only: [:create ]
-  include Devise::Controllers::InternalHelpers
 
   before_filter :ensure_params_exist
 
