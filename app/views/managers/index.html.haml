@@ -14,4 +14,5 @@
           %td= link_to 'Edit', edit_manager_path(manager)
           %td= link_to 'Destroy', manager, method: :delete, data: { confirm: 'Are you sure?' }
 %br/
-= link_to 'New Manager', new_manager_path
+- if can? :create, Manager
+  = link_to 'New Manager', new_manager_path

@@ -5,3 +5,7 @@
 - else
   %h2 All Rosters
   = render 'roster_list', rosters: @rosters
+
+%br/
+- if can? :create, Roster
+  = link_to 'New Roster', new_roster_path
