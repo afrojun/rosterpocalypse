@@ -7,10 +7,12 @@ class CreatePlayers < ActiveRecord::Migration[5.0]
       t.string :country
       t.string :region
       t.integer :cost,    null: false, default: 100
+      t.string :slug,     null: false
 
       t.timestamps
     end
 
     add_index :players, :name, unique: true
+    add_index :players, :slug, unique: true
   end
 end

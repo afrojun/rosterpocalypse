@@ -38,12 +38,6 @@ class AccessPolicy
     # More privileged role, applies to registered users.
     #
     role :member, proc { |user| user.present? && user.registered? } do
-      can [:read, :update, :destroy], User do |target_user, user|
-        target_user == user
-      end
-      can [:read, :update, :destroy], Manager do |manager, user|
-        manager == user
-      end
       can :create, Roster
       can [:update, :destroy], Roster do |roster, user|
         roster.manager.user == user

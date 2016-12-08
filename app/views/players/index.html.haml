@@ -5,6 +5,7 @@
       %th Name
       %th Team
       %th Role
+      %th Games
       %th Cost
       - if can? :update, Player
         %th{:colspan => "2"}
@@ -14,6 +15,7 @@
         %td= link_to player.name, player
         %td= player.team.try :name
         %td= player.role
+        %td= player.player_game_details.count
         %td= player.cost
         - if can? :update, Player
           %td= link_to 'Edit', edit_player_path(player)

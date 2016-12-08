@@ -1,7 +1,6 @@
-%p#notice= notice
 %p
-  %strong User:
-  = @manager.user
+  %strong Name:
+  = @manager.name
 
 - if can? :update, @manager
   = link_to 'Edit', edit_manager_path(@manager)

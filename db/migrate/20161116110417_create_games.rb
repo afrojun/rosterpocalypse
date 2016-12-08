@@ -5,10 +5,12 @@ class CreateGames < ActiveRecord::Migration[5.0]
       t.datetime :start_date, null: false
       t.integer :duration_s,  null: false
       t.string :game_hash,    null: false
+      t.string :slug,         null: false
 
       t.timestamps
     end
 
     add_index :games, :game_hash, unique: true
+    add_index :games, :slug, unique: true
   end
 end

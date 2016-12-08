@@ -1,7 +1,9 @@
 %p
-  %strong Name:
-  = @map.name
+  %h2= @map.name
 
+  = render "games/games_list", games: @map.games, show_map: false
+
+%br/
 - if can? :update, Map
   = link_to 'Edit', edit_map_path(@map)
   |

@@ -1,0 +1,22 @@
+%table.table.table-sm.table-striped
+  %thead
+    %tr
+      %th Teams
+      - if show_map
+        %th Map
+      %th Start Date and Time
+      %th Duration
+      - if can? :update, Game
+        %th{:colspan => "2"}
+  %tbody
+    - games.each do |game|
+      %tr
+        - present game do |g|
+          %td= link_to "#{g.teams[:blue].name} vs. #{g.teams[:red].name}", g
+          -if show_map
+            %td= g.map.name
+          %td= g.start_date
+          %td= distance_of_time(g.duration_s)
+          - if can? :update, Game
+            %td= link_to 'Edit', edit_game_path(g)
+            %td= link_to 'Destroy', g, method: :delete, data: { confirm: 'Are you sure?' }

@@ -1,4 +1,7 @@
 class Team < ApplicationRecord
+  extend FriendlyId
+  friendly_id :name
+
   has_many :alternate_names, class_name: "TeamAlternateName", dependent: :destroy
   has_many :players
   has_many :player_game_details, dependent: :destroy

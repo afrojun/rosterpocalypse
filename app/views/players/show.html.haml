@@ -1,20 +1,27 @@
-%p
-  %strong Name:
-  = @player.name
-%p
-  %strong Role:
-  = @player.role
-%p
-  %strong Country:
-  = @player.country
-%p
-  %strong Region:
-  = @player.region
-%p
-  %strong Cost:
-  = @player.cost
+- present @player do |p|
+  %p
+    %strong Name:
+    = p.name
+  %p
+    %strong Role:
+    = p.role
+  %p
+    %strong Country:
+    = p.country
+  %p
+    %strong Region:
+    = p.region
+  %p
+    %strong Cost:
+    = p.cost
+  %p
+    %strong Most Played Heroes:
+    = link_to_heroes_with_stat p.most_played_heroes
+  %p
+    %strong Top Winrate Heroes:
+    = link_to_heroes_with_stat p.top_winrate_heroes
 
-- if can? :update, Player
-  = link_to 'Edit', edit_player_path(@player)
-  |
-= link_to 'Back', players_path
+  - if can? :update, Player
+    = link_to 'Edit', edit_player_path(p)
+    |
+  = link_to 'Back', players_path

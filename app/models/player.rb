@@ -1,4 +1,7 @@
 class Player < ApplicationRecord
+  extend FriendlyId
+  friendly_id :name
+
   has_many :player_game_details, dependent: :destroy
   has_many :games, through: :player_game_details
   has_many :heroes, through: :player_game_details

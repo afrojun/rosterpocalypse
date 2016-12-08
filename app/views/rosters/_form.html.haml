@@ -1,5 +1,5 @@
 = form_for(roster, html: {class: "form"}) do |f|
-  %h1.form-heading= locals[:heading]
+  %h1.form-heading= heading
   - if roster.errors.any?
     #error_explanation
       %h2.form-heading

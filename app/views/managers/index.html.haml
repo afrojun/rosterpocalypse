@@ -1,6 +1,5 @@
-%p#notice= notice
 %h1 Managers
-%table
+%table.table.table-sm.table-striped
   %thead
     %tr
       %th User
@@ -9,7 +8,7 @@
   %tbody
     - @managers.each do |manager|
       %tr
-        %td= link_to manager.user, manager
+        %td= link_to manager.name, manager
         - if can? :update, Manager
           %td= link_to 'Edit', edit_manager_path(manager)
           %td= link_to 'Destroy', manager, method: :delete, data: { confirm: 'Are you sure?' }

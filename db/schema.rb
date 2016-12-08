@@ -15,38 +15,59 @@ ActiveRecord::Schema.define(version: 20161202114842) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "friendly_id_slugs", force: :cascade do |t|
+    t.string   "slug",                      null: false
+    t.integer  "sluggable_id",              null: false
+    t.string   "sluggable_type", limit: 50
+    t.string   "scope"
+    t.datetime "created_at"
+    t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true, using: :btree
+    t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type", using: :btree
+    t.index ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
+    t.index ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
+  end
+
   create_table "games", force: :cascade do |t|
     t.integer  "map_id",     null: false
     t.datetime "start_date", null: false
     t.integer  "duration_s", null: false
     t.string   "game_hash",  null: false
+    t.string   "slug",       null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["game_hash"], name: "index_games_on_game_hash", unique: true, using: :btree
     t.index ["map_id"], name: "index_games_on_map_id", using: :btree
+    t.index ["slug"], name: "index_games_on_slug", unique: true, using: :btree
   end
 
   create_table "heroes", force: :cascade do |t|
     t.string   "name",           null: false
     t.string   "internal_name",  null: false
     t.string   "classification"
+    t.string   "slug",           null: false
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.index ["internal_name"], name: "index_heroes_on_internal_name", unique: true, using: :btree
     t.index ["name"], name: "index_heroes_on_name", unique: true, using: :btree
+    t.index ["slug"], name: "index_heroes_on_slug", unique: true, using: :btree
   end
 
   create_table "managers", force: :cascade do |t|
     t.integer  "user_id"
+    t.string   "slug",       null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_managers_on_slug", unique: true, using: :btree
     t.index ["user_id"], name: "index_managers_on_user_id", using: :btree
   end
 
   create_table "maps", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",       null: false
+    t.string   "slug",       null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_maps_on_name", unique: true, using: :btree
+    t.index ["slug"], name: "index_maps_on_slug", unique: true, using: :btree
   end
 
   create_table "player_alternate_names", force: :cascade do |t|
@@ -86,9 +107,11 @@ ActiveRecord::Schema.define(version: 20161202114842) do
     t.string   "country"
     t.string   "region"
     t.integer  "cost",       default: 100, null: false
+    t.string   "slug",                     null: false
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
     t.index ["name"], name: "index_players_on_name", unique: true, using: :btree
+    t.index ["slug"], name: "index_players_on_slug", unique: true, using: :btree
     t.index ["team_id"], name: "index_players_on_team_id", using: :btree
   end
 
@@ -96,10 +119,12 @@ ActiveRecord::Schema.define(version: 20161202114842) do
     t.string   "name",                   null: false
     t.integer  "manager_id"
     t.integer  "score",      default: 0, null: false
+    t.string   "slug",                   null: false
     t.datetime "created_at",             null: false
     t.datetime "updated_at",             null: false
     t.index ["manager_id"], name: "index_rosters_on_manager_id", using: :btree
     t.index ["name"], name: "index_rosters_on_name", unique: true, using: :btree
+    t.index ["slug"], name: "index_rosters_on_slug", unique: true, using: :btree
   end
 
   create_table "rosters_players", id: false, force: :cascade do |t|
@@ -120,8 +145,11 @@ ActiveRecord::Schema.define(version: 20161202114842) do
 
   create_table "teams", force: :cascade do |t|
     t.string   "name",       null: false
+    t.string   "slug",       null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_teams_on_name", unique: true, using: :btree
+    t.index ["slug"], name: "index_teams_on_slug", unique: true, using: :btree
   end
 
   create_table "users", force: :cascade do |t|
