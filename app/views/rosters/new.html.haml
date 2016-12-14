@@ -1,2 +1,18 @@
-= render 'form', roster: @roster, heading: "New Roster"
+= form_for(@roster, html: {class: "form"}) do |f|
+  %h1.form-heading New Roster
+  - if @roster.errors.any?
+    #error_explanation
+      %h2.form-heading
+        = pluralize(@roster.errors.count, "error")
+        prohibited this @roster from being saved:
+      %ul
+        - @roster.errors.full_messages.each do |message|
+          %li= message
+
+  = f.label :name, class: "sr-only"
+  = f.text_field :name, autofocus: true, required: true, class: "form-control", placeholder: "Roster Name"
+
+  .actions
+    = f.submit "Create Roster", class: "btn btn-lg btn-primary btn-block"
+
 = link_to 'Back', rosters_path

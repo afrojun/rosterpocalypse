@@ -29,7 +29,7 @@ class RostersController < RosterpocalypseController
 
     respond_to do |format|
       if @roster.save
-        format.html { redirect_to @roster, notice: 'Roster was successfully created.' }
+        format.html { redirect_to edit_roster_path(@roster), notice: 'Your roster was successfully created, now add some players to it!' }
         format.json { render :show, status: :created, location: @roster }
       else
         format.html { render :new }

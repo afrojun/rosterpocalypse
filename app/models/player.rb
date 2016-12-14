@@ -7,7 +7,7 @@ class Player < ApplicationRecord
   has_many :heroes, through: :player_game_details
   has_many :alternate_names, class_name: "PlayerAlternateName", dependent: :destroy
   belongs_to :team
-  has_many :rosters, through: :roster_players
+  has_and_belongs_to_many :rosters
 
   after_create :update_alternate_names
   after_update :update_alternate_names

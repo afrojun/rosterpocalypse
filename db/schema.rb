@@ -115,6 +115,13 @@ ActiveRecord::Schema.define(version: 20161202114842) do
     t.index ["team_id"], name: "index_players_on_team_id", using: :btree
   end
 
+  create_table "players_rosters", id: false, force: :cascade do |t|
+    t.integer "roster_id", null: false
+    t.integer "player_id", null: false
+    t.index ["player_id", "roster_id"], name: "index_players_rosters_on_player_id_and_roster_id", using: :btree
+    t.index ["roster_id", "player_id"], name: "index_players_rosters_on_roster_id_and_player_id", using: :btree
+  end
+
   create_table "rosters", force: :cascade do |t|
     t.string   "name",                   null: false
     t.integer  "manager_id"
@@ -125,13 +132,6 @@ ActiveRecord::Schema.define(version: 20161202114842) do
     t.index ["manager_id"], name: "index_rosters_on_manager_id", using: :btree
     t.index ["name"], name: "index_rosters_on_name", unique: true, using: :btree
     t.index ["slug"], name: "index_rosters_on_slug", unique: true, using: :btree
-  end
-
-  create_table "rosters_players", id: false, force: :cascade do |t|
-    t.integer "roster_id", null: false
-    t.integer "player_id", null: false
-    t.index ["player_id", "roster_id"], name: "index_rosters_players_on_player_id_and_roster_id", using: :btree
-    t.index ["roster_id", "player_id"], name: "index_rosters_players_on_roster_id_and_player_id", using: :btree
   end
 
   create_table "team_alternate_names", force: :cascade do |t|

@@ -29,7 +29,6 @@ class AccessPolicy
       can :manage, Map
       can :manage, Player
       can :manage, Roster
-      can :manage, RosterPlayer
       can :manage, PlayerGameDetail
       can :manage, PlayerAlternateName
       can :manage, TeamAlternateName
@@ -41,10 +40,6 @@ class AccessPolicy
       can :create, Roster
       can [:update, :destroy], Roster do |roster, user|
         roster.manager.user == user
-      end
-      can :create, RosterPlayer
-      can [:update, :destroy], RosterPlayer do |roster_player, user|
-        roster_player.roster.manager.user == user
       end
     end
 
