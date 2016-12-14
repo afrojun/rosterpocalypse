@@ -8,7 +8,7 @@ class Game < ApplicationRecord
   has_many :heroes, through: :player_game_details
 
   def should_generate_new_friendly_id?
-    game_hash_changed? || super
+    slug.blank? || game_hash_changed?
   end
 
 end

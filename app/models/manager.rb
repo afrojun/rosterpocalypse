@@ -6,6 +6,10 @@ class Manager < ApplicationRecord
   has_many :rosters
 
   def name
-    user.username
+    user.try :username
+  end
+
+  def name_changed?
+    user.try :name_changed?
   end
 end

@@ -9,6 +9,8 @@ class Player < ApplicationRecord
   belongs_to :team
   has_and_belongs_to_many :rosters
 
+  validates :name, presence: true, uniqueness: true
+
   after_create :update_alternate_names
   after_update :update_alternate_names
 

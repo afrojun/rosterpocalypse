@@ -19,8 +19,7 @@ require 'rails_helper'
 # that an instance is receiving a specific message.
 
 RSpec.describe ManagersController, type: :controller do
-  # FIXME
-  login_admin
+  login_user
 
   # This should return the minimal set of attributes required to create a valid
   # Manager. As you add validations to Manager, be sure to
@@ -55,110 +54,6 @@ RSpec.describe ManagersController, type: :controller do
       manager = Manager.create! valid_attributes
       get :show, params: {id: manager.to_param}, session: valid_session
       expect(assigns(:manager)).to eq(manager)
-    end
-  end
-
-  describe "GET #new" do
-    it "assigns a new manager as @manager" do
-      get :new, params: {}, session: valid_session
-      expect(assigns(:manager)).to be_a_new(Manager)
-    end
-  end
-
-  describe "GET #edit" do
-    it "assigns the requested manager as @manager" do
-      manager = Manager.create! valid_attributes
-      get :edit, params: {id: manager.to_param}, session: valid_session
-      expect(assigns(:manager)).to eq(manager)
-    end
-  end
-
-  describe "POST #create" do
-    context "with valid params" do
-      it "creates a new Manager" do
-        expect {
-          post :create, params: {manager: valid_attributes}, session: valid_session
-        }.to change(Manager, :count).by(1)
-      end
-
-      it "assigns a newly created manager as @manager" do
-        post :create, params: {manager: valid_attributes}, session: valid_session
-        expect(assigns(:manager)).to be_a(Manager)
-        expect(assigns(:manager)).to be_persisted
-      end
-
-      it "redirects to the created manager" do
-        post :create, params: {manager: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(Manager.last)
-      end
-    end
-
-    context "with invalid params" do
-      it "assigns a newly created but unsaved manager as @manager" do
-        post :create, params: {manager: invalid_attributes}, session: valid_session
-        expect(assigns(:manager)).to be_a_new(Manager)
-      end
-
-      it "re-renders the 'new' template" do
-        post :create, params: {manager: invalid_attributes}, session: valid_session
-        expect(response).to render_template("new")
-      end
-    end
-  end
-
-  describe "PUT #update" do
-    context "with valid params" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
-
-      it "updates the requested manager" do
-        manager = Manager.create! valid_attributes
-        put :update, params: {id: manager.to_param, manager: new_attributes}, session: valid_session
-        manager.reload
-        skip("Add assertions for updated state")
-      end
-
-      it "assigns the requested manager as @manager" do
-        manager = Manager.create! valid_attributes
-        put :update, params: {id: manager.to_param, manager: valid_attributes}, session: valid_session
-        expect(assigns(:manager)).to eq(manager)
-      end
-
-      it "redirects to the manager" do
-        manager = Manager.create! valid_attributes
-        put :update, params: {id: manager.to_param, manager: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(manager)
-      end
-    end
-
-    context "with invalid params" do
-      it "assigns the manager as @manager" do
-        manager = Manager.create! valid_attributes
-        put :update, params: {id: manager.to_param, manager: invalid_attributes}, session: valid_session
-        expect(assigns(:manager)).to eq(manager)
-      end
-
-      it "re-renders the 'edit' template" do
-        manager = Manager.create! valid_attributes
-        put :update, params: {id: manager.to_param, manager: invalid_attributes}, session: valid_session
-        expect(response).to render_template("edit")
-      end
-    end
-  end
-
-  describe "DELETE #destroy" do
-    it "destroys the requested manager" do
-      manager = Manager.create! valid_attributes
-      expect {
-        delete :destroy, params: {id: manager.to_param}, session: valid_session
-      }.to change(Manager, :count).by(-1)
-    end
-
-    it "redirects to the managers list" do
-      manager = Manager.create! valid_attributes
-      delete :destroy, params: {id: manager.to_param}, session: valid_session
-      expect(response).to redirect_to(managers_url)
     end
   end
 

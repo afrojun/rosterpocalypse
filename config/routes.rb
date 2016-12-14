@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  resources :rosters
-  resources :managers
   root 'welcome#index'
   get 'welcome/index'
   get 'welcome', to: 'welcome#index'
@@ -16,6 +14,9 @@ Rails.application.routes.draw do
   resources :teams
   resources :players
   resources :maps
+  resources :rosters
+  resources :managers, only: [:index, :show]
+  
 
   devise_for :users
 

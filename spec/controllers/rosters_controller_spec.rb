@@ -87,9 +87,9 @@ RSpec.describe RostersController, type: :controller do
         expect(assigns(:roster)).to be_persisted
       end
 
-      it "redirects to the created roster" do
+      it "redirects to edit the newly created roster" do
         post :create, params: {roster: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(Roster.last)
+        expect(response).to redirect_to(edit_roster_url(Roster.last))
       end
     end
 

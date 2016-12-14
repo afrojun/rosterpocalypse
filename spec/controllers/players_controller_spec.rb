@@ -35,7 +35,7 @@ RSpec.describe PlayersController, type: :controller do
 
   let(:invalid_attributes) {
     {
-      name: "ProGamer",
+      name: nil,
       team_id: nil
     }
   }

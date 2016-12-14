@@ -36,8 +36,8 @@ RSpec.describe GamesController, type: :controller do
 
   let(:invalid_attributes) {
     {
-      map_id: nil,
-      start_date: Time.now.utc.to_datetime,
+      map_id: FactoryGirl.create(:map).id,
+      start_date: nil,
       duration_s: 1000,
       game_hash: nil
     }
