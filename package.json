@@ -1,5 +1,5 @@
 {
-  "name": "react-webpack-rails-tutorial",
+  "name": "rosterpocalypse",
   "version": "0.0.1",
   "private": true,
   "engines": {
@@ -14,5 +14,7 @@
     "postinstall": "cd client && npm install",
     "rails-server": "echo 'visit http://localhost:3000/hello_world' && foreman start -f Procfile.dev",
     "test": "rspec"
-  }
+  },
+  "dependencies": {},
+  "devDependencies": {}
 }

@@ -3,6 +3,9 @@
   %strong Name:
   = @roster.name
 %p
+  %strong Players:
+  = @roster.players.map(&:name).to_sentence
+%p
   %strong Score:
   = @roster.score
 = link_to 'Edit', edit_roster_path(@roster)

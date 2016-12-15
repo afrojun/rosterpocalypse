@@ -14,6 +14,7 @@ const config = {
     'es5-shim/es5-sham',
     'babel-polyfill',
     './app/bundles/HelloWorld/startup/registration',
+    './app/bundles/RosterPicker/startup/registration',
   ],
 
   output: {
@@ -35,6 +36,12 @@ const config = {
       },
     }),
   ],
+  node: {
+    console: true,
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty'
+  },
   module: {
     loaders: [
       {
@@ -42,9 +49,17 @@ const config = {
         loader: 'imports?shim=es5-shim/es5-shim&sham=es5-shim/es5-sham',
       },
       {
+        test: /\.css$/,
+        loader: "style-loader!css-loader"
+      },
+      {
         test: /\.jsx?$/,
         loader: 'babel-loader',
         exclude: /node_modules/,
+      },
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
       },
     ],
   },

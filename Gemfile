@@ -30,6 +30,9 @@ gem 'bootstrap', '~> 4.0.0.alpha5'
 source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.1.0'
 end
+# font-awesome for web fonts CSS
+gem "font-awesome-rails"
+
 # Devise for authentication
 gem 'devise'
 # Access Granted for Authorization

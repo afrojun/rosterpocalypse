@@ -4,12 +4,13 @@ class PlayersController < RosterpocalypseController
   # GET /players
   # GET /players.json
   def index
-    @players = Player.all
+    @players = Player.all.includes(:team)
   end
 
   # GET /players/1
   # GET /players/1.json
   def show
+
   end
 
   # GET /players/new

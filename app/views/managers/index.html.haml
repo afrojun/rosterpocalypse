@@ -2,16 +2,8 @@
 %table.table.table-sm.table-striped
   %thead
     %tr
-      %th User
-      - if can? :update, Manager
-        %th{:colspan => "2"}
+      %th Manager
   %tbody
     - @managers.each do |manager|
       %tr
         %td= link_to manager.name, manager
-        - if can? :update, Manager
-          %td= link_to 'Edit', edit_manager_path(manager)
-          %td= link_to 'Destroy', manager, method: :delete, data: { confirm: 'Are you sure?' }
-%br/
-- if can? :create, Manager
-  = link_to 'New Manager', new_manager_path

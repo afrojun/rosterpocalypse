@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   resources :maps
   resources :rosters
   resources :managers, only: [:index, :show]
-  
+
 
   devise_for :users
 

@@ -1,4 +1,4 @@
-= react_component("RosterPicker", props: {name: @roster.name, players: @roster.players.map(&:name)}, prerender: false)
+= react_component("RosterPickerContainer", props: {rosterPath: roster_url(@roster), playersPath: players_url}, prerender: false)
 
 = link_to 'Show', @roster
 |

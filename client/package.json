@@ -1,5 +1,5 @@
 {
-  "name": "react-webpack-rails-tutorial",
+  "name": "rosterpocalypse",
   "version": "0.0.1",
   "private": true,
   "engines": {
@@ -28,7 +28,12 @@
     "react": "^15.0.0",
     "react-dom": "^15.0.0",
     "react-on-rails": "6.3.1",
-    "webpack": "^1.12.14"
+    "webpack": "^1.12.14",
+    "request": "^2.79.0",
+    "request-promise-native": "^1.0.3",
+    "json-loader": "^0.5.4",
+    "css-loader": "^0.26.1",
+    "style-loader": "^0.13.1"
   },
   "devDependencies": {
   }

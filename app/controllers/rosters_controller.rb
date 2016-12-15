@@ -4,8 +4,8 @@ class RostersController < RosterpocalypseController
   # GET /rosters
   # GET /rosters.json
   def index
-    @my_rosters = current_user.blank? ? [] : Roster.where(manager: current_user)
-    @rosters = Roster.all
+    @my_rosters = current_user.blank? ? [] : Roster.where("manager_id = ?", current_user.manager.id)
+    @rosters = Roster.all.includes(players: [:team])
   end
 
   # GET /rosters/1
@@ -71,7 +71,7 @@ class RostersController < RosterpocalypseController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def roster_params
-    params.require(:roster).permit(:name).tap do |rp|
+    params.require(:roster).permit(:name, players: []).tap do |rp|
       rp[:manager_id] = current_user.manager.id
     end
   end
