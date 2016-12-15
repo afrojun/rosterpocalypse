@@ -1,8 +1,7 @@
-import React, { PropTypes } from 'react';
-import ReactOnRails from 'react-on-rails';
-import PlayerList from '../components/PlayerList';
-import PlayersTable from '../components/PlayersTable';
-import rp from 'request-promise-native';
+import React, { PropTypes } from "react";
+import ReactOnRails from "react-on-rails";
+import PlayersTable from "../components/PlayersTable";
+import rp from "request-promise-native";
 
 class RosterPickerContainer extends React.Component {
   static propTypes = {
@@ -31,14 +30,15 @@ class RosterPickerContainer extends React.Component {
   }
 
   componentWillMount() {
-    console.log("componentWillMount")
     this.fetchData();
   }
 
-  addToRoster(playerId) {
-    console.log(playerId);
+  componentDidMount() {
+    $("tbody.reactable-pagination tr td").addClass("custom-pagination");
+  }
 
-    if(this.state.roster.players.length < 5) {
+  addToRoster(playerId) {
+    if(this.state.roster.players.length < RosterPickerContainer.MAX_PLAYERS_IN_ROSTER) {
       let player = this.state.players.find(player => {
         return player.id === playerId
       });
@@ -47,14 +47,11 @@ class RosterPickerContainer extends React.Component {
       let newRoster = Object.assign({}, this.state.roster, {players: rosterPlayers});
       this.setState({roster: newRoster});
     } else {
-      console.log("Only 5 players are allowed in a roster!");
-      this.setState({notification: <span className="text-danger">Only 5 players are allowed in a roster!</span>})
+      this.setState({notification: <span className="text-danger">Only {RosterPickerContainer.MAX_PLAYERS_IN_ROSTER} players are allowed in a roster!</span>})
     }
   }
 
   removeFromRoster(playerId) {
-    console.log(playerId);
-
     // Remove the player from the roster
     let rosterPlayers = this.state.roster.players.filter(player => {
       return player.id !== playerId
@@ -91,10 +88,8 @@ class RosterPickerContainer extends React.Component {
   }
 
   submitRoster() {
-    console.log("submit roster: " + this.state.roster);
-
     var options = {
-      method: 'PUT',
+      method: "PUT",
       uri: this.props.rosterPath + ".json",
       body: {
         roster: {
@@ -126,8 +121,18 @@ class RosterPickerContainer extends React.Component {
   }
 
   render() {
-    console.log("render");
-    console.log(this.state);
+    let playersTableOpts = {
+      className: "table table-striped table-hover table-sm",
+      filterable: ["name"],
+      noDataText: "No matching players found.",
+      itemsPerPage: 10,
+      pageButtonLimit: 5
+    }
+    let rosterTableOpts = {
+      className: "table table-striped table-hover table-sm",
+      noDataText: "No players in roster."
+    }
+
     return (
       <div className="form roster-form">
         <h1 className="form-heading">
@@ -137,6 +142,7 @@ class RosterPickerContainer extends React.Component {
           {this.state.roster.name} contains {this.state.roster.players.length} players with a total Cost of {this.totalCost()}
         </h3>
         <PlayersTable
+          tableOpts={rosterTableOpts}
           imageClass="fa-minus-square text-danger"
           players={this.state.roster.players}
           onClick={this.removeFromRoster}
@@ -148,6 +154,7 @@ class RosterPickerContainer extends React.Component {
 
         <h3 className="form-heading">Add Players:</h3>
         <PlayersTable
+          tableOpts={playersTableOpts}
           imageClass="fa-plus-square text-success"
           players={this.state.players}
           onClick={this.addToRoster}
@@ -157,5 +164,7 @@ class RosterPickerContainer extends React.Component {
     );
   }
 }
+
+RosterPickerContainer.MAX_PLAYERS_IN_ROSTER = 5;
 
 export default RosterPickerContainer;
