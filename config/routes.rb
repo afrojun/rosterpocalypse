@@ -21,7 +21,4 @@ Rails.application.routes.draw do
   devise_for :users
 
   post 'replay_details', to: 'api/game_stats_ingestion#create'
-
-  # React-on-Rails routes
-  get 'hello_world', to: 'hello_world#index'
 end
