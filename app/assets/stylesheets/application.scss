@@ -1,5 +1,6 @@
 @import "bootstrap";
 @import "font-awesome";
+@import "rosters";
 
 .form {
   max-width: 330px;
@@ -31,10 +32,6 @@
   border-bottom-left-radius: 0;
   border-top-right-radius: 0;
   border-top-left-radius: 0;
-}
-
-i.roster-change {
-  cursor: pointer;
 }
 
 .roster-form {

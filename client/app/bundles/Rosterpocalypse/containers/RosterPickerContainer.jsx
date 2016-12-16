@@ -122,13 +122,18 @@ class RosterPickerContainer extends React.Component {
 
   render() {
     let playersTableOpts = {
+      id: "playersTable",
       className: "table table-striped table-hover table-sm",
-      filterable: ["name"],
+      filterable: ["name", "role", "team"],
       noDataText: "No matching players found.",
       itemsPerPage: 10,
-      pageButtonLimit: 5
+      pageButtonLimit: 5,
+      previousPageLabel: "<",
+      nextPageLabel: ">",
+      sortable: ["cost"]
     }
     let rosterTableOpts = {
+      id: "rosterTable",
       className: "table table-striped table-hover table-sm",
       noDataText: "No players in roster."
     }

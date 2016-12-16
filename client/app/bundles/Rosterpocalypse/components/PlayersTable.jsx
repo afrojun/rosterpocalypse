@@ -33,9 +33,9 @@ const PlayersTable = (props) => {
               }
 
             </Td>
-            <Td column="name" className="col-sm-3"><a href={player.url}>{player.name}</a></Td>
-            <Td column="role" className="col-sm-3">{player.role}</Td>
-            <Td column="team" className="col-sm-3">{player.team && player.team.name}</Td>
+            <Td column="name" value={player.name} className="col-sm-3"><a href={player.url}>{player.name}</a></Td>
+            <Td column="role" value={player.role} className="col-sm-3">{player.role}</Td>
+            <Td column="team" value={player.team && player.team.name} className="col-sm-3">{player.team && player.team.name}</Td>
             <Td column="cost" className="col-sm-2">{player.cost}</Td>
           </Tr>
       ))}
