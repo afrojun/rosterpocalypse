@@ -65,15 +65,8 @@ class Player < ApplicationRecord
       class_ratios = player_heroes_by_classification.reduce({}) do |class_counts, (classification, heroes)|
                        class_counts.merge({ classification => heroes.count.to_f/player_game_details.count })
                      end
-      majority_class = class_ratios.detect do |_, ratio|
-        ratio > 0.5
-      end
-      if majority_class.present?
-        set_role_from_class majority_class.first
-      else
-        set_role_from_class "Flex"
-      end
-
+      majority_class = class_ratios.detect { |_, ratio| ratio > 0.5 }
+      set_role_from_class(majority_class.present? ? majority_class.first : "Flex")
     else
       set_role_from_class player_heroes_by_classification.keys.first
     end

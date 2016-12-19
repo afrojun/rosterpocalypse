@@ -1,3 +1,2 @@
-%h1 New Hero
-= render 'form', hero: @hero
-= link_to 'Back', heroes_path
+= render "form", hero: @hero, heading: "New Hero", submit_message: "Create Hero"
+= link_to "Back", heroes_path

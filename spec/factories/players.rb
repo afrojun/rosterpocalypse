@@ -7,6 +7,6 @@ FactoryGirl.define do
     country "Country"
     region { ["NA, EU, KR, CN"].sample }
     team
-    cost { rand 20..250 }
+    cost { rand 50..150 }
   end
 end

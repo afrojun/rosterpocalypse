@@ -1,14 +1,15 @@
-= form_for(team) do |f|
+= form_for(team, html: {class: "form"}) do |f|
+  %h1.form-heading= heading
   - if team.errors.any?
     #error_explanation
-      %h2
+      %h2.form-heading
         = pluralize(team.errors.count, "error")
         prohibited this team from being saved:
       %ul
         - team.errors.full_messages.each do |message|
           %li= message
   .field
-    = f.label :name
-    = f.text_field :name
+    = f.label :name, class: "sr-only"
+    = f.text_field :name, autofocus: true, required: true, class: "form-control", placeholder: "Team Name"
   .actions
-    = f.submit
+    = f.submit submit_message, class: "btn btn-lg btn-primary btn-block"

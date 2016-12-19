@@ -47,7 +47,7 @@ class RostersController < RosterpocalypseController
         format.json { render :show, status: :ok, location: @roster }
       else
         format.html { render :edit }
-        format.json { render json: @roster.errors, status: :unprocessable_entity }
+        format.json { render json: @roster.errors.map{ |key, message| "#{key.capitalize} #{message}" }.to_sentence, status: :unprocessable_entity }
       end
     end
   end

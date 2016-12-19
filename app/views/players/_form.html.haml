@@ -1,26 +1,30 @@
-= form_for(player) do |f|
+= form_for(player, html: {class: "form"}) do |f|
+  %h1.form-heading= heading
   - if player.errors.any?
     #error_explanation
-      %h2
+      %h2.form-heading
         = pluralize(player.errors.count, "error")
         prohibited this player from being saved:
       %ul
         - player.errors.full_messages.each do |message|
           %li= message
   .field
-    = f.label :name
-    = f.text_field :name
+    = f.label :name, class: "sr-only"
+    = f.text_field :name, autofocus: true, required: true, class: "form-control", placeholder: "Player Name"
   .field
-    = f.label :role
-    = f.text_field :role
+    = f.label :role, class: "sr-only"
+    = f.text_field :role, required: true, class: "form-control", placeholder: "Role"
   .field
-    = f.label :country
-    = f.text_field :country
+    = f.label :country, class: "sr-only"
+    = f.text_field :country, class: "form-control", placeholder: "Country"
   .field
-    = f.label :region
-    = f.text_field :region
+    = f.label :region, class: "sr-only"
+    = f.text_field :region, class: "form-control", placeholder: "Region"
   .field
-    = f.label :cost
-    = f.number_field :cost
+    = f.label :cost, class: "sr-only"
+    = f.number_field :cost, required: true, class: "form-control", placeholder: "Cost"
+  .field
+    = f.label :team, class: "sr-only"
+    = f.select :team_id, Team.order(:name).map { |team| [team.name, team.id] }, {include_blank: true}, {class: "form-control"}
   .actions
-    = f.submit
+    = f.submit submit_message, class: "btn btn-lg btn-primary btn-block"

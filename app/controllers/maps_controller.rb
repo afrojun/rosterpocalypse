@@ -54,10 +54,16 @@ class MapsController < RosterpocalypseController
   # DELETE /maps/1
   # DELETE /maps/1.json
   def destroy
-    @map.destroy
-    respond_to do |format|
-      format.html { redirect_to maps_url, notice: 'Map was successfully destroyed.' }
-      format.json { head :no_content }
+    if @map.destroy
+      respond_to do |format|
+        format.html { redirect_to maps_url, notice: 'Map was successfully destroyed.' }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to maps_url, alert: @map.errors.details[:base].map{ |error| error[:error] }.to_sentence }
+        format.json { render json: @map.errors, status: :unprocessable_entity }
+      end
     end
   end
 

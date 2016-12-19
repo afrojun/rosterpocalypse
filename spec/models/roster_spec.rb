@@ -4,6 +4,9 @@ RSpec.describe Roster, type: :model do
   let(:roster) { FactoryGirl.create :roster }
 
   context "#update_including_players" do
+    let(:support_player) { FactoryGirl.create :player, role: "Support" }
+    let(:warrior_player) { FactoryGirl.create :player, role: "Warrior" }
+
     it "updates the roster name" do
       expect(roster.update_including_players(name: "foo-roster")).to eq true
       expect(roster.name).to eq "foo-roster"
@@ -15,30 +18,45 @@ RSpec.describe Roster, type: :model do
 
     it "updates the associated players" do
       player1 = FactoryGirl.create :player
-      player2 = FactoryGirl.create :player
 
-      expect(roster.update_including_players(players: [player1.id, player2.id])).to eq true
+      expect(roster.update_including_players(players: [warrior_player.id, support_player.id])).to eq true
+      expect(roster.players).to eq [warrior_player, support_player]
+    end
 
-      expect(roster.players).to eq [player1, player2]
+    it "requires at least 1 support player and 1 warrior player" do
+      player1 = FactoryGirl.create :player
+      expect(roster.update_including_players(players: [player1.id])).to eq false
+      expect(roster.players).to eq []
+      expect(roster.errors.messages).to include(rosters: ["need to include at least one dedicated Support player", "need to include at least one dedicated Warrior player"])
+    end
+
+    it "requires at least 1 support player" do
+      expect(roster.update_including_players(players: [warrior_player.id])).to eq false
+      expect(roster.players).to eq []
+      expect(roster.errors.messages).to include(rosters: ["need to include at least one dedicated Support player"])
+    end
+
+    it "requires at least 1 warrior player" do
+      expect(roster.update_including_players(players: [support_player.id])).to eq false
+      expect(roster.players).to eq []
+      expect(roster.errors.messages).to include(rosters: ["need to include at least one dedicated Warrior player"])
     end
 
     it "overwrites the existing associated players" do
       player1 = FactoryGirl.create :player
       player2 = FactoryGirl.create :player
-      player3 = FactoryGirl.create :player
-      player4 = FactoryGirl.create :player
 
-      expect(roster.update_including_players(players: [player1.id, player2.id])).to eq true
-      expect(roster.players).to eq [player1, player2]
+      expect(roster.update_including_players(players: [player1.id, support_player.id, warrior_player.id])).to eq true
+      expect(roster.players).to eq [player1, support_player, warrior_player]
 
-      expect(roster.update_including_players(players: [player3.id, player4.id])).to eq true
-      expect(roster.players).to eq [player3, player4]
+      expect(roster.update_including_players(players: [player2.id, support_player.id, warrior_player.id])).to eq true
+      expect(roster.players).to eq [player2, support_player, warrior_player]
     end
 
     it "ignores non-existent players" do
       player1 = FactoryGirl.create :player
-      expect(roster.update_including_players(players: [player1.id, 9999])).to eq true
-      expect(roster.players).to eq [player1]
+      expect(roster.update_including_players(players: [player1.id, support_player.id, warrior_player.id, 9999])).to eq true
+      expect(roster.players).to eq [player1, support_player, warrior_player]
     end
 
     it "rejects updates with more than 5 players" do

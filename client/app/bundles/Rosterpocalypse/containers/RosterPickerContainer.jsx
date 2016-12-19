@@ -47,7 +47,7 @@ class RosterPickerContainer extends React.Component {
       let newRoster = Object.assign({}, this.state.roster, {players: rosterPlayers});
       this.setState({roster: newRoster});
     } else {
-      this.setState({notification: <span className="text-danger">Only {RosterPickerContainer.MAX_PLAYERS_IN_ROSTER} players are allowed in a roster!</span>})
+      this.setState({notification: <span className="text-danger">Error: Rosters may have a maximum of {RosterPickerContainer.MAX_PLAYERS_IN_ROSTER} players</span>})
     }
   }
 
@@ -102,10 +102,11 @@ class RosterPickerContainer extends React.Component {
 
     rp(options)
       .then(parsedBody => {
-        this.setState({notification: <span className="text-success">Roster updated successfully!</span>})
+        this.setState({notification: <span className="text-success">Roster updated successfully!</span>});
       })
       .catch(err => {
-        this.setState({notification: <span className="text-danger">Error while updating the roster: {err}</span>})
+        console.log(err);
+        this.setState({notification: <span className="text-danger">Error: {err.error}</span>});
       });
   }
 
@@ -144,7 +145,7 @@ class RosterPickerContainer extends React.Component {
           Editing Roster
         </h1>
         <h3 className="form-heading">
-          {this.state.roster.name} contains {this.state.roster.players.length} players with a total Cost of {this.totalCost()}
+          {this.state.roster.name} contains {this.state.roster.players.length} players with a total cost of {this.totalCost()}
         </h3>
         <PlayersTable
           tableOpts={rosterTableOpts}

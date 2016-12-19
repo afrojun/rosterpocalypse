@@ -1,20 +1,21 @@
-= form_for(hero) do |f|
+= form_for(hero, html: {class: "form"}) do |f|
+  %h1.form-heading= heading
   - if hero.errors.any?
     #error_explanation
-      %h2
+      %h2.form-heading
         = pluralize(hero.errors.count, "error")
         prohibited this hero from being saved:
       %ul
         - hero.errors.full_messages.each do |message|
           %li= message
   .field
-    = f.label :name
-    = f.text_field :name
+    = f.label :name, class: "sr-only"
+    = f.text_field :name, autofocus: true, required: true, class: "form-control", placeholder: "Hero Name"
   .field
-    = f.label :internal_name
-    = f.text_field :internal_name
+    = f.label :internal_name, class: "sr-only"
+    = f.text_field :internal_name, required: true, class: "form-control", placeholder: "Internal Name"
   .field
-    = f.label :classification
-    = f.select :classification, Hero::HERO_CLASSIFICATIONS
+    = f.label :classification, class: "sr-only"
+    = f.select :classification, Hero::HERO_CLASSIFICATIONS, {}, class: "form-control"
   .actions
-    = f.submit
+    = f.submit submit_message, class: "btn btn-lg btn-primary btn-block"
