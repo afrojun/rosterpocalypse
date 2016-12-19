@@ -42,7 +42,7 @@ class RostersController < RosterpocalypseController
   # PATCH/PUT /rosters/1.json
   def update
     respond_to do |format|
-      if @roster.update(roster_params)
+      if @roster.update_including_players(roster_params)
         format.html { redirect_to @roster, notice: "Roster was successfully updated." }
         format.json { render :show, status: :ok, location: @roster }
       else

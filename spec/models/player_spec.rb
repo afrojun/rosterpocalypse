@@ -52,4 +52,91 @@ RSpec.describe Player, type: :model do
       expect(player.errors.details[:base].first[:error]).to include("Unable to delete #{player.name}")
     end
   end
+
+  context "updating player cost" do
+    let(:player) { FactoryGirl.create :player }
+    let(:game_details1) { FactoryGirl.create :player_game_detail, player: player, solo_kills: 1, assists: 3, deaths: 2, time_spent_dead: 65, win: true }
+    let(:game_details2) { FactoryGirl.create :player_game_detail, player: player, solo_kills: 2, assists: 6, deaths: 0, time_spent_dead: 0, win: true }
+    let(:game_details3) { FactoryGirl.create :player_game_detail, player: player, solo_kills: 3, assists: 2, deaths: 4, time_spent_dead: 165, win: false }
+
+    context "#cost_change" do
+      it "updates the cost correctly" do
+        expect(player.send :cost_change, game_details1).to eq 2
+        expect(player.send :cost_change, game_details2).to eq 5
+        expect(player.send :cost_change, game_details3).to eq -5
+      end
+    end
+
+    context "#update_cost" do
+      it "updates the cost correctly" do
+        init_details = [game_details1, game_details2, game_details3]
+        player.update_cost
+        expect(player.cost).to eq 102
+      end
+    end
+  end
+
+  context "#infer_role" do
+    let(:player) { FactoryGirl.create :player }
+
+    context "single hero classification players" do
+      it "identifies Specialist players as Flex" do
+        expect(player).to receive(:player_heroes_by_classification).at_least(:once).and_return({"Specialist" => ["foo"]})
+        player.infer_role
+        expect(player.role).to eq "Flex"
+      end
+
+      it "identifies Multiclass players as Flex" do
+        expect(player).to receive(:player_heroes_by_classification).at_least(:once).and_return({"Multiclass" => ["foo"]})
+        player.infer_role
+        expect(player.role).to eq "Flex"
+      end
+
+      it "identifies Assassin players" do
+        expect(player).to receive(:player_heroes_by_classification).at_least(:once).and_return({"Assassin" => ["foo"]})
+        player.infer_role
+        expect(player.role).to eq "Assassin"
+      end
+
+      it "identifies Warrior players" do
+        expect(player).to receive(:player_heroes_by_classification).at_least(:once).and_return({"Warrior" => ["foo"]})
+        player.infer_role
+        expect(player.role).to eq "Warrior"
+      end
+
+      it "identifies Support players" do
+        expect(player).to receive(:player_heroes_by_classification).at_least(:once).and_return({"Support" => ["foo"]})
+        player.infer_role
+        expect(player.role).to eq "Support"
+      end
+    end
+
+    context "multi-hero classification players" do
+
+      context "with a single role" do
+        it "identifies majority Assassin players as Assassin" do
+          expect(player).to receive(:player_heroes_by_classification).at_least(:once).and_return({"Assassin" => [1,2,3], "Specialist" => [9]})
+          expect(player).to receive(:player_game_details).at_least(:once).and_return([1,2,3,9])
+          player.infer_role
+          expect(player.role).to eq "Assassin"
+        end
+
+        it "identifies majority Specialist players as Flex" do
+          expect(player).to receive(:player_heroes_by_classification).at_least(:once).and_return({"Assassin" => [3], "Specialist" => [1,2,9]})
+          expect(player).to receive(:player_game_details).at_least(:once).and_return([1,2,3,9])
+          player.infer_role
+          expect(player.role).to eq "Flex"
+        end
+      end
+
+      context "flexible role" do
+        it "identifies mixed class players as Flex" do
+          expect(player).to receive(:player_heroes_by_classification).at_least(:once).and_return({"Assassin" => [3,4,5], "Specialist" => [1,2,9]})
+          expect(player).to receive(:player_game_details).at_least(:once).and_return([1,2,3,4,5,9])
+          player.infer_role
+          expect(player.role).to eq "Flex"
+        end
+      end
+    end
+  end
 end

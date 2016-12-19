@@ -5,15 +5,19 @@ RSpec.describe Roster, type: :model do
 
   context "#update_including_players" do
     it "updates the roster name" do
-      roster.update_including_players(name: "foo-roster")
+      expect(roster.update_including_players(name: "foo-roster")).to eq true
       expect(roster.name).to eq "foo-roster"
+    end
+
+    it "rejects invalid updates to the roster name" do
+      expect(roster.update_including_players(name: nil)).to eq false
     end
 
     it "updates the associated players" do
       player1 = FactoryGirl.create :player
       player2 = FactoryGirl.create :player
 
-      roster.update_including_players(players: [player1.id, player2.id])
+      expect(roster.update_including_players(players: [player1.id, player2.id])).to eq true
 
       expect(roster.players).to eq [player1, player2]
     end
@@ -24,16 +28,16 @@ RSpec.describe Roster, type: :model do
       player3 = FactoryGirl.create :player
       player4 = FactoryGirl.create :player
 
-      roster.update_including_players(players: [player1.id, player2.id])
+      expect(roster.update_including_players(players: [player1.id, player2.id])).to eq true
       expect(roster.players).to eq [player1, player2]
 
-      roster.update_including_players(players: [player3.id, player4.id])
+      expect(roster.update_including_players(players: [player3.id, player4.id])).to eq true
       expect(roster.players).to eq [player3, player4]
     end
 
     it "ignores non-existent players" do
       player1 = FactoryGirl.create :player
-      roster.update_including_players(players: [player1.id, 9999])
+      expect(roster.update_including_players(players: [player1.id, 9999])).to eq true
       expect(roster.players).to eq [player1]
     end
 

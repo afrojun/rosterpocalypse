@@ -131,6 +131,12 @@ RSpec.describe RostersController, type: :controller do
     end
 
     context "with invalid params" do
+      it "does not update the roster" do
+        put :update, params: {id: roster.id, roster: invalid_attributes}, session: valid_session
+        roster.reload
+        expect(roster.name).to eq "AwesomeRoster"
+      end
+
       it "assigns the roster as @roster" do
         put :update, params: {id: roster.id, roster: invalid_attributes}, session: valid_session
         expect(assigns(:roster)).to eq(roster)
@@ -138,6 +144,7 @@ RSpec.describe RostersController, type: :controller do
 
       it "re-renders the 'edit' template" do
         put :update, params: {id: roster.id, roster: invalid_attributes}, session: valid_session
+        puts flash.inspect
         expect(response).to render_template("edit")
       end
     end

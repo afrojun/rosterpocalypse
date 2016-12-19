@@ -6,7 +6,7 @@ class Hero < ApplicationRecord
   has_many :players, through: :player_game_details
   has_many :games, through: :player_game_details
 
-  HERO_CLASSIFICATIONS = ["Warrior", "Support", "Specialist", "Assassin", "Multiclass: Assassin | Warrior"]
+  HERO_CLASSIFICATIONS = ["Warrior", "Support", "Specialist", "Assassin", "Multiclass"]
 
   validates :name, presence: true, uniqueness: true
   validates :internal_name, presence: true, uniqueness: true
@@ -62,7 +62,7 @@ class Hero < ApplicationRecord
     # Support
     "Auriel" => { name: "Auriel", classification: "Support" },
     "Brightwing" => { name: "Brightwing", classification: "Support" },
-    "Kharazim" => { name: "Monk", classification: "Support" },
+    "Monk" => { name: "Kharazim", classification: "Support" },
     "LiLi" => { name: "Li Li", classification: "Support" },
     "Malfurion" => { name: "Malfurion", classification: "Support" },
     "Medic" => { name: "Lt. Morales", classification: "Support" },
@@ -90,6 +90,6 @@ class Hero < ApplicationRecord
     "Zarya" => { name: "Zarya", classification: "Warrior" },
 
     # Multiclass
-    "Varian" => { name: "Varian", classification: "Multiclass: Assassin | Warrior" }
+    "Varian" => { name: "Varian", classification: "Multiclass" }
   }
 end
