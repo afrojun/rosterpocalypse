@@ -26,7 +26,6 @@ RSpec.describe RostersController, type: :controller do
   # adjust the attributes here as well.
   let(:valid_attributes) {
     {
-      manager_id: Manager.first.id,
       name: "AwesomeRoster"
     }
   }
@@ -37,6 +36,9 @@ RSpec.describe RostersController, type: :controller do
     }
   }
 
+  let(:manager) { FactoryGirl.create :manager, user: subject.current_user }
+  let(:roster) { FactoryGirl.create :roster, valid_attributes.merge(manager: manager) }
+
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # RostersController. Be sure to keep this updated too.
@@ -44,7 +46,6 @@ RSpec.describe RostersController, type: :controller do
 
   describe "GET #index" do
     it "assigns all rosters as @rosters" do
-      roster = Roster.create! valid_attributes
       get :index, params: {}, session: valid_session
       expect(assigns(:rosters)).to eq([roster])
     end
@@ -52,8 +53,7 @@ RSpec.describe RostersController, type: :controller do
 
   describe "GET #show" do
     it "assigns the requested roster as @roster" do
-      roster = Roster.create! valid_attributes
-      get :show, params: {id: roster.to_param}, session: valid_session
+      get :show, params: {id: roster.id}, session: valid_session
       expect(assigns(:roster)).to eq(roster)
     end
   end
@@ -67,8 +67,7 @@ RSpec.describe RostersController, type: :controller do
 
   describe "GET #edit" do
     it "assigns the requested roster as @roster" do
-      roster = Roster.create! valid_attributes
-      get :edit, params: {id: roster.to_param}, session: valid_session
+      get :edit, params: {id: roster.id}, session: valid_session
       expect(assigns(:roster)).to eq(roster)
     end
   end
@@ -109,55 +108,63 @@ RSpec.describe RostersController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
+        {
+          name: "MehRoster"
+        }
       }
 
       it "updates the requested roster" do
-        roster = Roster.create! valid_attributes
-        put :update, params: {id: roster.to_param, roster: new_attributes}, session: valid_session
+        put :update, params: {id: roster.id, roster: new_attributes}, session: valid_session
         roster.reload
-        skip("Add assertions for updated state")
+        expect(roster.name).to eq "MehRoster"
       end
 
       it "assigns the requested roster as @roster" do
-        roster = Roster.create! valid_attributes
-        put :update, params: {id: roster.to_param, roster: valid_attributes}, session: valid_session
+        put :update, params: {id: roster.id, roster: valid_attributes}, session: valid_session
         expect(assigns(:roster)).to eq(roster)
       end
 
       it "redirects to the roster" do
-        roster = Roster.create! valid_attributes
-        put :update, params: {id: roster.to_param, roster: valid_attributes}, session: valid_session
+        put :update, params: {id: roster.id, roster: valid_attributes}, session: valid_session
         expect(response).to redirect_to(roster)
       end
     end
 
     context "with invalid params" do
       it "assigns the roster as @roster" do
-        roster = Roster.create! valid_attributes
-        put :update, params: {id: roster.to_param, roster: invalid_attributes}, session: valid_session
+        put :update, params: {id: roster.id, roster: invalid_attributes}, session: valid_session
         expect(assigns(:roster)).to eq(roster)
       end
 
       it "re-renders the 'edit' template" do
-        roster = Roster.create! valid_attributes
-        put :update, params: {id: roster.to_param, roster: invalid_attributes}, session: valid_session
+        put :update, params: {id: roster.id, roster: invalid_attributes}, session: valid_session
         expect(response).to render_template("edit")
+      end
+    end
+
+    context "for a roster that does not belong to the user" do
+      let(:other_user) { FactoryGirl.create :user }
+      let(:other_manager) { FactoryGirl.create :manager, user: other_user }
+      let(:other_roster) { FactoryGirl.create :roster, manager: other_manager }
+
+      it "denies access" do
+        put :update, params: {id: other_roster.id, roster: valid_attributes}, session: valid_session
+        expect(response).to redirect_to(root_path)
+        expect(flash[:alert]).to eq "You don't have permission to take this action."
       end
     end
   end
 
   describe "DELETE #destroy" do
     it "destroys the requested roster" do
-      roster = Roster.create! valid_attributes
+      roster
       expect {
-        delete :destroy, params: {id: roster.to_param}, session: valid_session
+        delete :destroy, params: {id: roster.id}, session: valid_session
       }.to change(Roster, :count).by(-1)
     end
 
     it "redirects to the rosters list" do
-      roster = Roster.create! valid_attributes
-      delete :destroy, params: {id: roster.to_param}, session: valid_session
+      delete :destroy, params: {id: roster.id}, session: valid_session
       expect(response).to redirect_to(rosters_url)
     end
   end

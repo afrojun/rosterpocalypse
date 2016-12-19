@@ -29,7 +29,7 @@ class PlayersController < RosterpocalypseController
 
     respond_to do |format|
       if @player.save
-        format.html { redirect_to @player, notice: 'Player was successfully created.' }
+        format.html { redirect_to @player, notice: "Player was successfully created." }
         format.json { render :show, status: :created, location: @player }
       else
         format.html { render :new }
@@ -43,7 +43,7 @@ class PlayersController < RosterpocalypseController
   def update
     respond_to do |format|
       if @player.update(player_params)
-        format.html { redirect_to @player, notice: 'Player was successfully updated.' }
+        format.html { redirect_to @player, notice: "Player was successfully updated." }
         format.json { render :show, status: :ok, location: @player }
       else
         format.html { render :edit }
@@ -55,10 +55,14 @@ class PlayersController < RosterpocalypseController
   # DELETE /players/1
   # DELETE /players/1.json
   def destroy
-    @player.destroy
     respond_to do |format|
-      format.html { redirect_to players_url, notice: 'Player was successfully destroyed.' }
-      format.json { head :no_content }
+      if @player.destroy
+        format.html { redirect_to players_url, notice: "Player was successfully destroyed." }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to players_url, alert: @player.errors.details[:base].map{ |error| error[:error] }.to_sentence }
+        format.json { render json: @player.errors, status: :unprocessable_entity }
+      end
     end
   end
 

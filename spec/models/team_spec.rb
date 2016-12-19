@@ -18,4 +18,22 @@ RSpec.describe Team, type: :model do
       expect(found_team).to eql team
     end
   end
+
+  context "#destroy" do
+    let(:team) { FactoryGirl.create :team }
+
+    it "succeeds if there are no associated games" do
+      id = team.id
+      team.destroy
+      expect(Team.where(id: id)).to be_blank
+    end
+
+    it "fails if there are any associated games" do
+      FactoryGirl.create :player_game_detail, team: team
+      id = team.id
+      team.destroy
+      expect(Team.where(id: id).first).to eq team
+      expect(team.errors.details[:base].first[:error]).to include("Unable to delete #{team.name}")
+    end
+  end
 end

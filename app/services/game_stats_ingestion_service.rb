@@ -29,7 +29,12 @@ class GameStatsIngestionService
               player.update_attribute(:team, team) if player.team.blank?
 
               hero = Hero.find_or_create_by internal_name: player_detail["hero"] do |h|
-                       h.name = player_detail["hero"]
+                       if heroDetails = Hero::HEROES[player_detail["hero"]]
+                         h.name = heroDetails[:name]
+                         h.classification = heroDetails[:classification]
+                       else
+                        h.name = player_detail["hero"]
+                      end
                      end
 
               player_game_detail = PlayerGameDetail.find_or_initialize_by player: player, game: game

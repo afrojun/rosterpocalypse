@@ -39,7 +39,7 @@ class AccessPolicy
     role :member, proc { |user| user.present? && user.registered? } do
       can :create, Roster
       can [:update, :destroy], Roster do |roster, user|
-        roster.manager.user == user
+        roster.manager.user.id == user.id
       end
     end
 

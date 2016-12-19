@@ -41,6 +41,20 @@ RSpec.describe HeroesController, type: :controller do
     }
   }
 
+  let(:new_attributes) {
+    {
+      name: "EvilHero",
+      internal_name: "EvilHero",
+      classification: "Assassin"
+    }
+  }
+
+  def assert_update_successful hero
+    expect(hero.name).to eq "EvilHero"
+    expect(hero.internal_name).to eq "EvilHero"
+    expect(hero.classification).to eq "Assassin"
+  end
+
   context "a normal user" do
     it_should_behave_like "a normal user", Hero, :hero
   end

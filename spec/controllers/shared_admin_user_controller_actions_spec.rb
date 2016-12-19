@@ -75,15 +75,11 @@ shared_examples_for "an admin user" do |model_class, model_symbol|
 
     describe "PUT #update" do
       context "with valid params" do
-        let(:new_attributes) {
-          skip("Add a hash of attributes valid for your model")
-        }
-
         it "updates the requested #{model_symbol}" do
           model = model_class.create! valid_attributes
           put :update, params: {id: model.to_param, model_symbol => new_attributes}, session: valid_session
           model.reload
-          skip("Add assertions for updated state")
+          assert_update_successful model
         end
 
         it "assigns the requested #{model_symbol} as @#{model_symbol}" do

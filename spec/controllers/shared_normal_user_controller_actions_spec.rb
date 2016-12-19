@@ -10,7 +10,7 @@ shared_examples_for "a normal user" do |model_class, model_symbol|
     let(:valid_session) { {} }
 
     def check_access_denied
-      expect(response).to redirect_to welcome_path
+      expect(response).to redirect_to root_path
       expect(flash[:alert]).to eq "You don't have permission to take this action."
     end
 

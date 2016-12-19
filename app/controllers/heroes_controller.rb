@@ -40,7 +40,6 @@ class HeroesController < RosterpocalypseController
   # PATCH/PUT /heroes/1
   # PATCH/PUT /heroes/1.json
   def update
-
     respond_to do |format|
       if @hero.update(hero_params)
         format.html { redirect_to @hero, notice: 'Hero was successfully updated.' }
@@ -55,11 +54,14 @@ class HeroesController < RosterpocalypseController
   # DELETE /heroes/1
   # DELETE /heroes/1.json
   def destroy
-
-    @hero.destroy
     respond_to do |format|
-      format.html { redirect_to heroes_url, notice: 'Hero was successfully destroyed.' }
-      format.json { head :no_content }
+      if @hero.destroy
+        format.html { redirect_to heroes_url, notice: "Hero was successfully destroyed." }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to heroes_url, alert: @hero.errors.details[:base].map{ |error| error[:error] }.to_sentence }
+        format.json { render json: @hero.errors, status: :unprocessable_entity }
+      end
     end
   end
 

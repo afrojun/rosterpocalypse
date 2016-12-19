@@ -7,6 +7,8 @@ class Game < ApplicationRecord
   has_many :players, through: :player_game_details
   has_many :heroes, through: :player_game_details
 
+  validates :game_hash, presence: true, uniqueness: true
+
   def should_generate_new_friendly_id?
     slug.blank? || game_hash_changed?
   end

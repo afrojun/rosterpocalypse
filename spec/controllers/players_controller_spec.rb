@@ -26,10 +26,11 @@ RSpec.describe PlayersController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Player. As you add validations to Player, be sure to
   # adjust the attributes here as well.
+  let(:team) { FactoryGirl.create(:team) }
   let(:valid_attributes) {
     {
       name: "ProGamer",
-      team_id: FactoryGirl.create(:team).id
+      team_id: team.id
     }
   }
 
@@ -39,6 +40,19 @@ RSpec.describe PlayersController, type: :controller do
       team_id: nil
     }
   }
+
+  let(:new_team) { FactoryGirl.create(:team) }
+  let(:new_attributes) {
+    {
+      name: "AmateurGamer",
+      team_id: new_team.id
+    }
+  }
+
+  def assert_update_successful player
+    expect(player.name).to eq "AmateurGamer"
+    expect(player.team).to eq new_team
+  end
 
   context "a normal user" do
     it_should_behave_like "a normal user", Player, :player

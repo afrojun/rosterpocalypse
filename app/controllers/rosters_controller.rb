@@ -29,7 +29,7 @@ class RostersController < RosterpocalypseController
 
     respond_to do |format|
       if @roster.save
-        format.html { redirect_to edit_roster_path(@roster), notice: 'Your roster was successfully created, now add some players to it!' }
+        format.html { redirect_to edit_roster_path(@roster), notice: "Your roster was successfully created, now add some players to it!" }
         format.json { render :show, status: :created, location: @roster }
       else
         format.html { render :new }
@@ -43,7 +43,7 @@ class RostersController < RosterpocalypseController
   def update
     respond_to do |format|
       if @roster.update(roster_params)
-        format.html { redirect_to @roster, notice: 'Roster was successfully updated.' }
+        format.html { redirect_to @roster, notice: "Roster was successfully updated." }
         format.json { render :show, status: :ok, location: @roster }
       else
         format.html { render :edit }
@@ -57,7 +57,7 @@ class RostersController < RosterpocalypseController
   def destroy
     @roster.destroy
     respond_to do |format|
-      format.html { redirect_to rosters_url, notice: 'Roster was successfully destroyed.' }
+      format.html { redirect_to rosters_url, notice: "Roster was successfully destroyed." }
       format.json { head :no_content }
     end
   end

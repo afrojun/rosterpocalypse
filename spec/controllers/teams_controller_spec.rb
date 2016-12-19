@@ -38,6 +38,16 @@ RSpec.describe TeamsController, type: :controller do
     }
   }
 
+  let(:new_attributes) {
+    {
+      name: "CrazyTeam"
+    }
+  }
+
+  def assert_update_successful team
+    expect(team.name).to eq "CrazyTeam"
+  end
+
   context "a normal user" do
     it_should_behave_like "a normal user", Team, :team
   end

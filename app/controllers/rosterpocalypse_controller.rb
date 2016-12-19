@@ -5,7 +5,7 @@ class RosterpocalypseController < ApplicationController
   before_action :authorize_destroy!, only: [:destroy]
 
   rescue_from "AccessGranted::AccessDenied" do |exception|
-    redirect_back fallback_location: welcome_path, alert: "You don't have permission to take this action."
+    redirect_back fallback_location: root_path, alert: "You don't have permission to take this action."
   end
 
   protected

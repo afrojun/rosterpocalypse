@@ -17,11 +17,11 @@ module Error
     private
 
     def respond(_error, _status, _message)
-      Rails.logger.warn "Rescuing from controller error: [#{_error}, #{_status}] #{_message}"
-      puts "Rescuing from controller error: [#{_error}, #{_status}] #{_message}"
+      Rails.logger.error "Rescuing from controller error: [#{_error}, #{_status}] #{_message}"
       redirect_map = {
         "create" => :new,
-        "update" => :edit
+        "update" => :edit,
+        "destroy" => :show
       }
 
       respond_to do |format|

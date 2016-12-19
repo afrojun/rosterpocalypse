@@ -7,18 +7,21 @@ class Roster < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
 
-  def update params
-    transaction do
-      update_attribute(:name, params[:name]) if params[:name].present?
+  MAX_PLAYERS = 5
 
-      if params[:players].present? && params[:players].count <= 5 && newPlayers = Player.where(id: params[:players])
+  def update_including_players params
+    transaction do
+      response = update params.slice(:name)
+
+      if response && params[:players].present? && params[:players].count <= MAX_PLAYERS && newPlayers = Player.where(id: params[:players])
         players.clear
         players<<newPlayers
+        return true
       else
-        errors.add(:rosters, "may have a maximum of 5 players")
+        errors.add(:rosters, "may have a maximum of #{MAX_PLAYERS} players")
         return false
       end
     end
-
   end
+
 end
