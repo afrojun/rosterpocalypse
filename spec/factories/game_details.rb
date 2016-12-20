@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :player_game_detail do
+  factory :game_detail do
     player
     game
     hero

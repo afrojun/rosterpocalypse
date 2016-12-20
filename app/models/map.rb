@@ -9,9 +9,9 @@ class Map < ApplicationRecord
   before_destroy :validate_destroy
 
   def validate_destroy
-    gameCount = Game.where(map: self).count
-    if gameCount > 0
-      errors.add(:base, "Unable to delete #{name} since it has #{gameCount} associated #{"game".pluralize(gameCount)}.")
+    game_count = Game.where(map: self).count
+    if game_count > 0
+      errors.add(:base, "Unable to delete #{name} since it has #{game_count} associated #{"game".pluralize(game_count)}.")
       throw :abort
     end
   end

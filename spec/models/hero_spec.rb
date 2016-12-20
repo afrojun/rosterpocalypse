@@ -11,7 +11,7 @@ RSpec.describe Hero, type: :model do
     end
 
     it "fails if there are any associated games" do
-      FactoryGirl.create :player_game_detail, hero: hero
+      FactoryGirl.create :game_detail, hero: hero
       id = hero.id
       hero.destroy
       expect(Hero.where(id: id).first).to eq hero

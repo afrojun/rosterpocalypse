@@ -10,7 +10,9 @@ Rails.application.routes.draw do
   get 'credits', to: 'credits#index'
 
   resources :heroes
-  resources :games
+  resources :games do
+    resources :details, controller: 'game_details', shallow: true
+  end
   resources :teams
   resources :players
   resources :maps

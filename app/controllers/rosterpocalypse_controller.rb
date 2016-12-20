@@ -27,7 +27,7 @@ class RosterpocalypseController < ApplicationController
   end
 
   def set_method_symbol
-    "set_#{model_class}".downcase.to_sym
+    "set_#{controller_path.singularize}".to_sym
   end
 
 end

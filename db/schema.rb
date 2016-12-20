@@ -27,6 +27,25 @@ ActiveRecord::Schema.define(version: 20161202114842) do
     t.index ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
   end
 
+  create_table "game_details", force: :cascade do |t|
+    t.integer  "game_id",                         null: false
+    t.integer  "player_id",                       null: false
+    t.integer  "hero_id",                         null: false
+    t.integer  "team_id",                         null: false
+    t.integer  "solo_kills",      default: 0,     null: false
+    t.integer  "assists",         default: 0,     null: false
+    t.integer  "deaths",          default: 0,     null: false
+    t.integer  "time_spent_dead", default: 0,     null: false
+    t.string   "team_colour",                     null: false
+    t.boolean  "win",             default: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.index ["game_id"], name: "index_game_details_on_game_id", using: :btree
+    t.index ["hero_id"], name: "index_game_details_on_hero_id", using: :btree
+    t.index ["player_id"], name: "index_game_details_on_player_id", using: :btree
+    t.index ["team_id"], name: "index_game_details_on_team_id", using: :btree
+  end
+
   create_table "games", force: :cascade do |t|
     t.integer  "map_id",     null: false
     t.datetime "start_date", null: false
@@ -77,27 +96,6 @@ ActiveRecord::Schema.define(version: 20161202114842) do
     t.datetime "updated_at",     null: false
     t.index ["alternate_name"], name: "index_player_alternate_names_on_alternate_name", unique: true, using: :btree
     t.index ["player_id"], name: "index_player_alternate_names_on_player_id", using: :btree
-  end
-
-  create_table "player_game_details", force: :cascade do |t|
-    t.integer  "player_id",                       null: false
-    t.integer  "game_id",                         null: false
-    t.integer  "hero_id",                         null: false
-    t.integer  "team_id",                         null: false
-    t.integer  "solo_kills",      default: 0,     null: false
-    t.integer  "assists",         default: 0,     null: false
-    t.integer  "deaths",          default: 0,     null: false
-    t.integer  "time_spent_dead", default: 0,     null: false
-    t.string   "team_colour",                     null: false
-    t.boolean  "win",             default: false
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-    t.index ["game_id", "player_id"], name: "index_player_game_details_on_game_id_and_player_id", using: :btree
-    t.index ["game_id"], name: "index_player_game_details_on_game_id", using: :btree
-    t.index ["hero_id"], name: "index_player_game_details_on_hero_id", using: :btree
-    t.index ["player_id", "game_id"], name: "index_player_game_details_on_player_id_and_game_id", using: :btree
-    t.index ["player_id"], name: "index_player_game_details_on_player_id", using: :btree
-    t.index ["team_id"], name: "index_player_game_details_on_team_id", using: :btree
   end
 
   create_table "players", force: :cascade do |t|
@@ -172,13 +170,13 @@ ActiveRecord::Schema.define(version: 20161202114842) do
     t.index ["username"], name: "index_users_on_username", unique: true, using: :btree
   end
 
+  add_foreign_key "game_details", "games"
+  add_foreign_key "game_details", "heroes"
+  add_foreign_key "game_details", "players"
+  add_foreign_key "game_details", "teams"
   add_foreign_key "games", "maps"
   add_foreign_key "managers", "users"
   add_foreign_key "player_alternate_names", "players"
-  add_foreign_key "player_game_details", "games"
-  add_foreign_key "player_game_details", "heroes"
-  add_foreign_key "player_game_details", "players"
-  add_foreign_key "player_game_details", "teams"
   add_foreign_key "rosters", "managers"
   add_foreign_key "team_alternate_names", "teams"
 end

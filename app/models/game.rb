@@ -3,9 +3,9 @@ class Game < ApplicationRecord
   friendly_id :game_hash
 
   belongs_to :map
-  has_many :player_game_details, dependent: :destroy
-  has_many :players, through: :player_game_details
-  has_many :heroes, through: :player_game_details
+  has_many :game_details, dependent: :destroy
+  has_many :players, through: :game_details
+  has_many :heroes, through: :game_details
 
   validates :game_hash, presence: true, uniqueness: true
 

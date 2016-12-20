@@ -26,10 +26,10 @@ RSpec.describe PlayerPresenter do
     end
 
     it "correctly populates the win/loss/total counts" do
-      FactoryGirl.create :player_game_detail, player: player, hero: hero1, win: true
-      FactoryGirl.create :player_game_detail, player: player, hero: hero1, win: false
-      FactoryGirl.create :player_game_detail, player: player, hero: hero2, win: true
-      FactoryGirl.create :player_game_detail, player: player, hero: hero3, win: false
+      FactoryGirl.create :game_detail, player: player, hero: hero1, win: true
+      FactoryGirl.create :game_detail, player: player, hero: hero1, win: false
+      FactoryGirl.create :game_detail, player: player, hero: hero2, win: true
+      FactoryGirl.create :game_detail, player: player, hero: hero3, win: false
       expect(presenter.player_hero_win_loss_count[hero1]).to eq({win: 1, loss: 1, total: 2})
       expect(presenter.player_hero_win_loss_count[hero2]).to eq({win: 1, loss: 0, total: 1})
       expect(presenter.player_hero_win_loss_count[hero3]).to eq({win: 0, loss: 1, total: 1})

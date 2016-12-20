@@ -12,9 +12,9 @@
     - games.each do |game|
       %tr
         - present game do |g|
-          %td= link_to teams_with_bold_winner(g.teams), g
+          %td= link_to "#{g.teams[:blue].name} vs. #{g.teams[:red].name}", g
           -if show_map
-            %td= link_to g.map.name, g.map
+            %td= g.map.name
           %td= g.start_date
           %td= distance_of_time(g.duration_s)
           - if can? :update, Game

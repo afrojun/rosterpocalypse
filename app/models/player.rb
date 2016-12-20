@@ -2,9 +2,9 @@ class Player < ApplicationRecord
   extend FriendlyId
   friendly_id :name
 
-  has_many :player_game_details
-  has_many :games, through: :player_game_details
-  has_many :heroes, through: :player_game_details
+  has_many :game_details
+  has_many :games, through: :game_details
+  has_many :heroes, through: :game_details
   has_many :alternate_names, class_name: "PlayerAlternateName", dependent: :destroy
   belongs_to :team
   has_and_belongs_to_many :rosters
@@ -30,9 +30,9 @@ class Player < ApplicationRecord
   end
 
   def validate_destroy
-    gameCount = PlayerGameDetail.where(player: self).count
-    if gameCount > 0
-      errors.add(:base, "Unable to delete #{name} since it has #{gameCount} associated #{"game".pluralize(gameCount)}.")
+    game_count = game_details.count
+    if game_count > 0
+      errors.add(:base, "Unable to delete #{name} since it has #{game_count} associated #{"game".pluralize(game_count)}.")
       throw :abort
     end
   end
@@ -47,7 +47,7 @@ class Player < ApplicationRecord
   end
 
   def update_cost
-    player_cost = player_game_details.reduce(INITIAL_COST) do |tracking_cost, details|
+    player_cost = game_details.reduce(INITIAL_COST) do |tracking_cost, details|
                     tracking_cost + cost_change(details)
                   end
 
@@ -63,7 +63,7 @@ class Player < ApplicationRecord
   def infer_role
     if player_heroes_by_classification.size > 1
       class_ratios = player_heroes_by_classification.reduce({}) do |class_counts, (classification, heroes)|
-                       class_counts.merge({ classification => heroes.count.to_f/player_game_details.count })
+                       class_counts.merge({ classification => heroes.count.to_f/game_details.count })
                      end
       majority_class = class_ratios.detect { |_, ratio| ratio > 0.5 }
       set_role_from_class(majority_class.present? ? majority_class.first : "Flex")
@@ -80,7 +80,7 @@ class Player < ApplicationRecord
   end
 
   def player_heroes_by_classification
-    @player_heroes_by_classification ||= player_game_details.map(&:hero).group_by(&:classification)
+    @player_heroes_by_classification ||= game_details.map(&:hero).group_by(&:classification)
   end
 
   def is_flex? classification

@@ -14,7 +14,7 @@ FactoryGirl.define do
     end
 
     after :create do |game, evaluator|
-      FactoryGirl.create_list :player_game_details, evaluator.number_of_details, :game => game
+      FactoryGirl.create_list :game_details, evaluator.number_of_details, :game => game
     end
   end
 

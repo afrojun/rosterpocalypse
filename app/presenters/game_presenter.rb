@@ -1,13 +1,10 @@
 class GamePresenter < BasePresenter
   def game_details
-    game.player_game_details.includes(:player, :hero, :team)
+    game.game_details.includes(:player, :hero, :team).order(:team_colour, 'players.slug')
   end
 
   def teams
-    {
-      red: game_details.where("team_colour = 'red'").first.team,
-      blue: game_details.where("team_colour = 'blue'").first.team,
-    }
+    game_details.group_by { |details| details.team.name }
   end
 
   def winner

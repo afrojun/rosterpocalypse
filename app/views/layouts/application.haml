@@ -32,7 +32,8 @@
             - if user_signed_in?
               %li.nav-item.dropdown.float-lg-right
                 %a.nav-link.dropdown-toggle{href: "#", id: "navbarDropdownMenuLink", "data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false"}
-                  Logged in as #{current_user.username}
+                  %i{class: "fa fa-lg fa-user-circle"}
+                  Hello #{current_user.username}!
                 .dropdown-menu{"aria-labelledby" => "navbarDropdownMenuLink"}
                   %a.dropdown-item{href: edit_user_registration_path} Edit profile
                   %a.dropdown-item{href: destroy_user_session_path, "data-method" => "delete"} Logout

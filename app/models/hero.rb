@@ -2,9 +2,9 @@ class Hero < ApplicationRecord
   extend FriendlyId
   friendly_id :name
 
-  has_many :player_game_details
-  has_many :players, through: :player_game_details
-  has_many :games, through: :player_game_details
+  has_many :game_details
+  has_many :players, through: :game_details
+  has_many :games, through: :game_details
 
   HERO_CLASSIFICATIONS = ["Warrior", "Support", "Specialist", "Assassin", "Multiclass"]
 
@@ -15,9 +15,9 @@ class Hero < ApplicationRecord
   before_destroy :validate_destroy
 
   def validate_destroy
-    gameCount = PlayerGameDetail.where(hero: self).count
-    if gameCount > 0
-      errors.add(:base, "Unable to delete #{name} since it has #{gameCount} associated #{"game".pluralize(gameCount)}.")
+    game_count = game_details.count
+    if game_count > 0
+      errors.add(:base, "Unable to delete #{name} since it has #{game_count} associated #{"game".pluralize(game_count)}.")
       throw :abort
     end
   end
@@ -29,11 +29,11 @@ class Hero < ApplicationRecord
     "Gazlowe" => { name: "Gazlowe", classification: "Specialist" },
     "Medivh" => { name: "Medivh", classification: "Specialist" },
     "Murky" => { name: "Murky", classification: "Specialist" },
-    "Nazeebo" => { name: "Nazeebo", classification: "Specialist" },
+    "WitchDoctor" => { name: "Nazeebo", classification: "Specialist" },
     "Necromancer" => { name: "Xul", classification: "Specialist" },
     "SgtHammer" => { name: "Sgt. Hammer", classification: "Specialist" },
     "Sylvanas" => { name: "Sylvanas", classification: "Specialist" },
-    "TheLostVikings" => { name: "The Lost Vikings", classification: "Specialist" },
+    "LostVikings" => { name: "The Lost Vikings", classification: "Specialist" },
     "Zagara" => { name: "Zagara", classification: "Specialist" },
 
     # Assassin
@@ -48,7 +48,7 @@ class Hero < ApplicationRecord
     "Jaina" => { name: "Jaina", classification: "Assassin" },
     "Kaelthas" => { name: "Kael'thas", classification: "Assassin" },
     "Kerrigan" => { name: "Kerrigan", classification: "Assassin" },
-    "Lunara" => { name: "Lunara", classification: "Assassin" },
+    "Dryad" => { name: "Lunara", classification: "Assassin" },
     "Nova" => { name: "Nova", classification: "Assassin" },
     "Ragnaros" => { name: "Ragnaros", classification: "Assassin" },
     "Raynor" => { name: "Raynor", classification: "Assassin" },
@@ -61,7 +61,7 @@ class Hero < ApplicationRecord
 
     # Support
     "Auriel" => { name: "Auriel", classification: "Support" },
-    "Brightwing" => { name: "Brightwing", classification: "Support" },
+    "FaerieDragon" => { name: "Brightwing", classification: "Support" },
     "Monk" => { name: "Kharazim", classification: "Support" },
     "LiLi" => { name: "Li Li", classification: "Support" },
     "Malfurion" => { name: "Malfurion", classification: "Support" },

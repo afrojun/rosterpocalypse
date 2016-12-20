@@ -2,7 +2,7 @@
   %h1 Game Details
   %h3 #{game.map.name} game took #{distance_of_time_in_words(game.duration_s, 0, include_seconds: true)} on #{game.start_date}
 
-  %table.table.table-sm
+  %table.table.table-sm.table-striped
     %thead
       %tr
         %th
@@ -17,12 +17,8 @@
           %th{:colspan => "2"}
     %tbody
       - game.game_details.each do |details|
-        %tr{class: details.team_colour == "red" ? "team-red" : "team-blue"}
-          %td
-            %span{class: "fa-stack" }
-              - if details.win
-                %i{class: "fa fa-star fa-stack-1x game-win"}
-                %i{class: "fa fa-star-o fa-stack-1x"}
+        %tr
+          %td{class: details.win ? "game-win" : "game-loss"}
           %td= link_to details.player.name, details.player
           %td= link_to details.team.name, details.team
           %td= link_to details.hero.name, details.hero
@@ -31,8 +27,8 @@
           %td= details.assists
           %td= details.time_spent_dead
           - if can? :update, Game
-            %td= link_to 'Edit', edit_detail_path(details)
-            %td= link_to 'Destroy', detail_path(details), method: :delete, data: { confirm: 'Are you sure?' }
+            %td= link_to 'Edit', edit_game_details_path(details)
+            %td= link_to 'Destroy', details, method: :delete, data: { confirm: 'Are you sure?' }
   %br/
   - if can?(:update, Game) && can?(:update, GameDetail)
     %td= link_to 'Edit', edit_game_path(game)

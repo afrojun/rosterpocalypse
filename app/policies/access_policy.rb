@@ -29,7 +29,7 @@ class AccessPolicy
       can :manage, Map
       can :manage, Player
       can :manage, Roster
-      can :manage, PlayerGameDetail
+      can :manage, GameDetail
       can :manage, PlayerAlternateName
       can :manage, TeamAlternateName
     end

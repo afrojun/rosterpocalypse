@@ -29,7 +29,7 @@ RSpec.describe Team, type: :model do
     end
 
     it "fails if there are any associated games" do
-      FactoryGirl.create :player_game_detail, team: team
+      FactoryGirl.create :game_detail, team: team
       id = team.id
       team.destroy
       expect(Team.where(id: id).first).to eq team

@@ -20,7 +20,8 @@ class GameStatsIngestionService
           team_name_prefix_by_team = get_team_name_prefix_by_team player_details_by_team
 
           player_details_by_team.each do |team_colour, player_details|
-            team = Team.find_or_create_including_alternate_names team_name_prefix_by_team[team_colour]
+            team_name = team_name_prefix_by_team[team_colour].present? ? team_name_prefix_by_team[team_colour] : "Unknown"
+            team = Team.find_or_create_including_alternate_names team_name
 
             player_details.each do |player_detail|
               sanitized_player_name = strip_team_name_from_player_name team.name, player_detail["name"]
@@ -37,8 +38,8 @@ class GameStatsIngestionService
                       end
                      end
 
-              player_game_detail = PlayerGameDetail.find_or_initialize_by player: player, game: game
-              player_game_detail.update_attributes!(
+              game_detail = GameDetail.find_or_initialize_by player: player, game: game
+              game_detail.update_attributes!(
                 hero: hero,
                 team: team,
                 solo_kills: player_detail["SoloKill"],

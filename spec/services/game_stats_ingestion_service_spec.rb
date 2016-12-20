@@ -119,11 +119,23 @@ describe GameStatsIngestionService do
       expect { GameStatsIngestionService.populate_from_json nil }.not_to raise_error
     end
 
-    it "populates game data correctly" do
+    it "populates game details from the JSON" do
       GameStatsIngestionService.populate_from_json game_stats_json
-      expect(Player.all.map(&:name).sort).to eq ["KyoCha", "Sign", "Rich", "Sake", "merryday", "Bakery", "JayPL", "Snitch", "Athero", "Mene"].sort
       expect(Game.first.game_hash).to eq "31af3b750df2b90e51121833672747969fdd3a89c8bfa1303abd6fec9a8c7758"
-      expect(PlayerGameDetail.all.size).to eq 10
+      expect(GameDetail.all.size).to eq 10
+      expect(Player.all.map(&:name).sort).to eq ["KyoCha", "Sign", "Rich", "Sake", "merryday", "Bakery", "JayPL", "Snitch", "Athero", "Mene"].sort
+      expect(Team.all.map(&:name).sort).to eq ["DIG", "MVP"]
+      expect(Map.first.name).to eq "Tomb of the Spider Queen"
+    end
+
+    it "assigns unknown teams as 'Unknown' " do
+      team_names_by_colour = {
+        "red" => "",
+        "blue" => ""
+      }
+      expect(GameStatsIngestionService).to receive(:get_team_name_prefix_by_team).and_return(team_names_by_colour)
+      GameStatsIngestionService.populate_from_json game_stats_json
+      expect(Team.all.map(&:name).sort).to eq ["Unknown"]
     end
   end
 

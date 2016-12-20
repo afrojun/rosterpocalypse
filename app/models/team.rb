@@ -4,7 +4,7 @@ class Team < ApplicationRecord
 
   has_many :alternate_names, class_name: "TeamAlternateName", dependent: :destroy
   has_many :players
-  has_many :player_game_details
+  has_many :game_details
 
   validates :name, presence: true, uniqueness: true
 
@@ -17,9 +17,9 @@ class Team < ApplicationRecord
   end
 
   def validate_destroy
-    gameCount = PlayerGameDetail.where(team: self).count
-    if gameCount > 0
-      errors.add(:base, "Unable to delete #{name} since it has #{gameCount} associated #{"game".pluralize(gameCount)}.")
+    game_count = game_details.count
+    if game_count > 0
+      errors.add(:base, "Unable to delete #{name} since it has #{game_count} associated #{"game".pluralize(game_count)}.")
       throw :abort
     end
   end

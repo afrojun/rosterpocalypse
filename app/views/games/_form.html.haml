@@ -1,23 +1,24 @@
-= form_for(game) do |f|
+= form_for(game, html: {class: "form"}) do |f|
+  %h1.form-heading= heading
   - if game.errors.any?
     #error_explanation
-      %h2
+      %h2.form-heading
         = pluralize(game.errors.count, "error")
         prohibited this game from being saved:
       %ul
         - game.errors.full_messages.each do |message|
           %li= message
   .field
-    = f.label :map
-    = f.select(:map_id, Map.all.collect { |m| [m.name, m.id] })
+    = f.label :map, class: "sr-only"
+    = f.select(:map_id, Map.all.collect { |m| [m.name, m.id] }, {}, class: "form-control", required: true)
   .field
-    = f.label :start_date
-    = f.datetime_select :start_date
+    = f.label :start_date, class: "sr-only"
+    = f.datetime_select :start_date, class: "form-control", required: true
   .field
-    = f.label "Duration (seconds)"
-    = f.number_field :duration_s
+    = f.label "Duration (seconds)", class: "sr-only"
+    = f.number_field :duration_s, class: "form-control", required: true
   .field
-    = f.label :game_hash
-    = f.text_field :game_hash
+    = f.label :game_hash, class: "sr-only"
+    = f.text_field :game_hash, class: "form-control", required: true
   .actions
-    = f.submit
+    = f.submit submit_message, class: "btn btn-lg btn-primary btn-block"
