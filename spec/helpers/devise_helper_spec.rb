@@ -18,12 +18,12 @@ RSpec.describe DeviseHelper, type: :helper do
 
     it "generates the HTML for displaying the identity logo" do
       user = FactoryGirl.create :user, identities: [fb_identity]
-      expect(helper.identity_provider_logos(user)).to eq '<i class="fa fa-lg fa-facebook-square"></i>'
+      expect(helper.identity_provider_logos(user)).to eq '<i class="fa fa-2x fa-facebook-square facebook-blue"></i>'
     end
 
     it "generates the HTML for displaying multiple identity logos" do
       user = FactoryGirl.create :user, identities: [fb_identity, reddit_identity]
-      expect(helper.identity_provider_logos(user)).to eq '<i class="fa fa-lg fa-facebook-square"></i> <i class="fa fa-lg fa-reddit-square"></i>'
+      expect(helper.identity_provider_logos(user)).to eq '<i class="fa fa-2x fa-facebook-square facebook-blue"></i> <i class="fa fa-2x fa-reddit-square reddit-red"></i>'
     end
   end
 end

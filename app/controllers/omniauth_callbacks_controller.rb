@@ -16,7 +16,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def generic_callback provider
-    @identity = Identity.find_for_oauth env["omniauth.auth"].except("extra")
+    @identity = Identity.find_for_oauth request.env["omniauth.auth"].except("extra")
 
     @user = @identity.user || current_user
     if @user.nil?
@@ -31,6 +31,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
                   username: (@identity.nickname || @identity.email.split("@").first)
                 )
               end
+
       @identity.update_attribute :user_id, @user.id
     end
 
@@ -42,7 +43,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       sign_in_and_redirect @user, event: :authentication
       set_flash_message(:notice, :success, kind: provider.humanize.split(" ").first) if is_navigational_format?
     else
-      session["devise.#{provider}_data"] = env["omniauth.auth"].except("extra")
+      session["devise.#{provider}_data"] = request.env["omniauth.auth"].except("extra")
       redirect_to new_user_registration_url
     end
   end
