@@ -26,7 +26,7 @@ class Hero < ApplicationRecord
     # Specialist
     "Abathur" => { name: "Abathur", classification: "Specialist" },
     "Azmodan" => { name: "Azmodan", classification: "Specialist" },
-    "Gazlowe" => { name: "Gazlowe", classification: "Specialist" },
+    "Tinker" => { name: "Gazlowe", classification: "Specialist" },
     "Medivh" => { name: "Medivh", classification: "Specialist" },
     "Murky" => { name: "Murky", classification: "Specialist" },
     "WitchDoctor" => { name: "Nazeebo", classification: "Specialist" },
@@ -52,7 +52,7 @@ class Hero < ApplicationRecord
     "Nova" => { name: "Nova", classification: "Assassin" },
     "Ragnaros" => { name: "Ragnaros", classification: "Assassin" },
     "Raynor" => { name: "Raynor", classification: "Assassin" },
-    "TheButcher" => { name: "The Butcher", classification: "Assassin" },
+    "Butcher" => { name: "Butcher", classification: "Assassin" },
     "Thrall" => { name: "Thrall", classification: "Assassin" },
     "Tracer" => { name: "Tracer", classification: "Assassin" },
     "Tychus" => { name: "Tychus", classification: "Assassin" },

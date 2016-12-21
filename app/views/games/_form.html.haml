@@ -13,7 +13,7 @@
     = f.select(:map_id, Map.all.collect { |m| [m.name, m.id] }, {}, class: "form-control", required: true)
   .field
     = f.label :start_date, class: "sr-only"
-    = f.datetime_select :start_date, class: "form-control", required: true
+    = f.datetime_select :start_date, {}, class: "form-control", required: true
   .field
     = f.label "Duration (seconds)", class: "sr-only"
     = f.number_field :duration_s, class: "form-control", required: true
