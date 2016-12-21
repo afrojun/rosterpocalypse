@@ -3,6 +3,7 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 $blue: #0077dc;
+$gray: #8e8e8e;
 
 i.roster-change {
   cursor: pointer;
@@ -46,6 +47,17 @@ i.roster-change {
     border-right-width: 0px;
 }
 
+.pagination-page-selector {
+  float: right;
+  padding-top: 2em;
+}
+
+.pagination-page-selector select {
+  height: 30px;
+  width: 80px;
+  background-color: white;
+}
+
 .clear-filter {
   position: absolute;
   right: 8px;
@@ -55,7 +67,7 @@ i.roster-change {
   margin: auto;
   font-size: 14px;
   cursor: pointer;
-  color: #8e8e8e;
+  color: $gray;
 }
 
 .table-filter {

@@ -18,7 +18,8 @@ class RosterPickerContainer extends React.Component {
       },
       players: [],
       notification: "",
-      filter: ""
+      filter: "",
+      playersPerPage: 10
     };
 
     this.fetchRoster = this.fetchRoster.bind(this);
@@ -31,6 +32,7 @@ class RosterPickerContainer extends React.Component {
     this.showRosterActionForAllPlayers = this.showRosterActionForAllPlayers.bind(this);
     this.updateFilter = this.updateFilter.bind(this);
     this.clearFilter = this.clearFilter.bind(this);
+    this.changePlayersPerPage = this.changePlayersPerPage.bind(this);
   }
 
   componentWillMount() {
@@ -48,6 +50,13 @@ class RosterPickerContainer extends React.Component {
 
   clearFilter() {
     this.setState({filter: ""});
+  }
+
+  changePlayersPerPage(event) {
+    console.log("changePlayersPerPage")
+    console.log(event.target)
+    console.log(event.target.value)
+    this.setState({playersPerPage: event.target.value});
   }
 
   addToRoster(playerId) {
@@ -145,7 +154,7 @@ class RosterPickerContainer extends React.Component {
       className: "table table-striped table-hover table-sm",
       filterable: ["name", "role", "team"],
       noDataText: "No matching players found.",
-      itemsPerPage: 10,
+      itemsPerPage: this.state.playersPerPage,
       pageButtonLimit: 5,
       previousPageLabel: "<",
       nextPageLabel: ">",
@@ -178,6 +187,15 @@ class RosterPickerContainer extends React.Component {
           filter={this.state.filter}
           updateFilter={this.updateFilter}
           clearFilter={this.clearFilter} />
+
+        <div className="pagination-page-selector">
+          <select name="Page size" onChange={this.changePlayersPerPage}>
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+        </div>
 
         <PlayersTable
           tableOpts={playersTableOpts}
