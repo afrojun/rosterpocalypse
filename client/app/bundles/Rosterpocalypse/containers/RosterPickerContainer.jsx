@@ -1,6 +1,7 @@
 import React, { PropTypes } from "react";
 import ReactOnRails from "react-on-rails";
 import PlayersTable from "../components/PlayersTable";
+import TableFilter from "../components/TableFilter";
 import rp from "request-promise-native";
 
 class RosterPickerContainer extends React.Component {
@@ -16,7 +17,8 @@ class RosterPickerContainer extends React.Component {
         players: []
       },
       players: [],
-      notification: ""
+      notification: "",
+      filter: ""
     };
 
     this.fetchRoster = this.fetchRoster.bind(this);
@@ -27,6 +29,8 @@ class RosterPickerContainer extends React.Component {
     this.totalCost = this.totalCost.bind(this);
     this.submitRoster = this.submitRoster.bind(this);
     this.showRosterActionForAllPlayers = this.showRosterActionForAllPlayers.bind(this);
+    this.updateFilter = this.updateFilter.bind(this);
+    this.clearFilter = this.clearFilter.bind(this);
   }
 
   componentWillMount() {
@@ -35,6 +39,15 @@ class RosterPickerContainer extends React.Component {
 
   componentDidMount() {
     $("tbody.reactable-pagination tr td").addClass("custom-pagination");
+  }
+
+  updateFilter(event) {
+    event.preventDefault();
+    this.setState({filter: event.target.value});
+  }
+
+  clearFilter() {
+    this.setState({filter: ""});
   }
 
   addToRoster(playerId) {
@@ -47,7 +60,7 @@ class RosterPickerContainer extends React.Component {
       let newRoster = Object.assign({}, this.state.roster, {players: rosterPlayers});
       this.setState({roster: newRoster});
     } else {
-      this.setState({notification: <span className="text-danger">Error: Rosters may have a maximum of {RosterPickerContainer.MAX_PLAYERS_IN_ROSTER} players</span>})
+      this.setState({notification: <span className="text-danger">Error: Rosters may have a maximum of {RosterPickerContainer.MAX_PLAYERS_IN_ROSTER} players</span>});
     }
   }
 
@@ -82,9 +95,14 @@ class RosterPickerContainer extends React.Component {
   }
 
   totalCost() {
-    return this.state.roster.players.reduce((cost, player) => {
-      return cost + player.cost;
-    }, 0);
+    let total = this.state.roster.players.reduce((cost, player) => {
+              return cost + player.cost;
+            }, 0);
+    let className = "";
+    if(total > RosterPickerContainer.MAX_ROSTER_COST) {
+      className = "text-danger"
+    }
+    return(<span className={className}>{total}</span>);
   }
 
   submitRoster() {
@@ -131,7 +149,8 @@ class RosterPickerContainer extends React.Component {
       pageButtonLimit: 5,
       previousPageLabel: "<",
       nextPageLabel: ">",
-      sortable: ["cost"]
+      sortable: ["cost"],
+      filterBy: this.state.filter
     }
     let rosterTableOpts = {
       id: "rosterTable",
@@ -152,19 +171,24 @@ class RosterPickerContainer extends React.Component {
           imageClass="fa-minus-square text-danger"
           players={this.state.roster.players}
           onClick={this.removeFromRoster}
-          showRosterAction={this.showRosterActionForRosterPlayers} />
+          showRosterAction={this.showRosterActionForRosterPlayers}
+          updateFilter={this.updateFilter} />
 
-        <input type="submit" value="Update Roster" className="btn btn-primary" onClick={this.submitRoster} />
-        {"  "}
-        {this.state.notification}
+        <TableFilter
+          filter={this.state.filter}
+          updateFilter={this.updateFilter}
+          clearFilter={this.clearFilter} />
 
-        <h3 className="form-heading">Add Players:</h3>
         <PlayersTable
           tableOpts={playersTableOpts}
           imageClass="fa-plus-square text-success"
           players={this.state.players}
           onClick={this.addToRoster}
-          showRosterAction={this.showRosterActionForAllPlayers} />
+          showRosterAction={this.showRosterActionForAllPlayers}
+          updateFilter={this.updateFilter} />
+
+        <input type="submit" value="Update Roster" className="btn btn-primary" onClick={this.submitRoster} />
+        <span className="roster-pick-notification">{this.state.notification}</span>
 
       </div>
     );
@@ -172,5 +196,6 @@ class RosterPickerContainer extends React.Component {
 }
 
 RosterPickerContainer.MAX_PLAYERS_IN_ROSTER = 5;
+RosterPickerContainer.MAX_ROSTER_COST = 500;
 
 export default RosterPickerContainer;
