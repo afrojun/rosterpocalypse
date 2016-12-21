@@ -21,6 +21,10 @@ gem 'coffee-rails', '~> 4.2'
 gem 'haml'
 gem 'html2haml'
 
+# Use oj for fast JSON handling
+gem 'oj'
+gem 'oj_mimic_json'
+
 # React on Rails
 gem 'react_on_rails', '~>6'
 
@@ -35,6 +39,16 @@ gem "font-awesome-rails"
 
 # Devise for authentication
 gem 'devise'
+# OAuth gems
+gem 'omniauth'
+gem 'omniauth-oauth2', '~> 1.3.1'
+gem 'omniauth-twitter'
+gem 'omniauth-facebook'
+gem 'omniauth-reddit', :git => 'git://github.com/jackdempsey/omniauth-reddit.git'
+gem 'twitter'
+gem 'omniauth-google-oauth2'
+# gem 'google-api-client', require: 'google/api_client'
+
 # Access Granted for Authorization
 gem 'access-granted', '~> 1.1.0'
 # Better distance of time in words for Rails

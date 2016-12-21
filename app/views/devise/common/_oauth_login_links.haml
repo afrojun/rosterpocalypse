@@ -1,0 +1,13 @@
+.form
+  %b Sign in with:
+  = link_to user_facebook_omniauth_authorize_path do
+    = identity_provider_logo :facebook
+
+  = link_to user_twitter_omniauth_authorize_path do
+    = identity_provider_logo :twitter
+
+  = link_to user_reddit_omniauth_authorize_path do
+    = identity_provider_logo :reddit
+
+  = link_to user_google_oauth2_omniauth_authorize_path do
+    = identity_provider_logo :google_oauth2

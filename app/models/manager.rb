@@ -3,7 +3,7 @@ class Manager < ApplicationRecord
   friendly_id :name
 
   belongs_to :user
-  has_many :rosters
+  has_many :rosters, dependent: :destroy
 
   def name
     user.try :username
