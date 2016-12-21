@@ -2,6 +2,7 @@ import React, { PropTypes } from "react";
 import ReactOnRails from "react-on-rails";
 import PlayersTable from "../components/PlayersTable";
 import TableFilter from "../components/TableFilter";
+import PaginationElementsPerPageSelector from "../components/PaginationElementsPerPageSelector";
 import rp from "request-promise-native";
 
 class RosterPickerContainer extends React.Component {
@@ -53,9 +54,6 @@ class RosterPickerContainer extends React.Component {
   }
 
   changePlayersPerPage(event) {
-    console.log("changePlayersPerPage")
-    console.log(event.target)
-    console.log(event.target.value)
     this.setState({playersPerPage: event.target.value});
   }
 
@@ -188,14 +186,8 @@ class RosterPickerContainer extends React.Component {
           updateFilter={this.updateFilter}
           clearFilter={this.clearFilter} />
 
-        <div className="pagination-page-selector">
-          <select name="Page size" onChange={this.changePlayersPerPage}>
-            <option value="10">10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-          </select>
-        </div>
+        <PaginationElementsPerPageSelector
+          changePlayersPerPage={this.changePlayersPerPage} />
 
         <PlayersTable
           tableOpts={playersTableOpts}
