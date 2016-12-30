@@ -1,4 +1,5 @@
 - present(@game) do |game|
+  = page_title "#{game.teams.keys.join(" vs. ")}"
   %h1 Game Details
   %h3 #{game.map.name} game took #{distance_of_time_in_words(game.duration_s, 0, include_seconds: true)} on #{game.start_date}
 
@@ -36,3 +37,5 @@
   %br/
   - if can?(:update, Game) && can?(:update, GameDetail)
     %td= link_to 'Edit', edit_game_path(game)
+    |
+= link_to 'Games', heroes_path

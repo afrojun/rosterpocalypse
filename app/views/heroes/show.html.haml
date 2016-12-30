@@ -1,3 +1,5 @@
+= page_title @hero.name
+
 %p
   %strong Name:
   = @hero.name
@@ -8,4 +10,4 @@
 - if can? :update, @hero
   = link_to 'Edit', edit_hero_path(@hero)
   |
-= link_to 'Back', heroes_path
+= link_to 'Heroes', heroes_path

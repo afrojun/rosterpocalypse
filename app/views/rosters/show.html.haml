@@ -1,3 +1,5 @@
+= page_title @roster.name
+
 %p#notice= notice
 %p
   %strong Name:
@@ -8,6 +10,8 @@
 %p
   %strong Score:
   = @roster.score
-= link_to 'Edit', edit_roster_path(@roster)
-|
-= link_to 'Back', rosters_path
+
+- if can? :update, roster
+  = link_to 'Edit', edit_roster_path(@roster)
+  |
+= link_to 'Rosters', rosters_path

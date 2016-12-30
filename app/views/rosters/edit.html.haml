@@ -1,5 +1,3 @@
-= react_component("RosterPickerContainer", props: {rosterPath: roster_url(@roster), playersPath: players_url}, prerender: false)
+= page_title "Manage Roster: #{@roster.name}"
 
-= link_to 'Show', @roster
-|
-= link_to 'Back', rosters_path
+= react_component("RosterPickerContainer", props: {rosterPath: roster_url(@roster), playersPath: players_url}, prerender: false)

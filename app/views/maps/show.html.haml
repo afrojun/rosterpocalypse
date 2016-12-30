@@ -1,3 +1,5 @@
+= page_title @map.name
+
 %p
   %h2= @map.name
 
@@ -7,4 +9,4 @@
 - if can? :update, Map
   = link_to 'Edit', edit_map_path(@map)
   |
-= link_to 'Back', maps_path
+= link_to 'Maps', maps_path

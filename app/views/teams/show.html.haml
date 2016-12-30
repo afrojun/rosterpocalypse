@@ -1,3 +1,5 @@
+= page_title @team.name
+
 %p
   %strong Name:
   = @team.name
@@ -5,4 +7,4 @@
 - if can? :update, @team
   = link_to 'Edit', edit_team_path(@team)
   |
-= link_to 'Back', teams_path
+= link_to 'Teams', teams_path
