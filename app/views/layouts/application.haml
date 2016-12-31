@@ -16,7 +16,11 @@
           - if user_signed_in?
             %li.nav-item
               %a.nav-link{href: rosters_path} Rosters
+            %li.nav-item
+              %a.nav-link{href: leagues_path} Leagues
           - if user_signed_in? && current_user.admin?
+            %li.nav-item
+              %a.nav-link{href: tournaments_path} Tournaments
             %li.nav-item
               %a.nav-link{href: managers_path} Managers
             %li.nav-item

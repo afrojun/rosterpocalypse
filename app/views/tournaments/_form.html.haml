@@ -1,0 +1,42 @@
+= page_title heading
+
+= form_for(tournament, html: {class: "form"}) do |f|
+  %h1.form-heading= heading
+  - if tournament.errors.any?
+    #error_explanation
+      %h2.form-heading
+        = pluralize(tournament.errors.count, "error")
+        prohibited this tournament from being saved:
+      %ul
+        - tournament.errors.full_messages.each do |message|
+          %li= message
+  .field
+    = f.label :name, class: "sr-only"
+    = f.text_field :name, autofocus: true, required: true, class: "form-control", placeholder: "Tournament Name"
+
+  .field
+    = f.label :region, class: "sr-only"
+    = f.select :region, Tournament::REGIONS, {}, class: "form-control"
+
+  .field
+    = f.label :cycle_hours, class: "sr-only"
+    = f.number_field :cycle_hours, required: true, class: "form-control", placeholder: "Cycle Hours"
+
+  .field
+    = f.label :start_date, class: "sr-only"
+    .form-group
+      .datetimepicker.input-group.date
+        = f.text_field :start_date, required: true, class: "form-control", placeholder: "Start Date"
+        %span.input-group-addon
+          %span.fa.fa-calendar
+
+  .field
+    = f.label :end_date, class: "sr-only"
+    .form-group
+      .datetimepicker.input-group.date
+        = f.text_field :end_date, required: true, class: "form-control", placeholder: "End Date"
+        %span.input-group-addon
+          %span.fa.fa-calendar
+
+  .actions
+    = f.submit submit_message, class: "btn btn-lg btn-primary btn-block"

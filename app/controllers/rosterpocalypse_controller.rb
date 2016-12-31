@@ -1,5 +1,6 @@
 class RosterpocalypseController < ApplicationController
-  before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
+  before_action :authenticate_user!
+  before_action :authorize_read!, only: [:index, :show]
   before_action :authorize_update!, only: [:edit, :update]
   before_action :authorize_create!, only: [:new, :create]
   before_action :authorize_destroy!, only: [:destroy]
@@ -16,6 +17,10 @@ class RosterpocalypseController < ApplicationController
 
   def authorize_update!
     authorize! :update, send(set_method_symbol)
+  end
+
+  def authorize_read!
+    authorize! :read, model_class.constantize
   end
 
   def authorize_destroy!

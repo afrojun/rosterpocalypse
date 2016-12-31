@@ -3,16 +3,8 @@ require "rails_helper"
 RSpec.describe GameDetailsController, type: :routing do
   describe "routing" do
 
-    it "routes to #index" do
-      expect(:get => "/games/1/details").to route_to("game_details#index", game_id: "1")
-    end
-
     it "routes to #new" do
       expect(:get => "/games/1/details/new").to route_to("game_details#new", game_id: "1")
-    end
-
-    it "routes to #show" do
-      expect(:get => "/details/1").to route_to("game_details#show", id: "1")
     end
 
     it "routes to #edit" do

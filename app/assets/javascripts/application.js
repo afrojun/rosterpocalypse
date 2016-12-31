@@ -16,4 +16,28 @@
 //= require bootstrap
 //= require jquery_ujs
 //= require turbolinks
+//= require moment
+//= require bootstrap-datetimepicker
 //= require_tree .
+
+
+$(function () {
+    var pickerPrefs = {
+      format: "Y-MM-DD HH:mm:ss",
+      collapse: false,
+      icons: {
+        time:     "fa fa-clock-o",
+        date:     "fa fa-calendar",
+        up:       "fa fa-arrow-up",
+        down:     "fa fa-arrow-down",
+        left:     "fa fa-chevron-left",
+        right:    "fa fa-chevron-right",
+        previous: "fa fa-chevron-left",
+        next:     "fa fa-chevron-right",
+        today:    "fa fa-crosshairs",
+        clear:    "fa fa-trash",
+        close:    "fa fa-remove"
+      }
+    };
+    $(".datetimepicker").datetimepicker(pickerPrefs);
+});

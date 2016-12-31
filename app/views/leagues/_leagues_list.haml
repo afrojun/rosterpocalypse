@@ -1,0 +1,21 @@
+%table.table.table-sm.table-striped
+  %thead
+    %tr
+      %th Name
+      %th Tournament
+      %th Description
+      %th Manager
+      %th{:colspan => "2"}
+  %tbody
+    - leagues.each do |league|
+      %tr
+        %td= link_to league.name, league
+        %td= link_to league.tournament.name, league.tournament
+        %td= league.description
+        %td= link_to league.manager.name, league.manager
+        - if can? :update, league
+          %td= link_to 'Edit', edit_league_path(league)
+          %td= link_to 'Destroy', league, method: :delete, data: { confirm: 'Are you sure?' }
+        - else
+          %td
+          %td

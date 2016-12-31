@@ -17,6 +17,7 @@ class Player < ApplicationRecord
 
   ROLES = %w{ Support Warrior Assassin Flex }
   FLEX_CLASSIFICATIONS = %w{ Specialist Multiclass Flex }
+  REGIONS = %w{ CN EU KR NA }
 
   # This is the maximum and minimum costs that a player can have to
   # ensure that the best players don't become overly expensive and

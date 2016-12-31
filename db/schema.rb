@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161220222355) do
+ActiveRecord::Schema.define(version: 20161230100949) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,6 +86,29 @@ ActiveRecord::Schema.define(version: 20161220222355) do
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
     t.index ["user_id"], name: "index_identities_on_user_id", using: :btree
+  end
+
+  create_table "leagues", force: :cascade do |t|
+    t.string   "name",          null: false
+    t.text     "description"
+    t.integer  "manager_id",    null: false
+    t.integer  "tournament_id", null: false
+    t.string   "type",          null: false
+    t.string   "slug",          null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["manager_id"], name: "index_leagues_on_manager_id", using: :btree
+    t.index ["name"], name: "index_leagues_on_name", unique: true, using: :btree
+    t.index ["slug"], name: "index_leagues_on_slug", unique: true, using: :btree
+    t.index ["tournament_id"], name: "index_leagues_on_tournament_id", using: :btree
+    t.index ["type"], name: "index_leagues_on_type", using: :btree
+  end
+
+  create_table "leagues_rosters", id: false, force: :cascade do |t|
+    t.integer "league_id", null: false
+    t.integer "roster_id", null: false
+    t.index ["league_id", "roster_id"], name: "index_leagues_rosters_on_league_id_and_roster_id", using: :btree
+    t.index ["roster_id", "league_id"], name: "index_leagues_rosters_on_roster_id_and_league_id", using: :btree
   end
 
   create_table "managers", force: :cascade do |t|
@@ -167,6 +190,19 @@ ActiveRecord::Schema.define(version: 20161220222355) do
     t.index ["slug"], name: "index_teams_on_slug", unique: true, using: :btree
   end
 
+  create_table "tournaments", force: :cascade do |t|
+    t.string   "name",        null: false
+    t.string   "region",      null: false
+    t.integer  "cycle_hours", null: false
+    t.datetime "start_date",  null: false
+    t.datetime "end_date"
+    t.string   "slug",        null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["name"], name: "index_tournaments_on_name", unique: true, using: :btree
+    t.index ["slug"], name: "index_tournaments_on_slug", unique: true, using: :btree
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "",    null: false
     t.string   "encrypted_password",     default: "",    null: false
@@ -193,6 +229,8 @@ ActiveRecord::Schema.define(version: 20161220222355) do
   add_foreign_key "game_details", "teams"
   add_foreign_key "games", "maps"
   add_foreign_key "identities", "users"
+  add_foreign_key "leagues", "managers"
+  add_foreign_key "leagues", "tournaments"
   add_foreign_key "managers", "users"
   add_foreign_key "player_alternate_names", "players"
   add_foreign_key "rosters", "managers"

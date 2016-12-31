@@ -1,17 +1,6 @@
 class GameDetailsController < RosterpocalypseController
-  before_action :set_game_detail, only: [:show, :edit, :update, :destroy]
-  before_action :set_game, only: [:index, :new, :create]
-
-  # GET /games/1/details
-  # GET /games/1/details.json
-  def index
-    @game_details = @game.game_details
-  end
-
-  # GET /details/1
-  # GET /details/1.json
-  def show
-  end
+  before_action :set_game_detail, only: [:edit, :update, :destroy]
+  before_action :set_game, only: [:new, :create]
 
   # GET /games/1/details/new
   def new

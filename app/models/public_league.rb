@@ -1,0 +1,2 @@
+class PublicLeague < League
+end

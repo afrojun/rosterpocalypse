@@ -1,7 +1,12 @@
 = page_title @manager.name
 
-%p
-  %strong Name:
-  = @manager.name
+%h1= @manager.name
+
+%h3 Rosters
+= render "rosters/roster_list", rosters: @manager.rosters
+
+%h3 Leagues
+= render "leagues/leagues_list", leagues: @manager.leagues
+
 
 = link_to 'Managers', managers_path

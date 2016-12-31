@@ -1,0 +1,16 @@
+= page_title @league.name
+
+%p
+  %strong Name:
+  = @league.name
+%p
+  %strong Description:
+  = @league.description
+%p
+  %strong Tournament:
+  = @league.tournament.name
+
+- if can? :update, @league
+  = link_to 'Edit', edit_league_path(@league)
+  |
+= link_to 'Leagues', leagues_path

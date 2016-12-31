@@ -24,20 +24,37 @@ class AccessPolicy
       end
       can :manage, Manager
       can :manage, Game
+      can :manage, GameDetail
       can :manage, Hero
       can :manage, Team
+      can :manage, TeamAlternateName
       can :manage, Map
       can :manage, Player
-      can :manage, Roster
-      can :manage, GameDetail
       can :manage, PlayerAlternateName
-      can :manage, TeamAlternateName
+      can :manage, Roster
+      can :manage, League
+      can :manage, PublicLeague
+      can :manage, PrivateLeague
+      can :manage, Tournament
     end
 
     # More privileged role, applies to registered users.
     #
     role :member, proc { |user| user.present? && user.registered? } do
-      can :create, Roster
+      can :read, Manager
+      can :read, Game
+      can :read, Hero
+      can :read, Team
+      can :read, Map
+      can :read, Player
+      can :read, Tournament
+      can :read, PublicLeague
+      can [:read, :create], League
+      can [:read, :create], PrivateLeague
+      can [:update, :destroy], PrivateLeague do |league, user|
+        league.manager.user.id == user.id
+      end
+      can [:read, :create], Roster
       can [:update, :destroy], Roster do |roster, user|
         roster.manager.user.id == user.id
       end
@@ -47,13 +64,7 @@ class AccessPolicy
     # Applies to every user.
     #
     role :guest do
-      can :read, Manager
-      can :read, Game
-      can :read, Hero
-      can :read, Team
-      can :read, Map
-      can :read, Player
-      can :read, Roster
+      # Very limited access, can only view the home page and sign up
     end
   end
 end

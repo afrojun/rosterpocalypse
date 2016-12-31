@@ -1,0 +1,2 @@
+class PrivateLeague < League
+end

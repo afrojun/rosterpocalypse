@@ -88,22 +88,6 @@ RSpec.describe GameDetailsController, type: :controller do
       expect(flash[:alert]).to eq "You don't have permission to take this action."
     end
 
-    describe "GET #index" do
-      it "assigns all game_details as @game_details" do
-        game_detail = GameDetail.create! valid_attributes
-        get :index, params: {game_id: game.id}, session: valid_session
-        expect(assigns(:game_details)).to eq([game_detail])
-      end
-    end
-
-    describe "GET #show" do
-      it "assigns the requested game_detail as @game_detail" do
-        game_detail = GameDetail.create! valid_attributes
-        get :show, params: {id: game_detail.to_param}, session: valid_session
-        expect(assigns(:game_detail)).to eq(game_detail)
-      end
-    end
-
     describe "GET #new" do
       it "access denied" do
         get :new, params: {game_id: game.id}, session: valid_session
@@ -150,22 +134,6 @@ RSpec.describe GameDetailsController, type: :controller do
     # in order to pass any filters (e.g. authentication) defined in
     # GamesController. Be sure to keep this updated too.
     let(:valid_session) { {} }
-
-    describe "GET #index" do
-      it "assigns all game_details as @game_details" do
-        game_detail = GameDetail.create! valid_attributes
-        get :index, params: {game_id: game.id}, session: valid_session
-        expect(assigns(:game_details)).to eq([game_detail])
-      end
-    end
-
-    describe "GET #show" do
-      it "assigns the requested game_detail as @game_detail" do
-        game_detail = GameDetail.create! valid_attributes
-        get :show, params: {id: game_detail.to_param}, session: valid_session
-        expect(assigns(:game_detail)).to eq(game_detail)
-      end
-    end
 
     describe "GET #new" do
       it "assigns a new game_detail as @game_detail" do

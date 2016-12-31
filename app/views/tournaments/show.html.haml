@@ -1,0 +1,22 @@
+= page_title @tournament.name
+
+%p
+  %strong Name:
+  = @tournament.name
+%p
+  %strong Region:
+  = @tournament.region
+%p
+  %strong Cycle hours:
+  = @tournament.cycle_hours
+%p
+  %strong Start date:
+  = @tournament.start_date
+%p
+  %strong End date:
+  = @tournament.end_date
+
+- if can? :update, @tournament
+  = link_to 'Edit', edit_tournament_path(@tournament)
+  |
+= link_to 'Back', tournaments_path

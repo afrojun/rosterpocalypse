@@ -10,17 +10,26 @@
       %ul
         - game.errors.full_messages.each do |message|
           %li= message
+
   .field
     = f.label :map, class: "sr-only"
     = f.select(:map_id, Map.all.collect { |m| [m.name, m.id] }, {}, class: "form-control", required: true)
-  .field
-    = f.label :start_date, class: "sr-only"
-    = f.datetime_select :start_date, {}, class: "form-control", required: true
+
   .field
     = f.label "Duration (seconds)", class: "sr-only"
     = f.number_field :duration_s, class: "form-control", required: true
+
   .field
     = f.label :game_hash, class: "sr-only"
     = f.text_field :game_hash, class: "form-control", required: true
+
+  .field
+    = f.label :start_date, class: "sr-only"
+    .form-group
+      .datetimepicker.input-group.date
+        = f.text_field :start_date, required: true, class: "form-control", placeholder: "Start Date"
+        %span.input-group-addon
+          %span.fa.fa-calendar
+
   .actions
     = f.submit submit_message, class: "btn btn-lg btn-primary btn-block"

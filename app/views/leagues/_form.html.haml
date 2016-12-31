@@ -1,0 +1,24 @@
+= page_title heading
+
+= form_for(league, html: {class: "form"}) do |f|
+  %h1.form-heading= heading
+  - if league.errors.any?
+    #error_explanation
+      %h2.form-heading
+        = pluralize(league.errors.count, "error")
+        prohibited this league from being saved:
+      %ul
+        - league.errors.full_messages.each do |message|
+          %li= message
+
+  .field
+    = f.label :name, class: "sr-only"
+    = f.text_field :name, autofocus: true, required: true, class: "form-control", placeholder: "League Name"
+  .field
+    = f.label :description, class: "sr-only"
+    = f.text_area :description, class: "form-control", placeholder: "League Description (optional)"
+  .field
+    = f.label :tournament, class: "sr-only"
+    = f.select(:tournament_id, Tournament.all.collect { |t| [t.name, t.id] }, {}, class: "form-control", required: true)
+  .actions
+    = f.submit submit_message, class: "btn btn-lg btn-primary btn-block"

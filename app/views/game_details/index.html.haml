@@ -1,6 +1,0 @@
-= page_title "Games"
-
-%h1 Games
-= render 'games_list', games: @games, show_map: true
-- if can? :create, Game
-  = link_to 'New Game', new_game_path

@@ -11,7 +11,7 @@
   %strong Score:
   = @roster.score
 
-- if can? :update, roster
+- if can? :update, @roster
   = link_to 'Edit', edit_roster_path(@roster)
   |
 = link_to 'Rosters', rosters_path

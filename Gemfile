@@ -17,6 +17,9 @@ gem 'coffee-rails', '~> 4.2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
+# https://github.com/josevalim/rails-footnotes
+gem 'rails-footnotes', '~> 4.0'
+
 # Use Haml for cleaner view templates
 gem 'haml'
 gem 'html2haml'
@@ -34,6 +37,10 @@ gem 'bootstrap', '~> 4.0.0.alpha5'
 source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.1.0'
 end
+# Better DateTime Picker
+gem 'momentjs-rails', '>= 2.9.0'
+gem 'bootstrap3-datetimepicker-rails', '~> 4.17.43'
+
 # font-awesome for web fonts CSS
 gem "font-awesome-rails"
 

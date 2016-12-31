@@ -63,6 +63,8 @@ GEM
     bootstrap (4.0.0.alpha5)
       autoprefixer-rails (>= 6.0.3)
       sass (>= 3.4.19)
+    bootstrap3-datetimepicker-rails (4.17.43)
+      momentjs-rails (>= 2.8.1)
     buftok (0.2.0)
     builder (3.2.2)
     byebug (9.0.6)
@@ -195,6 +197,8 @@ GEM
     mini_racer (0.1.7)
       libv8 (~> 5.3)
     minitest (5.9.1)
+    momentjs-rails (2.15.1)
+      railties (>= 3.1)
     multi_json (1.12.1)
     multi_test (0.1.2)
     multi_xml (0.6.0)
@@ -268,6 +272,8 @@ GEM
     rails-dom-testing (2.0.1)
       activesupport (>= 4.2.0, < 6.0)
       nokogiri (~> 1.6.0)
+    rails-footnotes (4.1.8)
+      rails (>= 3.2)
     rails-html-sanitizer (1.0.3)
       loofah (~> 2.0)
     railties (5.0.0.1)
@@ -382,6 +388,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   bootstrap (~> 4.0.0.alpha5)
+  bootstrap3-datetimepicker-rails (~> 4.17.43)
   byebug
   capybara
   coffee-rails (~> 4.2)
@@ -400,6 +407,7 @@ DEPENDENCIES
   jquery-rails
   listen (~> 3.0.5)
   mini_racer
+  momentjs-rails (>= 2.9.0)
   oj
   oj_mimic_json
   omniauth
@@ -414,6 +422,7 @@ DEPENDENCIES
   rails (~> 5.0.0, >= 5.0.0.1)
   rails-assets-tether (>= 1.1.0)!
   rails-controller-testing
+  rails-footnotes (~> 4.0)
   react_on_rails (~> 6)
   rspec-rails (~> 3.5)
   sass-rails (~> 5.0)

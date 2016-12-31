@@ -31,14 +31,14 @@ shared_examples_for "a normal user" do |model_class, model_symbol|
     end
 
     describe "GET #new" do
-      it "access denied" do
+      it "denies access" do
         get :new, params: {}, session: valid_session
         check_access_denied
       end
     end
 
     describe "GET #edit" do
-      it "access denied" do
+      it "denies access" do
         model = model_class.create! valid_attributes
         get :edit, params: {id: model.to_param}, session: valid_session
         check_access_denied
@@ -46,14 +46,14 @@ shared_examples_for "a normal user" do |model_class, model_symbol|
     end
 
     describe "POST #create" do
-      it "access denied" do
+      it "denies access" do
         post :create, params: {model_symbol => valid_attributes}, session: valid_session
         check_access_denied
       end
     end
 
     describe "PUT #update" do
-      it "access denied" do
+      it "denies access" do
         model = model_class.create! valid_attributes
         put :update, params: {id: model.to_param, model_symbol => valid_attributes}, session: valid_session
         check_access_denied
@@ -61,7 +61,7 @@ shared_examples_for "a normal user" do |model_class, model_symbol|
     end
 
     describe "DELETE #destroy" do
-      it "access denied" do
+      it "denies access" do
         model = model_class.create! valid_attributes
         delete :destroy, params: {id: model.to_param}, session: valid_session
         check_access_denied
