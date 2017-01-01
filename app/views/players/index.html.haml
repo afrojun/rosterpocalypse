@@ -17,7 +17,7 @@
         %td= link_to player.name, player
         %td= player.team.try :name
         %td= player.role
-        %td= player.game_details.count
+        %td= player.game_details.size
         %td= player.cost
         - if can? :update, Player
           %td= link_to 'Edit', edit_player_path(player)

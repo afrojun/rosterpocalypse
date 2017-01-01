@@ -31,7 +31,7 @@ class Player < ApplicationRecord
   end
 
   def validate_destroy
-    game_count = game_details.count
+    game_count = game_details.size
     if game_count > 0
       errors.add(:base, "Unable to delete #{name} since it has #{game_count} associated #{"game".pluralize(game_count)}.")
       throw :abort

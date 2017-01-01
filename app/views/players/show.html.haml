@@ -1,15 +1,12 @@
 - present @player do |p|
   = page_title p.name
-
-  %p
-    %strong Name:
-    = p.name
+  %h1= p.name
   %p
     %strong Role:
     = p.role
   %p
     %strong Team:
-    = p.team.name
+    = link_to p.team.name, p.team
   %p
     %strong Country:
     = p.country
@@ -26,6 +23,8 @@
     %strong Top Winrate Heroes:
     = link_to_heroes_with_stat p.top_winrate_heroes
 
+  %h3 Games
+  = render "games/games_list", games: @player_games, show_map: true
   - if can? :update, Player
     = link_to 'Edit', edit_player_path(p)
     |
