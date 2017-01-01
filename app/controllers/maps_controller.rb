@@ -4,12 +4,13 @@ class MapsController < RosterpocalypseController
   # GET /maps
   # GET /maps.json
   def index
-    @maps = Map.all
+    @maps = Map.all.includes(:games)
   end
 
   # GET /maps/1
   # GET /maps/1.json
   def show
+    @map_games = @map.games.includes(:map, game_details: [:team])
   end
 
   # GET /maps/new

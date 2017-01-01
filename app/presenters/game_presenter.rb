@@ -1,14 +1,14 @@
 class GamePresenter < BasePresenter
-  def game_details
+  def details
     game.game_details.includes(:player, :hero, :team).order(:team_colour, 'players.slug')
   end
 
-  def teams
-    game_details.group_by { |details| details.team.name }
+  def details_by_team
+    details.group_by { |detail| detail.team.name }
   end
 
-  def winner
-    game_details.where("win = true").first.team_colour
+  def teams_by_win
+    game.game_details.reduce({}) { |memo, detail| memo.merge({detail.win => detail.team.name}) }
   end
 
   alias game __getobj__

@@ -4,7 +4,7 @@ class GamesController < RosterpocalypseController
   # GET /games
   # GET /games.json
   def index
-    @games = Game.all
+    @games = Game.all.includes(:map, game_details: [:player, :hero, :team])
   end
 
   # GET /games/1

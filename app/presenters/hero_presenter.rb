@@ -1,7 +1,11 @@
 class HeroPresenter < BasePresenter
+  def details
+    @details ||= hero.game_details
+  end
+
   def hero_stats
-    n_games = hero.games.count
-    wins = hero.game_details.sum {|g| g.win ? 1 : 0}
+    n_games = details.size
+    wins = details.select { |g| g.win }.size
     win_percent = n_games > 0 ? ((wins.to_f/n_games.to_f) * 100).ceil : 0
 
     {

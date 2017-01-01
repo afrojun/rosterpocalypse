@@ -1,5 +1,5 @@
 - present(@game) do |game|
-  = page_title "#{game.teams.keys.join(" vs. ")}"
+  = page_title "#{game.details_by_team.keys.join(" vs. ")}"
   %h1 Game Details
   %h3 #{game.map.name} game took #{distance_of_time_in_words(game.duration_s, 0, include_seconds: true)} on #{game.start_date}
 
@@ -17,7 +17,7 @@
         - if can? :update, Game
           %th{:colspan => "2"}
     %tbody
-      - game.game_details.each do |details|
+      - game.details.each do |details|
         %tr{class: details.team_colour == "red" ? "team-red" : "team-blue"}
           %td
             %span{class: "fa-stack" }
@@ -38,4 +38,4 @@
   - if can?(:update, Game) && can?(:update, GameDetail)
     %td= link_to 'Edit', edit_game_path(game)
     |
-= link_to 'Games', heroes_path
+= link_to 'Games', games_path

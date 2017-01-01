@@ -1,11 +1,12 @@
 = page_title @hero.name
 
-%p
-  %strong Name:
-  = @hero.name
+%h1= @hero.name
 %p
   %strong Classification:
   = @hero.classification
+
+%h3 Games
+= render "games/games_list", games: @hero_games, show_map: true
 
 - if can? :update, @hero
   = link_to 'Edit', edit_hero_path(@hero)

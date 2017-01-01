@@ -2,9 +2,10 @@ class Team < ApplicationRecord
   extend FriendlyId
   friendly_id :name
 
+  has_many :game_details
+  has_many :games, through: :game_details
   has_many :alternate_names, class_name: "TeamAlternateName", dependent: :destroy
   has_many :players
-  has_many :game_details
 
   validates :name, presence: true, uniqueness: true
 

@@ -4,12 +4,14 @@ class TeamsController < RosterpocalypseController
   # GET /teams
   # GET /teams.json
   def index
-    @teams = Team.all
+    @teams = Team.all.includes(:alternate_names)
   end
 
   # GET /teams/1
   # GET /teams/1.json
   def show
+    @players = Player.where(team: @team)
+    @team_games = @team.games.includes(:map, game_details: [:team]).uniq
   end
 
   # GET /teams/new

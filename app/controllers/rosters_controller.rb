@@ -5,7 +5,6 @@ class RostersController < RosterpocalypseController
   # GET /rosters.json
   def index
     @my_rosters = Roster.includes(players: [:team]).where("manager_id = ?", current_user.manager.id)
-    @rosters = Roster.all.includes(players: [:team])
   end
 
   # GET /rosters/1

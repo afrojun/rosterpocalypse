@@ -5,8 +5,7 @@
   %h2 #{current_user.username}'s Rosters
   = render 'roster_list', rosters: @my_rosters
 - else
-  %h2 All Rosters
-  = render 'roster_list', rosters: @rosters
+  %p No Rosters found
 
 %br/
 - if can? :create, Roster

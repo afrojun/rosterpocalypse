@@ -1,9 +1,9 @@
 module GameHelper
 
-  def teams_with_bold_winner teams
-    teams.collect do |team, details|
-      details.first.win ? embolden(team) : team
-    end.join(" vs. ").html_safe
+  def teams_with_bold_winner teams_by_win
+    winner = embolden(teams_by_win[true])
+    loser = teams_by_win[false]
+    [winner, loser].join(" vs. ").html_safe
   end
 
   def embolden text

@@ -12,7 +12,7 @@
     - games.each do |game|
       %tr
         - present game do |g|
-          %td= link_to teams_with_bold_winner(g.teams), g
+          %td= link_to teams_with_bold_winner(g.teams_by_win), g
           -if show_map
             %td= link_to g.map.name, g.map
           %td= g.start_date
