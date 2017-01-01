@@ -15,9 +15,15 @@ class User < ApplicationRecord
   validates_format_of :username, with: /^[a-zA-Z0-9_\.]*$/, multiline: true
 
   after_create :create_manager
+  before_update :update_manager
 
   def create_manager
     Manager.create user: self
+  end
+
+  # Save the associated manager so that its slug gets updated when the username changes
+  def update_manager
+    manager.save
   end
 
   def admin?

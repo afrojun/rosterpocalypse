@@ -11,6 +11,6 @@ class Manager < ApplicationRecord
   end
 
   def name_changed?
-    user.try :name_changed?
+    user.try :username_changed?
   end
 end
