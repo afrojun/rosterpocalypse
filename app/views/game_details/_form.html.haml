@@ -1,12 +1,6 @@
 = form_for(game_detail, as: :detail, url: detail_path(game_detail), html: {class: "compact-form"}) do |f|
-  - if game_detail.errors.any?
-    #error_explanation
-      %h2.form-heading
-        = pluralize(game_detail.errors.count, "error")
-        prohibited this game detail from being saved:
-      %ul
-        - game_detail.errors.full_messages.each do |message|
-          %li= message
+  = render 'layouts/error_messages', object: game_detail
+
   .field
     = f.label :player_id, class: "sr-only"
     = f.select :player_id, Player.all.collect { |p| [p.name, p.id] }, {}, required: true, class: "form-control"

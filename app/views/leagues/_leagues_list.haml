@@ -5,6 +5,7 @@
       %th Tournament
       %th Description
       %th Manager
+      %th
       %th{:colspan => "2"}
   %tbody
     - leagues.each do |league|
@@ -13,6 +14,7 @@
         %td= link_to league.tournament.name, league.tournament
         %td= league.description
         %td= link_to league.manager.name, league.manager
+        %td= league_membership_change league
         - if can? :update, league
           %td= link_to 'Edit', edit_league_path(league)
           %td= link_to 'Destroy', league, method: :delete, data: { confirm: 'Are you sure?' }

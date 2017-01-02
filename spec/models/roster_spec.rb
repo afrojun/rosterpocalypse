@@ -4,7 +4,7 @@ RSpec.describe Roster, type: :model do
   let(:roster) { FactoryGirl.create :roster }
 
   context "validations" do
-    context ":region" do
+    context "region must be one of the pre-defined regions" do
       it "creates rosters with a valid region" do
         na_roster = FactoryGirl.create :roster, region: "NA"
         expect(na_roster).to be_persisted
@@ -14,6 +14,31 @@ RSpec.describe Roster, type: :model do
         expect { FactoryGirl.create :roster, region: "Foo" }.to raise_error ActiveRecord::RecordInvalid
       end
     end
+
+    context "#validate_one_roster_per_region" do
+      let(:manager) { FactoryGirl.create :manager }
+
+      it "fails to create the roster when another exists for that region" do
+        success = FactoryGirl.create :roster, region: "NA", manager: manager
+        expect(success).to be_persisted
+        manager.rosters = [success]
+        expect { FactoryGirl.create :roster, region: "NA", manager: manager }.to raise_error ActiveRecord::RecordInvalid
+      end
+
+      it "fails to update the roster when another exists for that region" do
+        success = FactoryGirl.create :roster, region: "NA", manager: manager
+        expect(success).to be_persisted
+        manager.rosters = [success]
+        failure = FactoryGirl.create :roster, region: "EU", manager: manager
+        expect(failure).to be_persisted
+        manager.reload
+        manager.rosters << failure
+        expect { failure.update_attributes!(region: "NA") }.to raise_error ActiveRecord::RecordInvalid
+        failure.reload
+        expect(failure.region).to eq "EU"
+      end
+    end
+
   end
 
   context "#update_including_players" do

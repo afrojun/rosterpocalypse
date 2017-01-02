@@ -2,6 +2,7 @@
   %thead
     %tr
       %th Name
+      %th Region
       %th Score
       - if can? :update, Roster
         %th{:colspan => "2"}
@@ -12,6 +13,7 @@
           %td= link_to roster.name, edit_roster_path(roster)
         - else
           %td= link_to roster.name, roster
+        %td= roster.region
         %td= roster.score
         - if can? :destroy, roster
           %td= link_to 'Destroy', roster, method: :delete, data: { confirm: 'Are you sure?' }

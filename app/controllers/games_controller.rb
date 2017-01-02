@@ -62,6 +62,8 @@ class GamesController < RosterpocalypseController
   end
 
   def bulk_destroy
+    authorize! :destroy, Game
+
     games = Game.where(id: params[:game_ids])
     n_games = games.size
     result = games.all? { |game| game.destroy }

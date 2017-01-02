@@ -2,14 +2,7 @@
 
 = form_for(tournament, html: {class: "form"}) do |f|
   %h1.form-heading= heading
-  - if tournament.errors.any?
-    #error_explanation
-      %h2.form-heading
-        = pluralize(tournament.errors.count, "error")
-        prohibited this tournament from being saved:
-      %ul
-        - tournament.errors.full_messages.each do |message|
-          %li= message
+  = render 'layouts/error_messages', object: tournament
 
   .field.row
     = f.label :name, class: "col-xs-2 col-form-label"

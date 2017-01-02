@@ -19,6 +19,13 @@ class RostersController < RosterpocalypseController
 
   # GET /rosters/1/edit
   def edit
+    @roster_props = {
+      rosterPath: roster_url(@roster),
+      playersPath: players_url,
+      rosterRegion: @roster.region,
+      maxPlayersInRoster: Roster::MAX_PLAYERS,
+      maxRosterCost: Roster::MAX_TOTAL_COST
+    }
   end
 
   # POST /rosters
@@ -28,7 +35,18 @@ class RostersController < RosterpocalypseController
 
     respond_to do |format|
       if @roster.save
-        format.html { redirect_to edit_roster_path(@roster), notice: "Your roster was successfully created, now add some players to it!" }
+        # Enroll the roster in the most recently started Public League for the region that has not yet ended (if any)
+        # This is best-effort and we simply carry on if we don't find a League that matches those criteria
+        tournament = Tournament.where('region = ? AND end_date > ?', @roster.region, Time.now).order(start_date: :desc).first
+        public_league = PublicLeague.where(tournament: tournament).first
+        league_message = ""
+        if public_league.present?
+          logger.info "Adding the Roster '#{@roster.name}' to Public League '#{public_league.name}'"
+          public_league.rosters << @roster
+          league_message = " and added to the '#{public_league.name}' League"
+        end
+
+        format.html { redirect_to edit_roster_path(@roster), notice: "Your roster was successfully created#{league_message}!" }
         format.json { render :show, status: :created, location: @roster }
       else
         format.html { render :new }

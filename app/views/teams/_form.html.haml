@@ -2,14 +2,8 @@
 
 = form_for(team, html: {class: "compact-form"}) do |f|
   %h1.form-heading= heading
-  - if team.errors.any?
-    #error_explanation
-      %h2.form-heading
-        = pluralize(team.errors.count, "error")
-        prohibited this team from being saved:
-      %ul
-        - team.errors.full_messages.each do |message|
-          %li= message
+  = render 'layouts/error_messages', object: team
+
   .field
     = f.label :name, class: "sr-only"
     = f.text_field :name, autofocus: true, required: true, class: "form-control", placeholder: "Team Name"

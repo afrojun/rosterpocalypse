@@ -2,14 +2,7 @@
 
 = form_for(game, html: {class: "compact-form"}) do |f|
   %h1.form-heading= heading
-  - if game.errors.any?
-    #error_explanation
-      %h2.form-heading
-        = pluralize(game.errors.count, "error")
-        prohibited this game from being saved:
-      %ul
-        - game.errors.full_messages.each do |message|
-          %li= message
+  = render 'layouts/error_messages', object: game
 
   .field
     = f.label :map, class: "sr-only"

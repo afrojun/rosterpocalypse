@@ -1,3 +1,3 @@
 = page_title "Manage Roster: #{@roster.name}"
 
-= react_component("RosterPickerContainer", props: {rosterPath: roster_url(@roster), playersPath: players_url}, prerender: false)
+= react_component("RosterPickerContainer", props: @roster_props, prerender: false)

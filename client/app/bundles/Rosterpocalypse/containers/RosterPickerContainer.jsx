@@ -8,7 +8,10 @@ import rp from "request-promise-native";
 class RosterPickerContainer extends React.Component {
   static propTypes = {
     rosterPath: PropTypes.string.isRequired,
-    playersPath: PropTypes.string.isRequired
+    playersPath: PropTypes.string.isRequired,
+    rosterRegion: PropTypes.string.isRequired,
+    maxPlayersInRoster: PropTypes.number.isRequired,
+    maxRosterCost: PropTypes.number.isRequired
   };
 
   constructor(props, _railsContext) {
@@ -58,7 +61,7 @@ class RosterPickerContainer extends React.Component {
   }
 
   addToRoster(playerId) {
-    if(this.state.roster.players.length < RosterPickerContainer.MAX_PLAYERS_IN_ROSTER) {
+    if(this.state.roster.players.length < this.props.maxPlayersInRoster) {
       let player = this.state.players.find(player => {
         return player.id === playerId
       });
@@ -67,7 +70,7 @@ class RosterPickerContainer extends React.Component {
       let newRoster = Object.assign({}, this.state.roster, {players: rosterPlayers});
       this.setState({roster: newRoster});
     } else {
-      this.setState({notification: <span className="text-danger">Error: Rosters may have a maximum of {RosterPickerContainer.MAX_PLAYERS_IN_ROSTER} players</span>});
+      this.setState({notification: <span className="text-danger">Error: Rosters may have a maximum of {this.props.maxPlayersInRoster} players</span>});
     }
   }
 
@@ -88,7 +91,7 @@ class RosterPickerContainer extends React.Component {
   }
 
   fetchPlayers() {
-    return rp(this.props.playersPath + ".json").
+    return rp(this.props.playersPath + ".json?region=" + this.props.rosterRegion).
               then(playersData => {
                 this.setState({players: JSON.parse(playersData)});
               });
@@ -106,7 +109,7 @@ class RosterPickerContainer extends React.Component {
               return cost + player.cost;
             }, 0);
     let className = "";
-    if(total > RosterPickerContainer.MAX_ROSTER_COST) {
+    if(total > this.props.maxRosterCost) {
       className = "text-danger"
     }
     return(<span className={className}>{total}</span>);
@@ -167,12 +170,9 @@ class RosterPickerContainer extends React.Component {
 
     return (
       <div className="form roster-form">
-        <h1 className="form-heading">
-          Editing Roster
-        </h1>
-        <h3 className="form-heading">
+        <h2 className="form-heading">
           {this.state.roster.name} contains {this.state.roster.players.length} players with a total cost of {this.totalCost()}
-        </h3>
+        </h2>
         <PlayersTable
           tableOpts={rosterTableOpts}
           imageClass="fa-minus-square text-danger"
@@ -204,8 +204,5 @@ class RosterPickerContainer extends React.Component {
     );
   }
 }
-
-RosterPickerContainer.MAX_PLAYERS_IN_ROSTER = 5;
-RosterPickerContainer.MAX_ROSTER_COST = 500;
 
 export default RosterPickerContainer;

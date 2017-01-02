@@ -4,7 +4,13 @@ class PlayersController < RosterpocalypseController
   # GET /players
   # GET /players.json
   def index
-    @players = Player.includes(:game_details, :team).order(:slug)
+    region = params[:region]
+    if region && Team::REGIONS.include?(region)
+      region_teams = Team.where(region: region)
+      @players = Player.includes(:game_details, :team).where(team: region_teams).order(:slug)
+    else
+      @players = Player.includes(:game_details, :team).order(:slug)
+    end
   end
 
   # GET /players/1
@@ -67,6 +73,8 @@ class PlayersController < RosterpocalypseController
   end
 
   def merge
+    authorize! :update, Player
+
     message = {}
     players = Player.where(id: params[:player_ids]).to_a
 

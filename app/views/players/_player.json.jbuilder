@@ -1,4 +1,4 @@
-json.extract! player, :id, :name, :role, :country, :region, :cost
+json.extract! player, :id, :name, :role, :country, :cost
 json.url player_url(player)
 
 json.team do

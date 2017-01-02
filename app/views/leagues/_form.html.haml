@@ -2,14 +2,7 @@
 
 = form_for(league, html: {class: "compact-form"}) do |f|
   %h1.form-heading= heading
-  - if league.errors.any?
-    #error_explanation
-      %h2.form-heading
-        = pluralize(league.errors.count, "error")
-        prohibited this league from being saved:
-      %ul
-        - league.errors.full_messages.each do |message|
-          %li= message
+  = render 'layouts/error_messages', object: league
 
   .field
     = f.label :name, class: "sr-only"

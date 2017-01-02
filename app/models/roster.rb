@@ -9,8 +9,21 @@ class Roster < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :region, inclusion: { in: Tournament::REGIONS }
 
+  before_validation :validate_one_roster_per_region
+
   MAX_PLAYERS = 5
   MAX_TOTAL_COST = 500
+
+  def self.find_by_manager_and_region manager, region
+    Roster.where(manager: manager, region: region).first
+  end
+
+  def validate_one_roster_per_region
+    if manager.rosters.map(&:region).include?(region)
+      errors.add(:base, "Managers may only have one roster per region.")
+      throw :abort
+    end
+  end
 
   def update_including_players params
     transaction do
@@ -44,6 +57,7 @@ class Roster < ApplicationRecord
     end
   end
 
+  # Require at least 1 Supprt and 1 Warrior player on all teams
   def validate_player_roles players
     support_present = players.any? { |player| player.role == "Support" }
     warrior_present = players.any? { |player| player.role == "Warrior" }

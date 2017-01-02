@@ -2,6 +2,7 @@
 
 = form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: "compact-form"}) do |f|
   %h1.form-heading Log in
+  = render 'layouts/error_messages', object: resource
 
   = f.label :email, class: "sr-only"
   = f.email_field :email, autofocus: true, required: true, class: "form-control", placeholder: "Email address"

@@ -2,14 +2,7 @@
 
 = form_for(@roster, html: {class: "compact-form"}) do |f|
   %h1.form-heading New Roster
-  - if @roster.errors.any?
-    #error_explanation
-      %h2.form-heading
-        = pluralize(@roster.errors.count, "error")
-        prohibited this @roster from being saved:
-      %ul
-        - @roster.errors.full_messages.each do |message|
-          %li= message
+  = render 'layouts/error_messages', object: @roster
 
   .field
     = f.label :name, class: "sr-only"

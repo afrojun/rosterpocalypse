@@ -17,11 +17,7 @@ Rails.application.routes.draw do
       post "bulk_destroy"
     end
   end
-  resources :teams do
-    collection do
-      post "merge"
-    end
-  end
+  resources :teams
   resources :players do
     collection do
       post "merge"
@@ -29,9 +25,24 @@ Rails.application.routes.draw do
   end
   resources :maps
   resources :rosters
-  resources :leagues
-  resources :private_leagues
-  resources :public_leagues
+  resources :leagues do
+    member do
+      post "join"
+      post "leave"
+    end
+  end
+  resources :private_leagues do
+    member do
+      post "join"
+      post "leave"
+    end
+  end
+  resources :public_leagues do
+    member do
+      post "join"
+      post "leave"
+    end
+  end
   resources :managers, only: [:index, :show]
 
   devise_for :users, class_name: 'FormUser', controllers: { omniauth_callbacks: 'omniauth_callbacks', registrations: 'registrations' }
