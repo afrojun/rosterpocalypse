@@ -4,7 +4,7 @@ class GamesController < RosterpocalypseController
   # GET /games
   # GET /games.json
   def index
-    @games = Game.all.includes(:map, game_details: [:player, :hero, :team])
+    @games = Game.all.includes(:map, :tournament, game_details: [:team])
   end
 
   # GET /games/1
@@ -58,6 +58,24 @@ class GamesController < RosterpocalypseController
     respond_to do |format|
       format.html { redirect_to games_url, notice: 'Game was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def bulk_destroy
+    games = Game.where(id: params[:game_ids])
+    n_games = games.size
+    result = games.all? { |game| game.destroy }
+
+    if result
+      respond_to do |format|
+        format.html { redirect_to games_url, notice: "All #{n_games} games were successfully destroyed." }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to games_url, notice: "Some games failed to be destroyed." }
+        format.json { head :no_content }
+      end
     end
   end
 

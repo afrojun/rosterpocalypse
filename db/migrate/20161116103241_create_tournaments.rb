@@ -5,7 +5,7 @@ class CreateTournaments < ActiveRecord::Migration[5.0]
       t.string :region,       null: false
       t.integer :cycle_hours, null: false
       t.datetime :start_date, null: false
-      t.datetime :end_date
+      t.datetime :end_date,   null: false
       t.string :slug,         null: false
 
       t.timestamps

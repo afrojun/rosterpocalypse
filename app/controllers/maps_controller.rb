@@ -10,7 +10,7 @@ class MapsController < RosterpocalypseController
   # GET /maps/1
   # GET /maps/1.json
   def show
-    @map_games = @map.games.includes(:map, game_details: [:team])
+    @map_games = @map.games.includes(:map, :tournament, game_details: [:team])
   end
 
   # GET /maps/new

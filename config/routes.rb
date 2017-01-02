@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :tournaments
   root 'welcome#index'
   get 'welcome/index'
   get 'welcome', to: 'welcome#index'
@@ -10,12 +9,24 @@ Rails.application.routes.draw do
   get 'credits/index'
   get 'credits', to: 'credits#index'
 
+  resources :tournaments
   resources :heroes
   resources :games do
     resources :details, controller: 'game_details', shallow: true, only: [:new, :create, :edit, :update, :destroy]
+    collection do
+      post "bulk_destroy"
+    end
   end
-  resources :teams
-  resources :players
+  resources :teams do
+    collection do
+      post "merge"
+    end
+  end
+  resources :players do
+    collection do
+      post "merge"
+    end
+  end
   resources :maps
   resources :rosters
   resources :leagues

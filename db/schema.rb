@@ -47,16 +47,18 @@ ActiveRecord::Schema.define(version: 20161230100949) do
   end
 
   create_table "games", force: :cascade do |t|
-    t.integer  "map_id",     null: false
-    t.datetime "start_date", null: false
-    t.integer  "duration_s", null: false
-    t.string   "game_hash",  null: false
-    t.string   "slug",       null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer  "map_id",        null: false
+    t.integer  "tournament_id"
+    t.datetime "start_date",    null: false
+    t.integer  "duration_s",    null: false
+    t.string   "game_hash",     null: false
+    t.string   "slug",          null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
     t.index ["game_hash"], name: "index_games_on_game_hash", unique: true, using: :btree
     t.index ["map_id"], name: "index_games_on_map_id", using: :btree
     t.index ["slug"], name: "index_games_on_slug", unique: true, using: :btree
+    t.index ["tournament_id"], name: "index_games_on_tournament_id", using: :btree
   end
 
   create_table "heroes", force: :cascade do |t|
@@ -162,7 +164,7 @@ ActiveRecord::Schema.define(version: 20161230100949) do
 
   create_table "rosters", force: :cascade do |t|
     t.string   "name",                   null: false
-    t.integer  "manager_id"
+    t.integer  "manager_id",             null: false
     t.integer  "score",      default: 0, null: false
     t.string   "slug",                   null: false
     t.datetime "created_at",             null: false
@@ -228,6 +230,7 @@ ActiveRecord::Schema.define(version: 20161230100949) do
   add_foreign_key "game_details", "players"
   add_foreign_key "game_details", "teams"
   add_foreign_key "games", "maps"
+  add_foreign_key "games", "tournaments"
   add_foreign_key "identities", "users"
   add_foreign_key "leagues", "managers"
   add_foreign_key "leagues", "tournaments"

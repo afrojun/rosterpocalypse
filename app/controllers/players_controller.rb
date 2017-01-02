@@ -10,7 +10,7 @@ class PlayersController < RosterpocalypseController
   # GET /players/1
   # GET /players/1.json
   def show
-    @player_games = @player.games.includes(:map, game_details: [:team])
+    @player_games = @player.games.includes(:map, :tournament, game_details: [:team])
   end
 
   # GET /players/new
@@ -64,6 +64,30 @@ class PlayersController < RosterpocalypseController
         format.json { render json: @player.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def merge
+    message = {}
+    players = Player.where(id: params[:player_ids]).to_a
+
+    if players.size > 1
+      primary = players.shift
+
+      players.each do |player|
+        player_name = player.name
+        primary.merge! player
+
+        message[:notice] = "#{message[:notice]}Merged #{player_name} with #{primary.name}. "
+      end
+    else
+      message[:alert] = "Please choose more than 1 player to merge."
+    end
+
+    respond_to do |format|
+      format.html { redirect_to players_url, message }
+      format.json { render json: message }
+    end
+
   end
 
   private

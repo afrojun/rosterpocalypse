@@ -3,6 +3,7 @@ class Tournament < ApplicationRecord
   friendly_id :name
 
   has_many :leagues
+  has_many :games
 
   validates :name, presence: true, uniqueness: true
 

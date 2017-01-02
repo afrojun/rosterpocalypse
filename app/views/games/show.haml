@@ -1,6 +1,8 @@
 - present(@game) do |game|
   = page_title "#{game.details_by_team.keys.join(" vs. ")}"
   %h1 Game Details
+  - if game.tournament.present?
+    %h2= "Tournament: #{game.tournament.name}"
   %h3 #{game.map.name} game took #{distance_of_time_in_words(game.duration_s, 0, include_seconds: true)} on #{game.start_date}
 
   %table.table.table-sm

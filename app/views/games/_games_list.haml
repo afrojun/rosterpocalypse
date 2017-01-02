@@ -1,9 +1,14 @@
+- show_checkboxes ||= false
+- checkbox_proc ||= Proc.new { |game| check_box_tag "" }
+
 %table.table.table-sm.table-striped
   %thead
     %tr
+      - if show_checkboxes
+        %th= check_box_tag :select_all_checkbox, 1, false
       %th Teams
-      - if show_map
-        %th Map
+      %th Map
+      %th Tournament
       %th Start Date and Time
       %th Duration
       - if can? :update, Game
@@ -12,11 +17,26 @@
     - games.each do |game|
       %tr
         - present game do |g|
+          - if show_checkboxes
+            %td= checkbox_proc.call g
           %td= link_to teams_with_bold_winner(g.teams_by_win), g
-          -if show_map
-            %td= link_to g.map.name, g.map
+          %td= link_to g.map.name, g.map
+          %td
+            - if g.tournament
+              = link_to g.tournament.name, g.tournament
+            - else
+              = "-"
           %td= g.start_date
-          %td= distance_of_time(g.duration_s)
+          %td= g.duration_s.pretty_duration
           - if can? :update, Game
             %td= link_to 'Edit', edit_game_path(g)
             %td= link_to 'Destroy', g, method: :delete, data: { confirm: 'Are you sure?' }
+
+:javascript
+  $(function() {
+    $("#select_all_checkbox").on("click", function() {
+      var state = $("#select_all_checkbox")[0].checked
+      var checkboxes = $('input[type="checkbox"]');
+      checkboxes.prop("checked", state);
+    });
+  });

@@ -31,9 +31,15 @@ class Player < ApplicationRecord
   end
 
   def validate_destroy
-    game_count = game_details.size
+    roster_count = rosters.count
+    game_count = game_details.count
     if game_count > 0
       errors.add(:base, "Unable to delete #{name} since it has #{game_count} associated #{"game".pluralize(game_count)}.")
+      throw :abort
+    end
+
+    if roster_count > 0
+      errors.add(:base, "Unable to delete #{name} since it has #{roster_count} associated #{"roster".pluralize(roster_count)}.")
       throw :abort
     end
   end
@@ -44,6 +50,35 @@ class Player < ApplicationRecord
       alternate_names.first.player
     else
       Player.find_or_create_by name: player_name
+    end
+  end
+
+  # Perform a destructive merge with another player
+  def merge! other_player
+    transaction do
+      player_name = other_player.name
+
+      # Update the team if it is currently Unknown
+      if team.name == "Unknown" && other_player.team.name != "Unknown"
+        update_attribute(:team, other_player.team)
+      end
+
+      # Change all game details for the merged player to point to this player
+      other_player.game_details.each do |detail|
+        detail.update_attribute(:player, self)
+      end
+
+      # Replace the merged player in any existing rosters with this player
+      other_player.rosters.each do |roster|
+        roster.players.delete(other_player)
+        roster.players << self
+      end
+
+      # Destroy the old player
+      other_player.destroy
+
+      # Finally add the merged player's name as a new alternate name for the primary
+      PlayerAlternateName.find_or_create_by(player: self, alternate_name: other_player.name)
     end
   end
 

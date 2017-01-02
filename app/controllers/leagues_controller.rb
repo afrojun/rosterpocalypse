@@ -4,11 +4,11 @@ class LeaguesController < RosterpocalypseController
   # GET /leagues
   # GET /leagues.json
   def index
-    @public_leagues = PublicLeague.all
+    @public_leagues = PublicLeague.all.includes(manager: [:user])
     @private_leagues = if current_user.admin?
-                         PrivateLeague.all
+                         PrivateLeague.all.includes(manager: [:user])
                        else
-                         PrivateLeague.where("manager_id = #{current_user.manager.id}")
+                         PrivateLeague.where("manager_id = #{current_user.manager.id}").includes(manager: [:user])
                        end
   end
 

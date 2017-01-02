@@ -1,27 +1,37 @@
 = page_title "Players"
 
 %h1 Players
-%table.table.table-sm.table-striped
-  %thead
-    %tr
-      %th Name
-      %th Team
-      %th Role
-      %th Games
-      %th Cost
-      - if can? :update, Player
-        %th{:colspan => "2"}
-  %tbody
-    - @players.each do |player|
+= form_tag merge_players_path do
+  %table.table.table-sm.table-striped
+    %thead
       %tr
-        %td= link_to player.name, player
-        %td= player.team.try :name
-        %td= player.role
-        %td= player.game_details.size
-        %td= player.cost
         - if can? :update, Player
-          %td= link_to 'Edit', edit_player_path(player)
-          %td= link_to 'Destroy', player, method: :delete, data: { confirm: 'Are you sure?' }
+          %th
+        %th Name
+        %th Team
+        %th Role
+        %th Games
+        %th Cost
+        - if can? :update, Player
+          %th{:colspan => "2"}
+    %tbody
+      - @players.each do |player|
+        %tr
+          - if can? :update, Player
+            %td= check_box_tag player.id, player.id, false, name: "player_ids[]"
+          %td= link_to player.name, player
+          %td= link_to player.team.name, player.team
+          %td= player.role
+          %td= player.game_details.size
+          %td= player.cost
+          - if can? :update, Player
+            %td= link_to 'Edit', edit_player_path(player)
+            %td= link_to 'Destroy', player, method: :delete, data: { confirm: 'Are you sure?' }
+
+  - if can? :update, Player
+    .actions.form_group
+      = submit_tag 'Merge Selected Players', class: "btn btn-lg btn-primary btn-block"
+
 %br/
 - if can? :create, Player
   = link_to 'New Player', new_player_path

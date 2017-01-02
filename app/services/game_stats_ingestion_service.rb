@@ -27,12 +27,17 @@ class GameStatsIngestionService
               sanitized_player_name = strip_team_name_from_player_name team.name, player_detail["name"]
 
               player = Player.find_or_create_including_alternate_names sanitized_player_name
-              player.update_attribute(:team, team) if player.team.blank?
+
+              if player.team.blank? || (team.name != "Unknown" && player.team.name == "Unknown")
+                player.update_attribute(:team, team)
+              else
+                team = player.team if team.name == "Unknown"
+              end
 
               hero = Hero.find_or_create_by internal_name: player_detail["hero"] do |h|
-                       if heroDetails = Hero::HEROES[player_detail["hero"]]
-                         h.name = heroDetails[:name]
-                         h.classification = heroDetails[:classification]
+                       if hero_details = Hero::HEROES[player_detail["hero"]]
+                         h.name = hero_details[:name]
+                         h.classification = hero_details[:classification]
                        else
                         h.name = player_detail["hero"]
                       end

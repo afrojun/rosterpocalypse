@@ -1,8 +1,6 @@
 = page_title @tournament.name
 
-%p
-  %strong Name:
-  = @tournament.name
+%h1= @tournament.name
 %p
   %strong Region:
   = @tournament.region
@@ -15,6 +13,9 @@
 %p
   %strong End date:
   = @tournament.end_date
+
+%h3 Games
+= render "games/games_list", games: @tournament_games
 
 - if can? :update, @tournament
   = link_to 'Edit', edit_tournament_path(@tournament)
