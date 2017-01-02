@@ -11,7 +11,7 @@ class TeamsController < RosterpocalypseController
   # GET /teams/1.json
   def show
     @players = Player.where(team: @team)
-    @team_games = @team.games.includes(:map, :tournament, game_details: [:team]).uniq
+    @team_games = @team.games.includes(:map, :tournament, game_details: [:team]).distinct
   end
 
   # GET /teams/new

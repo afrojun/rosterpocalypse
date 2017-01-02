@@ -5,7 +5,8 @@ class Tournament < ApplicationRecord
   has_many :leagues
   has_many :games
 
-  validates :name, presence: true, uniqueness: true
-
   REGIONS = Player::REGIONS + ["Global"]
+
+  validates :name, presence: true, uniqueness: true
+  validates :region, inclusion: { in: REGIONS }
 end

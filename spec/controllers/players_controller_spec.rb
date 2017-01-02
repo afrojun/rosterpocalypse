@@ -21,8 +21,6 @@ require 'controllers/shared_admin_user_controller_actions_spec'
 # that an instance is receiving a specific message.
 
 RSpec.describe PlayersController, type: :controller do
-  login_user
-
   # This should return the minimal set of attributes required to create a valid
   # Player. As you add validations to Player, be sure to
   # adjust the attributes here as well.

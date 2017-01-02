@@ -45,9 +45,10 @@ RSpec.describe RostersController, type: :controller do
   let(:valid_session) { {} }
 
   describe "GET #index" do
-    it "assigns all rosters as @rosters" do
+    it "assigns user's rosters as @my_rosters" do
+      roster
       get :index, params: {}, session: valid_session
-      expect(assigns(:rosters)).to eq([roster])
+      expect(assigns(:my_rosters)).to eq([roster])
     end
   end
 
@@ -144,7 +145,6 @@ RSpec.describe RostersController, type: :controller do
 
       it "re-renders the 'edit' template" do
         put :update, params: {id: roster.id, roster: invalid_attributes}, session: valid_session
-        puts flash.inspect
         expect(response).to render_template("edit")
       end
     end
