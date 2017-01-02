@@ -3,5 +3,6 @@ FactoryGirl.define do
 
   factory :team do
     name { generate :team_name }
+    region { Team::REGIONS.sample }
   end
 end

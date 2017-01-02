@@ -145,7 +145,6 @@ ActiveRecord::Schema.define(version: 20161230100949) do
     t.string   "role"
     t.integer  "team_id"
     t.string   "country"
-    t.string   "region"
     t.integer  "cost",       default: 100, null: false
     t.string   "slug",                     null: false
     t.datetime "created_at",               null: false
@@ -165,6 +164,7 @@ ActiveRecord::Schema.define(version: 20161230100949) do
   create_table "rosters", force: :cascade do |t|
     t.string   "name",                   null: false
     t.integer  "manager_id",             null: false
+    t.string   "region",                 null: false
     t.integer  "score",      default: 0, null: false
     t.string   "slug",                   null: false
     t.datetime "created_at",             null: false
@@ -185,6 +185,7 @@ ActiveRecord::Schema.define(version: 20161230100949) do
 
   create_table "teams", force: :cascade do |t|
     t.string   "name",       null: false
+    t.string   "region"
     t.string   "slug",       null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -197,7 +198,7 @@ ActiveRecord::Schema.define(version: 20161230100949) do
     t.string   "region",      null: false
     t.integer  "cycle_hours", null: false
     t.datetime "start_date",  null: false
-    t.datetime "end_date"
+    t.datetime "end_date",    null: false
     t.string   "slug",        null: false
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false

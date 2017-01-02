@@ -26,13 +26,15 @@ RSpec.describe RostersController, type: :controller do
   # adjust the attributes here as well.
   let(:valid_attributes) {
     {
-      name: "AwesomeRoster"
+      name: "AwesomeRoster",
+      region: "EU"
     }
   }
 
   let(:invalid_attributes) {
     {
-      name: nil
+      name: "BadRoster",
+      region: "Foo"
     }
   }
 

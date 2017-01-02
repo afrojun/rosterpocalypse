@@ -3,6 +3,19 @@ require 'rails_helper'
 RSpec.describe Roster, type: :model do
   let(:roster) { FactoryGirl.create :roster }
 
+  context "validations" do
+    context ":region" do
+      it "creates rosters with a valid region" do
+        na_roster = FactoryGirl.create :roster, region: "NA"
+        expect(na_roster).to be_persisted
+      end
+
+      it "fails to create rosters with an invalid region" do
+        expect { FactoryGirl.create :roster, region: "Foo" }.to raise_error ActiveRecord::RecordInvalid
+      end
+    end
+  end
+
   context "#update_including_players" do
     let(:support_player) { FactoryGirl.create :player, role: "Support" }
     let(:warrior_player) { FactoryGirl.create :player, role: "Warrior" }

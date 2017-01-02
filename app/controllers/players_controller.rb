@@ -98,6 +98,6 @@ class PlayersController < RosterpocalypseController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def player_params
-      params.require(:player).permit(:name, :role, :country, :region, :cost, :team_id)
+      params.require(:player).permit(:name, :role, :country, :cost, :team_id)
     end
 end

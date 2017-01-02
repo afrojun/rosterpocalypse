@@ -1,6 +1,6 @@
 = page_title "Manage User"
 
-= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "form" }) do |f|
+= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "compact-form" }) do |f|
   %h1.form-heading Edit #{resource_name.to_s.humanize}
   = render 'layouts/error_messages', object: resource
 
@@ -28,7 +28,7 @@
   .actions
     = f.submit "Update User", class: "btn btn-lg btn-primary btn-block"
 
-= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "form" }) do |f|
+= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "compact-form" }) do |f|
   %h4.form-heading Change password
   = f.hidden_field :username
   = f.hidden_field :email
@@ -48,9 +48,9 @@
   .actions
     = f.submit "Change Password", class: "btn btn-lg btn-primary btn-block"
 
-.container.form
+.container.compact-form
   %h4.form-heading Delete account
 
-  %p Remove this account and all associated rosters.
+  %p Remove this account and all associated rosters and private leagues.
   %p <b>This action is irreversible!</b>
   = button_to "Delete Account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "btn btn-lg btn-danger btn-block"

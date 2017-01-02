@@ -5,7 +5,6 @@ FactoryGirl.define do
     name { generate :player_name }
     role "role"
     country "Country"
-    region { Player::REGIONS.sample }
     team
     cost { rand 50..150 }
   end

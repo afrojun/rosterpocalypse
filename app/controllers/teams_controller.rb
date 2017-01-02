@@ -75,6 +75,6 @@ class TeamsController < RosterpocalypseController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def team_params
-      params.require(:team).permit(:name)
+      params.require(:team).permit(:name, :region)
     end
 end

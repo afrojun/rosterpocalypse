@@ -7,13 +7,14 @@ class Roster < ApplicationRecord
   has_and_belongs_to_many :leagues
 
   validates :name, presence: true, uniqueness: true
+  validates :region, inclusion: { in: Tournament::REGIONS }
 
   MAX_PLAYERS = 5
   MAX_TOTAL_COST = 500
 
   def update_including_players params
     transaction do
-      if update params.slice(:name)
+      if update params.slice(:name, :region)
         if params[:players].present?
           if validate_roster_size params[:players]
             new_players = Player.where(id: params[:players])

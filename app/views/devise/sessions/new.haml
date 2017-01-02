@@ -1,6 +1,6 @@
 = page_title "Log In"
 
-= form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: "form"}) do |f|
+= form_for(resource, as: resource_name, url: session_path(resource_name), html: {class: "compact-form"}) do |f|
   %h1.form-heading Log in
 
   = f.label :email, class: "sr-only"

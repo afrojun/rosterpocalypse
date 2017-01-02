@@ -5,7 +5,6 @@ class CreatePlayers < ActiveRecord::Migration[5.0]
       t.string :role
       t.references :team
       t.string :country
-      t.string :region
       t.integer :cost,    null: false, default: 100
       t.string :slug,     null: false
 

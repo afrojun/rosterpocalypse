@@ -7,7 +7,10 @@ class Team < ApplicationRecord
   has_many :alternate_names, class_name: "TeamAlternateName", dependent: :destroy
   has_many :players
 
+  REGIONS = %w{ CN EU KR NA }
+
   validates :name, presence: true, uniqueness: true
+  validates :region, inclusion: { in: REGIONS + [nil, ""] }
 
   after_create :update_alternate_names
   after_update :update_alternate_names

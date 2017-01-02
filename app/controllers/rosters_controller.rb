@@ -70,7 +70,7 @@ class RostersController < RosterpocalypseController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def roster_params
-    params.require(:roster).permit(:name, players: []).tap do |rp|
+    params.require(:roster).permit(:name, :region, players: []).tap do |rp|
       rp[:manager_id] = current_user.manager.id
     end
   end

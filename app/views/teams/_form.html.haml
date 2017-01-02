@@ -1,6 +1,6 @@
 = page_title heading
 
-= form_for(team, html: {class: "form"}) do |f|
+= form_for(team, html: {class: "compact-form"}) do |f|
   %h1.form-heading= heading
   - if team.errors.any?
     #error_explanation
@@ -13,5 +13,8 @@
   .field
     = f.label :name, class: "sr-only"
     = f.text_field :name, autofocus: true, required: true, class: "form-control", placeholder: "Team Name"
+  .field
+    = f.label :region, class: "sr-only"
+    = f.select :region, Team::REGIONS, {}, required: true, class: "form-control"
   .actions
     = f.submit submit_message, class: "btn btn-lg btn-primary btn-block"

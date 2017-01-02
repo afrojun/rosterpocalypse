@@ -1,4 +1,4 @@
-= form_for(game_detail, as: :detail, url: detail_path(game_detail), html: {class: "form"}) do |f|
+= form_for(game_detail, as: :detail, url: detail_path(game_detail), html: {class: "compact-form"}) do |f|
   - if game_detail.errors.any?
     #error_explanation
       %h2.form-heading

@@ -4,20 +4,20 @@
 @import "rosters";
 @import "games";
 
-.form {
+.compact-form {
   max-width: 330px;
   padding: 15px;
   margin: 0 auto;
 }
-.form .form-heading,
-.form .checkbox {
+.compact-form .form-heading,
+.compact-form .checkbox {
   margin-top: 10px;
   margin-bottom: 10px;
 }
-.form .checkbox {
+.compact-form .checkbox {
   font-weight: normal;
 }
-.form .form-control {
+.compact-form .form-control {
   position: relative;
   height: auto;
   -webkit-box-sizing: border-box;
@@ -25,10 +25,10 @@
   padding: 10px;
   font-size: 16px;
 }
-.form .form-control:focus {
+.compact-form .form-control:focus {
   z-index: 2;
 }
-.form input {
+.compact-form input {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
