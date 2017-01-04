@@ -18,12 +18,12 @@ class Player < ApplicationRecord
   ROLES = %w{ Support Warrior Assassin Flex }
   FLEX_CLASSIFICATIONS = %w{ Specialist Multiclass Flex }
 
-  # This is the maximum and minimum costs that a player can have to
+  # This is the maximum and minimum values that a player can have to
   # ensure that the best players don't become overly expensive and
   # all players have some value
-  MIN_COST = 50
-  MAX_COST = 200
-  INITIAL_COST = 100
+  MIN_VALUE = 50
+  MAX_VALUE = 200
+  INITIAL_VALUE = 100
 
   def update_alternate_names
     PlayerAlternateName.find_or_create_by(player: self, alternate_name: name)
@@ -55,7 +55,8 @@ class Player < ApplicationRecord
   # Perform a destructive merge with another player
   def merge! other_player
     transaction do
-      player_name = other_player.name
+      # Save the alternate names to add them to this player once the other player is destroyed
+      other_player_alternate_names = other_player.alternate_names.map(&:alternate_name)
 
       # Update the team if it is currently Unknown
       if team.name == "Unknown" && other_player.team.name != "Unknown"
@@ -76,22 +77,24 @@ class Player < ApplicationRecord
       # Destroy the old player
       other_player.destroy
 
-      # Finally add the merged player's name as a new alternate name for the primary
-      PlayerAlternateName.find_or_create_by(player: self, alternate_name: other_player.name)
+      # Finally add the merged player's alternate names to the primary
+      other_player_alternate_names.each do |alt_name|
+        PlayerAlternateName.find_or_create_by(player: self, alternate_name: alt_name)
+      end
     end
   end
 
-  def update_cost
-    player_cost = game_details.reduce(INITIAL_COST) do |tracking_cost, details|
-                    tracking_cost + cost_change(details)
+  def update_value
+    player_value = game_details.reduce(INITIAL_VALUE) do |tracking_value, details|
+                    tracking_value + value_change(details)
                   end
 
-    if player_cost <= MAX_COST and player_cost >= MIN_COST
-      update_attribute :cost, player_cost
-    elsif player_cost > MAX_COST
-      update_attribute :cost, MAX_COST
-    elsif player_cost < MIN_COST
-      update_attribute :cost, MIN_COST
+    if player_value <= MAX_VALUE and player_value >= MIN_VALUE
+      update_attribute :value, player_value
+    elsif player_value > MAX_VALUE
+      update_attribute :value, MAX_VALUE
+    elsif player_value < MIN_VALUE
+      update_attribute :value, MIN_VALUE
     end
   end
 
@@ -122,13 +125,13 @@ class Player < ApplicationRecord
     FLEX_CLASSIFICATIONS.include? classification
   end
 
-  # Cost breakdown:
+  # Value breakdown:
   # Kill         = +0.5
   # Assist       = +0.25
   # Win          = +1
   # Loss         = -1
   # 15s Dead     = -0.5
-  def cost_change details
+  def value_change details
     ((details.solo_kills.to_f * 0.5) + (details.assists.to_f * 0.25) + (win_int(details) * 2) - ((details.time_spent_dead.to_f/15) * 0.5)).ceil
   end
 

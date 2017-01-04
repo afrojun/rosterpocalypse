@@ -11,7 +11,7 @@ class RosterPickerContainer extends React.Component {
     playersPath: PropTypes.string.isRequired,
     rosterRegion: PropTypes.string.isRequired,
     maxPlayersInRoster: PropTypes.number.isRequired,
-    maxRosterCost: PropTypes.number.isRequired
+    maxRosterValue: PropTypes.number.isRequired
   };
 
   constructor(props, _railsContext) {
@@ -31,7 +31,7 @@ class RosterPickerContainer extends React.Component {
     this.fetchData = this.fetchData.bind(this);
     this.addToRoster = this.addToRoster.bind(this);
     this.removeFromRoster = this.removeFromRoster.bind(this);
-    this.totalCost = this.totalCost.bind(this);
+    this.totalValue = this.totalValue.bind(this);
     this.submitRoster = this.submitRoster.bind(this);
     this.showRosterActionForAllPlayers = this.showRosterActionForAllPlayers.bind(this);
     this.updateFilter = this.updateFilter.bind(this);
@@ -104,12 +104,12 @@ class RosterPickerContainer extends React.Component {
               });
   }
 
-  totalCost() {
-    let total = this.state.roster.players.reduce((cost, player) => {
-              return cost + player.cost;
+  totalValue() {
+    let total = this.state.roster.players.reduce((value, player) => {
+              return value + player.value;
             }, 0);
     let className = "";
-    if(total > this.props.maxRosterCost) {
+    if(total > this.props.maxRosterValue) {
       className = "text-danger"
     }
     return(<span className={className}>{total}</span>);
@@ -159,7 +159,7 @@ class RosterPickerContainer extends React.Component {
       pageButtonLimit: 5,
       previousPageLabel: "<",
       nextPageLabel: ">",
-      sortable: ["cost"],
+      sortable: ["value"],
       filterBy: this.state.filter
     }
     let rosterTableOpts = {
@@ -171,7 +171,7 @@ class RosterPickerContainer extends React.Component {
     return (
       <div className="form roster-form">
         <h2 className="form-heading">
-          {this.state.roster.name} contains {this.state.roster.players.length} players with a total cost of {this.totalCost()}
+          {this.state.roster.name} contains {this.state.roster.players.length} players with a total value of {this.totalValue()}
         </h2>
         <PlayersTable
           tableOpts={rosterTableOpts}

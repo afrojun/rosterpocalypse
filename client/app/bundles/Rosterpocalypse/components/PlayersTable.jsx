@@ -16,7 +16,7 @@ const PlayersTable = (props) => {
         <Th column="name" className="col-sm-3">Name</Th>
         <Th column="role" className="col-sm-3">Role</Th>
         <Th column="team" className="col-sm-3">Team</Th>
-        <Th column="cost" className="col-sm-2">Cost</Th>
+        <Th column="value" className="col-sm-2">Value</Th>
       </Thead>
       {
         props.players.map(player => (
@@ -40,7 +40,7 @@ const PlayersTable = (props) => {
             <Td column="team" value={player.team && player.team.name} className="col-sm-3">
               <button className="btn btn-link table-filter-link" value={player.team && player.team.name} onClick={props.updateFilter}>{player.team && player.team.name}</button>
             </Td>
-            <Td column="cost" className="col-sm-2">{player.cost}</Td>
+            <Td column="value" className="col-sm-2">{player.value}</Td>
           </Tr>
       ))}
     </Table>

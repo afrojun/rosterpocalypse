@@ -11,7 +11,7 @@
         %th Team
         %th Role
         %th Games
-        %th Cost
+        %th Value
         - if can? :update, Player
           %th{:colspan => "2"}
     %tbody
@@ -23,7 +23,7 @@
           %td= link_to player.team.name, player.team
           %td= player.role
           %td= player.game_details.size
-          %td= player.cost
+          %td= player.value
           - if can? :update, Player
             %td= link_to 'Edit', edit_player_path(player)
             %td= link_to 'Destroy', player, method: :delete, data: { confirm: 'Are you sure?' }

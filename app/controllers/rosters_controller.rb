@@ -24,7 +24,7 @@ class RostersController < RosterpocalypseController
       playersPath: players_url,
       rosterRegion: @roster.region,
       maxPlayersInRoster: Roster::MAX_PLAYERS,
-      maxRosterCost: Roster::MAX_TOTAL_COST
+      maxRosterValue: Roster::MAX_TOTAL_VALUE
     }
   end
 

@@ -32,12 +32,12 @@
         %thead
           %tr
             %th Name
-            %th Cost
+            %th Value
         %tbody
-          - Player.order("cost DESC").limit(5).each do |player|
+          - Player.order("value DESC").limit(5).each do |player|
             %tr
               %td= link_to player.name, player
-              %td= player.cost
+              %td= player.value
       %p
         %a.btn.btn-secondary{href: players_path, role: "button"} View more &raquo;
 

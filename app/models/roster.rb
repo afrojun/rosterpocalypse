@@ -12,16 +12,18 @@ class Roster < ApplicationRecord
   before_validation :validate_one_roster_per_region
 
   MAX_PLAYERS = 5
-  MAX_TOTAL_COST = 500
+  MAX_TOTAL_VALUE = 500
 
   def self.find_by_manager_and_region manager, region
     Roster.where(manager: manager, region: region).first
   end
 
   def validate_one_roster_per_region
-    if manager.rosters.map(&:region).include?(region)
-      errors.add(:base, "Managers may only have one roster per region.")
-      throw :abort
+    if region_changed?
+      if manager.rosters.map(&:region).include?(region)
+        errors.add(:base, "Managers may only have one roster per region.")
+        throw :abort
+      end
     end
   end
 
@@ -31,7 +33,7 @@ class Roster < ApplicationRecord
         if params[:players].present?
           if validate_roster_size params[:players]
             new_players = Player.where(id: params[:players])
-            if validate_player_roles(new_players) && validate_player_cost(new_players)
+            if validate_player_roles(new_players) && validate_player_value(new_players)
               players.clear
               players<<new_players
               return true
@@ -70,12 +72,12 @@ class Roster < ApplicationRecord
     end
   end
 
-  def validate_player_cost players
-    total_cost = players.sum(&:cost)
-    if total_cost < MAX_TOTAL_COST
+  def validate_player_value players
+    total_value = players.sum(&:value)
+    if total_value < MAX_TOTAL_VALUE
       true
     else
-      errors.add(:rosters, "have a maximum total player cost of #{MAX_TOTAL_COST}")
+      errors.add(:rosters, "have a maximum total player value of #{MAX_TOTAL_VALUE}")
       false
     end
   end

@@ -53,25 +53,25 @@ RSpec.describe Player, type: :model do
     end
   end
 
-  context "updating player cost" do
+  context "updating player value" do
     let(:player) { FactoryGirl.create :player }
     let(:game_details1) { FactoryGirl.create :game_detail, player: player, solo_kills: 1, assists: 3, deaths: 2, time_spent_dead: 65, win: true }
     let(:game_details2) { FactoryGirl.create :game_detail, player: player, solo_kills: 2, assists: 6, deaths: 0, time_spent_dead: 0, win: true }
     let(:game_details3) { FactoryGirl.create :game_detail, player: player, solo_kills: 3, assists: 2, deaths: 4, time_spent_dead: 165, win: false }
 
-    context "#cost_change" do
-      it "updates the cost correctly" do
-        expect(player.send :cost_change, game_details1).to eq 2
-        expect(player.send :cost_change, game_details2).to eq 5
-        expect(player.send :cost_change, game_details3).to eq -5
+    context "#value_change" do
+      it "updates the value correctly" do
+        expect(player.send :value_change, game_details1).to eq 2
+        expect(player.send :value_change, game_details2).to eq 5
+        expect(player.send :value_change, game_details3).to eq -5
       end
     end
 
-    context "#update_cost" do
-      it "updates the cost correctly" do
+    context "#update_value" do
+      it "updates the value correctly" do
         init_details = [game_details1, game_details2, game_details3]
-        player.update_cost
-        expect(player.cost).to eq 102
+        player.update_value
+        expect(player.value).to eq 102
       end
     end
   end
