@@ -1,10 +1,10 @@
 class TeamsController < RosterpocalypseController
-  before_action :set_team, only: [:show, :edit, :update, :destroy]
+  before_action :set_team, only: [:show, :edit, :update, :destroy, :toggle_active]
 
   # GET /teams
   # GET /teams.json
   def index
-    @teams = Team.all.includes(:alternate_names)
+    @teams = Team.all.includes(:games, :players).order(active: :desc, region: :asc, name: :asc)
   end
 
   # GET /teams/1
@@ -67,6 +67,42 @@ class TeamsController < RosterpocalypseController
     end
   end
 
+  def merge
+    authorize! :update, Team
+
+    message = {}
+    teams = Team.where(id: params[:team_ids]).to_a
+
+    if teams.size > 1
+      primary = teams.shift
+
+      teams.each do |team|
+        team_name = team.name
+        primary.merge! team
+
+        message[:notice] = "#{message[:notice]}Merged #{team_name} with #{primary.name}. "
+      end
+    else
+      message[:alert] = "Please choose more than 1 team to merge."
+    end
+
+    respond_to do |format|
+      format.html { redirect_to teams_url, message }
+      format.json { render json: message }
+    end
+  end
+
+  def toggle_active
+    authorize! :update, @team
+
+    @team.toggle! :active
+
+    respond_to do |format|
+      format.html { redirect_to teams_url }
+      format.json { head :no_content }
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_team
@@ -75,6 +111,6 @@ class TeamsController < RosterpocalypseController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def team_params
-      params.require(:team).permit(:name, :region)
+      params.require(:team).permit(:name, :region, :active)
     end
 end

@@ -37,4 +37,29 @@ class Team < ApplicationRecord
     end
   end
 
+  def merge! other_team
+    transaction do
+      # Save the alternate names to add them to this team once the other team is destroyed
+      other_team_alternate_names = other_team.alternate_names.map(&:alternate_name)
+
+      # Change all game details for the merged team to point to this team
+      other_team.game_details.each do |detail|
+        detail.update_attribute(:team, self)
+      end
+
+      # Replace the team in any associated Players
+      other_team.players.each do |player|
+        player.update_attribute(:team, self)
+      end
+
+      # Destroy the old team
+      other_team.destroy
+
+      # Finally add the merged team's alternate names to the primary
+      other_team_alternate_names.each do |alt_name|
+        TeamAlternateName.find_or_create_by(team: self, alternate_name: alt_name)
+      end
+    end
+  end
+
 end

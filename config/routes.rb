@@ -11,20 +11,35 @@ Rails.application.routes.draw do
 
   resources :tournaments
   resources :heroes
+  resources :maps
+  resources :rosters
+  resources :managers, only: [:index, :show]
+
   resources :games do
     resources :details, controller: 'game_details', shallow: true, only: [:new, :create, :edit, :update, :destroy]
     collection do
       post "bulk_destroy"
     end
+    member do
+      post "swap_teams"
+    end
   end
-  resources :teams
+
+  resources :teams do
+    collection do
+      post "merge"
+    end
+    member do
+      post "toggle_active"
+    end
+  end
+
   resources :players do
     collection do
       post "merge"
     end
   end
-  resources :maps
-  resources :rosters
+
   resources :leagues do
     member do
       post "join"
@@ -43,7 +58,6 @@ Rails.application.routes.draw do
       post "leave"
     end
   end
-  resources :managers, only: [:index, :show]
 
   devise_for :users, class_name: 'FormUser', controllers: { omniauth_callbacks: 'omniauth_callbacks', registrations: 'registrations' }
 

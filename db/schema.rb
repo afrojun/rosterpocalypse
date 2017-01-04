@@ -145,7 +145,7 @@ ActiveRecord::Schema.define(version: 20161230100949) do
     t.string   "role"
     t.integer  "team_id"
     t.string   "country"
-    t.integer  "cost",       default: 100, null: false
+    t.integer  "value",      default: 100, null: false
     t.string   "slug",                     null: false
     t.datetime "created_at",               null: false
     t.datetime "updated_at",               null: false
@@ -184,11 +184,12 @@ ActiveRecord::Schema.define(version: 20161230100949) do
   end
 
   create_table "teams", force: :cascade do |t|
-    t.string   "name",       null: false
+    t.string   "name",                      null: false
     t.string   "region"
-    t.string   "slug",       null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.boolean  "active",     default: true, null: false
+    t.string   "slug",                      null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
     t.index ["name"], name: "index_teams_on_name", unique: true, using: :btree
     t.index ["slug"], name: "index_teams_on_slug", unique: true, using: :btree
   end

@@ -1,5 +1,5 @@
 class GamesController < RosterpocalypseController
-  before_action :set_game, only: [:show, :edit, :update, :destroy]
+  before_action :set_game, only: [:show, :edit, :update, :destroy, :swap_teams]
 
   # GET /games
   # GET /games.json
@@ -68,15 +68,28 @@ class GamesController < RosterpocalypseController
     n_games = games.size
     result = games.all? { |game| game.destroy }
 
-    if result
-      respond_to do |format|
+    respond_to do |format|
+      if result
         format.html { redirect_to games_url, notice: "All #{n_games} games were successfully destroyed." }
         format.json { head :no_content }
+      else
+        message = "Some games failed to be destroyed."
+        format.html { redirect_to games_url, notice: message }
+        format.json { render json: {error: message}, status: :unprocessable_entity }
       end
-    else
-      respond_to do |format|
-        format.html { redirect_to games_url, notice: "Some games failed to be destroyed." }
-        format.json { head :no_content }
+    end
+  end
+
+  def swap_teams
+    authorize! :update, @game
+
+    respond_to do |format|
+      if @game.swap_teams
+        format.html { redirect_to @game, notice: "Successfully swapped teams." }
+        format.json { render :show, status: :ok, location: @game }
+      else
+        format.html { redirect_to @game, notice: "Failed to swap teams." }
+        format.json { render json: @game.errors, status: :unprocessable_entity }
       end
     end
   end

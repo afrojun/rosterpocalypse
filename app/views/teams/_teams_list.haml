@@ -1,0 +1,26 @@
+%table.table.table-sm.table-striped
+  %thead
+    %tr
+      %th
+      %th Name
+      %th Region
+      %th Players
+      %th Games
+      - if can? :update, Team
+        %th{:colspan => "2"}
+  %tbody
+    - @teams.each do |team|
+      %tr
+        %td
+          = link_to toggle_active_team_path(team), method: :post, data: {remote: true} do
+            - if team.active
+              %i{class: "fa fa-check text-success"}
+            - else
+              %i{class: "fa fa-times text-danger"}
+        %td= link_to team.name, team
+        %td= team.region
+        %td= team.players.size
+        %td= team.games.distinct.size
+        - if can? :update, Team
+          %td= link_to 'Edit', edit_team_path(team)
+          %td= link_to 'Destroy', team, method: :delete, data: { confirm: 'Are you sure?' }

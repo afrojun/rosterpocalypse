@@ -38,6 +38,8 @@
             %td= link_to 'Destroy', detail_path(details), method: :delete, data: { confirm: 'Are you sure?' }
   %br/
   - if can?(:update, Game) && can?(:update, GameDetail)
-    %td= link_to 'Edit', edit_game_path(game)
+    = link_to 'Swap Teams', swap_teams_game_path(game), method: :post
+    |
+    = link_to 'Edit', edit_game_path(game)
     |
 = link_to 'Games', games_path

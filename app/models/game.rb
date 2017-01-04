@@ -14,4 +14,19 @@ class Game < ApplicationRecord
     slug.blank? || game_hash_changed?
   end
 
+  def swap_teams
+    teams = game_details.map(&:team).uniq
+    if teams.size == 2
+      transaction do
+        game_details.each do |detail|
+          new_team = (teams - [detail.team]).first
+          detail.update_attribute(:team, new_team)
+        end
+      end
+    else
+      errors.add(:base, "Only games with exactly 2 teams can be swapped.")
+      false
+    end
+
+  end
 end

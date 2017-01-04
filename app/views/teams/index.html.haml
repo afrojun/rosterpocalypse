@@ -1,23 +1,8 @@
 = page_title "Teams"
 
 %h1 Teams
-%table.table.table-sm.table-striped
-  %thead
-    %tr
-      %th Name
-      %th Region
-      %th Alternate Names
-      - if can? :update, Team
-        %th{:colspan => "2"}
-  %tbody
-    - @teams.each do |team|
-      %tr
-        %td= link_to team.name, team
-        %td= team.region
-        %td= team.alternate_names.map(&:alternate_name).to_sentence(two_words_connector: ", ", last_word_connector: ", ")
-        - if can? :update, Team
-          %td= link_to 'Edit', edit_team_path(team)
-          %td= link_to 'Destroy', team, method: :delete, data: { confirm: 'Are you sure?' }
+= render "teams/teams_list", teams: @teams
+
 %br/
 - if can? :create, Team
   = link_to 'New Team', new_team_path

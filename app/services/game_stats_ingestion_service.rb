@@ -16,15 +16,21 @@ class GameStatsIngestionService
           # detect the name so we can strip it from player names.
           # First, split the player details by team colour so we can look at the players
           # in each team separately
-          player_details_by_team = get_player_details_by_team json["player_details"]
-          team_name_prefix_by_team = get_team_name_prefix_by_team player_details_by_team
+          player_details_by_team_colour = get_player_details_by_team_colour json["player_details"]
+          team_name_prefix_by_colour = get_team_name_prefix_by_team_colour player_details_by_team_colour
+          team_names_by_colour = get_team_names_by_team_colour_from_filename json["filename"]
 
-          player_details_by_team.each do |team_colour, player_details|
-            team_name = team_name_prefix_by_team[team_colour].present? ? team_name_prefix_by_team[team_colour] : "Unknown"
+          player_details_by_team_colour.each do |team_colour, player_details|
+            team_name = if team_names_by_colour[team_colour].present?
+                          team_names_by_colour[team_colour]
+                        else
+                          team_name_prefix_by_colour[team_colour].present? ? team_name_prefix_by_colour[team_colour] : "Unknown"
+                        end
+
             team = Team.find_or_create_including_alternate_names team_name
 
             player_details.each do |player_detail|
-              sanitized_player_name = strip_team_name_from_player_name team.name, player_detail["name"]
+              sanitized_player_name = strip_team_name_prefix_from_player_name team_name_prefix_by_colour[team_colour], player_detail["name"]
 
               player = Player.find_or_create_including_alternate_names sanitized_player_name
 
@@ -64,7 +70,7 @@ class GameStatsIngestionService
 
     protected
 
-    def get_team_name_prefix_by_team player_details_by_team
+    def get_team_name_prefix_by_team_colour player_details_by_team
       Hash.new.tap do |team_name_prefix_by_team|
         player_details_by_team.each do |team, player_details|
           player_names = player_details.map { |player_detail| player_detail["name"] }
@@ -74,7 +80,27 @@ class GameStatsIngestionService
       end
     end
 
-    def get_player_details_by_team player_details
+    def get_team_names_by_team_colour_from_filename filename
+      basename = File.basename filename
+      result = basename.match /^\d\d\.\d\d\.\d\d_([\w-]+)_vs_([\w-]+)_GAME_\d_at_(\w+)\.StormReplay$/
+      if result && result.size == 4
+        # FIXME: We are completely guessing the team colours here!
+        # In the interests of time, this is a tradeoff I'm willing to make in favour
+        # of getting better team names
+        _, red_team, blue_team, tournament = result.to_a
+        {
+          "red" => red_team.gsub("_", " "),
+          "blue" => blue_team.gsub("_", " ")
+        }
+      else
+        {
+          "red" => "",
+          "blue" => ""
+        }
+      end
+    end
+
+    def get_player_details_by_team_colour player_details
       Hash.new.tap do |player_details_by_team|
         player_details.each do |_, player_detail|
           if player_names = player_details_by_team[player_detail["team"]]
@@ -98,9 +124,9 @@ class GameStatsIngestionService
       return first_name
     end
 
-    def strip_team_name_from_player_name team_name, player_name
+    def strip_team_name_prefix_from_player_name team_name_prefix, player_name
       player_name.dup.tap do |name|
-        name.slice!(team_name)
+        name.slice!(team_name_prefix) if team_name_prefix.present?
       end
     end
 

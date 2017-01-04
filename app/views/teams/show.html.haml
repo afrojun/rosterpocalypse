@@ -1,6 +1,13 @@
 = page_title @team.name
 
 %h1= @team.name
+%p
+  %strong Region:
+  = @team.region
+%p
+  %strong Active:
+  = @team.active
+
 
 %h3 Players
 %ul
