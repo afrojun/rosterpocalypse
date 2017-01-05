@@ -91,7 +91,7 @@ class RosterPickerContainer extends React.Component {
   }
 
   fetchPlayers() {
-    return rp(this.props.playersPath + ".json?region=" + this.props.rosterRegion).
+    return rp(this.props.playersPath + ".json?active=true&region=" + this.props.rosterRegion).
               then(playersData => {
                 this.setState({players: JSON.parse(playersData)});
               });

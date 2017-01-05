@@ -3,7 +3,7 @@ class CreateTeams < ActiveRecord::Migration[5.0]
     create_table :teams do |t|
       t.string :name,     null: false
       t.string :region
-      t.boolean :active,  null: false, default: true
+      t.boolean :active,  null: false, default: false
       t.string :slug,     null: false
 
       t.timestamps

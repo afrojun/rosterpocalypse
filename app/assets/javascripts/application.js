@@ -20,7 +20,7 @@
 //= require bootstrap-datetimepicker
 //= require_tree .
 
-
+// Javascript for the datetimepicker widget
 $(function () {
     var pickerPrefs = {
       format: "Y-MM-DD HH:mm:ss",

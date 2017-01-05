@@ -1,7 +1,7 @@
 desc "This task is called by the Heroku scheduler add-on"
-task :update_player_costs => :environment do
-  puts "Updating player costs..."
-  Player.all.each { |player| player.update_cost }
+task :update_player_values => :environment do
+  puts "Updating player values..."
+  Player.all.each { |player| player.update_value }
   puts "done."
 end
 

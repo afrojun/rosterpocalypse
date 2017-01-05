@@ -1,6 +1,14 @@
-= page_title "Players"
+= page_title "Players : #{@teams_filter[:region] || "Global"} : #{@teams_filter[:active] ? "Active" : "All"}"
 
 %h1 Players
+%span
+  - if @teams_filter[:active]
+    = link_to "Show All Players", players_path(region: @teams_filter[:region]), class: "btn btn-info"
+  - else
+    = link_to "Show Active Players", players_path(active: true, region: @teams_filter[:region]), class: "btn btn-info"
+%span.float-xs-right
+  = select_tag "Select Region", options_for_select(Tournament::REGIONS, @teams_filter[:region] || "Global"), class: "form-control", id: "players-region-select"
+
 = form_tag merge_players_path do
   %table.table.table-sm.table-striped
     %thead
@@ -25,13 +33,34 @@
           %td= player.game_details.size
           %td= player.value
           - if can? :update, Player
-            %td= link_to 'Edit', edit_player_path(player)
-            %td= link_to 'Destroy', player, method: :delete, data: { confirm: 'Are you sure?' }
+            %td= link_to "Edit", edit_player_path(player)
+            %td= link_to "Destroy", player, method: :delete, data: { confirm: "Are you sure?" }
 
   - if can? :update, Player
     .actions.form_group
-      = submit_tag 'Merge Selected Players', class: "btn btn-lg btn-primary btn-block"
+      = submit_tag "Merge Selected Players", class: "btn btn-lg btn-primary btn-block"
 
 %br/
 - if can? :create, Player
-  = link_to 'New Player', new_player_path
+  = link_to "New Player", new_player_path
+
+:javascript
+  $(function() {
+    var currentRegion = $("#players-region-select").val();
+    $("#players-region-select").on("change", function() {
+      var newRegion = $("#players-region-select").val();
+      var playersPath = $("#players-region-select")[0].baseURI;
+
+      if(playersPath.includes("?")) {
+        if(playersPath.includes("region")) {
+          window.location.href = playersPath.replace(currentRegion, newRegion);
+        }
+        else {
+          window.location.href = playersPath + "&region=" + newRegion;
+        }
+      }
+      else {
+        window.location.href = playersPath + "?region=" + newRegion;
+      }
+    });
+  })

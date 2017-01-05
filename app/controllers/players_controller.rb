@@ -5,12 +5,14 @@ class PlayersController < RosterpocalypseController
   # GET /players.json
   def index
     region = params[:region]
-    if region && Team::REGIONS.include?(region)
-      region_teams = Team.where(region: region)
-      @players = Player.includes(:game_details, :team).where(team: region_teams).order(:slug)
-    else
-      @players = Player.includes(:game_details, :team).order(:slug)
-    end
+    active = params[:active]
+
+    @teams_filter = {}
+    @teams_filter[:region] = region if region && Team::REGIONS.include?(region)
+    @teams_filter[:active] = (active == "true") if active && ["true", "false"].include?(active)
+
+    region_teams = Team.where(@teams_filter)
+    @players = Player.includes(:game_details, :team).where(team: region_teams).order(:slug)
   end
 
   # GET /players/1
@@ -79,14 +81,20 @@ class PlayersController < RosterpocalypseController
     players = Player.where(id: params[:player_ids]).to_a
 
     if players.size > 1
+      player_names = []
+
+      # We choose the primary player to be the one with the most recent game
+      players.sort_by! do |player|
+        player.games.order(start_date: :desc).first
+      end
       primary = players.shift
 
       players.each do |player|
         player_name = player.name
         primary.merge! player
-
-        message[:notice] = "#{message[:notice]}Merged #{player_name} with #{primary.name}. "
+        player_names << player_name
       end
+      message[:notice] = "Merge successful! Merged #{player_names.to_sentence} with #{primary.name}."
     else
       message[:alert] = "Please choose more than 1 player to merge."
     end
