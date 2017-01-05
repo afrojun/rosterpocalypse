@@ -3,6 +3,7 @@ FactoryGirl.define do
 
   factory :game do
     map
+    tournament
     start_date { Time.now.utc }
     duration_s { rand 300..1500 }
     game_hash { generate :game_hash }

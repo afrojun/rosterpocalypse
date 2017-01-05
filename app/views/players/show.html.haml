@@ -6,7 +6,7 @@
     = p.role
   %p
     %strong Team:
-    = link_to p.team.name, p.team
+    = p.team.present? ? link_to(p.team.name, p.team) : ""
   %p
     %strong Country:
     = p.country

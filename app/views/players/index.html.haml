@@ -20,7 +20,7 @@
           - if can? :update, Player
             %td= check_box_tag player.id, player.id, false, name: "player_ids[]"
           %td= link_to player.name, player
-          %td= link_to player.team.name, player.team
+          %td= player.team.present? ? link_to(player.team.name, player.team) : ""
           %td= player.role
           %td= player.game_details.size
           %td= player.value

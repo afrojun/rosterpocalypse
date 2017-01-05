@@ -21,10 +21,14 @@ class Team < ApplicationRecord
   end
 
   def validate_destroy
-    game_count = game_details.size
+    game_count = games.distinct.size
     if game_count > 0
       errors.add(:base, "Unable to delete #{name} since it has #{game_count} associated #{"game".pluralize(game_count)}.")
       throw :abort
+    else
+      players.each do |player|
+        player.update_attribute(:team, nil)
+      end
     end
   end
 

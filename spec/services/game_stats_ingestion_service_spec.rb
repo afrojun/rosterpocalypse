@@ -160,7 +160,9 @@ describe GameStatsIngestionService do
 
   context "#get_team_names_by_team_colour_from_filename" do
     it "extracts the team names from the filename" do
-      team_names_by_colour = GameStatsIngestionService.send :get_team_names_by_team_colour_from_filename, game_stats_json["filename"]
+      details = GameStatsIngestionService.send :get_player_details_by_team_colour, game_stats_json["player_details"]
+      prefixes = GameStatsIngestionService.send :get_team_name_prefix_by_team_colour, details
+      team_names_by_colour = GameStatsIngestionService.send :get_team_names_by_team_colour_from_filename, game_stats_json["filename"], prefixes, details
       expect(team_names_by_colour).to eq({"red" => "MVP BLACK", "blue" => "Dignitas"})
     end
   end
@@ -171,6 +173,72 @@ describe GameStatsIngestionService do
       expect(details.keys).to eq ["red", "blue"]
       expect(details["red"].length).to eq 5
       expect(details["blue"].length).to eq 5
+    end
+  end
+
+  context "#match_team_name?" do
+    it "calls #fuzzy_match_team_name if an abbreviation is provided" do
+      expect(GameStatsIngestionService).not_to receive(:players_in_team?)
+      expect(GameStatsIngestionService.send :match_team_name?, "Dignitas", "DIG", {}).to eq true
+    end
+
+    it "calls #players_in_team? if no abbreviation is provided" do
+      expect(GameStatsIngestionService).to receive(:players_in_team?).and_return true
+      GameStatsIngestionService.send :match_team_name?, "Dignitas", "", {}
+    end
+  end
+
+  context "#fuzzy_match_team_name" do
+    it "matches abbreviations with full names" do
+      expect(GameStatsIngestionService.send :fuzzy_match_team_name, "Dignitas", "DIG").to eq "dig"
+    end
+
+    it "returns an empty string when there is no match" do
+      expect(GameStatsIngestionService.send :fuzzy_match_team_name, "Naventic", "DIG").to eq ""
+    end
+
+    it "returns an empty string when the abbreviation is empty" do
+      expect(GameStatsIngestionService.send :fuzzy_match_team_name, "Dignitas", "").to eq ""
+    end
+
+    it "handles team names starting with 'Team'" do
+      expect(GameStatsIngestionService.send :fuzzy_match_team_name, "Team Dignitas", "DIG").to eq "dig"
+      expect(GameStatsIngestionService.send :fuzzy_match_team_name, "Team Naventic", "NAV").to eq "nav"
+    end
+
+    it "handles abbreviations using initials" do
+      expect(GameStatsIngestionService.send :fuzzy_match_team_name, "Team No Limit", "TNL").to eq "team no l"
+      expect(GameStatsIngestionService.send :fuzzy_match_team_name, "Please Buff Arthas", "PBA").to eq "please buff artha"
+    end
+
+    it "only matches from the start of the name, unless the first word is 'team'" do
+      expect(GameStatsIngestionService.send :fuzzy_match_team_name, "Burning Rage", "BR").to eq "burning r"
+      expect(GameStatsIngestionService.send :fuzzy_match_team_name, "Reborn", "BR").to eq ""
+    end
+  end
+
+  context "#players_in_team?" do
+    let(:player1) { FactoryGirl.create :player, name: game_stats_json["player_details"]["5"]["name"] }
+    let(:player2) { FactoryGirl.create :player, name: game_stats_json["player_details"]["6"]["name"] }
+    let(:player3) { FactoryGirl.create :player, name: game_stats_json["player_details"]["7"]["name"] }
+    let(:team) { FactoryGirl.create :team, name: "Test Team", players: [player1, player2, player3] }
+
+    it "returns true if there is a match" do
+      team
+      details = GameStatsIngestionService.send :get_player_details_by_team_colour, game_stats_json["player_details"]
+      expect(GameStatsIngestionService.send :players_in_team?, "Test Team", details["red"]).to eq true
+    end
+
+    it "returns false if no match is found" do
+      team
+      details = GameStatsIngestionService.send :get_player_details_by_team_colour, game_stats_json["player_details"]
+      expect(GameStatsIngestionService.send :players_in_team?, "Test Team", details["blue"]).to eq false
+    end
+
+    it "returns false if the team is not found" do
+      team
+      details = GameStatsIngestionService.send :get_player_details_by_team_colour, game_stats_json["player_details"]
+      expect(GameStatsIngestionService.send :players_in_team?, "Non-existent Test", details["red"]).to eq false
     end
   end
 
