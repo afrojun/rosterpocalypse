@@ -85,9 +85,11 @@ class Player < ApplicationRecord
   end
 
   def update_value
-    player_value = game_details.reduce(INITIAL_VALUE) do |tracking_value, details|
+    player_value = game_details.includes(:game).reduce(INITIAL_VALUE) do |tracking_value, details|
                     tracking_value + value_change(details)
                   end
+
+    player_value = player_value + (game_details.size.to_f * 0.1) # confidence factor
 
     if player_value <= MAX_VALUE and player_value >= MIN_VALUE
       update_attribute :value, player_value
@@ -126,13 +128,23 @@ class Player < ApplicationRecord
   end
 
   # Value breakdown:
-  # Kill         = +0.5
-  # Assist       = +0.25
-  # Win          = +1
-  # Loss         = -1
-  # 15s Dead     = -0.5
+  # Kill         = +0.1
+  # Assist       = +0.05
+  # Win          = +0.5
+  # Loss         = -0.5
+  # 15s Dead     = -0.05
+  # scaling factor = +/-0.05 * diff in ave team value
   def value_change details
-    ((details.solo_kills.to_f * 0.5) + (details.assists.to_f * 0.25) + (win_int(details) * 2) - ((details.time_spent_dead.to_f/15) * 0.5)).ceil
+    game = details.game
+    opposing_players = game.game_details.includes(:player).where('team_id != ?', details.team_id).map(&:player)
+    ave_opponent_value = opposing_players.sum(&:value).to_f/opposing_players.size.to_f
+
+    team_players = game.game_details.includes(:player).where('team_id = ?', details.team_id).map(&:player)
+    ave_team_value = team_players.sum(&:value).to_f/team_players.size.to_f
+
+    # This scales the win multiplier based on the relative strength of the two teams
+    scaling_factor = (ave_opponent_value - ave_team_value).to_f * win_int(details).to_f * 0.05
+    ((details.solo_kills.to_f * 0.1) + (details.assists.to_f * 0.05) + (win_int(details).to_f * (0.5 + scaling_factor)) - ((details.time_spent_dead.to_f/15) * 0.05)).floor
   end
 
   def win_int details

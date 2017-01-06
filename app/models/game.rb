@@ -14,8 +14,11 @@ class Game < ApplicationRecord
     slug.blank? || game_hash_changed?
   end
 
+  def teams
+    @teams ||= game_details.map(&:team).uniq
+  end
+
   def swap_teams
-    teams = game_details.map(&:team).uniq
     if teams.size == 2
       transaction do
         game_details.each do |detail|
