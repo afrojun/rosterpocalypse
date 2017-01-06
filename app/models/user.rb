@@ -13,6 +13,7 @@ class User < ApplicationRecord
               case_sensitive: false
             }
   validates_format_of :username, with: /^[a-zA-Z0-9_\.]*$/, multiline: true
+  validates_length_of :username, minimum: 3, maximum: 30
 
   after_create :create_manager
   before_update :update_manager
