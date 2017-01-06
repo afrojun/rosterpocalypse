@@ -52,12 +52,14 @@ class Hero < ApplicationRecord
     "Nova" => { name: "Nova", classification: "Assassin" },
     "Ragnaros" => { name: "Ragnaros", classification: "Assassin" },
     "Raynor" => { name: "Raynor", classification: "Assassin" },
-    "Butcher" => { name: "Butcher", classification: "Assassin" },
+    "Samuro" => { name: "Samuro", classification: "Assassin" },
+    "Butcher" => { name: "The Butcher", classification: "Assassin" },
     "Thrall" => { name: "Thrall", classification: "Assassin" },
     "Tracer" => { name: "Tracer", classification: "Assassin" },
     "Tychus" => { name: "Tychus", classification: "Assassin" },
     "Wizard" => { name: "Li-Ming", classification: "Assassin" },
     "Zeratul" => { name: "Zeratul", classification: "Assassin" },
+    "Zuljin" => { name: "Zul'jin", classification: "Assassin" },
 
     # Support
     "Auriel" => { name: "Auriel", classification: "Support" },

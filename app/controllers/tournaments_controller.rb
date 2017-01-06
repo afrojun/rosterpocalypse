@@ -4,13 +4,13 @@ class TournamentsController < RosterpocalypseController
   # GET /tournaments
   # GET /tournaments.json
   def index
-    @tournaments = Tournament.all
+    @tournaments = Tournament.all.includes(:games).order(start_date: :desc)
   end
 
   # GET /tournaments/1
   # GET /tournaments/1.json
   def show
-    @tournament_games = @tournament.games.includes(:map, :tournament, game_details: [:team])
+    @tournament_games = @tournament.games.includes(:map, :tournament, game_details: [:team]).order(start_date: :desc).page params[:page]
   end
 
   # GET /tournaments/new

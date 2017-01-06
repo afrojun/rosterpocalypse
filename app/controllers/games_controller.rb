@@ -4,7 +4,7 @@ class GamesController < RosterpocalypseController
   # GET /games
   # GET /games.json
   def index
-    @games = Game.all.includes(:map, :tournament, game_details: [:team])
+    @games = Game.includes(:map, :tournament, game_details: [:team]).order(start_date: :desc).page params[:page]
   end
 
   # GET /games/1

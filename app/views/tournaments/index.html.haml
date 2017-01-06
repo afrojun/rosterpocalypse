@@ -6,10 +6,10 @@
     %tr
       %th Name
       %th Region
+      %th Games
       %th Cycle hours
       %th Start date
       %th End date
-      %th Slug
       - if can? :update, Tournament
         %th{:colspan => "2"}
   %tbody
@@ -17,6 +17,7 @@
       %tr
         %td= link_to tournament.name, tournament
         %td= tournament.region
+        %td= tournament.games.size
         %td= tournament.cycle_hours
         %td= tournament.start_date
         %td= tournament.end_date

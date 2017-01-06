@@ -10,6 +10,9 @@
   = select_tag "Select Region", options_for_select(Tournament::REGIONS, @teams_filter[:region] || "Global"), class: "form-control", id: "players-region-select"
 
 = form_tag merge_players_path do
+  = hidden_field_tag "region", @teams_filter[:region]
+  = hidden_field_tag "active", @teams_filter[:active]
+
   %table.table.table-sm.table-striped
     %thead
       %tr

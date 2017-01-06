@@ -5,7 +5,7 @@ class GameStatsIngestionService
   class << self
 
     def populate_from_json json
-      if json
+      if json && json["unique_id"] && Game.where(game_hash: json["unique_id"]).blank?
         ActiveRecord::Base.transaction do
           map = Map.find_or_create_by name: json["map_name"]
 
@@ -96,7 +96,7 @@ class GameStatsIngestionService
           end
         end
       else
-        Rails.logger.warn "No json input provided!"
+        Rails.logger.warn "No json input provided, or this game has already been ingested."
       end
     end
 
@@ -119,9 +119,9 @@ class GameStatsIngestionService
         tournament_name = result.to_a.last.gsub("_", " ")
         regions = {
           "CN" => ["China", "Gold Series"],
-          "EU" => ["Europe"],
+          "EU" => ["Europe", "Valencia", "Tours", "ZOTAC"],
           "KR" => ["Korea", "Super League"],
-          "NA" => ["North America"],
+          "NA" => ["North America", "Austin", "Bloodlust"],
         }
         region = regions.detect(lambda {["Global"]}) do |region, keywords|
                    tournament_name.include?(region) || keywords.any? { |keyword| tournament_name.include?(keyword) }

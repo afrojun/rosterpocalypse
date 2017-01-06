@@ -1,24 +1,18 @@
 class PlayersController < RosterpocalypseController
   before_action :set_player, only: [:show, :edit, :update, :destroy]
+  before_action :set_team_filter, only: [:index, :merge]
 
   # GET /players
   # GET /players.json
   def index
-    region = params[:region]
-    active = params[:active]
-
-    @teams_filter = {}
-    @teams_filter[:region] = region if region && Team::REGIONS.include?(region)
-    @teams_filter[:active] = (active == "true") if active && ["true", "false"].include?(active)
-
-    region_teams = Team.where(@teams_filter)
+    region_teams = Team.where @teams_filter
     @players = Player.includes(:game_details, :team).where(team: region_teams).order(:slug)
   end
 
   # GET /players/1
   # GET /players/1.json
   def show
-    @player_games = @player.games.includes(:map, :tournament, game_details: [:team])
+    @player_games = @player.games.includes(:map, :tournament, game_details: [:team]).order(start_date: :desc).page params[:page]
   end
 
   # GET /players/new
@@ -100,7 +94,7 @@ class PlayersController < RosterpocalypseController
     end
 
     respond_to do |format|
-      format.html { redirect_to players_url, message }
+      format.html { redirect_to players_url(region: @teams_filter[:region], active: @teams_filter[:active]), message }
       format.json { render json: message }
     end
 
@@ -110,6 +104,15 @@ class PlayersController < RosterpocalypseController
     # Use callbacks to share common setup or constraints between actions.
     def set_player
       @player = Player.find(params[:id])
+    end
+
+    def set_team_filter
+      region = params[:region]
+      active = params[:active]
+
+      @teams_filter = {}
+      @teams_filter[:region] = region if region && Team::REGIONS.include?(region)
+      @teams_filter[:active] = (active == "true") if active && ["true", "false"].include?(active)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

@@ -20,6 +20,9 @@ gem 'coffee-rails', '~> 4.2'
 # https://github.com/josevalim/rails-footnotes
 gem 'rails-footnotes', '~> 4.0'
 
+# Kaminari for pagination
+gem 'kaminari'
+
 # Use Haml for cleaner view templates
 gem 'haml'
 gem 'html2haml'

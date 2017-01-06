@@ -15,7 +15,7 @@
         %tr
           %td= link_to m.name, map
           %td= m.map_stats[:n_games]
-          %td= distance_of_time_in_words m.map_stats[:ave_game_duration]
+          %td= m.map_stats[:ave_game_duration].pretty_duration
           - if can? :update, Map
             %td= link_to 'Edit', edit_map_path(map)
             %td= link_to 'Destroy', map, method: :delete, data: { confirm: 'Are you sure?' }
