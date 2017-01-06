@@ -126,6 +126,13 @@ class GameStatsIngestionService
         region = regions.detect(lambda {["Global"]}) do |region, keywords|
                    tournament_name.include?(region) || keywords.any? { |keyword| tournament_name.include?(keyword) }
                  end.first
+
+        # Sometimes the tournament name has some extra characters at the end of it, try to remove them if we can
+        unless Tournament.where(name: tournament_name).any?
+          alternate_name = tournament_name.split(" ").tap{|t| t.pop}.join(" ")
+          tournament_name = alternate_name if Tournament.where(name: alternate_name).any?
+        end
+
         [tournament_name, region]
       else
         ["", ""]

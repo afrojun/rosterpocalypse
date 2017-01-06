@@ -21,12 +21,13 @@ class Player < ApplicationRecord
   # This is the maximum and minimum values that a player can have to
   # ensure that the best players don't become overly expensive and
   # all players have some value
-  MIN_VALUE = 50
-  MAX_VALUE = 200
-  INITIAL_VALUE = 100
+  MIN_VALUE = 50.0
+  MAX_VALUE = 200.0
+  INITIAL_VALUE = 100.0
 
   def update_alternate_names
     PlayerAlternateName.find_or_create_by(player: self, alternate_name: name)
+    PlayerAlternateName.find_or_create_by(player: self, alternate_name: name.downcase)
   end
 
   def validate_destroy
@@ -44,7 +45,7 @@ class Player < ApplicationRecord
   end
 
   def self.find_or_create_including_alternate_names player_name
-    alternate_names = PlayerAlternateName.where alternate_name: player_name
+    alternate_names = PlayerAlternateName.where alternate_name: player_name.downcase
     if alternate_names.any?
       alternate_names.first.player
     else
@@ -89,7 +90,7 @@ class Player < ApplicationRecord
                     tracking_value + value_change(details)
                   end
 
-    player_value = player_value + (game_details.size.to_f * 0.1) # confidence factor
+    player_value = player_value + (game_details.size.to_f * 0.01) # confidence factor
 
     if player_value <= MAX_VALUE and player_value >= MIN_VALUE
       update_attribute :value, player_value
@@ -137,14 +138,18 @@ class Player < ApplicationRecord
   def value_change details
     game = details.game
     opposing_players = game.game_details.includes(:player).where('team_id != ?', details.team_id).map(&:player)
-    ave_opponent_value = opposing_players.sum(&:value).to_f/opposing_players.size.to_f
+    ave_opponent_value = opposing_players.sum(&:value)/opposing_players.size.to_f
 
     team_players = game.game_details.includes(:player).where('team_id = ?', details.team_id).map(&:player)
-    ave_team_value = team_players.sum(&:value).to_f/team_players.size.to_f
+    ave_team_value = team_players.sum(&:value)/team_players.size.to_f
 
     # This scales the win multiplier based on the relative strength of the two teams
-    scaling_factor = (ave_opponent_value - ave_team_value).to_f * win_int(details).to_f * 0.05
-    ((details.solo_kills.to_f * 0.1) + (details.assists.to_f * 0.05) + (win_int(details).to_f * (0.5 + scaling_factor)) - ((details.time_spent_dead.to_f/15) * 0.05)).floor
+    scaling_factor_string = "((#{ave_opponent_value} - #{ave_team_value}) * #{win_int(details).to_f} * 0.05"
+    Rails.logger.debug "scaling_factor calculation: #{scaling_factor_string}"
+    scaling_factor = (ave_opponent_value - ave_team_value) * win_int(details).to_f * 0.05
+    calculation_string = "((#{details.solo_kills.to_f} * 0.1) + (#{details.assists.to_f} * 0.05) + (#{win_int(details).to_f} * (0.5 + #{scaling_factor})) - ((#{details.time_spent_dead.to_f}/15) * 0.05)).round(2)"
+    Rails.logger.debug "value_change calculation: #{calculation_string}"
+    ((details.solo_kills.to_f * 0.1) + (details.assists.to_f * 0.05) + (win_int(details).to_f * (0.5 + scaling_factor)) - ((details.time_spent_dead.to_f/15) * 0.05)).round(2)
   end
 
   def win_int details

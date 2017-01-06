@@ -54,24 +54,42 @@ RSpec.describe Player, type: :model do
   end
 
   context "updating player value" do
-    let(:player) { FactoryGirl.create :player }
-    let(:game_details1) { FactoryGirl.create :game_detail, player: player, solo_kills: 1, assists: 3, deaths: 2, time_spent_dead: 65, win: true }
-    let(:game_details2) { FactoryGirl.create :game_detail, player: player, solo_kills: 2, assists: 6, deaths: 0, time_spent_dead: 0, win: true }
-    let(:game_details3) { FactoryGirl.create :game_detail, player: player, solo_kills: 3, assists: 2, deaths: 4, time_spent_dead: 165, win: false }
+    let(:hero1) { FactoryGirl.create :hero }
+    let(:hero2) { FactoryGirl.create :hero }
+    let(:team1) { FactoryGirl.create :team }
+    let(:team2) { FactoryGirl.create :team }
+    let(:player1) { FactoryGirl.create :player, team: team1, value: 100 }
+    let(:player2) { FactoryGirl.create :player, team: team2, value: 100 }
+    let(:game1) { FactoryGirl.create :game }
+    let(:game_details1) { FactoryGirl.create :game_detail, game: game1, player: player1, team: team1, hero: hero1, solo_kills: 1, assists: 3, deaths: 2, time_spent_dead: 65, win: true }
+    let(:game_details2) { FactoryGirl.create :game_detail, game: game1, player: player2, team: team2, hero: hero2, solo_kills: 3, assists: 2, deaths: 4, time_spent_dead: 165, win: false }
 
     context "#value_change" do
-      it "updates the value correctly" do
-        expect(player.send :value_change, game_details1).to eq 2
-        expect(player.send :value_change, game_details2).to eq 5
-        expect(player.send :value_change, game_details3).to eq -5
+      it "calculates the value change correctly" do
+        allow(game1).to receive(:players).and_return([player1, player2])
+        allow(player1).to receive(:game_details).and_return(game_details1)
+        allow(player2).to receive(:game_details).and_return(game_details2)
+
+        expect(player1.send :value_change, game_details1).to eq 0.53
+        expect(player2.send :value_change, game_details2).to eq -0.65
       end
     end
 
     context "#update_value" do
-      it "updates the value correctly" do
-        init_details = [game_details1, game_details2, game_details3]
-        player.update_value
-        expect(player.value).to eq 102
+      it "updates the value for player1 correctly" do
+        init_details = [game_details1, game_details2]
+
+        allow(game1).to receive(:players).and_return([player1, player2])
+        player1.update_value
+        expect(player1.value).to eq 100.54
+      end
+
+      it "updates the value for player2 correctly" do
+        init_details = [game_details1, game_details2]
+
+        allow(game1).to receive(:players).and_return([player1, player2])
+        player2.update_value
+        expect(player2.value).to eq 99.36
       end
     end
   end

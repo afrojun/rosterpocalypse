@@ -141,14 +141,14 @@ ActiveRecord::Schema.define(version: 20161230100949) do
   end
 
   create_table "players", force: :cascade do |t|
-    t.string   "name",       default: "",  null: false
+    t.string   "name",       default: "",    null: false
     t.string   "role"
     t.integer  "team_id"
     t.string   "country"
-    t.integer  "value",      default: 100, null: false
-    t.string   "slug",                     null: false
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.float    "value",      default: 100.0, null: false
+    t.string   "slug",                       null: false
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
     t.index ["name"], name: "index_players_on_name", unique: true, using: :btree
     t.index ["slug"], name: "index_players_on_slug", unique: true, using: :btree
     t.index ["team_id"], name: "index_players_on_team_id", using: :btree

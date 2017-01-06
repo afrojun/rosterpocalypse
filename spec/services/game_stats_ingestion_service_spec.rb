@@ -191,6 +191,12 @@ describe GameStatsIngestionService do
       expect(GameStatsIngestionService.send :get_tournament_name_and_region_from_filename, "02.12.16_mYinsanity_vs_Dignitas_GAME_1_at_Summer_Europe_Championship_2017.StormReplay").
         to eq ["Summer Europe Championship 2017", "EU"]
     end
+
+    it "strips extra characters from the end of the tournament name if another tournament exists without them" do
+      FactoryGirl.create :tournament, name: "Summer Europe Championship 2017", region: "EU"
+      expect(GameStatsIngestionService.send :get_tournament_name_and_region_from_filename, "02.12.16_mYinsanity_vs_Dignitas_GAME_1_at_Summer_Europe_Championship_2017_X8y27Lk.StormReplay").
+        to eq ["Summer Europe Championship 2017", "EU"]
+    end
   end
 
   context "#match_team_name?" do
