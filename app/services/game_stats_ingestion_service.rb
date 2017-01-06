@@ -1,16 +1,13 @@
 class GameStatsIngestionService
 
+  FILENAME_FORMAT_REGEX = /^\d{2}\.\d{2}\.\d{2}_(.+)_vs_(.+)_GAME_\d_at_(.+)\.StormReplay$/
+
   class << self
 
     def populate_from_json json
       if json
         ActiveRecord::Base.transaction do
           map = Map.find_or_create_by name: json["map_name"]
-          game = Game.find_or_create_by game_hash: json["unique_id"] do |g|
-                   g.map_id = map.id
-                   g.start_date = Time.at(json["start_epoch_time_utc"]).utc.to_datetime
-                   g.duration_s = json["duration"]
-                 end
 
           # Many games have player names that include a team name prefix, we need to
           # detect the name so we can strip it from player names.
@@ -19,6 +16,27 @@ class GameStatsIngestionService
           player_details_by_team_colour = get_player_details_by_team_colour json["player_details"]
           team_name_prefix_by_colour = get_team_name_prefix_by_team_colour player_details_by_team_colour
           team_names_by_colour = get_team_names_by_team_colour_from_filename json["filename"], team_name_prefix_by_colour, player_details_by_team_colour
+          tournament_name, region = get_tournament_name_and_region_from_filename json["filename"]
+
+          start_date = Time.at(json["start_epoch_time_utc"]).utc.to_datetime
+
+          if tournament_name.present?
+            tournament = Tournament.find_or_create_by name: tournament_name do |t|
+                           t.region = region
+                           t.cycle_hours = 6
+                           t.start_date = start_date
+                           t.end_date = start_date
+            end
+            tournament.update_attribute(:start_date, start_date) if start_date < tournament.start_date
+            tournament.update_attribute(:end_date, start_date) if start_date > tournament.end_date
+          end
+
+          game = Game.find_or_create_by game_hash: json["unique_id"] do |g|
+                   g.map_id = map.id
+                   g.start_date = Time.at(json["start_epoch_time_utc"]).utc.to_datetime
+                   g.duration_s = json["duration"]
+                   g.tournament = tournament
+                 end
 
           player_details_by_team_colour.each do |team_colour, player_details|
             # Detect the team name as follows:
@@ -28,10 +46,13 @@ class GameStatsIngestionService
             team_name = if team_names_by_colour[team_colour].present?
                           team_names_by_colour[team_colour]
                         else
+                          Rails.logger.warn "Unable to get figure out the full team names, falling back to name prefix or Unknown"
                           team_name_prefix_by_colour[team_colour].present? ? team_name_prefix_by_colour[team_colour] : "Unknown"
                         end
 
             team = Team.find_or_create_including_alternate_names team_name
+            TeamAlternateName.find_or_create_by(team: team, alternate_name: team_name_prefix_by_colour[team_colour]) if team_name_prefix_by_colour[team_colour].present?
+            team.update_attribute(:region, region) if team.region.blank? && region != "Global"
 
             player_details.each do |player_detail|
               # If the team name is prefixed to player names, strip it out
@@ -91,14 +112,32 @@ class GameStatsIngestionService
       end
     end
 
+    def get_tournament_name_and_region_from_filename filename
+      basename = File.basename filename
+      result = basename.match FILENAME_FORMAT_REGEX
+      if result && result.size == 4
+        tournament_name = result.to_a.last.gsub("_", " ")
+        regions = {
+          "CN" => ["China", "Gold Series"],
+          "EU" => ["Europe"],
+          "KR" => ["Korea", "Super League"],
+          "NA" => ["North America"],
+        }
+        region = regions.detect(lambda {["Global"]}) do |region, keywords|
+                   tournament_name.include?(region) || keywords.any? { |keyword| tournament_name.include?(keyword) }
+                 end.first
+        [tournament_name, region]
+      else
+        ["", ""]
+      end
+    end
+
     def get_team_names_by_team_colour_from_filename filename, team_name_prefix_by_colour, player_details_by_team_colour
       basename = File.basename filename
-      result = basename.match /^\d\d\.\d\d\.\d\d_([\w-]+)_vs_([\w-]+)_GAME_\d_at_(\w+)\.StormReplay$/
+      result = basename.match FILENAME_FORMAT_REGEX
       if result && result.size == 4
         # We try to match the team names to colours based on the prefix and players in the team, but if that fails, we just guess the team colours
-        _, team1, team2, tournament = result.to_a
-        team_name1 = team1.gsub("_", " ")
-        team_name2 = team2.gsub("_", " ")
+        _, team_name1, team_name2, _ = result.to_a.map { |val| val.gsub("_", " ") }
 
         if (match_team_name?(team_name1, team_name_prefix_by_colour["red"], player_details_by_team_colour["red"]) ||
             match_team_name?(team_name2, team_name_prefix_by_colour["blue"], player_details_by_team_colour["blue"]))
@@ -113,6 +152,7 @@ class GameStatsIngestionService
           }
         end
       else
+        Rails.logger.warn "Guessing team colour->name mapping for #{basename}."
         {
           "red" => "",
           "blue" => ""
@@ -121,7 +161,7 @@ class GameStatsIngestionService
     end
 
     def match_team_name? full_name, abbreviation, player_details
-      team_name_match = fuzzy_match_team_name(full_name, abbreviation)
+      team_name_match = fuzzy_match_name(full_name, abbreviation)
       return team_name_match.present? if team_name_match.present?
 
       players_in_team? full_name, player_details
@@ -139,7 +179,7 @@ class GameStatsIngestionService
       end
     end
 
-    def fuzzy_match_team_name full_name, abbreviation
+    def fuzzy_match_name full_name, abbreviation
       lowercase_name = full_name.downcase
       # The "Team" prefix in many team names can cause issues with this matching, so we need to handle it separately
       if lowercase_name.start_with? "team"

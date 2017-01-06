@@ -121,6 +121,7 @@ describe GameStatsIngestionService do
 
     it "populates game details from the JSON" do
       GameStatsIngestionService.populate_from_json game_stats_json
+      expect(Tournament.first.name).to eq "Summer Global Championship"
       expect(Game.first.game_hash).to eq "31af3b750df2b90e51121833672747969fdd3a89c8bfa1303abd6fec9a8c7758"
       expect(GameDetail.all.size).to eq 10
       expect(Player.all.map(&:name).sort).to eq ["KyoCha", "Sign", "Rich", "Sake", "merryday", "Bakery", "JayPL", "Snitch", "Athero", "Mene"].sort
@@ -128,14 +129,14 @@ describe GameStatsIngestionService do
       expect(Map.first.name).to eq "Tomb of the Spider Queen"
     end
 
-    it "assigns team names based on the filename if it cannot be inferred from the prefix" do
+    it "assigns team names based on the prefixes if it cannot be inferred from the filename" do
       team_names_by_colour = {
         "red" => "",
         "blue" => ""
       }
-      expect(GameStatsIngestionService).to receive(:get_team_name_prefix_by_team_colour).and_return(team_names_by_colour)
+      expect(GameStatsIngestionService).to receive(:get_team_names_by_team_colour_from_filename).and_return(team_names_by_colour)
       GameStatsIngestionService.populate_from_json game_stats_json
-      expect(Team.all.map(&:name).sort).to eq ["Dignitas", "MVP BLACK"]
+      expect(Team.all.map(&:name).sort).to eq ["DIG", "MVP"]
     end
 
     it "falls back to use the Unknown team if prefix and filename matching fails" do
@@ -159,7 +160,7 @@ describe GameStatsIngestionService do
   end
 
   context "#get_team_names_by_team_colour_from_filename" do
-    it "extracts the team names from the filename" do
+    it "extracts the team names and tournament name from the filename" do
       details = GameStatsIngestionService.send :get_player_details_by_team_colour, game_stats_json["player_details"]
       prefixes = GameStatsIngestionService.send :get_team_name_prefix_by_team_colour, details
       team_names_by_colour = GameStatsIngestionService.send :get_team_names_by_team_colour_from_filename, game_stats_json["filename"], prefixes, details
@@ -176,8 +177,24 @@ describe GameStatsIngestionService do
     end
   end
 
+  context "#get_tournament_name_and_region_from_filename" do
+    it "returns the expected tournament name and region" do
+      expect(GameStatsIngestionService.send :get_tournament_name_and_region_from_filename, game_stats_json["filename"]).to eq ["Summer Global Championship", "Global"]
+    end
+
+    it "handles simple regions" do
+      expect(GameStatsIngestionService.send :get_tournament_name_and_region_from_filename, "02.12.16_mYinsanity_vs_Dignitas_GAME_1_at_Summer_EU_Championship_2017.StormReplay").
+        to eq ["Summer EU Championship 2017", "EU"]
+    end
+
+    it "detects regions by keyword" do
+      expect(GameStatsIngestionService.send :get_tournament_name_and_region_from_filename, "02.12.16_mYinsanity_vs_Dignitas_GAME_1_at_Summer_Europe_Championship_2017.StormReplay").
+        to eq ["Summer Europe Championship 2017", "EU"]
+    end
+  end
+
   context "#match_team_name?" do
-    it "calls #fuzzy_match_team_name if an abbreviation is provided" do
+    it "calls #fuzzy_match_name if an abbreviation is provided" do
       expect(GameStatsIngestionService).not_to receive(:players_in_team?)
       expect(GameStatsIngestionService.send :match_team_name?, "Dignitas", "DIG", {}).to eq true
     end
@@ -188,32 +205,32 @@ describe GameStatsIngestionService do
     end
   end
 
-  context "#fuzzy_match_team_name" do
+  context "#fuzzy_match_name" do
     it "matches abbreviations with full names" do
-      expect(GameStatsIngestionService.send :fuzzy_match_team_name, "Dignitas", "DIG").to eq "dig"
+      expect(GameStatsIngestionService.send :fuzzy_match_name, "Dignitas", "DIG").to eq "dig"
     end
 
     it "returns an empty string when there is no match" do
-      expect(GameStatsIngestionService.send :fuzzy_match_team_name, "Naventic", "DIG").to eq ""
+      expect(GameStatsIngestionService.send :fuzzy_match_name, "Naventic", "DIG").to eq ""
     end
 
     it "returns an empty string when the abbreviation is empty" do
-      expect(GameStatsIngestionService.send :fuzzy_match_team_name, "Dignitas", "").to eq ""
+      expect(GameStatsIngestionService.send :fuzzy_match_name, "Dignitas", "").to eq ""
     end
 
     it "handles team names starting with 'Team'" do
-      expect(GameStatsIngestionService.send :fuzzy_match_team_name, "Team Dignitas", "DIG").to eq "dig"
-      expect(GameStatsIngestionService.send :fuzzy_match_team_name, "Team Naventic", "NAV").to eq "nav"
+      expect(GameStatsIngestionService.send :fuzzy_match_name, "Team Dignitas", "DIG").to eq "dig"
+      expect(GameStatsIngestionService.send :fuzzy_match_name, "Team Naventic", "NAV").to eq "nav"
     end
 
     it "handles abbreviations using initials" do
-      expect(GameStatsIngestionService.send :fuzzy_match_team_name, "Team No Limit", "TNL").to eq "team no l"
-      expect(GameStatsIngestionService.send :fuzzy_match_team_name, "Please Buff Arthas", "PBA").to eq "please buff artha"
+      expect(GameStatsIngestionService.send :fuzzy_match_name, "Team No Limit", "TNL").to eq "team no l"
+      expect(GameStatsIngestionService.send :fuzzy_match_name, "Please Buff Arthas", "PBA").to eq "please buff artha"
     end
 
     it "only matches from the start of the name, unless the first word is 'team'" do
-      expect(GameStatsIngestionService.send :fuzzy_match_team_name, "Burning Rage", "BR").to eq "burning r"
-      expect(GameStatsIngestionService.send :fuzzy_match_team_name, "Reborn", "BR").to eq ""
+      expect(GameStatsIngestionService.send :fuzzy_match_name, "Burning Rage", "BR").to eq "burning r"
+      expect(GameStatsIngestionService.send :fuzzy_match_name, "Reborn", "BR").to eq ""
     end
   end
 
