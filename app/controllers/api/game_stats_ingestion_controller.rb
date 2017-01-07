@@ -6,7 +6,7 @@ module Api
     # POST /replay_details
     def create
       response = JSON.parse params["response"]
-      GameStatsIngestionService.populate_from_json response
+      GameStatsIngestionService.new(response).populate_from_json
     end
   end
 
