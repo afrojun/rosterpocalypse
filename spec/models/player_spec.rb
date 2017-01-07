@@ -6,18 +6,16 @@ RSpec.describe Player, type: :model do
     context "after create" do
       it "creates an entry in the alternate name table" do
         player = FactoryGirl.create :player
-        expect(player.alternate_names.map(&:alternate_name)).to eq [player.name]
+        expect(player.alternate_names.map(&:alternate_name)).to eq [player.name, player.name.downcase]
       end
-
     end
 
     context "after update" do
       it "adds to the alternate name table if a new name is specified" do
         player = FactoryGirl.create :player, name: "Joe"
         player.update_attribute :name, "Bob"
-        expect(player.alternate_names.map(&:alternate_name)).to eq ["Joe", "Bob"]
+        expect(player.alternate_names.map(&:alternate_name)).to eq ["Joe", "joe", "Bob", "bob"]
       end
-
     end
 
   end
@@ -31,6 +29,13 @@ RSpec.describe Player, type: :model do
     it "finds an existing player if one exists" do
       player = FactoryGirl.create :player, name: "bar"
       found_player = Player.find_or_create_including_alternate_names "bar"
+      expect(found_player).to eql player
+    end
+
+    it "ignores case when finding players" do
+      player = FactoryGirl.create :player, name: "BaR"
+      expect(player.alternate_names.map(&:alternate_name)).to eq ["BaR", "bar"]
+      found_player = Player.find_or_create_including_alternate_names "BAR"
       expect(found_player).to eql player
     end
   end

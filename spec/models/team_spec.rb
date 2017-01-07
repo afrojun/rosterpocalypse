@@ -17,6 +17,13 @@ RSpec.describe Team, type: :model do
       found_team = Team.find_or_create_including_alternate_names "bar"
       expect(found_team).to eql team
     end
+
+    it "ignores case when finding teams" do
+      team = FactoryGirl.create :team, name: "BaR Team"
+      expect(team.alternate_names.map(&:alternate_name)).to eq ["BaR Team", "bar team"]
+      found_team = Team.find_or_create_including_alternate_names "BAR TEaM"
+      expect(found_team).to eql team
+    end
   end
 
   context "#destroy" do
