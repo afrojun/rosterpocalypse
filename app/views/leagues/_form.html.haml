@@ -12,6 +12,6 @@
     = f.text_area :description, class: "form-control", placeholder: "League Description (optional)"
   .field
     = f.label :tournament, class: "sr-only"
-    = f.select(:tournament_id, Tournament.all.collect { |t| [t.name, t.id] }, {}, class: "form-control", required: true)
+    = f.select(:tournament_id, Tournament.where('end_date > ?', Time.now).collect { |t| [t.name, t.id] }, {include_blank: false}, class: "form-control")
   .actions
     = f.submit submit_message, class: "btn btn-lg btn-primary btn-block"

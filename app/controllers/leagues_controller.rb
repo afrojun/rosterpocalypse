@@ -70,16 +70,13 @@ class LeaguesController < RosterpocalypseController
   # POST /leagues/1/join.json
   def join
     respond_to do |format|
-      if roster = Roster.find_by_manager_and_region(current_user.manager, @league.tournament.region)
-        logger.info "Adding Roster '#{roster.name}' to League '#{@league.name}'."
-        @league.rosters << roster
-
+      if roster = @league.join(current_user.manager)
         format.html { redirect_to @league, notice: "Roster '#{roster.name}' was added to '#{@league.name}'." }
         format.json { render :show, status: :ok, location: @league }
       else
-        message = "You do not have a Roster for the '#{@league.tournament.region}' region, please create one and try again."
+        message = @league.errors[:base].to_sentence
         format.html { redirect_to @league, alert: message }
-        format.json { render json: {message: message}, status: :unprocessable_entity }
+        format.json { render json: { message: message }, status: :unprocessable_entity }
       end
     end
   end
@@ -88,16 +85,13 @@ class LeaguesController < RosterpocalypseController
   # POST /leagues/1/leave.json
   def leave
     respond_to do |format|
-      if roster = @league.rosters.where(manager: current_user.manager).first
-        logger.info "Removing Roster '#{roster.name}' from League '#{@league.name}'."
-        @league.rosters.delete(roster)
-
+      if roster = @league.leave(current_user.manager)
         format.html { redirect_to leagues_url, notice: "Roster '#{roster.name}' was removed from '#{@league.name}'." }
         format.json { render :show, status: :ok, location: @league }
       else
-        message = "You do not have any Rosters in this League."
+        message = @league.errors[:base].to_sentence
         format.html { redirect_to leagues_url, alert: message }
-        format.json { render json: {message: message}, status: :unprocessable_entity }
+        format.json { render json: { message: message }, status: :unprocessable_entity }
       end
     end
   end
