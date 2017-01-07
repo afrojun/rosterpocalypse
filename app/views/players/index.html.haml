@@ -1,4 +1,4 @@
-= page_title "Players : #{@teams_filter[:region] || "Global"} : #{@teams_filter[:active] ? "Active" : "All"}"
+= page_title "Players : #{@teams_filter[:region] || Tournament::GLOBAL_REGION} : #{@teams_filter[:active] ? "Active" : "All"}"
 
 %h1 Players
 %span
@@ -7,7 +7,7 @@
   - else
     = link_to "Show Active Players", players_path(active: true, region: @teams_filter[:region]), class: "btn btn-info"
 %span.float-xs-right
-  = select_tag "Select Region", options_for_select(Tournament::REGIONS, @teams_filter[:region] || "Global"), class: "form-control", id: "players-region-select"
+  = select_tag "Select Region", options_for_select(Tournament::REGIONS, @teams_filter[:region] || Tournament::GLOBAL_REGION), class: "form-control", id: "players-region-select"
 
 = form_tag merge_players_path do
   = hidden_field_tag "region", @teams_filter[:region]
