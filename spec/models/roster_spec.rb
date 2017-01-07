@@ -47,6 +47,7 @@ RSpec.describe Roster, type: :model do
 
     it "updates the roster name" do
       expect(roster.update_including_players(name: "foo-roster")).to eq true
+      roster.reload
       expect(roster.name).to eq "foo-roster"
     end
 

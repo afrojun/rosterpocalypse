@@ -3,7 +3,8 @@ class Game < ApplicationRecord
   friendly_id :game_hash
 
   belongs_to :map
-  belongs_to :tournament
+  belongs_to :gameweek
+  has_one :tournament, through: :gameweek
   has_many :game_details, dependent: :destroy
   has_many :players, through: :game_details
   has_many :heroes, through: :game_details

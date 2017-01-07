@@ -8,6 +8,9 @@ class Player < ApplicationRecord
   has_many :alternate_names, class_name: "PlayerAlternateName", dependent: :destroy
   belongs_to :team
   has_and_belongs_to_many :rosters
+  has_many :transfers, dependent: :destroy
+  has_many :gameweek_players, dependent: :destroy
+  has_many :gameweeks, through: :gameweek_players
 
   validates :name, presence: true, uniqueness: true
 

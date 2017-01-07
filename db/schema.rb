@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161230100949) do
+ActiveRecord::Schema.define(version: 20170106150106) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,18 +47,51 @@ ActiveRecord::Schema.define(version: 20161230100949) do
   end
 
   create_table "games", force: :cascade do |t|
-    t.integer  "map_id",        null: false
-    t.integer  "tournament_id"
-    t.datetime "start_date",    null: false
-    t.integer  "duration_s",    null: false
-    t.string   "game_hash",     null: false
-    t.string   "slug",          null: false
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.integer  "map_id",      null: false
+    t.integer  "gameweek_id"
+    t.datetime "start_date",  null: false
+    t.integer  "duration_s",  null: false
+    t.string   "game_hash",   null: false
+    t.string   "slug",        null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
     t.index ["game_hash"], name: "index_games_on_game_hash", unique: true, using: :btree
+    t.index ["gameweek_id"], name: "index_games_on_gameweek_id", using: :btree
     t.index ["map_id"], name: "index_games_on_map_id", using: :btree
     t.index ["slug"], name: "index_games_on_slug", unique: true, using: :btree
-    t.index ["tournament_id"], name: "index_games_on_tournament_id", using: :btree
+  end
+
+  create_table "gameweek_players", force: :cascade do |t|
+    t.integer  "gameweek_id"
+    t.integer  "player_id"
+    t.integer  "points"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["gameweek_id"], name: "index_gameweek_players_on_gameweek_id", using: :btree
+    t.index ["player_id"], name: "index_gameweek_players_on_player_id", using: :btree
+  end
+
+  create_table "gameweek_rosters", force: :cascade do |t|
+    t.integer  "gameweek_id"
+    t.integer  "roster_id"
+    t.integer  "available_transfers", default: 1, null: false
+    t.text     "roster_snapshot"
+    t.integer  "points"
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.index ["gameweek_id"], name: "index_gameweek_rosters_on_gameweek_id", using: :btree
+    t.index ["roster_id"], name: "index_gameweek_rosters_on_roster_id", using: :btree
+  end
+
+  create_table "gameweeks", force: :cascade do |t|
+    t.string   "name",             null: false
+    t.integer  "tournament_id"
+    t.datetime "start_date",       null: false
+    t.datetime "roster_lock_date"
+    t.datetime "end_date",         null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+    t.index ["tournament_id"], name: "index_gameweeks_on_tournament_id", using: :btree
   end
 
   create_table "heroes", force: :cascade do |t|
@@ -207,6 +240,18 @@ ActiveRecord::Schema.define(version: 20161230100949) do
     t.index ["slug"], name: "index_tournaments_on_slug", unique: true, using: :btree
   end
 
+  create_table "transfers", force: :cascade do |t|
+    t.integer  "gameweek_id"
+    t.integer  "roster_id"
+    t.integer  "player_id"
+    t.string   "type",        null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["gameweek_id"], name: "index_transfers_on_gameweek_id", using: :btree
+    t.index ["player_id"], name: "index_transfers_on_player_id", using: :btree
+    t.index ["roster_id"], name: "index_transfers_on_roster_id", using: :btree
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "",    null: false
     t.string   "encrypted_password",     default: "",    null: false
@@ -231,8 +276,13 @@ ActiveRecord::Schema.define(version: 20161230100949) do
   add_foreign_key "game_details", "heroes"
   add_foreign_key "game_details", "players"
   add_foreign_key "game_details", "teams"
+  add_foreign_key "games", "gameweeks"
   add_foreign_key "games", "maps"
-  add_foreign_key "games", "tournaments"
+  add_foreign_key "gameweek_players", "gameweeks"
+  add_foreign_key "gameweek_players", "players"
+  add_foreign_key "gameweek_rosters", "gameweeks"
+  add_foreign_key "gameweek_rosters", "rosters"
+  add_foreign_key "gameweeks", "tournaments"
   add_foreign_key "identities", "users"
   add_foreign_key "leagues", "managers"
   add_foreign_key "leagues", "tournaments"
@@ -240,4 +290,7 @@ ActiveRecord::Schema.define(version: 20161230100949) do
   add_foreign_key "player_alternate_names", "players"
   add_foreign_key "rosters", "managers"
   add_foreign_key "team_alternate_names", "teams"
+  add_foreign_key "transfers", "gameweeks"
+  add_foreign_key "transfers", "players"
+  add_foreign_key "transfers", "rosters"
 end
