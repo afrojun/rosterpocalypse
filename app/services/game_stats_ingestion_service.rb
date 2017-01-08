@@ -2,7 +2,14 @@ class GameStatsIngestionService
 
   FILENAME_FORMAT_REGEX = /^\d{2}\.\d{2}\.\d{2}_(.+)_vs_(.+)_GAME_\d_at_(.+)\.StormReplay$/
 
-  attr_reader :json
+  private
+  # Lazy loaded attributes
+  attr_reader :start_date, :map, :game, :tournament, :gameweek, :tournament_name, :region, :filename_regex_match,
+              :team_name_prefix_by_team_colour, :team_names_by_team_colour, :player_details_by_team_colour
+
+  public
+
+  attr_accessor :json
 
   def initialize json
     @json = json
@@ -21,7 +28,7 @@ class GameStatsIngestionService
 
           player_details.each do |player_detail|
             hero = find_or_create_hero player_detail["hero"]
-            player = find_or_create_player player_detail["name"], team_colour
+            player = find_or_create_player player_detail["name"], hero, team_colour
 
             # Update the player's team if:
             # 1. the player's team is not yet defined
@@ -47,14 +54,19 @@ class GameStatsIngestionService
               win: player_detail["result"] == "win" ? true : false
             )
           end
+
+          GameweekPlayer.update_from_game game, gameweek
         end
       end
+
+      game
     else
       Rails.logger.warn "No json input provided, or this game has already been ingested."
+      nil
     end
   end
 
-  protected
+  private
 
   def start_date
     @start_date ||= Time.at(json["start_epoch_time_utc"]).utc.to_datetime
@@ -104,6 +116,10 @@ class GameStatsIngestionService
     end
   end
 
+  def gameweek_player player
+    GameweekPlayer.find_or_create_by gameweek: gameweek, player: player
+  end
+
   def find_or_create_team team_colour
     Team.find_or_create_including_alternate_names(team_name(team_colour)).tap do |team|
       TeamAlternateName.find_or_create_by(team: team, alternate_name: team_name_prefix_by_team_colour[team_colour]) if team_name_prefix_by_team_colour[team_colour].present?
@@ -111,10 +127,12 @@ class GameStatsIngestionService
     end
   end
 
-  def find_or_create_player player_name, team_colour
+  def find_or_create_player player_name, hero, team_colour
     # If the team name is prefixed to player names, strip it out
     sanitized_player_name = strip_team_name_prefix_from_player_name team_name_prefix_by_team_colour[team_colour], player_name
-    Player.find_or_create_including_alternate_names sanitized_player_name
+    Player.find_or_create_including_alternate_names(sanitized_player_name).tap do |player|
+      player.set_role_from_class(hero.classification) if player.role.blank?
+    end
   end
 
   def find_or_create_hero hero_name

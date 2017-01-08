@@ -17,6 +17,7 @@ gem 'coffee-rails', '~> 4.2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
+# Add helpful information on page performance to the bottom of pages
 # https://github.com/josevalim/rails-footnotes
 gem 'rails-footnotes', '~> 4.0'
 
@@ -46,6 +47,10 @@ gem 'bootstrap3-datetimepicker-rails', '~> 4.17.43'
 
 # font-awesome for web fonts CSS
 gem "font-awesome-rails"
+
+# Gem to help with statistical calculations
+# https://github.com/thirtysixthspan/descriptive_statistics
+gem 'descriptive_statistics', '~> 2.4.0', :require => 'descriptive_statistics/safe'
 
 # Devise for authentication
 gem 'devise'

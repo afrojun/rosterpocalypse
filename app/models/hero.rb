@@ -22,6 +22,10 @@ class Hero < ApplicationRecord
     end
   end
 
+  def stat_percentile stat, percentile
+    game_details.extend(DescriptiveStatistics).percentile(percentile) { |detail| detail.send stat.to_sym }
+  end
+
   HEROES = {
     # Specialist
     "Abathur" => { name: "Abathur", classification: "Specialist" },

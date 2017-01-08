@@ -57,6 +57,17 @@ class Player < ApplicationRecord
     end
   end
 
+  def self.players_in_role roles
+    Player.where(role: roles)
+  end
+
+  def self.role_stat_percentile roles, stat, percentile
+    details = GameDetail.where(player: players_in_role(roles)).extend(DescriptiveStatistics)
+    details.percentile(percentile) do |detail|
+      detail.send stat.to_sym
+    end
+  end
+
   # Perform a destructive merge with another player
   def merge! other_player
     transaction do
@@ -117,12 +128,12 @@ class Player < ApplicationRecord
     end
   end
 
-  private
-
   def set_role_from_class classification
     player_role = is_flex?(classification) ? "Flex" : classification
     update_attribute :role, player_role
   end
+
+  private
 
   def player_heroes_by_classification
     @player_heroes_by_classification ||= game_details.map(&:hero).group_by(&:classification)
@@ -148,16 +159,11 @@ class Player < ApplicationRecord
     ave_team_value = team_players.sum(&:value)/team_players.size.to_f
 
     # This scales the win multiplier based on the relative strength of the two teams
-    scaling_factor_string = "((#{ave_opponent_value} - #{ave_team_value}) * #{win_int(details).to_f} * 0.05"
+    scaling_factor_string = "((#{ave_opponent_value} - #{ave_team_value}) * #{details.win_int.to_f} * 0.05"
     Rails.logger.debug "scaling_factor calculation: #{scaling_factor_string}"
-    scaling_factor = (ave_opponent_value - ave_team_value) * win_int(details).to_f * 0.05
-    calculation_string = "((#{details.solo_kills.to_f} * 0.1) + (#{details.assists.to_f} * 0.05) + (#{win_int(details).to_f} * (0.5 + #{scaling_factor})) - ((#{details.time_spent_dead.to_f}/15) * 0.05)).round(2)"
+    scaling_factor = (ave_opponent_value - ave_team_value) * details.win_int.to_f * 0.05
+    calculation_string = "((#{details.solo_kills.to_f} * 0.1) + (#{details.assists.to_f} * 0.05) + (#{details.win_int.to_f} * (0.5 + #{scaling_factor})) - ((#{details.time_spent_dead.to_f}/15) * 0.05)).round(2)"
     Rails.logger.debug "value_change calculation: #{calculation_string}"
-    ((details.solo_kills.to_f * 0.1) + (details.assists.to_f * 0.05) + (win_int(details).to_f * (0.5 + scaling_factor)) - ((details.time_spent_dead.to_f/15) * 0.05)).round(2)
+    ((details.solo_kills.to_f * 0.1) + (details.assists.to_f * 0.05) + (details.win_int.to_f * (0.5 + scaling_factor)) - ((details.time_spent_dead.to_f/15) * 0.05)).round(2)
   end
-
-  def win_int details
-    details.win ? 1 : -1
-  end
-
 end

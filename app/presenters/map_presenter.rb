@@ -1,9 +1,8 @@
 class MapPresenter < BasePresenter
   def map_stats
-    n_games = map.games.size
     {
-      n_games: n_games,
-      ave_game_duration: n_games > 0 ? map.games.collect(&:duration_s).sum/n_games : 0
+      n_games: map.games.size,
+      ave_game_duration: map.duration_percentile(50).round
     }
   end
 

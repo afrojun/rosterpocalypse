@@ -62,18 +62,19 @@ ActiveRecord::Schema.define(version: 20170106155216) do
   end
 
   create_table "gameweek_players", force: :cascade do |t|
-    t.integer  "gameweek_id"
-    t.integer  "player_id"
-    t.integer  "points"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.integer  "gameweek_id",                  null: false
+    t.integer  "player_id",                    null: false
+    t.text     "points_breakdown"
+    t.integer  "points",           default: 0, null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.index ["gameweek_id"], name: "index_gameweek_players_on_gameweek_id", using: :btree
     t.index ["player_id"], name: "index_gameweek_players_on_player_id", using: :btree
   end
 
   create_table "gameweek_rosters", force: :cascade do |t|
-    t.integer  "gameweek_id"
-    t.integer  "roster_id"
+    t.integer  "gameweek_id",                     null: false
+    t.integer  "roster_id",                       null: false
     t.integer  "available_transfers", default: 1, null: false
     t.text     "roster_snapshot"
     t.integer  "points"
