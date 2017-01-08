@@ -6,8 +6,8 @@ class Roster < ApplicationRecord
   has_and_belongs_to_many :players, -> { order "slug" }
   has_and_belongs_to_many :leagues, -> { order "slug" }
   has_many :tournaments, -> { distinct }, through: :leagues
-  has_many :transfers, dependent: :destroy
   has_many :gameweek_rosters, dependent: :destroy
+  has_many :transfers, through: :gameweek_rosters
   has_many :gameweeks, through: :gameweek_rosters
 
   validates :name, presence: true, uniqueness: true
@@ -26,6 +26,56 @@ class Roster < ApplicationRecord
     Roster.where(manager: manager, region: region).first
   end
 
+  def gameweek_rosters_for_tournament tournament
+    gameweek_rosters.where(gameweek: tournament.gameweeks)
+  end
+
+  def current_gameweeks
+    tournaments.map(&:current_gameweek)
+  end
+
+  def current_gameweek_rosters
+    gameweek_rosters.where(gameweek: current_gameweeks)
+  end
+
+  def available_transfers
+    current_gameweek_rosters.reduce(DEFAULT_TRANSFERS_PER_GAMEWEEK) do |max, gameweek_roster|
+      gameweek_roster.available_transfers > max ? gameweek_roster.available_transfers : max
+    end
+  end
+
+  def add_to league
+    league.add(self) ? self : copy_errors(league)
+  end
+
+  def remove_from league
+    league.remove(self) ? self : copy_errors(league)
+  end
+
+  def update_including_players params
+    transaction do
+      if update params.slice(:name, :region)
+        params[:players].present? ? update_players(params[:players]) : true
+      else
+        false
+      end
+    end
+  end
+
+  private
+
+  def update_players player_ids
+    if new_players = validate_roster_size(player_ids)
+      if validate_transfers(new_players) && validate_player_roles(new_players) && validate_player_value(new_players)
+        players_to_add = new_players - players
+        players.clear
+        players << new_players
+        return true
+      end
+    end
+    false
+  end
+
   def validate_one_roster_per_region
     if region_changed?
       if manager.rosters.map(&:region).include?(region)
@@ -35,49 +85,12 @@ class Roster < ApplicationRecord
     end
   end
 
-  def gameweek_rosters_for_tournament tournament
-    gameweek_rosters.where(gameweek: tournament.gameweeks)
-  end
-
-  def current_gameweeks
-    tournaments.map(&:current_gameweek)
-  end
-
-  def available_transfers
-    current_gameweeks.reduce(DEFAULT_TRANSFERS_PER_GAMEWEEK) do |max, gameweek|
-      gameweek_roster = gameweek_rosters.where(gameweek: gameweek).first
-      max = gameweek_roster.available_transfers if gameweek_roster.present? && gameweek_roster.available_transfers > max
-    end
-  end
-
-  def update_including_players params
-    transaction do
-      if update params.slice(:name, :region)
-        if params[:players].present?
-          if validate_roster_size params[:players]
-            new_players = Player.where(id: params[:players])
-            if validate_player_roles(new_players) && validate_player_value(new_players)
-              players.clear
-              players<<new_players
-              return true
-            end
-          end
-        else
-          return true
-        end
-      end
-
-      return false
-    end
-  end
-
-  private
-
   def validate_roster_size player_ids
-    if player_ids.count <= MAX_PLAYERS
-      Player.where(id: player_ids).present?
+    new_players = Player.where(id: player_ids)
+    if new_players.size == MAX_PLAYERS
+      new_players
     else
-      errors.add(:rosters, "may have a maximum of #{MAX_PLAYERS} players")
+      errors.add(:roster, "must contain #{MAX_PLAYERS} players")
       false
     end
   end
@@ -89,8 +102,8 @@ class Roster < ApplicationRecord
     if support_present && warrior_present
       true
     else
-      errors.add(:rosters, "need to include at least one dedicated Support player") unless support_present
-      errors.add(:rosters, "need to include at least one dedicated Warrior player") unless warrior_present
+      errors.add(:roster, "needs to include at least one dedicated Support player") unless support_present
+      errors.add(:roster, "needs to include at least one dedicated Warrior player") unless warrior_present
       false
     end
   end
@@ -100,9 +113,46 @@ class Roster < ApplicationRecord
     if total_value < MAX_TOTAL_VALUE
       true
     else
-      errors.add(:rosters, "have a maximum total player value of #{MAX_TOTAL_VALUE}")
+      errors.add(:roster, "may have a maximum total player value of #{MAX_TOTAL_VALUE}")
       false
     end
+  end
+
+  def validate_transfers new_players
+    diff = new_players - players
+
+    max_transfers = allow_free_transfers? ? 5 : available_transfers
+    if diff.size <= max_transfers
+      true
+    else
+      errors.add(:roster, "has #{max_transfers} #{"transfer".pluralize(max_transfers)} available in this window")
+      false
+    end
+  end
+
+  def update_available_transfers num_transfers_completed
+    current_gameweek_rosters.each do |gameweek_roster|
+      new_available_transfers = gameweek_roster.available_transfers - num_transfers_completed
+      adjusted_transfers = new_available_transfers < 0 ? 0 : new_available_transfers
+      gameweek_roster.update_attribute :available_transfers, adjusted_transfers
+    end
+  end
+
+  def allow_free_transfers?
+    players.size < MAX_PLAYERS || leagues.blank? || !any_tournaments_in_progress?
+  end
+
+  def any_tournaments_in_progress?
+    tournaments.any? do |tournament|
+      tournament.start_date < Time.now
+    end
+  end
+
+  def copy_errors league
+    league.errors[:base].each do |message|
+      errors.add(:base, message)
+    end
+    false
   end
 
 end
