@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170106150106) do
+ActiveRecord::Schema.define(version: 20170106155216) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -241,15 +241,14 @@ ActiveRecord::Schema.define(version: 20170106150106) do
   end
 
   create_table "transfers", force: :cascade do |t|
-    t.integer  "gameweek_id"
-    t.integer  "roster_id"
-    t.integer  "player_id"
-    t.string   "type",        null: false
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
-    t.index ["gameweek_id"], name: "index_transfers_on_gameweek_id", using: :btree
-    t.index ["player_id"], name: "index_transfers_on_player_id", using: :btree
-    t.index ["roster_id"], name: "index_transfers_on_roster_id", using: :btree
+    t.integer  "gameweek_roster_id", null: false
+    t.integer  "player_in_id",       null: false
+    t.integer  "player_out_id",      null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.index ["gameweek_roster_id"], name: "index_transfers_on_gameweek_roster_id", using: :btree
+    t.index ["player_in_id"], name: "index_transfers_on_player_in_id", using: :btree
+    t.index ["player_out_id"], name: "index_transfers_on_player_out_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -290,7 +289,5 @@ ActiveRecord::Schema.define(version: 20170106150106) do
   add_foreign_key "player_alternate_names", "players"
   add_foreign_key "rosters", "managers"
   add_foreign_key "team_alternate_names", "teams"
-  add_foreign_key "transfers", "gameweeks"
-  add_foreign_key "transfers", "players"
-  add_foreign_key "transfers", "rosters"
+  add_foreign_key "transfers", "gameweek_rosters"
 end

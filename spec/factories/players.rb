@@ -6,6 +6,6 @@ FactoryGirl.define do
     role "role"
     country "Country"
     team
-    value { rand 50..150 }
+    value { rand 80..100 }
   end
 end

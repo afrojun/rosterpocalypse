@@ -1,15 +1,7 @@
 FactoryGirl.define do
-  factory :transfer_in do
-    gameweek
-    roster
-    player
-    type "TransferIn"
-  end
-
-  factory :transfer_out do
-    gameweek
-    roster
-    player
-    type "TransferOut"
+  factory :transfer do
+    gameweek_roster
+    association :player_in, factory: :player
+    association :player_out, factory: :player
   end
 end
