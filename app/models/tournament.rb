@@ -4,7 +4,7 @@ class Tournament < ApplicationRecord
 
   has_many :leagues
   has_many :rosters, -> { distinct }, through: :leagues
-  has_many :gameweeks, dependent: :destroy
+  has_many :gameweeks, -> { order 'start_date ASC' }, dependent: :destroy
   has_many :games, -> { order 'start_date DESC' }, through: :gameweeks
 
   GLOBAL_REGION = "Global"
@@ -13,7 +13,8 @@ class Tournament < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :region, inclusion: { in: REGIONS }
 
-  after_create :create_gameweeks
+  after_create :update_gameweeks
+  after_update :update_gameweeks
 
   REGION_TIME_ZONE_MAP = {
     "CN" => "Asia/Shanghai",
@@ -24,37 +25,54 @@ class Tournament < ApplicationRecord
     "" => "UTC"
   }
 
+  # The current Gameweek for the tournament is the first gameweek any time before the start of the
+  # first Gameweek.
   def current_gameweek
     now = Time.now
-    gameweeks.where("start_date < ? AND end_date > ?", now, now).first
+    first_gameweek = gameweeks.first
+    if now < first_gameweek.start_date
+      first_gameweek
+    else
+      gameweeks.where("start_date < ? AND end_date > ?", now, now).first
+    end
+  end
+
+  def update_gameweeks
+    create_gameweeks
+    destroy_gameweeks
   end
 
   def create_gameweeks
-    # Gameweeks start 1 week prior to the Tournament start to allow creation of rosters
-    gameweek_number = 0
+    gameweek_number = 1
     # Gameweeks start at midday UTC on Mondays
-    gameweek_start_date = start_date.beginning_of_week.advance(weeks: -1) + 12.hours
+    gameweek_start_date = start_date.beginning_of_week + 12.hours
     # Lock rosters at noon on Friday in the timezone of the tournament. We need to add extra checks to ensure that
     # the timezone change doesn't make the roster_lock dates move to a different week
-    gameweek_start_date_in_timezone = start_date.in_time_zone(REGION_TIME_ZONE_MAP[region]).beginning_of_week.advance(weeks: -1) + 12.hours
+    gameweek_start_date_in_timezone = start_date.in_time_zone(REGION_TIME_ZONE_MAP[region]).beginning_of_week + 12.hours
     day_diff = ((gameweek_start_date - gameweek_start_date_in_timezone) / 1.day).round
     gameweek_roster_lock_date = gameweek_start_date_in_timezone.advance(days: 4 + day_diff)
 
     while gameweek_start_date < end_date
       gameweek_name = "Gameweek #{gameweek_number}"
-      gameweek_end_date = gameweek_start_date.end_of_week
+      gameweek_end_date = gameweek_start_date.end_of_week + 12.hours
 
-      Gameweek.create(
-        name: gameweek_name,
-        tournament: self,
-        start_date: gameweek_start_date,
-        roster_lock_date: gameweek_number > 0 ? gameweek_roster_lock_date : nil,
-        end_date: gameweek_end_date
-      )
+      gameweek = Gameweek.find_or_initialize_by tournament: self, start_date: gameweek_start_date, end_date: gameweek_end_date
+      gameweek.update_attributes! name: gameweek_name, roster_lock_date: gameweek_roster_lock_date
 
       gameweek_number = gameweek_number + 1
       gameweek_start_date = gameweek_start_date.advance(weeks: 1)
       gameweek_roster_lock_date = gameweek_roster_lock_date.advance(weeks: 1)
+    end
+  end
+
+  def destroy_gameweeks
+    # Gameweeks where the Tournament start_date is after the Gameweek end_date OR the Gameweek start_date is after the Tournament end_date
+    gameweeks.where("start_date > ? OR end_date < ?", end_date, start_date).each do |gameweek|
+      if gameweek.games.blank? && gameweek.gameweek_rosters.blank? && gameweek.gameweek_players.blank?
+        gameweek.destroy
+      else
+        Rails.logger.info "Unable to delete orphaned Gameweek since there are still some resources referring to it: #{gameweek.inspect}."
+      end
     end
   end
 
