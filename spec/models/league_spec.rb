@@ -1,9 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe League, type: :model do
+  let(:region) { "EU" }
   let(:manager) { FactoryGirl.create :manager }
-  let(:tournament) { FactoryGirl.create :tournament, region: "EU" }
-  let(:roster) { FactoryGirl.create :roster, manager: manager, region: tournament.region }
+  let(:tournament) { FactoryGirl.create :tournament, region: region }
+  let(:roster) { FactoryGirl.create :roster, manager: manager, region: region }
   let(:league) { FactoryGirl.create :public_league, tournament: tournament }
   let(:private_league) { FactoryGirl.create :private_league, tournament: tournament, manager: manager }
 
@@ -45,56 +46,62 @@ RSpec.describe League, type: :model do
   end
 
   context "#add" do
+    it "doesn't allow adding a roster for a different region to the league" do
+      roster = FactoryGirl.create :roster, region: "NA"
+      expect(league.add(roster)).to eq false
+      expect(league.errors[:base].first).to match /^Unable to add Roster '\w+' for region '\w+' to League/
+    end
+
     it "adds the roster to the league" do
       expect { league.add(roster) }.to change(league.rosters, :count).by(1)
       expect(league.rosters.first).to eq roster
     end
 
     it "creates gameweek_rosters for all gameweeks in the tournament" do
-      league.add(roster)
-      expect(roster.gameweek_rosters.count).to eq 4
+      expect(league.add(roster)).to eq true
+      expect(roster.gameweek_rosters.count).to eq 3
     end
 
     it "creates only one set of gameweek_rosters for all leagues for a tournament" do
-      league.add roster
-      private_league.add roster
-      expect(roster.gameweek_rosters.count).to eq 4
+      expect(league.add(roster)).to eq true
+      expect(private_league.add(roster)).to eq true
+      expect(roster.gameweek_rosters.count).to eq 3
     end
   end
 
   context "#remove" do
     it "doesn't allow removing a roster from all leagues" do
-      league.add roster
-      league.remove roster
+      expect(league.add(roster)).to eq true
+      expect(league.remove(roster)).to eq false
       expect(league.errors[:base].first).to include "Unable to leave league"
     end
 
     it "removes the roster from a league" do
-      league.add roster
-      private_league.add roster
+      expect(league.add(roster)).to eq true
+      expect(private_league.add(roster)).to eq true
       expect { league.remove roster }.to change(roster.leagues, :count).by(-1)
     end
 
     it "deletes gameweek_rosters if the roster is not in any leagues for a tournament" do
-      tournament2 = FactoryGirl.create :tournament
+      tournament2 = FactoryGirl.create :tournament, region: region
       league2 = FactoryGirl.create :private_league, tournament: tournament2
       league.add roster
       league2.add roster
-      expect(roster.gameweek_rosters.count).to eq 8
+      expect(roster.gameweek_rosters.count).to eq 6
       league2.remove roster
-      expect(roster.gameweek_rosters.count).to eq 4
+      expect(roster.gameweek_rosters.count).to eq 3
     end
 
     it "only deletes gameweek_rosters that have no points" do
-      tournament2 = FactoryGirl.create :tournament
+      tournament2 = FactoryGirl.create :tournament, region: region
       league2 = FactoryGirl.create :private_league, tournament: tournament2
       league.add roster
       league2.add roster
-      expect(roster.gameweek_rosters.count).to eq 8
+      expect(roster.gameweek_rosters.count).to eq 6
       gameweek_roster = roster.gameweek_rosters_for_tournament(tournament2).first
       gameweek_roster.update_attribute(:points, 123)
       league2.remove roster
-      expect(roster.gameweek_rosters.count).to eq 5
+      expect(roster.gameweek_rosters.count).to eq 4
       expect(roster.gameweek_rosters).to include gameweek_roster
     end
   end

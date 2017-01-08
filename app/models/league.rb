@@ -32,13 +32,20 @@ class League < ApplicationRecord
   end
 
   def add roster
-    transaction do
-      rosters << roster
-      tournament.gameweeks.order(start_date: :asc).each_with_index do |gameweek, index|
-        GameweekRoster.find_or_create_by gameweek: gameweek, roster: roster
+    if roster.region == tournament.region
+      transaction do
+        rosters << roster
+        tournament.gameweeks.order(start_date: :asc).each_with_index do |gameweek, index|
+          GameweekRoster.find_or_create_by gameweek: gameweek, roster: roster
+        end
       end
+      true
+    else
+      message = "Unable to add Roster '#{roster.name}' for region '#{roster.region}' to League '#{name}' for region '#{tournament.region}'."
+      errors.add(:base, message)
+      Rails.logger.warn message
+      false
     end
-    true
   end
 
   def remove roster
