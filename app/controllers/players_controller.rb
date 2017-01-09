@@ -74,23 +74,12 @@ class PlayersController < RosterpocalypseController
     message = {}
     players = Player.where(id: params[:player_ids]).to_a
 
-    if players.size > 1
-      player_names = []
+    response, response_message = Player.merge_players players
 
-      # We choose the primary player to be the one with the most recent game
-      players.sort_by! do |player|
-        player.games.order(start_date: :desc).first
-      end
-      primary = players.shift
-
-      players.each do |player|
-        player_name = player.name
-        primary.merge! player
-        player_names << player_name
-      end
-      message[:notice] = "Merge successful! Merged #{player_names.to_sentence} with #{primary.name}."
+    if response
+      message[:notice] = response_message
     else
-      message[:alert] = "Please choose more than 1 player to merge."
+      message[:alert] = response_message
     end
 
     respond_to do |format|

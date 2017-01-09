@@ -5,13 +5,13 @@
   %thead
     %tr
       %th Name
-      %th Classification
-      %th Games Played
+      %th Class
+      %th Games
       %th Wins
       %th Losses
       %th Win %
       - if can? :update, Hero
-        %th{:colspan => "2"}
+        %th{colspan: "2"}
   %tbody
     - @heroes.each do |hero|
       - present hero do |h|

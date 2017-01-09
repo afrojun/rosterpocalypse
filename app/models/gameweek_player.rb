@@ -1,6 +1,7 @@
 class GameweekPlayer < ApplicationRecord
   belongs_to :gameweek
   belongs_to :player
+  has_many :games, through: :gameweek
 
   serialize :points_breakdown, Hash
 
@@ -12,14 +13,25 @@ class GameweekPlayer < ApplicationRecord
     game.game_details.each do |detail|
       if detail.player.role.present?
         gameweek_player = GameweekPlayer.find_or_create_by gameweek: gameweek, player: detail.player
-        all_points_breakdowns = gameweek_player.points_breakdown || {}
-        all_points_breakdowns[game.game_hash] = gameweek_player.points_breakdown_hash(game, detail)
-        gameweek_player.update_attribute :points_breakdown, all_points_breakdowns
-        gameweek_player.update_points
+        gameweek_player.refresh game
       else
         Rails.logger.warn "Unable to update the gameweek_player for this game_detail since the player role is missing."
       end
     end
+  end
+
+  # Refresh all game points for this gameweek
+  def update_all_games
+    games.each { |game| refresh game }
+  end
+
+  private
+
+  def refresh game
+    all_points_breakdowns = points_breakdown || {}
+    all_points_breakdowns[game.game_hash] = points_breakdown_hash(game, detail)
+    update_attribute :points_breakdown, all_points_breakdowns
+    update_points
   end
 
   def update_points

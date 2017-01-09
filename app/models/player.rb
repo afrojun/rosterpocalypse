@@ -8,10 +8,11 @@ class Player < ApplicationRecord
   has_many :alternate_names, class_name: "PlayerAlternateName", dependent: :destroy
   belongs_to :team
   has_and_belongs_to_many :rosters
-  has_many :transfers_in, dependent: :destroy, class_name: "Transfer", foreign_key: "player_in_id"
-  has_many :transfers_out, dependent: :destroy, class_name: "Transfer", foreign_key: "player_out_id"
+  has_many :gameweek_rosters, through: :rosters
   has_many :gameweek_players, dependent: :destroy
   has_many :gameweeks, through: :gameweek_players
+  has_many :transfers_in, dependent: :destroy, class_name: "Transfer", foreign_key: "player_in_id"
+  has_many :transfers_out, dependent: :destroy, class_name: "Transfer", foreign_key: "player_out_id"
 
   validates :name, presence: true, uniqueness: true
 
@@ -48,6 +49,14 @@ class Player < ApplicationRecord
     end
   end
 
+  # Accepts either a string or Array of names as input
+  def self.find_including_alternate_names player_names
+    player_names = [player_names] if player_names.is_a?(String)
+    downcase_names = player_names.map(&:downcase).uniq
+    alternate_names = PlayerAlternateName.where alternate_name: downcase_names
+    alternate_names.map(&:player).uniq
+  end
+
   def self.find_or_create_including_alternate_names player_name
     alternate_names = PlayerAlternateName.where alternate_name: player_name.downcase
     if alternate_names.any?
@@ -68,6 +77,27 @@ class Player < ApplicationRecord
     end
   end
 
+  def self.merge_players players
+    if players.size > 1
+      player_names = []
+
+      # We choose the primary player to be the one with the most recent game
+      players.sort_by! do |player|
+        player.games.order(start_date: :desc).first
+      end
+      primary = players.shift
+
+      players.each do |player|
+        player_name = player.name
+        primary.merge! player
+        player_names << player_name
+      end
+      [true, "Merge successful! Merged #{player_names.to_sentence} with #{primary.name}."]
+    else
+      [false, "Please choose more than 1 player to merge."]
+    end
+  end
+
   # Perform a destructive merge with another player
   def merge! other_player
     transaction do
@@ -81,7 +111,23 @@ class Player < ApplicationRecord
 
       # Change all game details for the merged player to point to this player
       other_player.game_details.each do |detail|
-        detail.update_attribute(:player, self)
+        detail.update_attribute :player, self
+      end
+
+      # Reload to pick up the newly associated game details
+      reload
+
+      # After updating game details, update all associated gameweek players
+      # If we already have a gameweek_player covering this gameweek, we need to refresh all game data
+      # Otherwise, since there is no existing gameweek_player, simply update the player
+      other_player.gameweek_players.each do |other_gameweek_player|
+        gameweek = other_gameweek_player.gameweek
+        if gameweeks.include? gameweek
+          gameweek_player = gameweek_players.where(gameweek: gameweek)
+          gameweek_player.update_all_games
+        else
+          other_gameweek_player.update_attribute :player, self
+        end
       end
 
       # Replace the merged player in any existing rosters with this player
@@ -90,7 +136,16 @@ class Player < ApplicationRecord
         roster.players << self
       end
 
+      # Update transfers
+      other_player.transfers_in.each do |transfer|
+        transfer.update_attribute :player_in, self
+      end
+      other_player.transfers_out.each do |transfer|
+        transfer.update_attribute :player_out, self
+      end
+
       # Destroy the old player
+      other_player.reload
       other_player.destroy
 
       # Finally add the merged player's alternate names to the primary
