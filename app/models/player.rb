@@ -159,11 +159,11 @@ class Player < ApplicationRecord
     ave_team_value = team_players.sum(&:value)/team_players.size.to_f
 
     # This scales the win multiplier based on the relative strength of the two teams
-    scaling_factor_string = "((#{ave_opponent_value} - #{ave_team_value}) * #{details.win_int.to_f} * 0.05"
+    scaling_factor_string = "((#{ave_opponent_value} - #{ave_team_value}) * #{details.win_int_neg.to_f} * 0.05"
     Rails.logger.debug "scaling_factor calculation: #{scaling_factor_string}"
-    scaling_factor = (ave_opponent_value - ave_team_value) * details.win_int.to_f * 0.05
-    calculation_string = "((#{details.solo_kills.to_f} * 0.1) + (#{details.assists.to_f} * 0.05) + (#{details.win_int.to_f} * (0.5 + #{scaling_factor})) - ((#{details.time_spent_dead.to_f}/15) * 0.05)).round(2)"
+    scaling_factor = (ave_opponent_value - ave_team_value) * details.win_int_neg.to_f * 0.05
+    calculation_string = "((#{details.solo_kills.to_f} * 0.1) + (#{details.assists.to_f} * 0.05) + (#{details.win_int_neg.to_f} * (0.5 + #{scaling_factor})) - ((#{details.time_spent_dead.to_f}/15) * 0.05)).round(2)"
     Rails.logger.debug "value_change calculation: #{calculation_string}"
-    ((details.solo_kills.to_f * 0.1) + (details.assists.to_f * 0.05) + (details.win_int.to_f * (0.5 + scaling_factor)) - ((details.time_spent_dead.to_f/15) * 0.05)).round(2)
+    ((details.solo_kills.to_f * 0.1) + (details.assists.to_f * 0.05) + (details.win_int_neg.to_f * (0.5 + scaling_factor)) - ((details.time_spent_dead.to_f/15) * 0.05)).round(2)
   end
 end

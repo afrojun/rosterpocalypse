@@ -11,6 +11,10 @@ class GameDetail < ApplicationRecord
   end
 
   def win_int
+    win ? 1 : 0
+  end
+
+  def win_int_neg
     win ? 1 : -1
   end
 end
