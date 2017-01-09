@@ -6,6 +6,7 @@ class GameweekPlayer < ApplicationRecord
 
   BONUS_AWARD_PERCENTILE = 80
   MAX_BONUS_POINTS = 4
+  MIN_GAMES_FOR_BONUS_AWARD = 30
 
   def self.update_from_game game, gameweek
     game.game_details.each do |detail|
@@ -29,7 +30,8 @@ class GameweekPlayer < ApplicationRecord
                          game_points_breakdown[:time_spent_dead] +
                          [game_points_breakdown[:bonus].count, MAX_BONUS_POINTS].min
                    end.sum
-    update_attribute :points, total_points
+    # overall points cannot be negative
+    update_attribute :points, [total_points, 0].max
   end
 
   # Points breakdown:
@@ -93,42 +95,46 @@ class GameweekPlayer < ApplicationRecord
 
   def player_role_awards detail
     role = detail.player.role
-    stat = case role
-           when "Support"
-             "assists"
-           when "Warrior"
-             "assists"
-           else
-             "solo_kills"
-           end
+    if Player.players_in_role(role).size > MIN_GAMES_FOR_BONUS_AWARD
+      stat = case role
+             when "Support"
+               "assists"
+             when "Warrior"
+               "assists"
+             else
+               "solo_kills"
+             end
 
-    threshold = Player.role_stat_percentile role, stat, BONUS_AWARD_PERCENTILE
-    if threshold < detail.send(stat.to_sym)
-      return ["#{BONUS_AWARD_PERCENTILE}th_percentile_in_#{stat}_for_#{role.downcase}".to_sym]
+      threshold = Player.role_stat_percentile role, stat, BONUS_AWARD_PERCENTILE
+      if threshold < detail.send(stat.to_sym)
+        return ["#{BONUS_AWARD_PERCENTILE}th_percentile_in_#{stat}_for_#{role.downcase}".to_sym]
+      end
     end
     []
   end
 
   def hero_awards detail
     hero = detail.hero
-    stat = case hero.classification
-           when "Support"
-             "assists"
-           when "Warrior"
-             "assists"
-           else
-             "solo_kills"
-           end
+    if hero.game_details.size > MIN_GAMES_FOR_BONUS_AWARD
+      stat = case hero.classification
+             when "Support"
+               "assists"
+             when "Warrior"
+               "assists"
+             else
+               "solo_kills"
+             end
 
-    threshold = detail.hero.stat_percentile stat, BONUS_AWARD_PERCENTILE
-    if threshold < detail.send(stat.to_sym)
-      return ["#{BONUS_AWARD_PERCENTILE}th_percentile_in_#{stat}_for_#{hero.slug}".to_sym]
+      threshold = detail.hero.stat_percentile stat, BONUS_AWARD_PERCENTILE
+      if threshold < detail.send(stat.to_sym)
+        return ["#{BONUS_AWARD_PERCENTILE}th_percentile_in_#{stat}_for_#{hero.slug.underscore}".to_sym]
+      end
     end
     []
   end
 
   def team_awards detail
-    if detail.player.role == "Support"
+    if detail.player.role == "Support" && Game.all.size > MIN_GAMES_FOR_BONUS_AWARD
       team = detail.team
       stat = "deaths"
       team_deaths = detail.game.team_stats[team.name][:deaths]
@@ -144,11 +150,13 @@ class GameweekPlayer < ApplicationRecord
 
   def map_awards game
     map  = game.map
-    # We want this to be low, so we take the inverse percentile
-    inverse_percentile = 100 - BONUS_AWARD_PERCENTILE
-    threshold = map.duration_percentile inverse_percentile
-    if threshold > game.duration_s
-      return ["#{inverse_percentile}th_percentile_in_duration_for_#{map.slug}".to_sym]
+    if map.games.size > MIN_GAMES_FOR_BONUS_AWARD
+      # We want this to be low, so we take the inverse percentile
+      inverse_percentile = 100 - BONUS_AWARD_PERCENTILE
+      threshold = map.duration_percentile inverse_percentile
+      if threshold > game.duration_s
+        return ["#{inverse_percentile}th_percentile_in_duration_for_#{map.slug.underscore}".to_sym]
+      end
     end
     []
   end
