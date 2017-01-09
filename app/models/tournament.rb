@@ -43,12 +43,12 @@ class Tournament < ApplicationRecord
   end
 
   def create_gameweeks
-    gameweek_number = 1
+    gameweek_number = 0
     # Gameweeks start at midday UTC on Mondays
-    gameweek_start_date = start_date.beginning_of_week + 12.hours
+    gameweek_start_date = start_date.beginning_of_week - 1.week + 12.hours
     # Lock rosters at noon on Friday in the timezone of the tournament. We need to add extra checks to ensure that
     # the timezone change doesn't make the roster_lock dates move to a different week
-    gameweek_start_date_in_timezone = start_date.in_time_zone(REGION_TIME_ZONE_MAP[region]).beginning_of_week + 12.hours
+    gameweek_start_date_in_timezone = start_date.in_time_zone(REGION_TIME_ZONE_MAP[region]).beginning_of_week - 1.week + 12.hours
     day_diff = ((gameweek_start_date - gameweek_start_date_in_timezone) / 1.day).round
     gameweek_roster_lock_date = gameweek_start_date_in_timezone.advance(days: 4 + day_diff)
 
@@ -67,8 +67,9 @@ class Tournament < ApplicationRecord
 
   def destroy_gameweeks
     # Gameweeks where the Tournament start_date is after the Gameweek end_date OR the Gameweek start_date is after the Tournament end_date
-    gameweeks.where("start_date > ? OR end_date < ?", end_date, start_date).each do |gameweek|
+    gameweeks.where("start_date > ? OR end_date < ?", end_date, start_date - 1.week).each do |gameweek|
       if gameweek.games.blank? && gameweek.gameweek_rosters.blank? && gameweek.gameweek_players.blank?
+        Rails.logger.info "Destroying orphaned gameweek: #{gameweek.inspect}."
         gameweek.destroy
       else
         Rails.logger.info "Unable to delete orphaned Gameweek since there are still some resources referring to it: #{gameweek.inspect}."
