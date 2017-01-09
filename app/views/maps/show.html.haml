@@ -1,7 +1,7 @@
 = page_title @map.name
 
 %h1= @map.name
-= render "games/games_list", games: @map_games
+= render "games/games_list", games: @map_games, should_paginate: true
 
 %br/
 - if can? :update, Map

@@ -21,7 +21,7 @@
     = link_to_heroes_with_stat p.top_winrate_heroes
 
   %h3 Games
-  = render "games/games_list", games: @player_games
+  = render "games/games_list", games: @player_games, should_paginate: true
   - if can? :update, Player
     = link_to 'Edit', edit_player_path(p)
     |
