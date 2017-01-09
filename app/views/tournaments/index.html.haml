@@ -1,29 +1,11 @@
 = page_title "Tournaments"
 
-%h1 Tournaments
-%table.table.table-sm.table-striped
-  %thead
-    %tr
-      %th Name
-      %th Region
-      %th Games
-      %th Cycle hours
-      %th Start date
-      %th End date
-      - if can? :update, Tournament
-        %th{:colspan => "2"}
-  %tbody
-    - @tournaments.each do |tournament|
-      %tr
-        %td= link_to tournament.name, tournament
-        %td= tournament.region
-        %td= tournament.games.size
-        %td= tournament.cycle_hours
-        %td= tournament.start_date
-        %td= tournament.end_date
-        - if can? :update, Tournament
-          %td= link_to 'Edit', edit_tournament_path(tournament)
-          %td= link_to 'Destroy', tournament, method: :delete, data: { confirm: 'Are you sure?' }
+%h1 Active Tournaments
+= render "tournaments_list", tournaments: @tournaments.where("end_date > ?", Time.now)
+
+%h1 Completed Tournaments
+= render "tournaments_list", tournaments: @tournaments.where("end_date < ?", Time.now)
+
 %br/
 - if can? :create, Tournament
   = link_to 'New Tournament', new_tournament_path

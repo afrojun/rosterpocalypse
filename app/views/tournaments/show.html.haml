@@ -1,12 +1,9 @@
-= page_title "#{@tournament.name} : #{@gameweek.name}"
+= page_title "#{@tournament.name}#{@gameweek.present? ? " : #{@gameweek.name}" : ""}"
 
 %h1= @tournament.name
 %p
   %strong Region:
   = @tournament.region
-%p
-  %strong Cycle hours:
-  = @tournament.cycle_hours
 %p
   %strong Start date:
   = @tournament.start_date
@@ -14,18 +11,19 @@
   %strong End date:
   = @tournament.end_date
 
-%h2= @gameweek.name
+- if @gameweek.present?
+  %h2= @gameweek.name
 
-%span.float-xs-right
-  = select_tag "Select Gameweek", options_from_collection_for_select(@gameweeks, "id", "name_including_dates", @gameweek.id), class: "form-control", id: "gameweek-select"
+  %span.float-xs-right
+    = select_tag "Select Gameweek", options_from_collection_for_select(@gameweeks, "id", "name_including_dates", @gameweek.id), class: "form-control", id: "gameweek-select"
 
-%h3 Games
-= render "games/games_list", games: @tournament_games
+  %h3 Games
+  = render "games/games_list", games: @tournament_games
 
 - if can? :update, @tournament
   = link_to 'Edit', edit_tournament_path(@tournament)
   |
-= link_to 'Back', tournaments_path
+= link_to 'Tournaments', tournaments_path
 
 
 :javascript
