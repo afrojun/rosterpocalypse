@@ -18,7 +18,7 @@ RSpec.describe HeroPresenter do
       FactoryGirl.create :game_detail, hero: hero, win: true
       FactoryGirl.create :game_detail, hero: hero, win: false
       FactoryGirl.create :game_detail, hero: hero, win: true
-      expect(presenter.hero_stats[:win_percent]).to eq 67
+      expect(presenter.hero_stats[:win_percent]).to eq 66.67
     end
   end
 end

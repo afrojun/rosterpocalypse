@@ -59,13 +59,13 @@ RSpec.describe League, type: :model do
 
     it "creates gameweek_rosters for all gameweeks in the tournament" do
       expect(league.add(roster)).to eq true
-      expect(roster.gameweek_rosters.count).to eq 3
+      expect(roster.gameweek_rosters.count).to eq 4
     end
 
     it "creates only one set of gameweek_rosters for all leagues for a tournament" do
       expect(league.add(roster)).to eq true
       expect(private_league.add(roster)).to eq true
-      expect(roster.gameweek_rosters.count).to eq 3
+      expect(roster.gameweek_rosters.count).to eq 4
     end
   end
 
@@ -87,9 +87,9 @@ RSpec.describe League, type: :model do
       league2 = FactoryGirl.create :private_league, tournament: tournament2
       league.add roster
       league2.add roster
-      expect(roster.gameweek_rosters.count).to eq 6
+      expect(roster.gameweek_rosters.count).to eq 8
       league2.remove roster
-      expect(roster.gameweek_rosters.count).to eq 3
+      expect(roster.gameweek_rosters.count).to eq 4
     end
 
     it "only deletes gameweek_rosters that have no points" do
@@ -97,11 +97,11 @@ RSpec.describe League, type: :model do
       league2 = FactoryGirl.create :private_league, tournament: tournament2
       league.add roster
       league2.add roster
-      expect(roster.gameweek_rosters.count).to eq 6
+      expect(roster.gameweek_rosters.count).to eq 8
       gameweek_roster = roster.gameweek_rosters_for_tournament(tournament2).first
       gameweek_roster.update_attribute(:points, 123)
       league2.remove roster
-      expect(roster.gameweek_rosters.count).to eq 4
+      expect(roster.gameweek_rosters.count).to eq 5
       expect(roster.gameweek_rosters).to include gameweek_roster
     end
   end

@@ -42,8 +42,9 @@ class RostersController < RosterpocalypseController
         league_message = ""
         if public_league.present?
           logger.info "Adding the Roster '#{@roster.name}' to Public League '#{public_league.name}'"
-          public_league.rosters << @roster
-          league_message = " and added to the '#{public_league.name}' League"
+          if public_league.add @roster
+            league_message = " and added to the '#{public_league.name}' League"
+          end
         end
 
         format.html { redirect_to edit_roster_path(@roster), notice: "Your roster was successfully created#{league_message}!" }

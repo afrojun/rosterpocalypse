@@ -67,6 +67,13 @@ RSpec.describe Roster, type: :model do
       gameweek_roster.update_attribute :available_transfers, 5
       expect(roster.available_transfers).to eq 5
     end
+
+    it "deducts completed transfers from the original number" do
+      roster.add_to league
+      expect(roster.available_transfers).to eq 1
+      FactoryGirl.create :transfer, gameweek_roster: roster.current_gameweek_rosters.first
+      expect(roster.available_transfers).to eq 0
+    end
   end
 
   context "#update_including_players" do
@@ -199,12 +206,44 @@ RSpec.describe Roster, type: :model do
       end
 
       context "#validate_transfers_count" do
-        it "rejects updates that make more than the allowed number of transfers" do
+        it "validates that the number of players being added and removed are the same" do
           expect(roster).to receive(:allow_free_transfers?).and_return(false)
           players.push support_player, warrior_player
-          expect(roster.update_including_players(players: player_ids)).to be false
+          expect(roster.update_including_players(players: players.map(&:id))).to be false
           expect(roster.players).to eq []
+          expect(roster.errors.messages[:roster].first).to include("transfers must maintain the roster size")
+        end
+
+        it "rejects updates that make more than the allowed number of transfers" do
+          players.push(warrior_player, support_player)
+          roster.update_including_players(players: player_ids)
+          original_players = players.dup
+
+          expect(roster).to receive(:allow_free_transfers?).and_return(true, false)
+          players.shift(2)
+          players.push sub_player, cheap_player
+          new_player_ids = players.map(&:id)
+
+          expect(roster.update_including_players(players: new_player_ids)).to be false
+          expect(roster.players.to_a).to eq original_players
           expect(roster.errors.messages).to include(roster: ["has 1 transfer available in this window"])
+        end
+      end
+
+      context "#roster_unlocked?" do
+        it "rejects the update if the roster is locked" do
+          players.push(warrior_player, support_player)
+          roster.update_including_players(players: player_ids)
+          original_players = players.dup
+
+          allow(roster).to receive(:allow_free_transfers?).and_return(true, false)
+          expect(roster).to receive(:any_roster_lock_in_place?).and_return(true)
+          players.shift(1)
+          players.push cheap_player
+
+          expect(roster.update_including_players(players: players.map(&:id))).to be false
+          expect(roster.players).to eq original_players
+          expect(roster.errors.messages).to include(roster: ["is currently locked until the end of the Gameweek"])
         end
       end
     end

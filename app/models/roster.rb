@@ -39,8 +39,13 @@ class Roster < ApplicationRecord
   end
 
   def available_transfers
-    current_gameweek_rosters.reduce(DEFAULT_TRANSFERS_PER_GAMEWEEK) do |max, gameweek_roster|
+    max_transfers = current_gameweek_rosters.reduce(DEFAULT_TRANSFERS_PER_GAMEWEEK) do |max, gameweek_roster|
       gameweek_roster.available_transfers > max ? gameweek_roster.available_transfers : max
+    end
+    if current_gameweek_rosters.first
+      [max_transfers - current_gameweek_rosters.first.transfers.size, 0].max
+    else
+      max_transfers
     end
   end
 
@@ -67,19 +72,42 @@ class Roster < ApplicationRecord
   def update_players player_ids
     if new_players = validate_roster_size(player_ids)
       if validate_transfers(new_players) && validate_player_roles(new_players) && validate_player_value(new_players)
-        players_to_add = new_players - players
-        players.clear
-        players << new_players
-        return true
+        if allow_free_transfers?
+          Rails.logger.info "Roster #{name}: Freely transferring in players: #{new_players.map(&:name)}"
+          players.clear
+          players << new_players
+          return true
+        elsif roster_unlocked?
+          players_to_add = new_players - players
+          players_to_remove = players - new_players
+          transfer_players players_to_add, players_to_remove
+          return true
+        end
       end
     end
     false
   end
 
+  def transfer_players players_to_add, players_to_remove
+    current_gameweek_rosters.each do |gameweek_roster|
+      in_out_pairs = players_to_add.zip players_to_remove
+
+      in_out_pairs.each do |player_in, player_out|
+        Rails.logger.info "Roster #{name}: Transferring #{player_in.name} IN and #{player_out.name} OUT"
+        transaction do
+          Transfer.create gameweek_roster: gameweek_roster, player_in: player_in, player_out: player_out
+          players.delete(player_out)
+          players << player_in
+          gameweek_roster.update_attribute :available_transfers, (gameweek_roster.available_transfers - 1)
+        end
+      end
+    end
+  end
+
   def validate_one_roster_per_region
     if region_changed?
       if manager.rosters.map(&:region).include?(region)
-        errors.add(:base, "Managers may only have one roster per region.")
+        errors.add(:roster, "managers may only have one roster per region")
         throw :abort
       end
     end
@@ -110,7 +138,7 @@ class Roster < ApplicationRecord
 
   def validate_player_value players
     total_value = players.sum(&:value)
-    if total_value < MAX_TOTAL_VALUE
+    if total_value <= MAX_TOTAL_VALUE
       true
     else
       errors.add(:roster, "may have a maximum total player value of #{MAX_TOTAL_VALUE}")
@@ -119,27 +147,40 @@ class Roster < ApplicationRecord
   end
 
   def validate_transfers new_players
-    diff = new_players - players
+    players_to_add = new_players - players
+    players_to_remove = players - new_players
 
-    max_transfers = allow_free_transfers? ? 5 : available_transfers
-    if diff.size <= max_transfers
-      true
+    if allow_free_transfers? || (players_to_add.size == players_to_remove.size)
+      diff = players_to_add - players_to_remove
+      max_transfers = allow_free_transfers? ? 5 : available_transfers
+      if diff.size <= max_transfers
+        return true
+      else
+        errors.add(:roster, "has #{max_transfers} #{"transfer".pluralize(max_transfers)} available in this window")
+      end
     else
-      errors.add(:roster, "has #{max_transfers} #{"transfer".pluralize(max_transfers)} available in this window")
-      false
+      errors.add(:roster, "transfers must maintain the roster size, please ensure you are adding as many players as you remove")
     end
+    false
   end
 
-  def update_available_transfers num_transfers_completed
-    current_gameweek_rosters.each do |gameweek_roster|
-      new_available_transfers = gameweek_roster.available_transfers - num_transfers_completed
-      adjusted_transfers = new_available_transfers < 0 ? 0 : new_available_transfers
-      gameweek_roster.update_attribute :available_transfers, adjusted_transfers
+  def roster_unlocked?
+    if any_roster_lock_in_place?
+      errors.add(:roster, "is currently locked until the end of the Gameweek")
+      false
+    else
+      true
     end
   end
 
   def allow_free_transfers?
     players.size < MAX_PLAYERS || leagues.blank? || !any_tournaments_in_progress?
+  end
+
+  def any_roster_lock_in_place?
+    current_gameweeks.any? do |gameweek|
+      gameweek.roster_lock_date < Time.now
+    end
   end
 
   def any_tournaments_in_progress?
