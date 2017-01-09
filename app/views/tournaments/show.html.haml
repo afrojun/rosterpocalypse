@@ -1,4 +1,4 @@
-= page_title @tournament.name
+= page_title "#{@tournament.name} : #{@gameweek.name}"
 
 %h1= @tournament.name
 %p
@@ -14,6 +14,11 @@
   %strong End date:
   = @tournament.end_date
 
+%h2= @gameweek.name
+
+%span.float-xs-right
+  = select_tag "Select Gameweek", options_from_collection_for_select(@gameweeks, "id", "name_including_dates", @gameweek.id), class: "form-control", id: "gameweek-select"
+
 %h3 Games
 = render "games/games_list", games: @tournament_games
 
@@ -21,3 +26,25 @@
   = link_to 'Edit', edit_tournament_path(@tournament)
   |
 = link_to 'Back', tournaments_path
+
+
+:javascript
+  $(function() {
+    var currentGameweek = $("#gameweek-select").val();
+    $("#gameweek-select").on("change", function() {
+      var newGameweek = $("#gameweek-select").val();
+      var tournamentPath = $("#gameweek-select")[0].baseURI;
+
+      if(tournamentPath.includes("?")) {
+        if(tournamentPath.includes("gameweek_id")) {
+          window.location.href = tournamentPath.replace(currentGameweek, newGameweek);
+        }
+        else {
+          window.location.href = tournamentPath + "&gameweek_id=" + newGameweek;
+        }
+      }
+      else {
+        window.location.href = tournamentPath + "?gameweek_id=" + newGameweek;
+      }
+    });
+  })

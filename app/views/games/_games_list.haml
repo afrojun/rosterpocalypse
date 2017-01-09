@@ -1,8 +1,10 @@
+- should_paginate ||= false
 - show_checkboxes ||= false
 - checkbox_proc ||= Proc.new { |game| check_box_tag "" }
 
-.center
-  = paginate games
+- if should_paginate
+  .center
+    = paginate games
 
 %table.table.table-sm.table-striped
   %thead

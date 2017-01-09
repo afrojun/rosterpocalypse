@@ -1,5 +1,6 @@
 class TournamentsController < RosterpocalypseController
   before_action :set_tournament, only: [:show, :edit, :update, :destroy]
+  before_action :set_gameweek, only: [:show]
 
   # GET /tournaments
   # GET /tournaments.json
@@ -10,7 +11,8 @@ class TournamentsController < RosterpocalypseController
   # GET /tournaments/1
   # GET /tournaments/1.json
   def show
-    @tournament_games = @tournament.games.includes(:map, :tournament, game_details: [:team]).order(start_date: :desc).page params[:page]
+    @gameweeks = @tournament.gameweeks.includes(:games).select { |gameweek| gameweek.games.any? }
+    @tournament_games = @gameweek.games.includes(:map, :tournament, game_details: [:team])
   end
 
   # GET /tournaments/new
@@ -22,9 +24,9 @@ class TournamentsController < RosterpocalypseController
   # GET /tournaments/1/edit
   def edit
     @tournament_games = Game.where("
-      (tournament_id IS NULL OR tournament_id = ?) AND (start_date >= ? AND start_date <= ?)",
-      @tournament.id, @tournament.start_date, @tournament.end_date
-    ).includes(:map, :tournament, game_details: [:team])
+      (gameweek_id IS NULL OR gameweek_id IN (?)) AND (start_date >= ? AND start_date <= ?)",
+      @tournament.gameweeks.map(&:id), @tournament.start_date, @tournament.end_date
+    ).includes(:map, gameweek: [:tournament], game_details: [:team])
   end
 
   # POST /tournaments
@@ -47,19 +49,21 @@ class TournamentsController < RosterpocalypseController
   # PATCH/PUT /tournaments/1.json
   def update
     if params[:game_ids]
-      games_to_remove = Game.where("id IN (?)", @tournament.games.map(&:id) - params[:game_ids].map(&:to_i))
+      game_ids_to_remove = @tournament.games.map(&:id) - params[:game_ids].map(&:to_i)
+      games_to_remove = Game.where("id IN (?)", game_ids_to_remove)
       if games_to_remove.present?
         logger.info "Removing previously associated games from this tournament: #{games_to_remove.map(&:id)}"
         games_to_remove.each do |game|
-          game.update_attribute(:tournament, nil)
+          game.update_attribute(:gameweek, nil)
         end
       end
 
-      games_to_add = Game.where("id IN (?) AND (tournament_id IS NULL OR tournament_id != ?)", params[:game_ids], @tournament.id)
+      games_to_add = Game.where("id IN (?) AND (gameweek_id IS NULL OR gameweek_id NOT IN (?))", params[:game_ids], @tournament.gameweeks.map(&:id))
       if games_to_add.present?
         logger.info "Adding games to this tournament: #{games_to_add.map(&:id)}"
         games_to_add.each do |game|
-          game.update_attribute(:tournament, @tournament)
+          gameweek = @tournament.gameweeks.where("start_date <= ? AND end_date >= ?", game.start_date, game.start_date).first
+          game.update_attribute(:gameweek, @gameweek)
         end
       end
     end
@@ -89,6 +93,10 @@ class TournamentsController < RosterpocalypseController
     # Use callbacks to share common setup or constraints between actions.
     def set_tournament
       @tournament = Tournament.find(params[:id])
+    end
+
+    def set_gameweek
+      @gameweek = params[:gameweek_id].present? ? Gameweek.find(params[:gameweek_id]) : @tournament.games.first.gameweek
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

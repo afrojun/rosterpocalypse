@@ -37,7 +37,7 @@
 
   - if @tournament_games
     %h3 Games
-    = render "games/games_list", games: @tournament_games, show_checkboxes: true, checkbox_proc: Proc.new { |game| check_box_tag game.id, game.id, game.tournament_id == tournament.id, name: "game_ids[]" }
+    = render "games/games_list", games: @tournament_games, show_checkboxes: true, checkbox_proc: Proc.new { |game| check_box_tag game.id, game.id, game.tournament.try(:id) == tournament.id, name: "game_ids[]" }
 
   .actions.form-group
     = f.submit submit_message, class: "btn btn-lg btn-primary btn-block"
