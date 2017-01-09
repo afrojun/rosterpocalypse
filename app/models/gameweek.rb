@@ -11,4 +11,9 @@ class Gameweek < ApplicationRecord
     format = "%Y-%m-%d"
     "#{name}: #{start_date.strftime(format)} - #{end_date.strftime(format)} (#{games.size})"
   end
+
+  # Is the tournament running this week? This is used to filter out the first/last weeks
+  def is_tournament_week?
+    end_date > tournament.start_date
+  end
 end

@@ -9,6 +9,7 @@ class RosterPickerContainer extends React.Component {
   static propTypes = {
     rosterPath: PropTypes.string.isRequired,
     playersPath: PropTypes.string.isRequired,
+    tournamentPath: PropTypes.string.isRequired,
     rosterRegion: PropTypes.string.isRequired,
     maxPlayersInRoster: PropTypes.number.isRequired,
     maxRosterValue: PropTypes.number.isRequired
@@ -170,9 +171,9 @@ class RosterPickerContainer extends React.Component {
 
     return (
       <div className="form roster-form">
-        <h2 className="form-heading">
+        <h3 className="form-heading">
           {this.state.roster.name} contains {this.state.roster.players.length} players with a total value of {this.totalValue()}
-        </h2>
+        </h3>
         <PlayersTable
           tableOpts={rosterTableOpts}
           imageClass="fa-minus-square text-danger"

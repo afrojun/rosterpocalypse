@@ -22,6 +22,7 @@ class RostersController < RosterpocalypseController
     @roster_props = {
       rosterPath: roster_url(@roster),
       playersPath: players_url,
+      tournamentPath: @roster.tournaments.any? ? tournament_url(@roster.tournaments.first) : "",
       rosterRegion: @roster.region,
       maxPlayersInRoster: Roster::MAX_PLAYERS,
       maxRosterValue: Roster::MAX_TOTAL_VALUE

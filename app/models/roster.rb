@@ -19,8 +19,6 @@ class Roster < ApplicationRecord
 
   MAX_PLAYERS = 5
   MAX_TOTAL_VALUE = 500
-  DEFAULT_TRANSFERS_PER_GAMEWEEK = 1
-  TRANSFERS_IN_FIRST_GAMEWEEK = 5
 
   def self.find_by_manager_and_region manager, region
     Roster.where(manager: manager, region: region).first
@@ -39,13 +37,8 @@ class Roster < ApplicationRecord
   end
 
   def available_transfers
-    max_transfers = current_gameweek_rosters.reduce(DEFAULT_TRANSFERS_PER_GAMEWEEK) do |max, gameweek_roster|
-      gameweek_roster.available_transfers > max ? gameweek_roster.available_transfers : max
-    end
-    if current_gameweek_rosters.first
-      [max_transfers - current_gameweek_rosters.first.transfers.size, 0].max
-    else
-      max_transfers
+    current_gameweek_rosters.reduce(0) do |max, gameweek_roster|
+      gameweek_roster.remaining_transfers > max ? gameweek_roster.remaining_transfers : max
     end
   end
 
@@ -98,7 +91,6 @@ class Roster < ApplicationRecord
           Transfer.create gameweek_roster: gameweek_roster, player_in: player_in, player_out: player_out
           players.delete(player_out)
           players << player_in
-          gameweek_roster.update_attribute :available_transfers, (gameweek_roster.available_transfers - 1)
         end
       end
     end
