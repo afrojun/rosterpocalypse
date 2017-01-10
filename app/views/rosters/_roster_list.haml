@@ -1,8 +1,11 @@
+- show_region ||= false
+
 %table.table.table-sm.table-striped
   %thead
     %tr
       %th Name
-      %th Region
+      - if show_region
+        %th Region
       %th Score
       - if can? :update, Roster
         %th{:colspan => "2"}
@@ -13,7 +16,8 @@
           %td= link_to roster.name, manage_roster_path(roster)
         - else
           %td= link_to roster.name, roster
-        %td= roster.region
+        - if show_region
+          %td= roster.region
         %td= roster.score
         - if can? :destroy, roster
           %td= link_to 'Destroy', roster, method: :delete, data: { confirm: 'Are you sure?' }

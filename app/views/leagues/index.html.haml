@@ -3,12 +3,12 @@
 %h1 Public Leagues
 = render "leagues_list", leagues: @public_leagues
 
-%h1 Private Leagues
-= render "leagues_list", leagues: @private_leagues
+- if @private_leagues.any?
+  %h1 Private Leagues
+  = render "leagues_list", leagues: @private_leagues, show_manager: true
 
 %br/
 - if can? :create, PublicLeague
-  = link_to 'New Public League', new_public_league_path
-  |
+  = link_to 'New Public League', new_public_league_path, class: "btn btn-success"
 - if can? :create, PrivateLeague
-  = link_to 'New Private League', new_private_league_path
+  = link_to 'New Private League', new_private_league_path, class: "btn btn-primary"

@@ -5,7 +5,8 @@ class LeaguesController < RosterpocalypseController
   # GET /leagues.json
   def index
     @public_leagues = PublicLeague.all.includes(:tournament, manager: [:user])
-    @private_leagues = PrivateLeague.all.includes(:tournament, manager: [:user])
+    # Get leagues owned by the manager or in which they have rosters
+    @private_leagues = PrivateLeague.all.includes(:tournament, manager: [:user]).where(id: current_user.manager.participating_in_private_leagues)
   end
 
   # GET /leagues/1

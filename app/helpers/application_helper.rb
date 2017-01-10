@@ -1,7 +1,7 @@
 module ApplicationHelper
 
-  def present model
-    klass = "#{model.class}Presenter".constantize
+  def present model, model_klass = model.class
+    klass = "#{model_klass}Presenter".constantize
     presenter = klass.new model, self
     yield presenter if block_given?
   end

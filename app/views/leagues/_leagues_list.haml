@@ -1,23 +1,28 @@
+- show_manager ||= false
+
 %table.table.table-sm.table-striped
   %thead
     %tr
       %th Name
       %th Tournament
       %th Description
-      %th Manager
+      - if show_manager
+        %th Manager
       %th
       %th{:colspan => "2"}
   %tbody
     - leagues.each do |league|
-      %tr
-        %td= link_to league.name, league
-        %td= link_to league.tournament.name, league.tournament
-        %td= league.description
-        %td= link_to league.manager.name, league.manager
-        %td= league_membership_change league
-        - if can? :update, league
-          %td= link_to 'Edit', edit_league_path(league)
-          %td= link_to 'Destroy', league, method: :delete, data: { confirm: 'Are you sure?' }
-        - else
-          %td
-          %td
+      - present league, "League" do |l|
+        %tr
+          %td= link_to l.name, l
+          %td= link_to l.tournament.name, l.tournament
+          %td= l.truncated_description
+          - if show_manager
+            %td= link_to l.manager.name, l.manager
+          %td= league_membership_change league
+          - if can? :update, league
+            %td= link_to 'Edit', edit_league_path(league)
+            %td= link_to 'Destroy', league, method: :delete, data: { confirm: 'Are you sure?' }
+          - else
+            %td
+            %td

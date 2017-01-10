@@ -13,4 +13,12 @@ class Manager < ApplicationRecord
   def name_changed?
     user.try :username_changed?
   end
+
+  def private_leagues
+    leagues.where(type: "PrivateLeague")
+  end
+
+  def participating_in_private_leagues
+    (rosters.map(&:private_leagues).flatten + private_leagues.to_a).uniq
+  end
 end

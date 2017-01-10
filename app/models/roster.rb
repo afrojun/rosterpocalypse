@@ -28,6 +28,10 @@ class Roster < ApplicationRecord
     gameweek_rosters.where(gameweek: tournament.gameweeks)
   end
 
+  def private_leagues
+    leagues.where(type: "PrivateLeague")
+  end
+
   def current_gameweeks
     tournaments.map(&:current_gameweek)
   end
