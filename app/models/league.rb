@@ -5,11 +5,22 @@ class League < ApplicationRecord
   belongs_to :manager
   belongs_to :tournament
   has_and_belongs_to_many :rosters
+  has_many :gameweek_rosters, -> { distinct }, through: :rosters
 
   validates :name, presence: true, uniqueness: true
   validates_format_of :name, with: /^[a-zA-Z0-9\/\- _\.]*$/, multiline: true
   validates_length_of :name, minimum: 4, maximum: 30
   validates :type, presence: true
+
+  def roster_rank roster
+    rosters.select(:id, :score).order(score: :desc).to_a.index(roster).try(:+, 1)
+  end
+
+  def historic_roster_rank gameweek, roster
+    league_gameweek_rosters = gameweek_rosters.select(:id, :points).where(gameweek: gameweek).order(points: :desc).to_a
+    gameweek_roster = roster.gameweek_rosters.where(gameweek: gameweek).first
+    league_gameweek_rosters.index(gameweek_roster).try(:+, 1)
+  end
 
   def join manager
     if roster = Roster.find_by_manager_and_region(manager, tournament.region)

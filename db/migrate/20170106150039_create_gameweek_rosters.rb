@@ -8,6 +8,9 @@ class CreateGameweekRosters < ActiveRecord::Migration[5.0]
       t.integer :points
 
       t.timestamps
+
+      t.index [:gameweek_id, :roster_id]
+      t.index [:roster_id, :gameweek_id]
     end
   end
 end

@@ -25,16 +25,22 @@ class Tournament < ApplicationRecord
     "" => "UTC"
   }
 
-  # The current Gameweek for the tournament is the first gameweek any time before the start of the
-  # first Gameweek.
-  def current_gameweek
-    now = Time.now
+  # For any time before the start of the first Gameweek, we assume that the first gameweek IS the gameweek, instead of returning nil
+  def find_gameweek date
     first_gameweek = gameweeks.first
-    if now < first_gameweek.start_date
+    if date < first_gameweek.start_date
       first_gameweek
     else
-      gameweeks.where("start_date < ? AND end_date > ?", now, now).first
+      gameweeks.where("start_date < ? AND end_date > ?", date, date).first
     end
+  end
+
+  def current_gameweek
+    find_gameweek Time.now.utc
+  end
+
+  def previous_gameweek
+    find_gameweek Time.now.utc.advance(weeks: -1)
   end
 
   def update_gameweeks

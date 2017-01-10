@@ -4,6 +4,7 @@
 
 $blue: #0077dc;
 $gray: #8e8e8e;
+$lightgray: #eceeef;
 
 i.roster-change {
   cursor: pointer;
@@ -86,4 +87,30 @@ i.roster-change {
 
 .roster-pick-notification {
   padding-left: 10px;
+}
+
+.roster-sidebar {
+  padding: 0px;
+  padding-top: 2px;
+  width: 20%;
+}
+
+.sidebar-table {
+  padding-top: 2em;
+  padding-bottom: 2em;
+  border-bottom: thin solid $lightgray;
+}
+
+.sidebar-table-label {
+  width: 100%;
+}
+.sidebar-table-value {
+  font-weight: bold;
+}
+.sidebar-league-table {
+  padding-top: 1em;
+}
+
+.sidebar-table-subheading {
+  padding-top: 1em;
 }

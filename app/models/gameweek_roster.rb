@@ -1,7 +1,7 @@
 class GameweekRoster < ApplicationRecord
   belongs_to :gameweek
   belongs_to :roster
-  has_many :transfers
+  has_many :transfers, dependent: :destroy
 
   serialize :roster_snapshot, Hash
 
@@ -23,5 +23,9 @@ class GameweekRoster < ApplicationRecord
     else
       Rails.logger.warn "Unable to create a snapshot of an incomplete roster."
     end
+  end
+
+  def points_string
+    points.present? ? points.to_s : "-"
   end
 end

@@ -7,6 +7,9 @@ class CreateGameweekPlayers < ActiveRecord::Migration[5.0]
       t.integer :points,        null: false, default: 0
 
       t.timestamps
+
+      t.index [:gameweek_id, :player_id]
+      t.index [:player_id, :gameweek_id]
     end
   end
 end

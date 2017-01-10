@@ -2,8 +2,10 @@ import React, { PropTypes } from "react";
 import ReactOnRails from "react-on-rails";
 import PlayersTable from "../components/PlayersTable";
 import TableFilter from "../components/TableFilter";
+import RosterSidebar from "../components/RosterSidebar";
 import PaginationElementsPerPageSelector from "../components/PaginationElementsPerPageSelector";
 import rp from "request-promise-native";
+import moment from "moment";
 
 class RosterPickerContainer extends React.Component {
   static propTypes = {
@@ -19,7 +21,12 @@ class RosterPickerContainer extends React.Component {
     super(props);
     this.state = {
       roster: {
-        players: []
+        current_gameweek: {},
+        previous_gameweek: {},
+        tournament: {},
+        players: [],
+        leagues: [],
+        transfers: []
       },
       players: [],
       notification: "",
@@ -32,7 +39,10 @@ class RosterPickerContainer extends React.Component {
     this.fetchData = this.fetchData.bind(this);
     this.addToRoster = this.addToRoster.bind(this);
     this.removeFromRoster = this.removeFromRoster.bind(this);
+    this.colourText = this.colourText.bind(this);
     this.totalValue = this.totalValue.bind(this);
+    this.rosterLockDate = this.rosterLockDate.bind(this);
+    this.remainingTransfersCount = this.remainingTransfersCount.bind(this);
     this.submitRoster = this.submitRoster.bind(this);
     this.showRosterActionForAllPlayers = this.showRosterActionForAllPlayers.bind(this);
     this.updateFilter = this.updateFilter.bind(this);
@@ -105,15 +115,60 @@ class RosterPickerContainer extends React.Component {
               });
   }
 
+  colourText(text, colour) {
+    let className = "";
+
+    switch(colour) {
+      case "red":
+        className = "text-danger";
+        break;
+      case "blue":
+        className = "text-info";
+        break;
+      case "green":
+        className = "text-success";
+        break;
+      default:
+        className = "";
+    }
+    return(<span className={className}>{text}</span>);
+  }
+
   totalValue() {
     let total = this.state.roster.players.reduce((value, player) => {
               return value + player.value;
             }, 0);
-    let className = "";
-    if(total > this.props.maxRosterValue) {
-      className = "text-danger"
+    let colour = (total > this.props.maxRosterValue ? "red" : "");
+    return(this.colourText(total, colour));
+  }
+
+  rosterLockDate() {
+    let timeNow = moment().valueOf();
+    let rosterLock = moment(this.state.roster.current_gameweek.roster_lock_date).valueOf();
+    let text = "";
+    let colour = "";
+    if(this.state.roster.free_transfer_mode) {
+      text = "Free transfer mode!";
+      colour = "green";
+    } else {
+      if(timeNow < rosterLock) {
+        text = moment(rosterLock).fromNow();
+      } else {
+        text = "LOCKED!"
+        colour = "red";
+      }
     }
-    return(<span className={className}>{total}</span>);
+
+    return(this.colourText(text, colour));
+  }
+
+  remainingTransfersCount() {
+    if(this.state.roster.free_transfer_mode) {
+      return this.colourText("\u221e", "green");
+    } else {
+      let remaining_transfers = this.state.roster.current_gameweek.remaining_transfers;
+      return(remaining_transfers == 0 ? this.colourText("0", "red") : remaining_transfers);
+    }
   }
 
   submitRoster() {
@@ -137,6 +192,9 @@ class RosterPickerContainer extends React.Component {
         console.log(err);
         this.setState({notification: <span className="text-danger">Error: {err.error}</span>});
       });
+
+    // Refresh the roster data after updating
+    this.fetchRoster();
   }
 
   showRosterActionForAllPlayers(playerId) {
@@ -169,38 +227,55 @@ class RosterPickerContainer extends React.Component {
       noDataText: "No players in roster."
     }
 
+    console.log(this.state);
+
     return (
-      <div className="form roster-form">
-        <h3 className="form-heading">
-          {this.state.roster.name} contains {this.state.roster.players.length} players with a total value of {this.totalValue()}
-        </h3>
-        <PlayersTable
-          tableOpts={rosterTableOpts}
-          imageClass="fa-minus-square text-danger"
-          players={this.state.roster.players}
-          onClick={this.removeFromRoster}
-          showRosterAction={this.showRosterActionForRosterPlayers}
-          updateFilter={this.updateFilter} />
+      <div>
+        <div className="form roster-form col-xs-10">
+          <h2 className="form-heading">
+            {this.state.roster.name}
+          </h2>
+          <h5>
+            {this.state.roster.tournament.name}
+          </h5>
+          <p>
+            Total value: <b>{this.totalValue()}</b>
+            <br/>
+            Roster lock: <b>{this.rosterLockDate()}</b>
+          </p>
+          <PlayersTable
+            tableOpts={rosterTableOpts}
+            imageClass="fa-minus-square text-danger"
+            players={this.state.roster.players}
+            onClick={this.removeFromRoster}
+            showRosterAction={this.showRosterActionForRosterPlayers}
+            updateFilter={this.updateFilter} />
 
-        <TableFilter
-          filter={this.state.filter}
-          updateFilter={this.updateFilter}
-          clearFilter={this.clearFilter} />
+          <TableFilter
+            filter={this.state.filter}
+            updateFilter={this.updateFilter}
+            clearFilter={this.clearFilter} />
 
-        <PaginationElementsPerPageSelector
-          changePlayersPerPage={this.changePlayersPerPage} />
+          <PaginationElementsPerPageSelector
+            changePlayersPerPage={this.changePlayersPerPage} />
 
-        <PlayersTable
-          tableOpts={playersTableOpts}
-          imageClass="fa-plus-square text-success"
-          players={this.state.players}
-          onClick={this.addToRoster}
-          showRosterAction={this.showRosterActionForAllPlayers}
-          updateFilter={this.updateFilter} />
+          <PlayersTable
+            tableOpts={playersTableOpts}
+            imageClass="fa-plus-square text-success"
+            players={this.state.players}
+            onClick={this.addToRoster}
+            showRosterAction={this.showRosterActionForAllPlayers}
+            updateFilter={this.updateFilter} />
 
-        <input type="submit" value="Update Roster" className="btn btn-primary" onClick={this.submitRoster} />
-        <span className="roster-pick-notification">{this.state.notification}</span>
+          <input type="submit" value="Update Roster" className="btn btn-primary" onClick={this.submitRoster} />
+          <span className="roster-pick-notification">{this.state.notification}</span>
 
+        </div>
+        <div className="roster-sidebar col-xs-2">
+          <RosterSidebar
+            roster={this.state.roster}
+            remainingTransfersCount={this.remainingTransfersCount} />
+        </div>
       </div>
     );
   }

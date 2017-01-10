@@ -5,9 +5,9 @@ class Roster < ApplicationRecord
   belongs_to :manager
   has_and_belongs_to_many :players, -> { order "slug" }
   has_and_belongs_to_many :leagues, -> { order "slug" }
-  has_many :tournaments, -> { distinct }, through: :leagues
+  has_many :tournaments, -> { order("start_date DESC").distinct }, through: :leagues
   has_many :gameweek_rosters, dependent: :destroy
-  has_many :transfers, through: :gameweek_rosters
+  has_many :transfers, -> { order "created_at DESC" }, through: :gameweek_rosters
   has_many :gameweeks, through: :gameweek_rosters
 
   validates :name, presence: true, uniqueness: true
@@ -32,13 +32,34 @@ class Roster < ApplicationRecord
     tournaments.map(&:current_gameweek)
   end
 
+  def previous_gameweeks
+    tournaments.map(&:previous_gameweek)
+  end
+
   def current_gameweek_rosters
     gameweek_rosters.where(gameweek: current_gameweeks)
+  end
+
+  def previous_gameweek_rosters
+    gameweek_rosters.where(gameweek: previous_gameweeks)
   end
 
   def available_transfers
     current_gameweek_rosters.reduce(0) do |max, gameweek_roster|
       gameweek_roster.remaining_transfers > max ? gameweek_roster.remaining_transfers : max
+    end
+  end
+
+  def allow_free_transfers?
+    players.size < MAX_PLAYERS || leagues.blank? || !is_tournament_week?
+  end
+
+  def unlocked?
+    if any_roster_lock_in_place? && is_tournament_week?
+      errors.add(:roster, "is currently locked until the end of the Gameweek")
+      false
+    else
+      true
     end
   end
 
@@ -70,10 +91,11 @@ class Roster < ApplicationRecord
           players.clear
           players << new_players
           return true
-        elsif roster_unlocked?
+        elsif unlocked?
           players_to_add = new_players - players
           players_to_remove = players - new_players
           transfer_players players_to_add, players_to_remove
+          current_gameweek_rosters.each(&:create_snapshot) if available_transfers < 1
           return true
         end
       end
@@ -156,28 +178,15 @@ class Roster < ApplicationRecord
     false
   end
 
-  def roster_unlocked?
-    if any_roster_lock_in_place?
-      errors.add(:roster, "is currently locked until the end of the Gameweek")
-      false
-    else
-      true
-    end
-  end
-
-  def allow_free_transfers?
-    players.size < MAX_PLAYERS || leagues.blank? || !any_tournaments_in_progress?
-  end
-
   def any_roster_lock_in_place?
     current_gameweeks.any? do |gameweek|
       gameweek.roster_lock_date < Time.now
     end
   end
 
-  def any_tournaments_in_progress?
-    tournaments.any? do |tournament|
-      tournament.start_date < Time.now
+  def is_tournament_week?
+    current_gameweeks.any? do |gameweek|
+      gameweek.is_tournament_week?
     end
   end
 

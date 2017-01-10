@@ -239,6 +239,7 @@ RSpec.describe Roster, type: :model do
 
           allow(roster).to receive(:allow_free_transfers?).and_return(true, false)
           expect(roster).to receive(:any_roster_lock_in_place?).and_return(true)
+          expect(roster).to receive(:is_tournament_week?).and_return(true)
           expect(roster).to receive(:available_transfers).and_return(1)
           players.shift(1)
           players.push cheap_player

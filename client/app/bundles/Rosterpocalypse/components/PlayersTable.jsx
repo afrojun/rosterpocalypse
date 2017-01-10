@@ -33,7 +33,9 @@ const PlayersTable = (props) => {
               }
 
             </Td>
-            <Td column="name" value={player.name} className="col-sm-3"><a href={player.url}>{player.name}</a></Td>
+            // TODO: Create a better player summary to show here without leaving the page
+            // <Td column="name" value={player.name} className="col-sm-3"><a href={player.url}>{player.name}</a></Td>
+            <Td column="name" value={player.name} className="col-sm-3">{player.name}</Td>
             <Td column="role" value={player.role} className="col-sm-3">
               <button className="btn btn-link table-filter-link" value={player.role} onClick={props.updateFilter}>{player.role}</button>
             </Td>
