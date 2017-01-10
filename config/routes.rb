@@ -62,4 +62,6 @@ Rails.application.routes.draw do
   devise_for :users, class_name: 'FormUser', controllers: { omniauth_callbacks: 'omniauth_callbacks', registrations: 'registrations' }
 
   post 'replay_details', to: 'api/game_stats_ingestion#create'
+
+  get '/.well-known/acme-challenge/:id' => 'welcome#letsencrypt'
 end
