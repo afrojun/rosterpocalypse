@@ -1,5 +1,5 @@
 class RostersController < RosterpocalypseController
-  before_action :set_roster, only: [:show, :edit, :update, :destroy]
+  before_action :set_roster, only: [:show, :manage, :update, :destroy]
 
   # GET /rosters
   # GET /rosters.json
@@ -17,8 +17,8 @@ class RostersController < RosterpocalypseController
     @roster = Roster.new
   end
 
-  # GET /rosters/1/edit
-  def edit
+  # GET /rosters/1/manage
+  def manage
     @roster_props = {
       rosterPath: roster_url(@roster),
       playersPath: players_url,
@@ -48,7 +48,7 @@ class RostersController < RosterpocalypseController
           end
         end
 
-        format.html { redirect_to edit_roster_path(@roster), notice: "Your roster was successfully created#{league_message}!" }
+        format.html { redirect_to manage_roster_path(@roster), notice: "Your roster was successfully created#{league_message}!" }
         format.json { render :show, status: :created, location: @roster }
       else
         format.html { render :new }
@@ -65,7 +65,7 @@ class RostersController < RosterpocalypseController
         format.html { redirect_to @roster, notice: "Roster was successfully updated." }
         format.json { render :show, status: :ok, location: @roster }
       else
-        format.html { render :edit }
+        format.html { render :manage }
         format.json { render json: @roster.errors.map{ |key, message| "#{key.capitalize} #{message}" }.to_sentence, status: :unprocessable_entity }
       end
     end

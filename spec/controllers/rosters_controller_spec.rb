@@ -68,9 +68,9 @@ RSpec.describe RostersController, type: :controller do
     end
   end
 
-  describe "GET #edit" do
+  describe "GET #manage" do
     it "assigns the requested roster as @roster" do
-      get :edit, params: {id: roster.id}, session: valid_session
+      get :manage, params: {id: roster.id}, session: valid_session
       expect(assigns(:roster)).to eq(roster)
     end
   end
@@ -89,9 +89,9 @@ RSpec.describe RostersController, type: :controller do
         expect(assigns(:roster)).to be_persisted
       end
 
-      it "redirects to edit the newly created roster" do
+      it "redirects to manage the newly created roster" do
         post :create, params: {roster: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(edit_roster_url(Roster.last))
+        expect(response).to redirect_to(manage_roster_url(Roster.last))
       end
     end
 
@@ -145,9 +145,9 @@ RSpec.describe RostersController, type: :controller do
         expect(assigns(:roster)).to eq(roster)
       end
 
-      it "re-renders the 'edit' template" do
+      it "re-renders the 'manage' template" do
         put :update, params: {id: roster.id, roster: invalid_attributes}, session: valid_session
-        expect(response).to render_template("edit")
+        expect(response).to render_template("manage")
       end
     end
 

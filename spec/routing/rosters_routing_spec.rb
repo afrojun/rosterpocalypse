@@ -15,8 +15,8 @@ RSpec.describe RostersController, type: :routing do
       expect(:get => "/rosters/1").to route_to("rosters#show", :id => "1")
     end
 
-    it "routes to #edit" do
-      expect(:get => "/rosters/1/edit").to route_to("rosters#edit", :id => "1")
+    it "routes to #manage" do
+      expect(:get => "/rosters/1/manage").to route_to("rosters#manage", :id => "1")
     end
 
     it "routes to #create" do

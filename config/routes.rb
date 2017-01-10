@@ -12,8 +12,13 @@ Rails.application.routes.draw do
   resources :tournaments
   resources :heroes
   resources :maps
-  resources :rosters
   resources :managers, only: [:index, :show]
+
+  resources :rosters, except: [:edit] do
+    member do
+      get "manage"
+    end
+  end
 
   resources :games do
     resources :details, controller: 'game_details', shallow: true, only: [:new, :create, :edit, :update, :destroy]

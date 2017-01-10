@@ -10,7 +10,7 @@
     - rosters.each do |roster|
       %tr
         - if can? :update, roster
-          %td= link_to roster.name, edit_roster_path(roster)
+          %td= link_to roster.name, manage_roster_path(roster)
         - else
           %td= link_to roster.name, roster
         %td= roster.region

@@ -60,7 +60,7 @@ const RosterSidebar = (props) => {
           <tbody>
             {
               props.roster.transfers.map(transfer => (
-                <tr key={transfer.id}>
+                <tr key={transfer.gameweek_roster_id + "_" + transfer.player_in_id + "_" + transfer.player_out_id}>
                   <td className="sidebar-transfers-players">
                     {transfer.player_in.name} <i className="fa fa-caret-up text-success"></i>
                     <i className="fa fa-caret-down text-danger"></i> {transfer.player_out.name}
