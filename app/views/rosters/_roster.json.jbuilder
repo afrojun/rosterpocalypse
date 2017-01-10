@@ -3,10 +3,16 @@ json.free_transfer_mode roster.allow_free_transfers?
 json.unlocked roster.unlocked?
 json.url roster_url(roster, format: :json)
 
-json.leagues roster.leagues do |league|
+json.public_leagues roster.public_leagues do |league|
   json.partial! "leagues/league", league: league
   json.roster_rank league.roster_rank(roster)
-  json.roster_count roster.leagues.first.rosters.size
+  json.roster_count league.rosters.size
+end
+
+json.private_leagues roster.private_leagues do |league|
+  json.partial! "leagues/league", league: league
+  json.roster_rank league.roster_rank(roster)
+  json.roster_count league.rosters.size
 end
 
 json.tournament do
