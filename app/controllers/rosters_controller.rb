@@ -1,5 +1,5 @@
 class RostersController < RosterpocalypseController
-  before_action :set_roster, only: [:show, :manage, :update, :destroy, :status]
+  before_action :set_roster, only: [:show, :manage, :update, :destroy, :status, :details]
 
   # GET /rosters
   # GET /rosters.json
@@ -19,9 +19,11 @@ class RostersController < RosterpocalypseController
 
   # GET /rosters/1/manage
   def manage
+    authorize! :update, @roster
+
     @roster_props = {
       rosterPath: roster_url(@roster),
-      manageRosterPath: manage_roster_url(@roster),
+      manageRosterPath: details_roster_url(@roster),
       playersPath: players_url,
       rosterRegion: @roster.region,
       maxPlayersInRoster: Roster::MAX_PLAYERS,
@@ -81,11 +83,21 @@ class RostersController < RosterpocalypseController
     end
   end
 
+  def details
+    authorize! :read, @roster
+  end
+
   # GET /rosters/1/status
   def status
+    authorize! :read, @roster
+
     @gameweek = Gameweek.where(id: params[:gameweek]).first || @roster.current_gameweek
     @gameweek_roster = GameweekRoster.where(gameweek: @gameweek, roster: @roster).first
     @gameweek_players_by_player = @gameweek_roster == @roster.current_gameweek_roster ? @gameweek_roster.gameweek_players_by_player(@roster.players) : @gameweek_roster.gameweek_players_by_player
+    @sidebar_props = {
+      rosterPath: roster_url(@roster),
+      manageRosterPath: details_roster_url(@roster)
+    }
   end
 
   private

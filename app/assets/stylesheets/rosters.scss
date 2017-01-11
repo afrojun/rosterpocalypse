@@ -90,15 +90,20 @@ i.roster-change {
 }
 
 .roster-sidebar {
-  padding: 0px;
-  padding-top: 2px;
+  padding-left: 1em;
+  font-size: 0.9em;
   width: 20%;
+  border-left: thin solid $lightgray;
+}
+
+.sidebar-div {
+  padding-top: 1em;
+  padding-bottom: 1em;
+  border-bottom: thin solid $lightgray;
 }
 
 .sidebar-table {
-  padding-top: 2em;
-  padding-bottom: 2em;
-  border-bottom: thin solid $lightgray;
+  padding-top: 1em;
 }
 
 .sidebar-table-label {
@@ -107,10 +112,13 @@ i.roster-change {
 .sidebar-table-value {
   font-weight: bold;
 }
-.sidebar-league-table {
+
+.sidebar-heading {
   padding-top: 1em;
 }
 
-.sidebar-table-subheading {
+.sidebar-subheading {
   padding-top: 1em;
+  font-size: 0.9em;
+  font-weight: bold;
 }

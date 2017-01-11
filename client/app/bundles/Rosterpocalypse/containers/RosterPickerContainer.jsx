@@ -234,9 +234,6 @@ class RosterPickerContainer extends React.Component {
           <h2 className="form-heading">
             {this.state.roster.name}
           </h2>
-          <h5>
-            {this.state.roster.tournament.name}
-          </h5>
           <p>
             Total value: <b>{this.totalValue()}</b>
             <br/>

@@ -1,3 +1,7 @@
+.roster-status-page {
+  width: 80%;
+}
+
 .roster-status-header {
   padding: 1.1em;
   text-align: center;
@@ -9,12 +13,18 @@
   font-weight: bold;
 }
 
+.roster-status-no-data-placeholder {
+  font-weight: bold;
+  font-size: large;
+  text-align: center;
+  padding: 2em;
+}
+
 .roster-status-gameweek-navigation {
 
 }
 
 .roster-status-team-details {
-  border-top: thin solid lightgray;
   padding: 1em;
 }
 

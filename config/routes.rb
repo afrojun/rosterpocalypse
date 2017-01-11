@@ -18,6 +18,7 @@ Rails.application.routes.draw do
     member do
       get "manage"
       get "status"
+      get "details"
     end
   end
 

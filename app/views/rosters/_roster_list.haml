@@ -12,10 +12,7 @@
   %tbody
     - rosters.each do |roster|
       %tr
-        - if can? :update, roster
-          %td= link_to roster.name, manage_roster_path(roster)
-        - else
-          %td= link_to roster.name, roster
+        %td= link_to roster.name, status_roster_path(roster)
         - if show_region
           %td= roster.region
         %td= roster.score
