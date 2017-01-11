@@ -10,7 +10,7 @@
 
   .field
     = f.label :region, class: "sr-only"
-    = f.select :region, Tournament.all.where("end_date > ?", Time.now).map(&:region), {}, required: true, class: "form-control"
+    = f.select :region, Tournament.all.map(&:region).uniq, {}, required: true, class: "form-control"
 
   .actions.form-group
     = f.submit "Create Roster", class: "btn btn-lg btn-primary btn-block"

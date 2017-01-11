@@ -14,7 +14,7 @@ const RosterSidebar = (props) => {
               <td className="sidebar-table-value">{props.roster.score}</td>
             </tr>
             <tr>
-              <td className="sidebar-table-label">{props.roster.previous_gameweek.name}</td>
+              <td className="sidebar-table-label"><a href={props.rosterPath + "/status"}>{props.roster.previous_gameweek.name}</a></td>
               <td className="sidebar-table-value">{props.roster.previous_gameweek.points_string}</td>
             </tr>
           </tbody>
@@ -124,6 +124,7 @@ const RosterSidebar = (props) => {
 
 RosterSidebar.propTypes = {
   roster: PropTypes.object.isRequired,
+  rosterPath: PropTypes.string.isRequired,
   remainingTransfersCount: PropTypes.func.isRequired
 };
 

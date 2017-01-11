@@ -5,7 +5,7 @@ class Gameweek < ApplicationRecord
   has_many :gameweek_rosters
   has_many :rosters, through: :gameweek_rosters
   has_many :transfers, through: :gameweek_rosters
-  has_many :games, -> { order "start_date DESC" }
+  has_many :games, -> { order "games.start_date DESC" }
 
   def name_including_dates
     format = "%Y-%m-%d"
@@ -15,5 +15,13 @@ class Gameweek < ApplicationRecord
   # Is the tournament running this week? This is used to filter out the first/last weeks
   def is_tournament_week?
     end_date > tournament.start_date
+  end
+
+  def next
+    tournament.gameweeks.where(start_date: start_date.advance(weeks: 1)).first
+  end
+
+  def previous
+    tournament.gameweeks.where(start_date: start_date.advance(weeks: -1)).first
   end
 end

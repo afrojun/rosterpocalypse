@@ -25,22 +25,38 @@ class Tournament < ApplicationRecord
     "" => "UTC"
   }
 
-  # For any time before the start of the first Gameweek, we assume that the first gameweek IS the gameweek, instead of returning nil
-  def find_gameweek date
-    first_gameweek = gameweeks.first
-    if date < first_gameweek.start_date
-      first_gameweek
-    else
-      gameweeks.where("start_date < ? AND end_date > ?", date, date).first
+  def self.active_tournaments
+    Tournament.where('end_date > ?', Time.now)
+  end
+
+  # The 'safe' parameter denotes whether we allow the value to be nil
+  # When 'safe', we always return a gameweek, the first one for dates before the start
+  # of the tournament, and the last one for dates after the end of the tournament
+  def find_gameweek date, safe = true
+    if safe
+      first_gameweek = gameweeks.first
+      last_gameweek = gameweeks.last
+
+      if date < first_gameweek.start_date
+        return first_gameweek
+      elsif date > last_gameweek.end_date
+        return last_gameweek
+      end
     end
+
+    gameweeks.where("start_date < ? AND end_date > ?", date, date).first
   end
 
-  def current_gameweek
-    find_gameweek Time.now.utc
+  def next_gameweek safe = true
+    find_gameweek Time.now.utc.advance(weeks: 1), safe
   end
 
-  def previous_gameweek
-    find_gameweek Time.now.utc.advance(weeks: -1)
+  def current_gameweek safe = true
+    find_gameweek Time.now.utc, safe
+  end
+
+  def previous_gameweek safe = true
+    find_gameweek Time.now.utc.advance(weeks: -1), safe
   end
 
   def update_gameweeks

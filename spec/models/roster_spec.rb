@@ -71,7 +71,7 @@ RSpec.describe Roster, type: :model do
     it "deducts completed transfers from the original number" do
       roster.add_to league
       expect(roster.available_transfers).to eq 1
-      FactoryGirl.create :transfer, gameweek_roster: roster.current_gameweek_rosters.first
+      FactoryGirl.create :transfer, gameweek_roster: roster.current_gameweek_roster
       expect(roster.available_transfers).to eq 0
     end
   end
@@ -238,7 +238,7 @@ RSpec.describe Roster, type: :model do
           original_players = players.dup
 
           allow(roster).to receive(:allow_free_transfers?).and_return(true, false)
-          expect(roster).to receive(:any_roster_lock_in_place?).and_return(true)
+          expect(roster).to receive(:roster_lock_in_place?).and_return(true)
           expect(roster).to receive(:is_tournament_week?).and_return(true)
           expect(roster).to receive(:available_transfers).and_return(1)
           players.shift(1)

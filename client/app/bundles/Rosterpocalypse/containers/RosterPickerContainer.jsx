@@ -10,8 +10,8 @@ import moment from "moment";
 class RosterPickerContainer extends React.Component {
   static propTypes = {
     rosterPath: PropTypes.string.isRequired,
+    manageRosterPath: PropTypes.string.isRequired,
     playersPath: PropTypes.string.isRequired,
-    tournamentPath: PropTypes.string.isRequired,
     rosterRegion: PropTypes.string.isRequired,
     maxPlayersInRoster: PropTypes.number.isRequired,
     maxRosterValue: PropTypes.number.isRequired
@@ -110,7 +110,7 @@ class RosterPickerContainer extends React.Component {
   }
 
   fetchRoster() {
-    return rp(this.props.rosterPath + ".json").
+    return rp(this.props.manageRosterPath + ".json").
               then(rosterData => {
                 this.setState({roster: JSON.parse(rosterData)});
               });
@@ -275,7 +275,8 @@ class RosterPickerContainer extends React.Component {
         <div className="roster-sidebar col-xs-2">
           <RosterSidebar
             roster={this.state.roster}
-            remainingTransfersCount={this.remainingTransfersCount} />
+            remainingTransfersCount={this.remainingTransfersCount}
+            rosterPath={this.props.rosterPath} />
         </div>
       </div>
     );

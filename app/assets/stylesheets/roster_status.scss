@@ -1,0 +1,69 @@
+.roster-status-header {
+  padding: 1.1em;
+  text-align: center;
+  display: flex;
+}
+
+.roster-status-heading {
+  font-size: x-large;
+  font-weight: bold;
+}
+
+.roster-status-gameweek-navigation {
+
+}
+
+.roster-status-team-details {
+
+}
+
+.roster-status-player-details {
+  //border: thin solid black;
+  padding: 1em;
+}
+
+.roster-status-player-name {
+  width: 100%;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.roster-status-player-team {
+  width: 100%;
+  font-weight: lighter;
+  font-size: 12px;
+}
+
+.roster-status-player-points {
+  font-size: x-large;
+  font-weight: bold;
+  color: red;
+  text-align: right;
+}
+
+.roster-status-player-game-details {
+  width: 100%;
+  font-size: 14px;
+  padding: 1em;
+}
+
+.roster-status-player-game-details-map {
+  font-weight: bold;
+  padding: 0;
+}
+
+.roster-status-player-game-details-points {
+  font-weight: bold;
+  padding: 0;
+  text-align: right;
+}
+
+.roster-status-player-game-details-points-breakdown {
+  font-size: small;
+  padding-top: 1em;
+  display: none;
+}
+
+.roster-status-player-game-details-bonus {
+  padding-bottom: 1em;
+}

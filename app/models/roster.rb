@@ -36,26 +36,28 @@ class Roster < ApplicationRecord
     leagues.where(type: "PublicLeague")
   end
 
-  def current_gameweeks
-    tournaments.map(&:current_gameweek)
+  def next_gameweek safe = true
+    tournaments.first.next_gameweek(safe)
   end
 
-  def previous_gameweeks
-    tournaments.map(&:previous_gameweek)
+  def current_gameweek safe = true
+    tournaments.first.current_gameweek(safe)
   end
 
-  def current_gameweek_rosters
-    gameweek_rosters.where(gameweek: current_gameweeks)
+  def previous_gameweek safe = true
+    tournaments.first.previous_gameweek(safe)
   end
 
-  def previous_gameweek_rosters
-    gameweek_rosters.where(gameweek: previous_gameweeks)
+  def current_gameweek_roster safe = true
+    gameweek_rosters.where(gameweek: current_gameweek(safe)).first
+  end
+
+  def previous_gameweek_roster safe = true
+    gameweek_rosters.where(gameweek: previous_gameweek(safe)).first
   end
 
   def available_transfers
-    current_gameweek_rosters.reduce(0) do |max, gameweek_roster|
-      gameweek_roster.remaining_transfers > max ? gameweek_roster.remaining_transfers : max
-    end
+    current_gameweek_roster.remaining_transfers > 0 ? current_gameweek_roster.remaining_transfers : 0
   end
 
   def allow_free_transfers?
@@ -63,7 +65,7 @@ class Roster < ApplicationRecord
   end
 
   def unlocked?
-    if any_roster_lock_in_place? && is_tournament_week?
+    if roster_lock_in_place? && is_tournament_week?
       errors.add(:roster, "is currently locked until the end of the Gameweek")
       false
     else
@@ -103,7 +105,7 @@ class Roster < ApplicationRecord
           players_to_add = new_players - players
           players_to_remove = players - new_players
           transfer_players players_to_add, players_to_remove
-          current_gameweek_rosters.each(&:create_snapshot) if available_transfers < 1
+          current_gameweek_roster.create_snapshot if available_transfers < 1
           return true
         end
       end
@@ -112,16 +114,14 @@ class Roster < ApplicationRecord
   end
 
   def transfer_players players_to_add, players_to_remove
-    current_gameweek_rosters.each do |gameweek_roster|
-      in_out_pairs = players_to_add.zip players_to_remove
+    in_out_pairs = players_to_add.zip players_to_remove
 
-      in_out_pairs.each do |player_in, player_out|
-        Rails.logger.info "Roster #{name}: Transferring #{player_in.name} IN and #{player_out.name} OUT"
-        transaction do
-          Transfer.create gameweek_roster: gameweek_roster, player_in: player_in, player_out: player_out
-          players.delete(player_out)
-          players << player_in
-        end
+    in_out_pairs.each do |player_in, player_out|
+      Rails.logger.info "Roster #{name}: Transferring #{player_in.name} IN and #{player_out.name} OUT"
+      transaction do
+        Transfer.create gameweek_roster: current_gameweek_roster, player_in: player_in, player_out: player_out
+        players.delete(player_out)
+        players << player_in
       end
     end
   end
@@ -186,16 +186,12 @@ class Roster < ApplicationRecord
     false
   end
 
-  def any_roster_lock_in_place?
-    current_gameweeks.any? do |gameweek|
-      gameweek.roster_lock_date < Time.now
-    end
+  def roster_lock_in_place?
+    current_gameweek.roster_lock_date < Time.now
   end
 
   def is_tournament_week?
-    current_gameweeks.any? do |gameweek|
-      gameweek.is_tournament_week?
-    end
+    current_gameweek.is_tournament_week?
   end
 
   def copy_errors league

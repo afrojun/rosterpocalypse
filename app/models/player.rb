@@ -33,6 +33,7 @@ class Player < ApplicationRecord
   def update_alternate_names
     PlayerAlternateName.find_or_create_by(player: self, alternate_name: name)
     PlayerAlternateName.find_or_create_by(player: self, alternate_name: name.downcase)
+    PlayerAlternateName.find_or_create_by(player: self, alternate_name: slug)
   end
 
   def validate_destroy
@@ -54,7 +55,7 @@ class Player < ApplicationRecord
     player_names = [player_names] if player_names.is_a?(String)
     downcase_names = player_names.map(&:downcase).uniq
     alternate_names = PlayerAlternateName.where alternate_name: downcase_names
-    alternate_names.map(&:player).uniq
+    alternate_names.map(&:player).uniq.first
   end
 
   def self.find_or_create_including_alternate_names player_name

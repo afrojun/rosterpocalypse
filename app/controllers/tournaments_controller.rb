@@ -5,7 +5,7 @@ class TournamentsController < RosterpocalypseController
   # GET /tournaments
   # GET /tournaments.json
   def index
-    @tournaments = Tournament.all.includes(:games).order(start_date: :desc)
+    @tournaments = Tournament.all.includes(:games)
   end
 
   # GET /tournaments/1

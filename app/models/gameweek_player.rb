@@ -2,7 +2,7 @@ class GameweekPlayer < ApplicationRecord
   belongs_to :gameweek
   belongs_to :player
   has_many :games, through: :gameweek
-  has_many :game_details, through: :games
+  has_many :game_details, -> { order "games.start_date DESC" }, through: :games
 
   serialize :points_breakdown, Hash
 
@@ -19,9 +19,18 @@ class GameweekPlayer < ApplicationRecord
 
   # Refresh all game points for this gameweek
   def update_all_games
-    game_details.each do |detail|
-      refresh game, detail
+    update_attribute :points_breakdown, {}
+    player_game_details.each do |detail|
+      refresh detail.game, detail
     end
+  end
+
+  def player_game_details
+    game_details.where(player: player)
+  end
+
+  def team
+    player_game_details.first.team
   end
 
   def refresh game, detail
@@ -31,47 +40,61 @@ class GameweekPlayer < ApplicationRecord
     update_points
   end
 
+  def points_breakdowns_by_game
+    Hash[
+      points_breakdown.map do |game_hash, breakdown|
+        [Game.find(game_hash), breakdown]
+      end.sort_by { |game, _| game.start_date }
+    ]
+  end
+
   private
 
   def update_points
-    total_points = points_breakdown.map do |game_hash, game_points_breakdown|
-                     game_points_breakdown[:solo_kills] +
-                         game_points_breakdown[:assists] +
-                         game_points_breakdown[:win] -
-                         game_points_breakdown[:time_spent_dead] +
-                         [game_points_breakdown[:bonus].count, MAX_BONUS_POINTS].min
+    total_points = points_breakdown.map do |_, game_points_breakdown|
+                     points_for_game game_points_breakdown
                    end.sum
     # overall points cannot be negative
     update_attribute :points, [total_points, 0].max
+  end
+
+  def points_for_game game_points_breakdown
+    game_points_breakdown[:solo_kills] +
+      game_points_breakdown[:assists] +
+      game_points_breakdown[:win] +
+      game_points_breakdown[:time_spent_dead] +
+      [game_points_breakdown[:bonus].count, MAX_BONUS_POINTS].min
   end
 
   # Points breakdown:
   #
   # Category        |  Assasin/Flex |   Warrior  |  Support
   # ----------------|---------------|------------|------------
-  # solo_kills      |       +3      |     +1     |     +1
+  # solo_kills      |       +2      |     +1     |     +1
   # assists         |       +1      |     +2     |     +2
-  # time_spent_dead |   -(time/30)  | -(time/15) | -(time/15)
+  # time_spent_dead |   -(time/30)  | -(time/30) | -(time/30)
   # win             |       +2      |     +2     |     +2
   # bonus           |    variable   |  variable  |  variable
   #
   def points_breakdown_hash game, detail
     role_stat_modifiers = {
-      assassin: { solo_kills: 3, assists: 1, time_spent_dead: 30.0, win: 2 },
-      flex: { solo_kills: 3, assists: 1, time_spent_dead: 30.0, win: 2 },
-      warrior: { solo_kills: 1, assists: 2, time_spent_dead: 15.0, win: 2 },
-      support: { solo_kills: 1, assists: 2, time_spent_dead: 15.0, win: 2 },
+      assassin: { solo_kills: 2, assists: 1, time_spent_dead: 30.0, win: 2 },
+      flex: { solo_kills: 2, assists: 1, time_spent_dead: 30.0, win: 2 },
+      warrior: { solo_kills: 1, assists: 2, time_spent_dead: 30.0, win: 2 },
+      support: { solo_kills: 1, assists: 2, time_spent_dead: 30.0, win: 2 },
     }
 
     # Assume the player is an assassin if we cannot figure out the role
     role = detail.player.role.present? ? detail.player.role.downcase.to_sym : :assassin
-    {
+    breakdown = {
       solo_kills: detail.solo_kills * role_stat_modifiers[role][:solo_kills],
       assists: detail.assists * role_stat_modifiers[role][:assists],
-      time_spent_dead: (detail.time_spent_dead.to_f/role_stat_modifiers[role][:time_spent_dead]).round,
+      time_spent_dead: -(detail.time_spent_dead.to_f/role_stat_modifiers[role][:time_spent_dead]).round,
       win: detail.win_int * role_stat_modifiers[role][:win],
       bonus: bonus_awards(game, detail)
     }
+    breakdown[:total] = points_for_game(breakdown)
+    breakdown
   end
 
   # Bonus categories:
@@ -97,8 +120,8 @@ class GameweekPlayer < ApplicationRecord
     bonuses = [] +
               player_role_awards(detail) +
               hero_awards(detail) +
-              team_awards(detail) +
-              map_awards(game)
+              team_awards(game, detail) +
+              map_awards(game, detail)
 
     Rails.logger.info "Bonus Awards granted to #{detail.player.name}: #{bonuses.inspect}" if bonuses.any?
     bonuses
@@ -144,11 +167,11 @@ class GameweekPlayer < ApplicationRecord
     []
   end
 
-  def team_awards detail
+  def team_awards game, detail
     if detail.player.role == "Support" && Game.all.size > MIN_GAMES_FOR_BONUS_AWARD
       team = detail.team
       stat = "deaths"
-      team_deaths = detail.game.team_stats[team.name][:deaths]
+      team_deaths = game.team_stats[team.name][:deaths]
       # We want this to be low, so we take the inverse percentile
       inverse_percentile = 100 - BONUS_AWARD_PERCENTILE
       threshold = Game.team_stat_percentile stat, inverse_percentile
@@ -159,13 +182,13 @@ class GameweekPlayer < ApplicationRecord
     []
   end
 
-  def map_awards game
+  def map_awards game, detail
     map  = game.map
     if map.games.size > MIN_GAMES_FOR_BONUS_AWARD
       # We want this to be low, so we take the inverse percentile
       inverse_percentile = 100 - BONUS_AWARD_PERCENTILE
       threshold = map.duration_percentile inverse_percentile
-      if threshold > game.duration_s
+      if threshold > game.duration_s && detail.win
         return ["#{inverse_percentile}th_percentile_in_duration_for_#{map.slug.underscore}".to_sym]
       end
     end

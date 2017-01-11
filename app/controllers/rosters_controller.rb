@@ -1,5 +1,5 @@
 class RostersController < RosterpocalypseController
-  before_action :set_roster, only: [:show, :manage, :update, :destroy]
+  before_action :set_roster, only: [:show, :manage, :update, :destroy, :status]
 
   # GET /rosters
   # GET /rosters.json
@@ -21,8 +21,8 @@ class RostersController < RosterpocalypseController
   def manage
     @roster_props = {
       rosterPath: roster_url(@roster),
+      manageRosterPath: manage_roster_url(@roster),
       playersPath: players_url,
-      tournamentPath: @roster.tournaments.any? ? tournament_url(@roster.tournaments.first) : "",
       rosterRegion: @roster.region,
       maxPlayersInRoster: Roster::MAX_PLAYERS,
       maxRosterValue: Roster::MAX_TOTAL_VALUE
@@ -79,6 +79,13 @@ class RostersController < RosterpocalypseController
       format.html { redirect_to rosters_url, notice: "Roster was successfully destroyed." }
       format.json { head :no_content }
     end
+  end
+
+  # GET /rosters/1/status
+  def status
+    @gameweek = Gameweek.where(id: params[:gameweek]).first || @roster.current_gameweek
+    @gameweek_roster = GameweekRoster.where(gameweek: @gameweek, roster: @roster).first
+    @gameweek_players_by_player = @gameweek_roster == @roster.current_gameweek_roster ? @gameweek_roster.gameweek_players_by_player(@roster.players) : @gameweek_roster.gameweek_players_by_player
   end
 
   private

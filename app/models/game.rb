@@ -33,16 +33,15 @@ class Game < ApplicationRecord
     slug.blank? || game_hash_changed?
   end
 
-  def teams
-    @teams ||= game_details.map(&:team).uniq
+  def other_team team
+    (teams - [team]).first
   end
 
   def swap_teams
     if teams.size == 2
       transaction do
         game_details.each do |detail|
-          new_team = (teams - [detail.team]).first
-          detail.update_attribute(:team, new_team)
+          detail.update_attribute(:team, other_team(detail.team))
         end
       end
     else
@@ -50,5 +49,9 @@ class Game < ApplicationRecord
       false
     end
 
+  end
+
+  def pretty_start_date
+    start_date.strftime("%b %-d %Y %H:%M")
   end
 end
