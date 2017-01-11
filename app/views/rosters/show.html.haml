@@ -1,9 +1,10 @@
 = page_title @roster.name
 
-%p#notice= notice
+%h2= @roster.name
+
 %p
-  %strong Name:
-  = @roster.name
+  %strong Tournament:
+  = @roster.tournament.name
 %p
   %strong Players:
   = @roster.players.map(&:name).to_sentence

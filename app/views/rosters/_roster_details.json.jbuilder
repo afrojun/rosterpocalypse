@@ -13,7 +13,7 @@ json.private_leagues roster.private_leagues do |league|
 end
 
 json.tournament do
-  json.partial! "tournaments/tournament", tournament: roster.leagues.first.tournament
+  json.partial! "tournaments/tournament", tournament: roster.tournament
 end
 
 json.current_gameweek do

@@ -3,7 +3,7 @@
 %h1 Rosters
 - if @my_rosters.any?
   %h2 #{current_user.username}'s Rosters
-  = render 'roster_list', rosters: @my_rosters, show_region: true
+  = render 'roster_list', rosters: @my_rosters, show_tournament: true
 - else
   %p No Rosters found
 

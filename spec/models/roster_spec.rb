@@ -2,69 +2,58 @@ require 'rails_helper'
 
 RSpec.describe Roster, type: :model do
   let(:region) { "EU" }
-  let(:start_date) { Time.now.utc - 1.month }
-  let(:end_date) { Time.now.utc + 1.month }
+  let(:start_date) { Time.parse("2017-01-20") }
+  let(:end_date) { Time.parse("2017-02-20") }
   let(:tournament) { FactoryGirl.create :tournament, region: region, start_date: start_date, end_date: end_date }
   let(:league) { FactoryGirl.create :public_league, tournament: tournament }
-  let(:roster) { FactoryGirl.create :roster, region: region }
+  let(:roster) { FactoryGirl.create :roster, tournament: tournament }
+
+  before :each do
+    allow(Time).to receive(:now).and_return(Time.parse "2017-02-01")
+  end
+
+  context "#create" do
+    it "creates rosters with a valid region" do
+      expect(roster).to be_persisted
+    end
+
+    it "creates gameweek_rosters for all gameweeks in the tournament" do
+      expect(roster.gameweek_rosters.count).to eq 6
+    end
+  end
 
   context "validations" do
     context "region must be one of the pre-defined regions" do
-      it "creates rosters with a valid region" do
-        na_roster = FactoryGirl.create :roster, region: "NA"
-        expect(na_roster).to be_persisted
-      end
-
       it "fails to create rosters with an invalid region" do
-        expect { FactoryGirl.create :roster, region: "Foo" }.to raise_error ActiveRecord::RecordInvalid
+        expect { FactoryGirl.create :roster, tournament: nil }.to raise_error ActiveRecord::StatementInvalid
       end
     end
 
-    context "#validate_one_roster_per_region" do
+    context "#validate_one_roster_per_tournament" do
       let(:manager) { FactoryGirl.create :manager }
 
-      it "fails to create the roster when another exists for that region" do
-        success = FactoryGirl.create :roster, region: "NA", manager: manager
+      it "fails to create the roster when another exists for that tournament" do
+        success = FactoryGirl.create :roster, tournament: tournament, manager: manager
         expect(success).to be_persisted
         manager.rosters = [success]
-        expect { FactoryGirl.create :roster, region: "NA", manager: manager }.to raise_error ActiveRecord::RecordInvalid
-      end
-
-      it "fails to update the roster when another exists for that region" do
-        success = FactoryGirl.create :roster, region: "NA", manager: manager
-        expect(success).to be_persisted
-        manager.rosters = [success]
-        failure = FactoryGirl.create :roster, region: "EU", manager: manager
-        expect(failure).to be_persisted
-        manager.reload
-        manager.rosters << failure
-        expect { failure.update_attributes!(region: "NA") }.to raise_error ActiveRecord::RecordInvalid
-        failure.reload
-        expect(failure.region).to eq "EU"
+        expect { FactoryGirl.create :roster, tournament: tournament, manager: manager }.to raise_error ActiveRecord::RecordNotSaved
       end
     end
 
   end
 
   context "#available_transfers" do
-    let(:start_date) { Time.now.utc - 1.month }
-    let(:end_date) { Time.now.utc + 1.month }
-    let(:tournament) { FactoryGirl.create :tournament, region: region, start_date: start_date, end_date: end_date }
-    let(:league) { FactoryGirl.create :public_league, tournament: tournament }
-
     it "returns the number of available transfers from one league" do
       roster.add_to league
       expect(roster.available_transfers).to eq 1
     end
 
     it "returns the max number of available transfers across multiple leagues" do
-      tournament2 = FactoryGirl.create :tournament, region: region, start_date: start_date + 1.week, end_date: end_date - 1.week
-      league2 = FactoryGirl.create :private_league, tournament: tournament2
+      league2 = FactoryGirl.create :private_league, tournament: tournament
 
       roster.add_to league
       roster.add_to league2
-      gameweek_roster = roster.gameweek_rosters.where(gameweek: tournament2.current_gameweek).first
-      gameweek_roster.update_attribute :available_transfers, 5
+      roster.current_gameweek_roster.update_attribute :available_transfers, 5
       expect(roster.available_transfers).to eq 5
     end
 

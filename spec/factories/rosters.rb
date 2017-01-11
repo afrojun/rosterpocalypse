@@ -3,7 +3,7 @@ FactoryGirl.define do
 
   factory :roster do
     name { generate :roster_name }
-    region { Tournament::REGIONS.sample }
+    tournament
     manager
     score 323
   end

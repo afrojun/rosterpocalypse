@@ -38,15 +38,16 @@ class RostersController < RosterpocalypseController
 
     respond_to do |format|
       if @roster.save
-        # Enroll the roster in the most recently started Public League for the region that has not yet ended (if any)
-        # This is best-effort and we simply carry on if we don't find a League that matches those criteria
-        tournament = Tournament.where('region = ? AND end_date > ?', @roster.region, Time.now).order(start_date: :desc).first
-        public_league = PublicLeague.where(tournament: tournament).first
-        league_message = ""
-        if public_league.present?
-          logger.info "Adding the Roster '#{@roster.name}' to Public League '#{public_league.name}'"
-          if public_league.add @roster
-            league_message = " and added to the '#{public_league.name}' League"
+        # Try to enroll the roster one of the associated tournament's public leagues, if any
+        # This is best-effort and we simply carry on if we don't find a League that matches our criteria
+        if @roster.tournament.active?
+          public_league = @roster.tournament.public_leagues.first
+          league_message = ""
+          if public_league.present?
+            logger.info "Adding the Roster '#{@roster.name}' to Public League '#{public_league.name}'"
+            if public_league.add @roster
+              league_message = " and added to the '#{public_league.name}' League"
+            end
           end
         end
 
@@ -109,7 +110,7 @@ class RostersController < RosterpocalypseController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def roster_params
-    params.require(:roster).permit(:name, :region, players: []).tap do |rp|
+    params.require(:roster).permit(:name, :tournament_id, players: []).tap do |rp|
       rp[:manager_id] = current_user.manager.id
     end
   end

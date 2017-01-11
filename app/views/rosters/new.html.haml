@@ -9,8 +9,8 @@
     = f.text_field :name, autofocus: true, required: true, class: "form-control", placeholder: "Roster Name"
 
   .field
-    = f.label :region, class: "sr-only"
-    = f.select :region, Tournament.all.map(&:region).uniq, {}, required: true, class: "form-control"
+    = f.label :tournament, class: "sr-only"
+    = f.select(:tournament_id, Tournament.active_tournaments.map { |t| [t.name, t.id] }, {include_blank: false}, class: "form-control")
 
   .actions.form-group
     = f.submit "Create Roster", class: "btn btn-lg btn-primary btn-block"

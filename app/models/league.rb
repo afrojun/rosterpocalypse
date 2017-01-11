@@ -23,11 +23,11 @@ class League < ApplicationRecord
   end
 
   def join manager
-    if roster = Roster.find_by_manager_and_region(manager, tournament.region)
+    if roster = Roster.find_by_manager_and_tournament(manager, tournament)
       Rails.logger.info "Adding Roster '#{roster.name}' to League '#{name}'."
       add(roster) && roster
     else
-      errors.add(:base, "You do not have a Roster for the '#{tournament.region}' region, please create one and try again.")
+      errors.add(:base, "You do not have a Roster for this League's tournament '#{tournament.name}'. Please create one and try again.")
       false
     end
   end
@@ -43,16 +43,11 @@ class League < ApplicationRecord
   end
 
   def add roster
-    if roster.region == tournament.region
-      transaction do
-        rosters << roster
-        tournament.gameweeks.order(start_date: :asc).each_with_index do |gameweek, index|
-          GameweekRoster.find_or_create_by gameweek: gameweek, roster: roster
-        end
-      end
+    if roster.tournament == tournament
+      rosters << roster
       true
     else
-      message = "Unable to add Roster '#{roster.name}' for region '#{roster.region}' to League '#{name}' for region '#{tournament.region}'."
+      message = "Unable to add Roster '#{roster.name}' to League '#{name}' since they are not for the same tournament."
       errors.add(:base, message)
       Rails.logger.warn message
       false
@@ -61,12 +56,7 @@ class League < ApplicationRecord
 
   def remove roster
     if roster.leagues.size > 1
-      transaction do
-        # If the roster is not in any other leagues for this tournament, destroy all remaining
-        # GameweekRosters for which points have not yet been calculated
-        rosters.delete roster
-        roster.gameweek_rosters_for_tournament(tournament).where(points: nil).each(&:destroy) unless tournament.rosters.include?(roster)
-      end
+      rosters.delete roster
       true
     else
       message = "Unable to leave league, rosters need to be in at least one league."

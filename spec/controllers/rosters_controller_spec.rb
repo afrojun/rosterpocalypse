@@ -24,17 +24,18 @@ RSpec.describe RostersController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Roster. As you add validations to Roster, be sure to
   # adjust the attributes here as well.
+  let(:tournament) { FactoryGirl.create :tournament }
   let(:valid_attributes) {
     {
       name: "AwesomeRoster",
-      region: "EU"
+      tournament: tournament
     }
   }
 
   let(:invalid_attributes) {
     {
-      name: "BadRoster",
-      region: "Foo"
+      name: "Bad",
+      tournament: tournament
     }
   }
 
@@ -79,18 +80,18 @@ RSpec.describe RostersController, type: :controller do
     context "with valid params" do
       it "creates a new Roster" do
         expect {
-          post :create, params: {roster: valid_attributes}, session: valid_session
+          post :create, params: {roster: valid_attributes.merge(tournament_id: tournament.id)}, session: valid_session
         }.to change(Roster, :count).by(1)
       end
 
       it "assigns a newly created roster as @roster" do
-        post :create, params: {roster: valid_attributes}, session: valid_session
+        post :create, params: {roster: valid_attributes.merge(tournament_id: tournament.id)}, session: valid_session
         expect(assigns(:roster)).to be_a(Roster)
         expect(assigns(:roster)).to be_persisted
       end
 
       it "redirects to manage the newly created roster" do
-        post :create, params: {roster: valid_attributes}, session: valid_session
+        post :create, params: {roster: valid_attributes.merge(tournament_id: tournament.id)}, session: valid_session
         expect(response).to redirect_to(manage_roster_url(Roster.last))
       end
     end

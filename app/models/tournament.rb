@@ -26,7 +26,11 @@ class Tournament < ApplicationRecord
   }
 
   def self.active_tournaments
-    Tournament.where('end_date > ?', Time.now)
+    Tournament.where('end_date > ?', Time.now.utc)
+  end
+
+  def active?
+    end_date > Time.now.utc
   end
 
   # The 'safe' parameter denotes whether we allow the value to be nil
@@ -57,6 +61,14 @@ class Tournament < ApplicationRecord
 
   def previous_gameweek safe = true
     find_gameweek Time.now.utc.advance(weeks: -1), safe
+  end
+
+  def private_leagues
+    leagues.where(type: "PrivateLeague")
+  end
+
+  def public_leagues
+    leagues.where(type: "PublicLeague")
   end
 
   def update_gameweeks

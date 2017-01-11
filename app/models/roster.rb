@@ -5,7 +5,7 @@ class Roster < ApplicationRecord
   belongs_to :manager
   has_and_belongs_to_many :players, -> { order "slug" }
   has_and_belongs_to_many :leagues, -> { order "slug" }
-  has_many :tournaments, -> { order("start_date DESC").distinct }, through: :leagues
+  belongs_to :tournament
   has_many :gameweek_rosters, dependent: :destroy
   has_many :transfers, -> { order "created_at DESC" }, through: :gameweek_rosters
   has_many :gameweeks, through: :gameweek_rosters
@@ -13,15 +13,19 @@ class Roster < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates_format_of :name, with: /^[a-zA-Z0-9\- _\.]*$/, multiline: true
   validates_length_of :name, minimum: 4, maximum: 20
-  validates :region, inclusion: { in: Tournament::REGIONS }
 
-  before_validation :validate_one_roster_per_region
+  before_create :validate_one_roster_per_tournament
+  after_create :create_gameweek_rosters
 
   MAX_PLAYERS = 5
   MAX_TOTAL_VALUE = 500
 
-  def self.find_by_manager_and_region manager, region
-    Roster.where(manager: manager, region: region).first
+  def self.find_by_manager_and_tournament manager, tournament
+    Roster.where(manager: manager, tournament: tournament).first
+  end
+
+  def region
+    tournament.region
   end
 
   def gameweek_rosters_for_tournament tournament
@@ -37,15 +41,15 @@ class Roster < ApplicationRecord
   end
 
   def next_gameweek safe = true
-    tournaments.first.next_gameweek(safe)
+    tournament.next_gameweek(safe)
   end
 
   def current_gameweek safe = true
-    tournaments.first.current_gameweek(safe)
+    tournament.current_gameweek(safe)
   end
 
   def previous_gameweek safe = true
-    tournaments.first.previous_gameweek(safe)
+    tournament.previous_gameweek(safe)
   end
 
   def current_gameweek_roster safe = true
@@ -83,7 +87,7 @@ class Roster < ApplicationRecord
 
   def update_including_players params
     transaction do
-      if update params.slice(:name, :region)
+      if update params.slice(:name)
         params[:players].present? ? update_players(params[:players]) : true
       else
         false
@@ -126,11 +130,17 @@ class Roster < ApplicationRecord
     end
   end
 
-  def validate_one_roster_per_region
-    if region_changed?
-      if manager.rosters.map(&:region).include?(region)
-        errors.add(:roster, "managers may only have one roster per region")
-        throw :abort
+  def validate_one_roster_per_tournament
+    if manager.rosters.map(&:tournament).include?(tournament)
+      errors.add(:roster, "managers may only have one roster per tournament")
+      throw :abort
+    end
+  end
+
+  def create_gameweek_rosters
+    transaction do
+      tournament.gameweeks.each do |gameweek|
+        GameweekRoster.find_or_create_by gameweek: gameweek, roster: self
       end
     end
   end

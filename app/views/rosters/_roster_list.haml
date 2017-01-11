@@ -1,11 +1,11 @@
-- show_region ||= false
+- show_tournament ||= false
 
 %table.table.table-sm.table-striped
   %thead
     %tr
       %th Name
-      - if show_region
-        %th Region
+      - if show_tournament
+        %th Tournament
       %th Score
       - if can? :update, Roster
         %th{:colspan => "2"}
@@ -13,8 +13,8 @@
     - rosters.each do |roster|
       %tr
         %td= link_to roster.name, status_roster_path(roster)
-        - if show_region
-          %td= roster.region
+        - if show_tournament
+          %td= roster.tournament.name
         %td= roster.score
         - if can? :destroy, roster
           %td= link_to 'Destroy', roster, method: :delete, data: { confirm: 'Are you sure?' }
