@@ -17,7 +17,6 @@ Rails.application.routes.draw do
   resources :rosters, except: [:edit] do
     member do
       get "manage"
-      get "status"
       get "details"
     end
   end

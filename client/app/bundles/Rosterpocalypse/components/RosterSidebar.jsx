@@ -12,9 +12,9 @@ const RosterSidebar = (props) => {
           <p className="sidebar-subheading">
             {props.roster.tournament.name}
           </p>
-          <a href={props.rosterPath + "/manage"}>Manage  </a>
-          |
-          <a href={props.rosterPath + "/status"}>  Status</a>
+          <a href={props.rosterPath}>Status</a>
+          {"  |  "}
+          <a href={props.rosterPath + "/manage"}>Manage</a>
         </div>
       </div>
 

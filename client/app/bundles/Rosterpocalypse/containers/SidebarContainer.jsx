@@ -7,7 +7,7 @@ import moment from "moment";
 class RosterPickerContainer extends React.Component {
   static propTypes = {
     rosterPath: PropTypes.string.isRequired,
-    manageRosterPath: PropTypes.string.isRequired,
+    rosterDetailsPath: PropTypes.string.isRequired,
   };
 
   constructor(props, _railsContext) {
@@ -34,7 +34,7 @@ class RosterPickerContainer extends React.Component {
   }
 
   fetchRoster() {
-    return rp(this.props.manageRosterPath + ".json").
+    return rp(this.props.rosterDetailsPath + ".json").
               then(rosterData => {
                 this.setState({roster: JSON.parse(rosterData)});
               });

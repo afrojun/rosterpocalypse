@@ -12,7 +12,7 @@
   %tbody
     - rosters.each do |roster|
       %tr
-        %td= link_to roster.name, status_roster_path(roster)
+        %td= link_to roster.name, roster
         - if show_tournament
           %td= roster.tournament.name
         %td= roster.score
