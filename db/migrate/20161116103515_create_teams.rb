@@ -11,5 +11,7 @@ class CreateTeams < ActiveRecord::Migration[5.0]
 
     add_index :teams, :name, unique: true
     add_index :teams, :slug, unique: true
+    add_index :teams, :region
+    add_index :teams, :active
   end
 end

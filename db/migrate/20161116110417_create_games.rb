@@ -13,5 +13,6 @@ class CreateGames < ActiveRecord::Migration[5.0]
 
     add_index :games, :game_hash, unique: true
     add_index :games, :slug, unique: true
+    add_index :games, :start_date
   end
 end

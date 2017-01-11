@@ -9,5 +9,9 @@ class CreateGameweeks < ActiveRecord::Migration[5.0]
 
       t.timestamps
     end
+
+    add_index :gameweeks, :start_date
+    add_index :gameweeks, :roster_lock_date
+    add_index :gameweeks, :end_date
   end
 end

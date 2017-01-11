@@ -11,5 +11,7 @@ class CreateGameweekPlayers < ActiveRecord::Migration[5.0]
       t.index [:gameweek_id, :player_id]
       t.index [:player_id, :gameweek_id]
     end
+
+    add_index :gameweek_players, :points
   end
 end

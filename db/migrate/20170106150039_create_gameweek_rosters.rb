@@ -12,5 +12,7 @@ class CreateGameweekRosters < ActiveRecord::Migration[5.0]
       t.index [:gameweek_id, :roster_id]
       t.index [:roster_id, :gameweek_id]
     end
+
+    add_index :gameweek_rosters, :points
   end
 end

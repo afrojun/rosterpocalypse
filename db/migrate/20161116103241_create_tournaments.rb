@@ -13,5 +13,7 @@ class CreateTournaments < ActiveRecord::Migration[5.0]
 
     add_index :tournaments, :name, unique: true
     add_index :tournaments, :slug, unique: true
+    add_index :tournaments, :start_date
+    add_index :tournaments, :end_date
   end
 end

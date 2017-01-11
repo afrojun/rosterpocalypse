@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(version: 20170106155216) do
     t.index ["gameweek_id"], name: "index_games_on_gameweek_id", using: :btree
     t.index ["map_id"], name: "index_games_on_map_id", using: :btree
     t.index ["slug"], name: "index_games_on_slug", unique: true, using: :btree
+    t.index ["start_date"], name: "index_games_on_start_date", using: :btree
   end
 
   create_table "gameweek_players", force: :cascade do |t|
@@ -68,8 +69,11 @@ ActiveRecord::Schema.define(version: 20170106155216) do
     t.integer  "points",           default: 0, null: false
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
+    t.index ["gameweek_id", "player_id"], name: "index_gameweek_players_on_gameweek_id_and_player_id", using: :btree
     t.index ["gameweek_id"], name: "index_gameweek_players_on_gameweek_id", using: :btree
+    t.index ["player_id", "gameweek_id"], name: "index_gameweek_players_on_player_id_and_gameweek_id", using: :btree
     t.index ["player_id"], name: "index_gameweek_players_on_player_id", using: :btree
+    t.index ["points"], name: "index_gameweek_players_on_points", using: :btree
   end
 
   create_table "gameweek_rosters", force: :cascade do |t|
@@ -80,7 +84,10 @@ ActiveRecord::Schema.define(version: 20170106155216) do
     t.integer  "points"
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
+    t.index ["gameweek_id", "roster_id"], name: "index_gameweek_rosters_on_gameweek_id_and_roster_id", using: :btree
     t.index ["gameweek_id"], name: "index_gameweek_rosters_on_gameweek_id", using: :btree
+    t.index ["points"], name: "index_gameweek_rosters_on_points", using: :btree
+    t.index ["roster_id", "gameweek_id"], name: "index_gameweek_rosters_on_roster_id_and_gameweek_id", using: :btree
     t.index ["roster_id"], name: "index_gameweek_rosters_on_roster_id", using: :btree
   end
 
@@ -92,6 +99,9 @@ ActiveRecord::Schema.define(version: 20170106155216) do
     t.datetime "end_date",         null: false
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
+    t.index ["end_date"], name: "index_gameweeks_on_end_date", using: :btree
+    t.index ["roster_lock_date"], name: "index_gameweeks_on_roster_lock_date", using: :btree
+    t.index ["start_date"], name: "index_gameweeks_on_start_date", using: :btree
     t.index ["tournament_id"], name: "index_gameweeks_on_tournament_id", using: :btree
   end
 
@@ -196,16 +206,18 @@ ActiveRecord::Schema.define(version: 20170106155216) do
   end
 
   create_table "rosters", force: :cascade do |t|
-    t.string   "name",                   null: false
-    t.integer  "manager_id",             null: false
-    t.string   "region",                 null: false
-    t.integer  "score",      default: 0, null: false
-    t.string   "slug",                   null: false
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "name",                      null: false
+    t.integer  "manager_id",                null: false
+    t.integer  "tournament_id",             null: false
+    t.integer  "score",         default: 0, null: false
+    t.string   "slug",                      null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
     t.index ["manager_id"], name: "index_rosters_on_manager_id", using: :btree
     t.index ["name"], name: "index_rosters_on_name", unique: true, using: :btree
+    t.index ["score"], name: "index_rosters_on_score", using: :btree
     t.index ["slug"], name: "index_rosters_on_slug", unique: true, using: :btree
+    t.index ["tournament_id"], name: "index_rosters_on_tournament_id", using: :btree
   end
 
   create_table "team_alternate_names", force: :cascade do |t|
@@ -224,7 +236,9 @@ ActiveRecord::Schema.define(version: 20170106155216) do
     t.string   "slug",                       null: false
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
+    t.index ["active"], name: "index_teams_on_active", using: :btree
     t.index ["name"], name: "index_teams_on_name", unique: true, using: :btree
+    t.index ["region"], name: "index_teams_on_region", using: :btree
     t.index ["slug"], name: "index_teams_on_slug", unique: true, using: :btree
   end
 
@@ -237,8 +251,10 @@ ActiveRecord::Schema.define(version: 20170106155216) do
     t.string   "slug",        null: false
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.index ["end_date"], name: "index_tournaments_on_end_date", using: :btree
     t.index ["name"], name: "index_tournaments_on_name", unique: true, using: :btree
     t.index ["slug"], name: "index_tournaments_on_slug", unique: true, using: :btree
+    t.index ["start_date"], name: "index_tournaments_on_start_date", using: :btree
   end
 
   create_table "transfers", force: :cascade do |t|
@@ -289,6 +305,7 @@ ActiveRecord::Schema.define(version: 20170106155216) do
   add_foreign_key "managers", "users"
   add_foreign_key "player_alternate_names", "players"
   add_foreign_key "rosters", "managers"
+  add_foreign_key "rosters", "tournaments"
   add_foreign_key "team_alternate_names", "teams"
   add_foreign_key "transfers", "gameweek_rosters"
 end
