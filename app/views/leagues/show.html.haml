@@ -1,19 +1,17 @@
 = page_title @league.name
 
-%h1= @league.name
-%p
-  %strong Tournament:
-  = link_to @league.tournament.name, @league.tournament
-%p
-  %strong Region:
-  = @league.tournament.region
-%p
-  %strong Description:
-  = @league.description
+%h1
+  = @league.name
+  = league_membership_change @league, ""
 
-= league_membership_change @league
+%h4= @league.tournament.name
 
-= render "rosters/roster_list", rosters: @rosters
+%p= @league.description
+
+- if @rosters.any?
+  = render "rosters/roster_list", rosters: @rosters
+- else
+  %br
 
 - if can? :update, @league
   = link_to 'Edit', edit_league_path(@league)
