@@ -228,8 +228,6 @@ class RosterPickerContainer extends React.Component {
       noDataText: "No players in roster."
     }
 
-    console.log(this.state);
-
     return (
       <div>
         <div className="form roster-form col-xs-10">

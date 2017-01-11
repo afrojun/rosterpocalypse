@@ -35,6 +35,10 @@ class GameweekRoster < ApplicationRecord
     end
   end
 
+  def update_points
+    update_attribute :points, gameweek_points
+  end
+
   def parse_snapshot
     @parsed_snapshot ||= begin
       if roster_snapshot.present?
@@ -58,6 +62,10 @@ class GameweekRoster < ApplicationRecord
     players.map do |player|
       GameweekPlayer.where(gameweek: gameweek, player: player).first
     end
+  end
+
+  def gameweek_points
+    gameweek_players.compact.map(&:points).sum
   end
 
   def gameweek_players_by_player players = snapshot_players

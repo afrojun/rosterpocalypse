@@ -5,7 +5,7 @@
 }
 
 .roster-status-heading {
-  font-size: x-large;
+  font-size: 2.5em;
   font-weight: bold;
 }
 
@@ -14,18 +14,72 @@
 }
 
 .roster-status-team-details {
+  border-top: thin solid lightgray;
+  padding: 1em;
+}
 
+.roster-status-gameweek-summary {
+  padding: 1em;
 }
 
 .roster-status-player-details {
-  //border: thin solid black;
   padding: 1em;
+  background-color: $lightgray
+}
+
+.roster-status-gameweek-details {
+  padding: 0em;
+}
+
+.roster-status-gameweek-points {
+  text-align: center;
+}
+
+.roster-status-gameweek-points-title {
+  font-weight: bold;
+}
+
+.roster-status-gameweek-points-total {
+  font-weight: bold;
+  font-size: 2.8em;
+  color: red;
+}
+
+.roster-status-gameweek-stats {
+  text-align: left;
+}
+
+.roster-status-gameweek-stat-name {
+  padding: 0.2em;
+}
+.roster-status-gameweek-stat-value {
+  padding: 0.2em;
+  text-align: center;
+}
+
+.roster-status-player-no-games-placeholder {
+  font-weight: bold;
+  padding: 1em;
+  background-color: white;
+}
+
+.active-player-gameweek {
+  background-color: $lightgray;
+}
+.inactive-player-gameweek {
+  background-color: white;
+}
+
+.roster-status-player {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
 }
 
 .roster-status-player-name {
   width: 100%;
   font-weight: bold;
   font-size: 16px;
+  cursor: pointer;
 }
 
 .roster-status-player-team {
@@ -37,8 +91,8 @@
 .roster-status-player-points {
   font-size: x-large;
   font-weight: bold;
-  color: red;
   text-align: right;
+  padding: 0em;
 }
 
 .roster-status-player-game-details {
@@ -49,21 +103,26 @@
 
 .roster-status-player-game-details-map {
   font-weight: bold;
-  padding: 0;
+  padding: 1em;
+  cursor: pointer;
+  background-color: white;
 }
 
 .roster-status-player-game-details-points {
   font-weight: bold;
-  padding: 0;
+  padding: 1em;
   text-align: right;
+  background-color: white;
 }
 
 .roster-status-player-game-details-points-breakdown {
   font-size: small;
   padding-top: 1em;
   display: none;
+  background-color: white;
 }
 
 .roster-status-player-game-details-bonus {
   padding-bottom: 1em;
+  background-color: white;
 }
