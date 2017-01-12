@@ -75,8 +75,8 @@ RSpec.describe Player, type: :model do
         allow(player1).to receive(:game_details).and_return(game_details1)
         allow(player2).to receive(:game_details).and_return(game_details2)
 
-        expect(player1.send :value_change, game_details1).to eq 0.53
-        expect(player2.send :value_change, game_details2).to eq -0.65
+        expect(player1.send :value_change, game_details1).to eq 0.44333333333333336
+        expect(player2.send :value_change, game_details2).to eq -0.71
       end
     end
 
@@ -86,7 +86,7 @@ RSpec.describe Player, type: :model do
 
         allow(game1).to receive(:players).and_return([player1, player2])
         player1.update_value
-        expect(player1.value).to eq 100.54
+        expect(player1.value).to eq 90.44
       end
 
       it "updates the value for player2 correctly" do
@@ -94,7 +94,7 @@ RSpec.describe Player, type: :model do
 
         allow(game1).to receive(:players).and_return([player1, player2])
         player2.update_value
-        expect(player2.value).to eq 99.36
+        expect(player2.value).to eq 89.29
       end
     end
   end

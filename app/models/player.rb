@@ -161,7 +161,8 @@ class Player < ApplicationRecord
                     tracking_value + value_change(details)
                   end
 
-    player_value = player_value + (game_details.size.to_f * 0.01) # confidence factor
+    inflation_adjustment_factor = -10
+    player_value = player_value.round(2) + inflation_adjustment_factor
 
     if player_value <= MAX_VALUE and player_value >= MIN_VALUE
       update_attribute :value, player_value
@@ -201,7 +202,7 @@ class Player < ApplicationRecord
 
   # Value breakdown:
   # Kill         = +0.1
-  # Assist       = +0.05
+  # Assist       = +0.02
   # Win          = +0.5
   # Loss         = -0.5
   # 15s Dead     = -0.05
@@ -216,10 +217,12 @@ class Player < ApplicationRecord
 
     # This scales the win multiplier based on the relative strength of the two teams
     scaling_factor_string = "((#{ave_opponent_value} - #{ave_team_value}) * #{details.win_int_neg.to_f} * 0.05"
-    Rails.logger.debug "scaling_factor calculation: #{scaling_factor_string}"
     scaling_factor = (ave_opponent_value - ave_team_value) * details.win_int_neg.to_f * 0.05
-    calculation_string = "((#{details.solo_kills.to_f} * 0.1) + (#{details.assists.to_f} * 0.05) + (#{details.win_int_neg.to_f} * (0.5 + #{scaling_factor})) - ((#{details.time_spent_dead.to_f}/15) * 0.05)).round(2)"
-    Rails.logger.debug "value_change calculation: #{calculation_string}"
-    ((details.solo_kills.to_f * 0.1) + (details.assists.to_f * 0.05) + (details.win_int_neg.to_f * (0.5 + scaling_factor)) - ((details.time_spent_dead.to_f/15) * 0.05)).round(2)
+    Rails.logger.debug "scaling_factor calculation: #{scaling_factor_string} = #{scaling_factor}"
+
+    calculation_string = "(#{details.solo_kills.to_f} * 0.1) + (#{details.assists.to_f} * 0.02) + (#{details.win_int_neg.to_f} * (0.5 + #{scaling_factor})) - ((#{details.time_spent_dead.to_f}/15) * 0.05)"
+    result = (details.solo_kills.to_f * 0.1) + (details.assists.to_f * 0.02) + (details.win_int_neg.to_f * (0.5 + scaling_factor)) - ((details.time_spent_dead.to_f/15) * 0.05)
+    Rails.logger.debug "value_change calculation: #{calculation_string} = #{result}"
+    result
   end
 end
