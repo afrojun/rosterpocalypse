@@ -13,31 +13,7 @@
   = hidden_field_tag "region", @teams_filter[:region]
   = hidden_field_tag "active", @teams_filter[:active]
 
-  %table.table.table-sm.table-striped
-    %thead
-      %tr
-        - if can? :update, Player
-          %th
-        %th Name
-        %th Team
-        %th Role
-        %th Games
-        %th Value
-        - if can? :update, Player
-          %th{:colspan => "2"}
-    %tbody
-      - @players.each do |player|
-        %tr
-          - if can? :update, Player
-            %td= check_box_tag player.id, player.id, false, name: "player_ids[]"
-          %td= link_to player.name, player
-          %td= player.team.present? ? link_to(player.team.name, player.team) : ""
-          %td= player.role
-          %td= player.game_details.size
-          %td= player.value
-          - if can? :update, Player
-            %td= link_to "Edit", edit_player_path(player)
-            %td= link_to "Destroy", player, method: :delete, data: { confirm: "Are you sure?" }
+  = render "players_list", players: @players, show_checkboxes: true
 
   - if can? :update, Player
     .actions.form_group

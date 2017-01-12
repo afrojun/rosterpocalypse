@@ -1,0 +1,27 @@
+- show_checkboxes ||= false
+
+%table.table.table-sm.table-striped
+  %thead
+    %tr
+      - if show_checkboxes && can?(:update, Player)
+        %th
+      %th Name
+      %th Team
+      %th Role
+      %th Games
+      %th Value
+      - if can? :update, Player
+        %th{:colspan => "2"}
+  %tbody
+    - players.each do |player|
+      %tr
+        - if show_checkboxes && can?(:update, Player)
+          %td= check_box_tag player.id, player.id, false, name: "player_ids[]"
+        %td= link_to player.name, player
+        %td= player.team.present? ? link_to(player.team.name, player.team) : ""
+        %td= player.role
+        %td= player.game_details.size
+        %td= player.value
+        - if can? :update, Player
+          %td= link_to "Edit", edit_player_path(player)
+          %td= link_to "Destroy", player, method: :delete, data: { confirm: "Are you sure?" }
