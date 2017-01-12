@@ -12,8 +12,10 @@
 
   %body
     .container
-      %nav.navbar.navbar-static-top.navbar-dark.bg-inverse
-        %a.navbar-brand{href: root_path}= t('title')
+      %nav.navbar.navbar-toggleable-sm.navbar-dark.bg-inverse
+        %a.navbar-brand.brand-name{href: root_path}
+          = image_tag "logo.svg", alt: "Rosterpocalypse", width: "36", height: 32, class: "logo-image"
+          = t('title')
         %ul.nav.navbar-nav
           - if user_signed_in?
             %li.nav-item
@@ -21,28 +23,26 @@
             %li.nav-item
               %a.nav-link{href: leagues_path} Leagues
           - if user_signed_in? && current_user.admin?
-            %li.nav-item
-              %a.nav-link{href: tournaments_path} Tournaments
-            %li.nav-item
-              %a.nav-link{href: managers_path} Managers
-            %li.nav-item
-              %a.nav-link{href: players_path} Players
-            %li.nav-item
-              %a.nav-link{href: games_path} Games
-            %li.nav-item
-              %a.nav-link{href: heroes_path} Heroes
-            %li.nav-item
-              %a.nav-link{href: maps_path} Maps
-            %li.nav-item
-              %a.nav-link{href: teams_path} Teams
+            %li.nav-item.dropdown
+              %a.nav-link.dropdown-toggle{href: "#", id: "navbarAdminDropdownMenuLink", "data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false"}
+                %i{class: "fa fa-lg fa-lock"}
+                Admin Links
+              .dropdown-menu{"aria-labelledby" => "navbarAdminDropdownMenuLink"}
+                %a.dropdown-item{href: tournaments_path} Tournaments
+                %a.dropdown-item{href: managers_path} Managers
+                %a.dropdown-item{href: players_path} Players
+                %a.dropdown-item{href: games_path} Games
+                %a.dropdown-item{href: heroes_path} Heroes
+                %a.dropdown-item{href: maps_path} Maps
+                %a.dropdown-item{href: teams_path} Teams
 
           %span.float-xs-right
             - if user_signed_in?
               %li.nav-item.dropdown.float-lg-right
-                %a.nav-link.dropdown-toggle{href: "#", id: "navbarDropdownMenuLink", "data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false"}
+                %a.nav-link.dropdown-toggle{href: "#", id: "navbarUserDropdownMenuLink", "data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false"}
                   %i{class: "fa fa-lg fa-user-circle"}
                   Hello #{current_user.username}!
-                .dropdown-menu{"aria-labelledby" => "navbarDropdownMenuLink"}
+                .dropdown-menu{"aria-labelledby" => "navbarUserDropdownMenuLink"}
                   %a.dropdown-item{href: edit_user_registration_path} Edit profile
                   %a.dropdown-item{href: destroy_user_session_path, "data-method" => "delete"} Logout
             - else

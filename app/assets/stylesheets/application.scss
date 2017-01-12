@@ -5,6 +5,28 @@
 @import "roster_status";
 @import "games";
 
+@font-face {
+  font-family: "3rd Man Regular";
+  src: asset-url('3rdMan.eot');
+  src: asset-url('3rdMan.svg#3rdmanregular') format('svg'),
+       asset-url('3rdMan.eot?#iefix') format('embedded-opentype'),
+       asset-url('3rdMan.woff') format('woff'),
+       asset-url('3rdMan.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.logo-image {
+  filter: invert(100%) brightness(200%);
+}
+
+.brand-name {
+  font-family: "3rd Man Regular";
+  font-size: 25px;
+  padding: 0em;
+  padding-right: 0.4em;
+}
+
 .compact-form {
   max-width: 330px;
   padding: 15px;
