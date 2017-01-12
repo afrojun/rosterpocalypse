@@ -5,6 +5,13 @@ GIT
     omniauth-reddit (0.0.2)
       omniauth-oauth2 (~> 1.1)
 
+GIT
+  remote: git://github.com/jumph4x/canonical-rails.git
+  revision: 9a52e4c49763b952563d68e120ba77ccab6add7e
+  specs:
+    canonical-rails (0.1.1)
+      rails (>= 4.1, < 5.1)
+
 GEM
   remote: https://rubygems.org/
   remote: https://rails-assets.org/
@@ -394,6 +401,7 @@ DEPENDENCIES
   bootstrap (~> 4.0.0.alpha5)
   bootstrap3-datetimepicker-rails (~> 4.17.43)
   byebug
+  canonical-rails!
   capybara
   coffee-rails (~> 4.2)
   cucumber-rails

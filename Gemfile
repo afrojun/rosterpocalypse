@@ -64,6 +64,10 @@ gem 'twitter'
 gem 'omniauth-google-oauth2'
 # gem 'google-api-client', require: 'google/api_client'
 
+# https://github.com/jumph4x/canonical-rails
+# To redirect to always use the 'www' subdomain
+gem 'canonical-rails', github: 'jumph4x/canonical-rails'
+
 # Access Granted for Authorization
 gem 'access-granted', '~> 1.1.0'
 # Better distance of time in words for Rails

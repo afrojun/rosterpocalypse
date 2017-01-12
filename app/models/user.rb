@@ -36,7 +36,7 @@ class User < ApplicationRecord
   end
 
   def owner?
-    username == admin && email == "arj.rdh@gmail.com"
+    username == "rosterpocalypse" && email == "rosterpocalypse@gmail.com"
   end
 
   def twitter
