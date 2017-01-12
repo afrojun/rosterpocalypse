@@ -1,7 +1,7 @@
 class PlayerPresenter < BasePresenter
   def role
     hero_stats = most_played_heroes.take(2)
-    if hero_stats.last.last < 10
+    if hero_stats.any? && hero_stats.last.last < 10
       return hero_stats.first.first.classification
     else
       classifications = hero_stats.map { |hero, stat| hero.classification }

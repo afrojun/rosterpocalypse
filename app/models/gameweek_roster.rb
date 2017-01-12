@@ -44,7 +44,7 @@ class GameweekRoster < ApplicationRecord
       if roster_snapshot.present?
         Hash[
           roster_snapshot[:players].map do |player_slug, value|
-            player = Player.find_including_alternate_names player_slug
+            player = Player.find_including_alternate_names(player_slug).first
             [player, value]
           end
         ]
