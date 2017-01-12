@@ -124,7 +124,7 @@ class Player < ApplicationRecord
       other_player.gameweek_players.each do |other_gameweek_player|
         gameweek = other_gameweek_player.gameweek
         if gameweeks.include? gameweek
-          gameweek_player = gameweek_players.where(gameweek: gameweek)
+          gameweek_player = gameweek_players.where(gameweek: gameweek).first
           gameweek_player.update_all_games
         else
           other_gameweek_player.update_attribute :player, self
