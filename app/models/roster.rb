@@ -98,6 +98,8 @@ class Roster < ApplicationRecord
   private
 
   def update_players player_ids
+    return true if players.map(&:id).sort == player_ids.sort # Shirt circuit when the players aren't changing
+
     if new_players = validate_roster_size(player_ids)
       if validate_transfers(new_players) && validate_player_roles(new_players) && validate_player_value(new_players)
         if allow_free_transfers?

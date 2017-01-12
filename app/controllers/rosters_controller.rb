@@ -73,7 +73,7 @@ class RostersController < RosterpocalypseController
     respond_to do |format|
       if @roster.update_including_players(roster_params)
         format.html { redirect_to @roster, notice: "Roster was successfully updated." }
-        format.json { render :show, status: :ok, location: @roster }
+        format.json { render :details, status: :ok, location: @roster }
       else
         format.html { render :manage }
         format.json { render json: @roster.errors.map{ |key, message| "#{key.capitalize} #{message}" }.to_sentence, status: :unprocessable_entity }

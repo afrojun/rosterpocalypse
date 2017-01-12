@@ -42,7 +42,7 @@ class RosterPickerContainer extends React.Component {
     this.removeFromRoster = this.removeFromRoster.bind(this);
     this.colourText = this.colourText.bind(this);
     this.totalValue = this.totalValue.bind(this);
-    this.rosterLockDate = this.rosterLockDate.bind(this);
+    this.rosterLockStatus = this.rosterLockStatus.bind(this);
     this.remainingTransfersCount = this.remainingTransfersCount.bind(this);
     this.submitRoster = this.submitRoster.bind(this);
     this.showRosterActionForAllPlayers = this.showRosterActionForAllPlayers.bind(this);
@@ -143,19 +143,27 @@ class RosterPickerContainer extends React.Component {
     return(this.colourText(total, colour));
   }
 
-  rosterLockDate() {
-    let timeNow = moment().valueOf();
-    let rosterLock = moment(this.state.roster.current_gameweek.roster_lock_date).valueOf();
+  rosterLockStatus() {
+    let dateFormat = "hA on ddd, MMM D Y"
+    let timeNow = moment();
+    let rosterLockDate = moment(this.state.roster.current_gameweek.roster_lock_date);
+    let endOfGameweek = moment(this.state.roster.current_gameweek.end_date);
     let text = "";
     let colour = "";
+
     if(this.state.roster.free_transfer_mode) {
-      text = "Free transfer mode!";
-      colour = "green";
-    } else {
-      if(timeNow < rosterLock) {
-        text = moment(rosterLock).fromNow();
+      if(this.state.roster.players[0] && this.state.roster.players.length == this.props.maxPlayersInRoster) {
+        text = "Free transfers until " + endOfGameweek.format(dateFormat) + "!";
+        colour = "green";
       } else {
-        text = "LOCKED!"
+        text = "Select " + this.props.maxPlayersInRoster + " players for your roster.";
+        colour = "blue";
+      }
+    } else {
+      if(this.state.roster.unlocked) {
+        text = "Roster will lock " + rosterLockDate.fromNow() + " at " + rosterLockDate.format(dateFormat);
+      } else {
+        text = "LOCKED until " + endOfGameweek + "!";
         colour = "red";
       }
     }
@@ -186,16 +194,17 @@ class RosterPickerContainer extends React.Component {
     };
 
     rp(options)
-      .then(parsedBody => {
+      .then(rosterDetails => {
+        this.setState({roster: rosterDetails});
         this.setState({notification: <span className="text-success">Roster updated successfully!</span>});
       })
       .catch(err => {
-        console.log(err);
-        this.setState({notification: <span className="text-danger">Error: {err.error}</span>});
+        if(err.response.statusCode == 422){
+          this.setState({notification: <span className="text-danger">Error: {err.error}</span>});
+        } else {
+          this.setState({notification: <span className="text-danger">Error: Server Error</span>});
+        }
       });
-
-    // Refresh the roster data after updating
-    this.fetchRoster();
   }
 
   showRosterActionForAllPlayers(playerId) {
@@ -235,9 +244,9 @@ class RosterPickerContainer extends React.Component {
             {this.state.roster.name}
           </h2>
           <p>
-            Total value: <b>{this.totalValue()}</b>
+            Total value: <b>{this.state.roster.players[0] && this.totalValue()}</b>
             <br/>
-            Roster lock: <b>{this.rosterLockDate()}</b>
+            <b>{this.state.roster.current_gameweek.roster_lock_date && this.rosterLockStatus()}</b>
           </p>
           <PlayersTable
             tableOpts={rosterTableOpts}
