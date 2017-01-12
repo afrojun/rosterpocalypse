@@ -196,7 +196,7 @@ RSpec.describe Roster, type: :model do
 
       context "#validate_transfers_count" do
         it "validates that the number of players being added and removed are the same" do
-          expect(roster).to receive(:allow_free_transfers?).and_return(false)
+          expect(roster).to receive(:allow_free_transfers?).twice.and_return(false)
           players.push support_player, warrior_player
           expect(roster.update_including_players(players: players.map(&:id))).to be false
           expect(roster.players).to eq []
@@ -208,7 +208,7 @@ RSpec.describe Roster, type: :model do
           roster.update_including_players(players: player_ids)
           original_players = players.dup
 
-          expect(roster).to receive(:allow_free_transfers?).and_return(true, false)
+          expect(roster).to receive(:allow_free_transfers?).and_return(true, false, false)
           expect(roster).to receive(:available_transfers).and_return(1)
           players.shift(2)
           players.push sub_player, cheap_player
@@ -228,7 +228,6 @@ RSpec.describe Roster, type: :model do
 
           allow(roster).to receive(:allow_free_transfers?).and_return(true, false)
           expect(roster).to receive(:roster_lock_in_place?).and_return(true)
-          expect(roster).to receive(:is_tournament_week?).and_return(true)
           expect(roster).to receive(:available_transfers).and_return(1)
           players.shift(1)
           players.push cheap_player

@@ -3,7 +3,7 @@ class Tournament < ApplicationRecord
   friendly_id :name
 
   has_many :leagues
-  has_many :rosters, -> { distinct }, through: :leagues
+  has_many :rosters
   has_many :gameweeks, -> { order 'start_date ASC' }, dependent: :destroy
   has_many :games, -> { order 'start_date DESC' }, through: :gameweeks
 

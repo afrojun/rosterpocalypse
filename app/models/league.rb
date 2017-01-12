@@ -55,14 +55,7 @@ class League < ApplicationRecord
   end
 
   def remove roster
-    if roster.leagues.size > 1
-      rosters.delete roster
-      true
-    else
-      message = "Unable to leave league, rosters need to be in at least one league."
-      errors.add(:base, message)
-      Rails.logger.warn message
-      false
-    end
+    rosters.delete roster
+    true
   end
 end

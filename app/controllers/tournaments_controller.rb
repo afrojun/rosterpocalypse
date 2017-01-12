@@ -24,8 +24,8 @@ class TournamentsController < RosterpocalypseController
   # GET /tournaments/1/edit
   def edit
     @tournament_games = Game.where("
-      (gameweek_id IS NULL OR gameweek_id IN ?) AND (start_date >= ? AND start_date <= ?)",
-      "(#{@tournament.gameweeks.map(&:id)})", @tournament.start_date, @tournament.end_date
+      (gameweek_id IS NULL OR gameweek_id IN (?)) AND (start_date >= ? AND start_date <= ?)",
+      @tournament.gameweeks.map(&:id), @tournament.start_date, @tournament.end_date
     ).includes(:map, gameweek: [:tournament], game_details: [:team])
   end
 
@@ -50,7 +50,7 @@ class TournamentsController < RosterpocalypseController
   def update
     if params[:game_ids]
       game_ids_to_remove = @tournament.games.map(&:id) - params[:game_ids].map(&:to_i)
-      games_to_remove = Game.where("id IN ?", "(#{game_ids_to_remove})")
+      games_to_remove = Game.where("id IN (?)", game_ids_to_remove)
       if games_to_remove.present?
         logger.info "Removing previously associated games from this tournament: #{games_to_remove.map(&:id)}"
         games_to_remove.each do |game|
@@ -58,7 +58,7 @@ class TournamentsController < RosterpocalypseController
         end
       end
 
-      games_to_add = Game.where("id IN ? AND (gameweek_id IS NULL OR gameweek_id NOT IN ?)", "(#{params[:game_ids]})", "(#{@tournament.gameweeks.map(&:id)})")
+      games_to_add = Game.where("id IN (?) AND (gameweek_id IS NULL OR gameweek_id NOT IN (?))", params[:game_ids], @tournament.gameweeks.map(&:id))
       if games_to_add.present?
         logger.info "Adding games to this tournament: #{games_to_add.map(&:id)}"
         games_to_add.each do |game|

@@ -65,16 +65,24 @@ class Roster < ApplicationRecord
   end
 
   def allow_free_transfers?
-    players.size < MAX_PLAYERS || leagues.blank? || !is_tournament_week?
+    players.size < MAX_PLAYERS || !current_gameweek.is_tournament_week?
+  end
+
+  def allow_updates?
+    allow_free_transfers? || unlocked?
   end
 
   def unlocked?
-    if roster_lock_in_place? && is_tournament_week?
+    if roster_lock_in_place? && current_gameweek.is_tournament_week?
       errors.add(:roster, "is currently locked until the end of the Gameweek")
       false
     else
       true
     end
+  end
+
+  def full?
+    players.size == MAX_PLAYERS ? true : false
   end
 
   def add_to league
@@ -100,19 +108,21 @@ class Roster < ApplicationRecord
   def update_players player_ids
     return true if players.map(&:id).sort == player_ids.sort # Shirt circuit when the players aren't changing
 
-    if new_players = validate_roster_size(player_ids)
-      if validate_transfers(new_players) && validate_player_roles(new_players) && validate_player_value(new_players)
-        if allow_free_transfers?
-          Rails.logger.info "Roster #{name}: Freely transferring in players: #{new_players.map(&:name)}"
-          players.clear
-          players << new_players
-          return true
-        elsif unlocked?
-          players_to_add = new_players - players
-          players_to_remove = players - new_players
-          transfer_players players_to_add, players_to_remove
-          current_gameweek_roster.create_snapshot if available_transfers < 1
-          return true
+    if allow_updates?
+      if new_players = validate_roster_size(player_ids)
+        if validate_transfers(new_players) && validate_player_roles(new_players) && validate_player_value(new_players)
+          if allow_free_transfers?
+            Rails.logger.info "Roster #{name}: Freely transferring in players: #{new_players.map(&:name)}"
+            players.clear
+            players << new_players
+            return true
+          elsif unlocked?
+            players_to_add = new_players - players
+            players_to_remove = players - new_players
+            transfer_players players_to_add, players_to_remove
+            current_gameweek_roster.create_snapshot if available_transfers < 1
+            return true
+          end
         end
       end
     end
@@ -199,11 +209,7 @@ class Roster < ApplicationRecord
   end
 
   def roster_lock_in_place?
-    current_gameweek.roster_lock_date < Time.now
-  end
-
-  def is_tournament_week?
-    current_gameweek.is_tournament_week?
+    current_gameweek.roster_lock_date < Time.now.utc
   end
 
   def copy_errors league

@@ -40,12 +40,14 @@ class RosterPickerContainer extends React.Component {
     this.fetchData = this.fetchData.bind(this);
     this.addToRoster = this.addToRoster.bind(this);
     this.removeFromRoster = this.removeFromRoster.bind(this);
+    this.updateRosterState = this.updateRosterState.bind(this);
     this.colourText = this.colourText.bind(this);
     this.totalValue = this.totalValue.bind(this);
     this.rosterLockStatus = this.rosterLockStatus.bind(this);
     this.remainingTransfersCount = this.remainingTransfersCount.bind(this);
     this.submitRoster = this.submitRoster.bind(this);
     this.showRosterActionForAllPlayers = this.showRosterActionForAllPlayers.bind(this);
+    this.showRosterActionForRosterPlayers = this.showRosterActionForRosterPlayers.bind(this);
     this.updateFilter = this.updateFilter.bind(this);
     this.clearFilter = this.clearFilter.bind(this);
     this.changePlayersPerPage = this.changePlayersPerPage.bind(this);
@@ -79,8 +81,7 @@ class RosterPickerContainer extends React.Component {
       });
       let rosterPlayers = this.state.roster.players.concat([player]);
 
-      let newRoster = Object.assign({}, this.state.roster, {players: rosterPlayers});
-      this.setState({roster: newRoster});
+      this.updateRosterState({players: rosterPlayers});
     } else {
       this.setState({notification: <span className="text-danger">Error: Rosters may have a maximum of {this.props.maxPlayersInRoster} players</span>});
     }
@@ -92,9 +93,13 @@ class RosterPickerContainer extends React.Component {
       return player.id !== playerId
     });
 
-    let newRoster = Object.assign({}, this.state.roster, {players: rosterPlayers});
-    this.setState({roster: newRoster});
+    this.updateRosterState({players: rosterPlayers});
     this.setState({notification: ""})
+  }
+
+  updateRosterState(object) {
+    let newRoster = Object.assign({}, this.state.roster, object, {dirty: true});
+    this.setState({roster: newRoster});
   }
 
   fetchData() {
@@ -152,18 +157,18 @@ class RosterPickerContainer extends React.Component {
     let colour = "";
 
     if(this.state.roster.free_transfer_mode) {
-      if(this.state.roster.players[0] && this.state.roster.players.length == this.props.maxPlayersInRoster) {
-        text = "Free transfers until " + endOfGameweek.format(dateFormat) + "!";
+      if(this.state.roster.full) {
+        text = "Free transfers until " + endOfGameweek.format(dateFormat);
         colour = "green";
       } else {
-        text = "Select " + this.props.maxPlayersInRoster + " players for your roster.";
+        text = "Select " + this.props.maxPlayersInRoster + " players for your roster";
         colour = "blue";
       }
     } else {
       if(this.state.roster.unlocked) {
         text = "Roster will lock " + rosterLockDate.fromNow() + " at " + rosterLockDate.format(dateFormat);
       } else {
-        text = "LOCKED until " + endOfGameweek + "!";
+        text = "LOCKED until " + endOfGameweek.format(dateFormat);
         colour = "red";
       }
     }
@@ -208,14 +213,17 @@ class RosterPickerContainer extends React.Component {
   }
 
   showRosterActionForAllPlayers(playerId) {
-    let player = this.state.roster.players.find(player => {
-      return player.id === playerId;
-    });
-    return player ? false : true;
+    if(this.state.roster.allow_updates) {
+      let player = this.state.roster.players.find(player => {
+        return player.id === playerId;
+      });
+      return player ? false : true;
+    }
+    return false;
   }
 
   showRosterActionForRosterPlayers(playerId) {
-    return true;
+    return this.state.roster.allow_updates ? true : false;
   }
 
   render() {

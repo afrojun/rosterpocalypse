@@ -55,8 +55,7 @@ class GameStatsIngestionService
             )
           end
 
-          # Only update GameweekPlayer details for active tournaments
-          if tournament.present? && tournament.active?
+          if gameweek.present?
             GameweekPlayer.update_from_game game, gameweek
           end
         end

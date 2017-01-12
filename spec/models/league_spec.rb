@@ -29,13 +29,11 @@ RSpec.describe League, type: :model do
   context "#leave" do
     it "removes the manager's roster from the league" do
       league.add roster
-      private_league.add roster
       expect { league.leave(manager) }.to change(league.rosters, :count).by(-1)
     end
 
     it "returns the roster" do
       league.add roster
-      private_league.add roster
       expect(league.leave(manager).id).to eq roster.id
     end
 
@@ -61,15 +59,8 @@ RSpec.describe League, type: :model do
   end
 
   context "#remove" do
-    it "doesn't allow removing a roster from all leagues" do
-      expect(league.add(roster)).to eq true
-      expect(league.remove(roster)).to eq false
-      expect(league.errors[:base].first).to include "Unable to leave league"
-    end
-
     it "removes the roster from a league" do
       expect(league.add(roster)).to eq true
-      expect(private_league.add(roster)).to eq true
       expect { league.remove roster }.to change(roster.leagues, :count).by(-1)
     end
   end
