@@ -65,7 +65,7 @@ class GameweekRoster < ApplicationRecord
   end
 
   def gameweek_points
-    gameweek_players.compact.map(&:points).sum
+    gameweek_players.compact.map(&:points).sum.round(2)
   end
 
   def gameweek_players_by_player players = snapshot_players

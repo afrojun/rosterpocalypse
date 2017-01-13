@@ -144,8 +144,10 @@ class RosterPickerContainer extends React.Component {
     let total = this.state.roster.players.reduce((value, player) => {
               return value + player.value;
             }, 0);
-    let colour = (total > this.props.maxRosterValue ? "red" : "");
-    return(this.colourText(total, colour));
+
+    let roundedTotal = Math.round(total * 100)/100;
+    let colour = (roundedTotal > this.props.maxRosterValue ? "red" : "");
+    return(this.colourText(roundedTotal, colour));
   }
 
   rosterLockStatus() {
@@ -158,10 +160,10 @@ class RosterPickerContainer extends React.Component {
 
     if(this.state.roster.free_transfer_mode) {
       if(this.state.roster.full) {
-        text = "Free transfers until " + endOfGameweek.format(dateFormat);
+        text = "No games this week! Unlimited roster changes allowed until " + endOfGameweek.format(dateFormat);
         colour = "green";
       } else {
-        text = "Select " + this.props.maxPlayersInRoster + " players for your roster";
+        text = "Select " + this.props.maxPlayersInRoster + " players for your roster, including at least one Support and one Warrior player";
         colour = "blue";
       }
     } else {
