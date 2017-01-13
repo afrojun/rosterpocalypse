@@ -27,6 +27,11 @@
   padding-right: 0.4em;
 }
 
+.info-box-image {
+  height: 180px;
+  width: 100%;
+}
+
 .compact-form {
   max-width: 330px;
   padding: 15px;
@@ -90,4 +95,8 @@
 
 .hide {
   display: none;
+}
+
+.login-fine-print {
+  padding-top: 1.5em;
 }

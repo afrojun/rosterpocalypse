@@ -14,7 +14,7 @@
     .container
       %nav.navbar.navbar-toggleable-sm.navbar-dark.bg-inverse
         %a.navbar-brand.brand-name{href: root_path}
-          = image_tag "logo.svg", alt: "Rosterpocalypse", width: "36", height: 32, class: "logo-image"
+          = image_tag "logo.svg", alt: "Rosterpocalypse", width: 36, height: 32, class: "logo-image"
           = t('title')
         %ul.nav.navbar-nav
           - if user_signed_in?

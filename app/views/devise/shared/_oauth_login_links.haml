@@ -11,3 +11,6 @@
 
   = link_to user_google_oauth2_omniauth_authorize_path do
     = identity_provider_logo :google_oauth2
+
+  .login-fine-print
+    %p.small= t("login_fine_print").html_safe

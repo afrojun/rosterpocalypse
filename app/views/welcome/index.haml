@@ -1,68 +1,31 @@
 .jumbotron
   .container
-    %h1.display-3 Build the best Heroes eSports team!
-    %p Build your dream team from the best professional Heroes of the Storm players to win honour and glory! Choose your roster wisely since you only have a limited pool of points to work with and make sure to keep up with the latest news and results to fine tune your team every week.
-    %p
-      %a.btn.btn-primary.btn-lg{href: new_roster_path, role: "button"} Get Started &raquo;
-
+    %h1.display-3 Prepare for the Rosterpocalypse!
+    %p.lead
 
 
 .container
   .row
     .col-md-4
-      %h2 Top Rosters
-      %table.table.table-sm.table-striped
-        %thead
-          %tr
-            %th Name
-            %th Manager
-            %th Score
-        %tbody
-          - Roster.order("score DESC").limit(5).each do |roster|
-            %tr
-              %td= link_to roster.name, roster
-              %td= link_to roster.manager.user.username, roster.manager
-              %td= roster.score
-      %p
-        %a.btn.btn-secondary{href: rosters_path, role: "button"} View more &raquo;
+      .card
+        = image_tag "DraftTeam.png", class: "info-box-image"
+        .card-block
+          %h4.card-title Draft Your Roster
+          %p.card-text Get started by creating a roster of the best players in one of the 4 HGC regions. Choose wisely as you have a limited pool of points to work with and only one transfer available every week.
+          %a.btn.btn-primary{href: new_roster_path, role: "button"} Create a Roster &raquo;
+
 
     .col-md-4
-      %h2 Top Players
-      %table.table.table-sm.table-striped
-        %thead
-          %tr
-            %th Name
-            %th Value
-        %tbody
-          - Player.order("value DESC").limit(5).each do |player|
-            %tr
-              %td= link_to player.name, player
-              %td= player.value
-      %p
-        %a.btn.btn-secondary{href: players_path, role: "button"} View more &raquo;
+      .card
+        = image_tag "HGC_Leagues.png", class: "info-box-image"
+        .card-block
+          %h4.card-title Join a League
+          %p.card-text Join the public league for each tournament and also create your own private leagues to compete with a smaller group of friends. Private leagues are hidden, but not restricted. To invite a friend to join your private league simply send them the link to it.
 
     .col-md-4
-      %h2 Upcoming Games
-      %table.table.table-sm.table-striped
-        %thead
-          %tr
-            %th Teams
-            %th Date
-        %tbody
-          %tr
-            %td Liquid vs Fnatic
-            %td 21/11/2016
-          %tr
-            %td Epunks vs Dignitas
-            %td 25/11/2016
-          %tr
-            %td Denial vs Naventic
-            %td 31/11/2016
-          %tr
-            %td MVP Black vs Tempest
-            %td 02/12/2016
-          %tr
-            %td eStar vs ZeroPanda
-            %td 05/12/2016
-      %p
-        %a.btn.btn-secondary{href: "#", role: "button"} View more &raquo;
+      .card
+        = image_tag "gold.gif", class: "info-box-image"
+        .card-block
+          %h4.card-title Win Prizes!
+          %p.card-text To add a little extra incentive, at the end of the season, the top scoring rosters of each public league will win exciting prizes in the form of heroes, bundles or battle.net gift cards.
+          %p.card-text The Rosterpocalypse will be streamed!
