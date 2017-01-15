@@ -1,6 +1,7 @@
 class TournamentsController < RosterpocalypseController
   before_action :set_tournament, only: [:show, :edit, :update, :destroy]
   before_action :set_gameweek, only: [:show]
+  before_action :set_page_title, only: [:show, :edit]
 
   # GET /tournaments
   # GET /tournaments.json
@@ -102,5 +103,9 @@ class TournamentsController < RosterpocalypseController
     # Never trust parameters from the scary internet, only allow the white list through.
     def tournament_params
       params.require(:tournament).permit(:name, :region, :cycle_hours, :start_date, :end_date)
+    end
+
+    def set_page_title
+      @page_title = "#{@tournament.name}#{@gameweek.present? ? " : #{@gameweek.name}" : ""}"
     end
 end

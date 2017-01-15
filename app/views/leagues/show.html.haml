@@ -1,8 +1,14 @@
-= page_title @league.name
+= page_title @page_title
+
+%ol.breadcrumb
+  %li.breadcrumb-item= link_to 'Leagues', leagues_path
+  %li.breadcrumb-item.active= @league.name
 
 %h1
   = @league.name
   = league_membership_change @league, ""
+  - if can? :update, @league
+    = link_to 'Edit', edit_league_path(@league), class: "small"
 
 %h4= @league.tournament.name
 
@@ -12,8 +18,3 @@
   = render "rosters/roster_list", rosters: @rosters
 - else
   %br
-
-- if can? :update, @league
-  = link_to 'Edit', edit_league_path(@league)
-  |
-= link_to 'Leagues', leagues_path

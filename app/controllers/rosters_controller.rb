@@ -1,5 +1,7 @@
 class RostersController < RosterpocalypseController
   before_action :set_roster, only: [:show, :manage, :update, :destroy, :status, :details]
+  before_action :set_gameweek, only: [:show]
+  before_action :set_page_title, only: [:show, :edit]
 
   # GET /rosters
   # GET /rosters.json
@@ -10,7 +12,6 @@ class RostersController < RosterpocalypseController
   # GET /rosters/1
   # GET /rosters/1.json
   def show
-    @gameweek = Gameweek.where(id: params[:gameweek]).first || @roster.current_gameweek
     @gameweek_roster = GameweekRoster.where(gameweek: @gameweek, roster: @roster).first
     @gameweek_players_by_player = @gameweek_roster == @roster.current_gameweek_roster ? @gameweek_roster.gameweek_players_by_player(@roster.players) : @gameweek_roster.gameweek_players_by_player
     @sidebar_props = {
@@ -107,5 +108,13 @@ class RostersController < RosterpocalypseController
     params.require(:roster).permit(:name, :tournament_id, players: []).tap do |rp|
       rp[:manager_id] = current_user.manager.id
     end
+  end
+
+  def set_gameweek
+    @gameweek = Gameweek.where(id: params[:gameweek]).first || @roster.current_gameweek
+  end
+
+  def set_page_title
+    @page_title = "Roster: #{@roster.name}#{@gameweek.present? ? " : #{@gameweek.name}" : ""}"
   end
 end

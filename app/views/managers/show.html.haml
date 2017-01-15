@@ -1,4 +1,8 @@
-= page_title @manager.name
+= page_title @page_title
+
+%ol.breadcrumb
+  %li.breadcrumb-item= link_to 'Managers', managers_path
+  %li.breadcrumb-item.active= @manager.name
 
 %h1= @manager.name
 
@@ -7,6 +11,3 @@
 
 %h3 Leagues
 = render "leagues/leagues_list", leagues: @manager.leagues
-
-
-= link_to 'Managers', managers_path

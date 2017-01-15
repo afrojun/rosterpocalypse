@@ -1,6 +1,14 @@
-= page_title @team.name
+= page_title @page_title
 
-%h1= @team.name
+%ol.breadcrumb
+  %li.breadcrumb-item= link_to 'Teams', teams_path
+  %li.breadcrumb-item.active= @team.name
+
+%h1
+  = @team.name
+  - if can? :update, @team
+    = link_to 'Edit', edit_team_path(@team), class: "small"
+
 %p
   %strong Region:
   = @team.region
@@ -22,8 +30,3 @@
   = render "games/games_list", games: @team_games, should_paginate: true
 - else
   %p No games recorded for this team
-
-- if can? :update, @team
-  = link_to 'Edit', edit_team_path(@team)
-  |
-= link_to 'Teams', teams_path

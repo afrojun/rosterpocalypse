@@ -254,7 +254,7 @@ class RosterPickerContainer extends React.Component {
             {this.state.roster.name}
           </h2>
           <p>
-            Total value: <b>{this.state.roster.players[0] && this.totalValue()}</b>
+            Total value: <b>{this.state.roster.players[0] ? this.totalValue() : "0"}</b>
             <br/>
             <b>{this.state.roster.current_gameweek.roster_lock_date && this.rosterLockStatus()}</b>
           </p>

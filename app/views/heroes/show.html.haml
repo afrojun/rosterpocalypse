@@ -1,14 +1,17 @@
-= page_title @hero.name
+= page_title @page_title
 
-%h1= @hero.name
+%ol.breadcrumb
+  %li.breadcrumb-item= link_to 'Heroes', heroes_path
+  %li.breadcrumb-item.active= @hero.name
+
+%h1
+  = @hero.name
+  - if can? :update, @hero
+    = link_to 'Edit', edit_hero_path(@hero), class: "small"
+
 %p
   %strong Classification:
   = @hero.classification
 
 %h3 Games
 = render "games/games_list", games: @hero_games, should_paginate: true
-
-- if can? :update, @hero
-  = link_to 'Edit', edit_hero_path(@hero)
-  |
-= link_to 'Heroes', heroes_path

@@ -4,6 +4,7 @@ class RosterpocalypseController < ApplicationController
   before_action :authorize_update!, only: [:edit, :update]
   before_action :authorize_create!, only: [:new, :create]
   before_action :authorize_destroy!, only: [:destroy]
+  before_action :set_page_title, only: [:show, :edit]
 
   rescue_from "AccessGranted::AccessDenied" do |exception|
     redirect_back fallback_location: root_path, alert: "You don't have permission to take this action."
@@ -33,6 +34,10 @@ class RosterpocalypseController < ApplicationController
 
   def set_method_symbol
     "set_#{controller_path.singularize}".to_sym
+  end
+
+  def set_page_title
+    @page_title = "#{model_class}: #{send(set_method_symbol).name}"
   end
 
 end

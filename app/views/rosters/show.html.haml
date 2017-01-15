@@ -1,4 +1,8 @@
-= page_title "Roster: #{@roster.name}#{@gameweek.present? ? " : #{@gameweek.name}" : ""}"
+= page_title @page_title
+
+%ol.breadcrumb
+  %li.breadcrumb-item= link_to 'Rosters', rosters_path
+  %li.breadcrumb-item.active= @roster.name
 
 .col-xs-10.roster-status-page
   .col-xs-12.roster-status-header
@@ -8,7 +12,7 @@
     %span.col-xs-8.roster-status-heading= @gameweek.name
 
     %span.col-xs-2.roster-status-gameweek-navigation.float-sm-right
-      - if @gameweek.next.present?
+      - if @gameweek.next.present? && @gameweek.next.start_date < Time.now.utc
         = link_to "Next &raquo;".html_safe, roster_path(@roster, gameweek: @gameweek.next), class: "btn btn-link btn-lg btn-wide"
 
   .col-xs-12.roster-status-gameweek-summary

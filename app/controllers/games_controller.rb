@@ -104,4 +104,10 @@ class GamesController < RosterpocalypseController
     def game_params
       params.require(:game).permit(:map_id, :start_date, :duration_s, :game_hash)
     end
+
+    # We use the presenter to set this from the view
+    def set_page_title
+      @page_title = nil
+    end
+
 end
