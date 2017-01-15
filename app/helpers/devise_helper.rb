@@ -1,7 +1,15 @@
 module DeviseHelper
 
   def identity_provider_logo provider
-    content_tag :i, "", class: "fa fa-2x #{identity_provider_logo_class_map[provider]}", title: provider.to_s.split("_").first.capitalize
+    if provider == :bnet
+      battlenet_logo
+    else
+      content_tag :i, "", class: "fa fa-2x #{identity_provider_logo_class_map[provider]}", title: provider.to_s.split("_").first.capitalize
+    end
+  end
+
+  def battlenet_logo
+    image_tag "battlenet_logo.png", title: "Battle.net", size: 32, style: "margin-bottom: 1em;"
   end
 
   def identity_provider_logos user
