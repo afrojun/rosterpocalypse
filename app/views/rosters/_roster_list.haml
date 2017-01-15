@@ -7,8 +7,7 @@
       - if show_tournament
         %th Tournament
       %th Score
-      - if can? :update, Roster
-        %th{:colspan => "2"}
+      %th{:colspan => "2"}
   %tbody
     - rosters.each do |roster|
       %tr
@@ -16,5 +15,9 @@
         - if show_tournament
           %td= roster.tournament.name
         %td= roster.score
-        - if can? :destroy, roster
-          %td= link_to 'Destroy', roster, method: :delete, data: { confirm: 'Are you sure?' }
+        %td
+          - if can? :update, roster
+            = link_to 'Manage', manage_roster_path(roster)
+        %td
+          - if can? :destroy, roster
+            = link_to 'Destroy', roster, method: :delete, data: { confirm: 'Are you sure?' }
