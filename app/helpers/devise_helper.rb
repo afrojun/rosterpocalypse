@@ -1,7 +1,7 @@
 module DeviseHelper
 
   def identity_provider_logo provider
-    content_tag :i, "", class: "fa fa-2x #{identity_provider_logo_class_map[provider]}"
+    content_tag :i, "", class: "fa fa-2x #{identity_provider_logo_class_map[provider]}", title: provider.to_s.split("_").first.capitalize
   end
 
   def identity_provider_logos user
@@ -12,10 +12,10 @@ module DeviseHelper
 
   def identity_provider_logo_class_map
     {
-      reddit: "fa-reddit-square reddit-red",
-      facebook: "fa-facebook-square facebook-blue",
-      twitter: "fa-twitter-square twitter-blue",
-      google_oauth2: "fa-google-plus-square google-plus-red"
+      reddit: "fa-reddit-alien reddit-red",
+      facebook: "fa-facebook facebook-blue",
+      twitter: "fa-twitter twitter-blue",
+      google_oauth2: "fa-google google-plus-red"
     }
   end
 

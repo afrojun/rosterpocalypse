@@ -1,16 +1,15 @@
 .compact-form
   %b Sign in with:
-  = link_to user_facebook_omniauth_authorize_path do
-    = identity_provider_logo :facebook
-
-  = link_to user_twitter_omniauth_authorize_path do
-    = identity_provider_logo :twitter
-
+  = link_to user_bnet_omniauth_authorize_path do
+    = image_tag "battlenet_logo.png", alt: "Battle.net", size: 32, style: "margin-bottom: 1em;"
   = link_to user_reddit_omniauth_authorize_path do
     = identity_provider_logo :reddit
-
+  = link_to user_twitter_omniauth_authorize_path do
+    = identity_provider_logo :twitter
   = link_to user_google_oauth2_omniauth_authorize_path do
     = identity_provider_logo :google_oauth2
+  = link_to user_facebook_omniauth_authorize_path do
+    = identity_provider_logo :facebook
 
   .login-fine-print
     %p.small= t("login_fine_print").html_safe

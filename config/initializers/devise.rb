@@ -12,6 +12,7 @@ Devise.setup do |config|
   config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV['FACEBOOK_APP_SECRET'], scope: "email"
   config.omniauth :twitter, ENV['TWITTER_APP_ID'], ENV['TWITTER_APP_SECRET']
   config.omniauth :reddit, ENV['REDDIT_APP_ID'], ENV['REDDIT_APP_SECRET'], scope: "identity"
+  config.omniauth :bnet, ENV['BNET_APP_ID'], ENV['BNET_APP_SECRET']
 
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,

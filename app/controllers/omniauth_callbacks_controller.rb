@@ -15,6 +15,10 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     generic_callback 'reddit'
   end
 
+  def bnet
+    generic_callback 'bnet'
+  end
+
   def generic_callback provider
     @identity = Identity.find_for_oauth request.env["omniauth.auth"].except("extra")
 
