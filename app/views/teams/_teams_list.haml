@@ -17,7 +17,10 @@
               %i{class: "fa fa-check text-success"}
             - else
               %i{class: "fa fa-times text-danger"}
-        %td= link_to team.name, team
+        %td
+          - if team.active
+            = link_to_team_with_logo team
+          = link_to team.name, team
         %td= team.region
         %td= team.players.size
         %td= team.games.distinct.size

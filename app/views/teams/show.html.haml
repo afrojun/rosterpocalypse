@@ -5,6 +5,7 @@
   %li.breadcrumb-item.active= @team.name
 
 %h1
+  = image_tag team_logo_filename(@team), alt: @team.name, size: 48
   = @team.name
   - if can? :update, @team
     = link_to 'Edit', edit_team_path(@team), class: "small"
