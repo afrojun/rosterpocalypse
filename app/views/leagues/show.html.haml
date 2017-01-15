@@ -15,6 +15,6 @@
 %p= @league.description
 
 - if @rosters.any?
-  = render "rosters/roster_list", rosters: @rosters
+  = render "rosters/roster_list", rosters: @rosters, show_manager: true
 - else
   %br
