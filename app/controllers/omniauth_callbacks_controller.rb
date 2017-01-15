@@ -20,7 +20,6 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def generic_callback provider
-    logger.info "OAuth Identity information: #{request.env["omniauth.auth"]}"
     @identity = Identity.find_for_oauth request.env["omniauth.auth"].except("extra")
 
     @user = @identity.user || current_user

@@ -8,7 +8,7 @@ class Identity < ApplicationRecord
     find_or_create_by(provider: auth.provider, uid: auth.uid) do |identity|
       identity.accesstoken = auth.credentials.token
       identity.refreshtoken = auth.credentials.refresh_token
-      identity.name = auth.info.name || auth.info.battletag.split("#").first
+      identity.name = auth.info.name || auth.info.battletag.gsub("#", ".")
       identity.email = auth.info.email
       identity.nickname = auth.info.nickname || auth.info.battletag.gsub("#", ".")
       identity.image = auth.info.image
