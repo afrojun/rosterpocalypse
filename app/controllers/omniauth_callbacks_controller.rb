@@ -25,10 +25,10 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
     @user = @identity.user || current_user
     if @user.nil?
-      @user = if provider == "reddit"
+      @user = if ["reddit", "bnet"].include?(provider)
                 User.find_or_create_by(
-                  email: "#{@identity.name}@reddit.com",
-                  username: "#{@identity.name}_reddit"
+                  email: "#{@identity.name}@#{provider}.com",
+                  username: "#{@identity.name}_#{provider}"
                 )
               else
                 User.find_or_create_by(
