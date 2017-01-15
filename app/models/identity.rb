@@ -10,7 +10,7 @@ class Identity < ApplicationRecord
       identity.refreshtoken = auth.credentials.refresh_token
       identity.name = auth.info.name || auth.info.battletag.gsub("#", ".")
       identity.email = auth.info.email
-      identity.nickname = auth.info.nickname || auth.info.battletag.gsub("#", ".")
+      identity.nickname = auth.info.nickname || (auth.info.name && auth.info.name.split.first) || auth.info.battletag.gsub("#", ".")
       identity.image = auth.info.image
       identity.phone = auth.info.phone
       identity.urls = (auth.info.urls || "").to_json
