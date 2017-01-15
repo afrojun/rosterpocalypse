@@ -66,15 +66,18 @@ RSpec.describe Roster, type: :model do
   end
 
   context "#update_including_players" do
-    let(:player1) { FactoryGirl.create :player }
-    let(:player2) { FactoryGirl.create :player }
-    let(:player3) { FactoryGirl.create :player }
-    let(:sub_player) { FactoryGirl.create :player }
+    let(:active_team) { FactoryGirl.create :team, active: true }
+    let(:inactive_team) { FactoryGirl.create :team, active: false }
+    let(:player1) { FactoryGirl.create :player, team: active_team }
+    let(:player2) { FactoryGirl.create :player, team: active_team }
+    let(:player3) { FactoryGirl.create :player, team: active_team }
+    let(:sub_player) { FactoryGirl.create :player, team: active_team }
 
-    let(:support_player) { FactoryGirl.create :player, role: "Support" }
-    let(:warrior_player) { FactoryGirl.create :player, role: "Warrior" }
-    let(:expensive_player) { FactoryGirl.create :player, value: Player::MAX_VALUE }
-    let(:cheap_player) { FactoryGirl.create :player, value: Player::MIN_VALUE }
+    let(:support_player) { FactoryGirl.create :player, role: "Support", team: active_team }
+    let(:warrior_player) { FactoryGirl.create :player, role: "Warrior", team: active_team }
+    let(:expensive_player) { FactoryGirl.create :player, value: Player::MAX_VALUE, team: active_team }
+    let(:cheap_player) { FactoryGirl.create :player, value: Player::MIN_VALUE, team: active_team }
+    let(:inactive_player) { FactoryGirl.create :player, team: inactive_team }
 
     let(:players) { [player1, player2, player3] }
     let(:player_ids) { players.map(&:id) }
@@ -191,6 +194,16 @@ RSpec.describe Roster, type: :model do
           expect(roster.update_including_players(players: player_ids)).to be false
           expect(roster.players).to eq []
           expect(roster.errors.messages).to include(roster: ["may have a maximum total player value of #{Roster::MAX_TOTAL_VALUE}"])
+        end
+      end
+
+      context "#validate_teams_active" do
+        it "rejects updates that include players on inactive teams" do
+          players.shift
+          players.push support_player, warrior_player, inactive_player
+          expect(roster.update_including_players(players: player_ids)).to be false
+          expect(roster.players).to eq []
+          expect(roster.errors.messages).to include(roster: ["may not include players from inactive teams"])
         end
       end
 

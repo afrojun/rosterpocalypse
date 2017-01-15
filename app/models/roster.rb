@@ -110,7 +110,7 @@ class Roster < ApplicationRecord
 
     if allow_updates?
       if new_players = validate_roster_size(player_ids)
-        if validate_transfers(new_players) && validate_player_roles(new_players) && validate_player_value(new_players)
+        if validate_teams_active(new_players) && validate_transfers(new_players) && validate_player_roles(new_players) && validate_player_value(new_players)
           if allow_free_transfers?
             Rails.logger.info "Roster #{name}: Freely transferring in players: #{new_players.map(&:name)}"
             players.clear
@@ -158,7 +158,7 @@ class Roster < ApplicationRecord
   end
 
   def validate_roster_size player_ids
-    new_players = Player.where(id: player_ids)
+    new_players = Player.where(id: player_ids).includes(:team)
     if new_players.size == MAX_PLAYERS
       new_players
     else
@@ -176,6 +176,16 @@ class Roster < ApplicationRecord
     else
       errors.add(:roster, "needs to include at least one dedicated Support player") unless support_present
       errors.add(:roster, "needs to include at least one dedicated Warrior player") unless warrior_present
+      false
+    end
+  end
+
+  def validate_teams_active players
+    teams = players.map(&:team).uniq
+    if teams.all?(&:active)
+      true
+    else
+      errors.add(:roster, "may not include players from inactive teams")
       false
     end
   end
