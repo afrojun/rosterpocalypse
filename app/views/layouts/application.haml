@@ -64,7 +64,15 @@
 
 .container
   .row
-    .col-md-4
-      = link_to "About", about_path
-      |
-      = link_to "Credits", credits_path
+    .col-md-6.footer-links
+      = link_to "About & FAQ", about_path
+      / %b &#8226;
+      / = link_to "Credits", credits_path
+      / %b &#8226;
+      / = link_to "Privacy Policy", privacy_path
+      / %b &#8226;
+      / = link_to "Terms and Conditions", terms_path
+    .col-md-6
+      .float-xs-right
+        %i.fa.fa-copyright
+        2017 Rosterpocalypse

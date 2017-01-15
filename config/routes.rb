@@ -3,11 +3,10 @@ Rails.application.routes.draw do
   get 'welcome/index'
   get 'welcome', to: 'welcome#index'
 
-  get 'about/index'
-  get 'about', to: 'about#index'
-
-  get 'credits/index'
-  get 'credits', to: 'credits#index'
+  get 'about', to: 'about#about'
+  get 'credits', to: 'about#credits'
+  get 'privacy', to: 'about#privacy'
+  get 'terms', to: 'about#terms'
 
   resources :tournaments
   resources :heroes

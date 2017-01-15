@@ -1,0 +1,119 @@
+= page_title "About"
+
+%h1#about About
+%p
+  Rosterpocalypse is an entirely fan-made website to create and manage fantasy teams of eSports players participating in the Heroes Global Championship for Blizzard's game -
+  = link_to "Heroes of the Storm", "http://eu.battle.net/heroes/en/"
+  \. It is in no way directly affiliated or endorsed by Blizzard. Please feel free to send any feedback you might have to rosterpocalypse AT gmail.com, we'd love to hear it!
+
+%p Thanks for trying out the site, and if you like it, send it on to your friends!
+
+%h1#faq FAQ
+%p
+  #q1.faq-question
+    Q1. What is Rosterpocalypse?
+    %small= link_to "link", "#q1"
+  .faq-answer Rosterpocalypse is a Heroes of the Storm fantasy eSports team building website which allows you to create and manage your own rosters of 5 professional players over the course of the 4 main regional tournaments in the Heroes of the Storm Global Championship circuit. There might also be short seasons for events like the inter-region clashes and the mid-season brawl.
+
+%p
+  #q2.faq-question
+    Q2. How do I create a new Roster?
+    %small= link_to "link", "#q2"
+  .faq-answer Simply click on the "Create Roster" link on the main page or in the "Rosters" section. The only 2 limitations to creating rosters are:
+  %ul
+    %li you may have multiple rosters, however only one Roster allowed <b>per tournament</b>
+    %li roster names must be unique and between 4 and 20 characters long
+
+%p
+  #q3.faq-question
+    Q3. How do I populate my Roster with players? Are there any limitations?
+    %small= link_to "link", "#q3"
+  .faq-answer Add players via the "manage" Roster page. There are a few criteria that all rosters must satisfy:
+  %ul
+    %li they must contain exactly 5 players
+    %li players must be members of one of the teams competing in HGC
+    %li at least 1 dedicated Warrior player and 1 dedicated Support player must be included
+    %li the total value of the players may not exceed 500
+
+%p
+  #q4.faq-question
+    Q4. Once my Roster has been created, how do I manage it over the course of the tournament?
+    %small= link_to "link", "#q4"
+  .faq-answer Every week (called a Gameweek) you are allowed to make one player transfer, as long as you continue to adhere to the limitations listed above. Once all your transfers have been made, your Roster will be locked in for that Gameweek.
+
+%p
+  #q5.faq-question
+    Q5. How are points allocated?
+    %small= link_to "link", "#q5"
+  .faq-answer Points are allocated based on player role according to the following rules:
+  -# Keep in sync with the table in app/models/gameweek_player.rb
+  .col-xs-12
+    .col-xs-7
+      %table.table.table-sm
+        %thead
+          %tr
+            %th
+            %th Assassin/Flex
+            %th Warrior
+            %th Support
+        %tbody
+          %tr
+            %td
+              %b Kills
+            %td +2
+            %td +1
+            %td +1
+          %tr
+            %td
+              %b Assists
+            %td +1
+            %td +1
+            %td +1
+          %tr
+            %td
+              %b Time Dead
+            %td -1 per 20s
+            %td -1 per 30s
+            %td -1 per 30s
+          %tr
+            %td
+              %b Win
+            %td +2
+            %td +2
+            %td +2
+
+%p
+  #q6.faq-question
+    Q6. What if one of the players in my Roster gets substituted or is unable to play in the expected match?
+    %small= link_to "link", "#q6"
+  .faq-answer In this case, the points that the sub scores will be transferred to the player who was substituted.
+
+%p
+  #q7.faq-question
+    Q7. What are "Leagues"?
+    %small= link_to "link", "#q7"
+  .faq-answer Leagues are where you compare your Roster's performance over the course of the season against other players. There are two types of leagues:
+  %ul
+    %li <b>Public Leagues:</b> These are open and visible to all players, and Rosters are automatically added to the main Public League for the tournament.
+    %li <b>Private Leagues:</b> Private Leagues are also open to all players, however they are only visible to players who either have rosters in them or the league owner. To invite new players to a Private League you have created, simply send them the link to it.
+
+%p
+  #q8.faq-question
+    Q8. What if the season has already started, can I still join?
+    %small= link_to "link", "#q8"
+  .faq-answer Yes! Your Roster will be added to a private league which contains all rosters created in that week, so you can match yourself with other players who also missed the same number of games.
+
+%p
+  #q9.faq-question
+    Q9. What happens at the end of a tournament?
+    %small= link_to "link", "#q9"
+  .faq-answer Once the tournament is completed, the final points are tallied and prizes will be awarded to the players with the highest overall score for the tournament in that season! Only Rosters in the main Public League for the tournament will be considered eligible. The exact nature of the prizes will be announced closer to the completion date.
+
+
+%h1#future Future Improvements
+While the basic functionality of the site is complete we have some more ideas and enhancements in the works which should give you more options to customise your team and improve your scores, including:
+%ul
+  %li integrated fixture calendar
+  %li assigning a roster captain, who will earn bonus points
+  %li bonus actions that can be invoked once a season to manipulate your team or give a boost to your score
+  %li more detailed player stats visible on the roster selection page

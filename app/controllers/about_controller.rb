@@ -1,4 +1,13 @@
 class AboutController < ApplicationController
-  def index
+  def about
+  end
+
+  def privacy
+  end
+
+  def terms
+  end
+
+  def credits
   end
 end

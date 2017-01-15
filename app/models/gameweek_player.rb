@@ -70,18 +70,18 @@ class GameweekPlayer < ApplicationRecord
   #
   # Category        |  Assasin/Flex |   Warrior  |  Support
   # ----------------|---------------|------------|------------
-  # solo_kills      |       +2      |     +1     |     +1
-  # assists         |       +1      |     +2     |     +2
-  # time_spent_dead |   -(time/30)  | -(time/30) | -(time/30)
+  # solo_kills      |       +3      |     +1     |     +1
+  # assists         |       +1      |     +1     |     +1
+  # time_spent_dead |   -(time/20)  | -(time/30) | -(time/30)
   # win             |       +2      |     +2     |     +2
   # bonus           |    variable   |  variable  |  variable
   #
   def points_breakdown_hash game, detail
     role_stat_modifiers = {
-      assassin: { solo_kills: 2, assists: 1, time_spent_dead: 30.0, win: 2 },
-      flex: { solo_kills: 2, assists: 1, time_spent_dead: 30.0, win: 2 },
-      warrior: { solo_kills: 1, assists: 2, time_spent_dead: 30.0, win: 2 },
-      support: { solo_kills: 1, assists: 2, time_spent_dead: 30.0, win: 2 },
+      assassin: { solo_kills: 3, assists: 1, time_spent_dead: 20.0, win: 5 },
+      flex:     { solo_kills: 3, assists: 1, time_spent_dead: 20.0, win: 5 },
+      warrior:  { solo_kills: 1, assists: 1, time_spent_dead: 30.0, win: 5 },
+      support:  { solo_kills: 1, assists: 1, time_spent_dead: 30.0, win: 5 },
     }
 
     # Assume the player is an assassin if we cannot figure out the role
