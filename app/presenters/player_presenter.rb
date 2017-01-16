@@ -1,26 +1,4 @@
 class PlayerPresenter < BasePresenter
-  def role
-    hero_stats = most_played_heroes.take(2)
-    if hero_stats.any? && hero_stats.last.last < 10
-      return hero_stats.first.first.classification
-    else
-      classifications = hero_stats.map { |hero, stat| hero.classification }
-
-      case classifications
-      when ["Warrior", "Assassin"]
-        "Flex"
-      when ["Warrior", "Specialist"]
-        "Flex"
-      when ["Assassin", "Specialist"]
-        "Assassin"
-      when [""]
-      else
-        print('It is not a string')
-      end
-    end
-
-  end
-
   def most_played_heroes
     top_three = player_hero_win_loss_count.sort_by do |hero, stats|
       stats[:total]

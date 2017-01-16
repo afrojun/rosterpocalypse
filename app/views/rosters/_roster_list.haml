@@ -16,7 +16,7 @@
       %tr
         %td= link_to roster.name, roster
         - if show_manager
-          %td= roster.manager.name
+          %td= roster.manager.name.include?("_bnet") ? roster.manager.name.split(".").first : roster.manager.name
         - if show_tournament
           %td= roster.tournament.name
         %td= roster.score
