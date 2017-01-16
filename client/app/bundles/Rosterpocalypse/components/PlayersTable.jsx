@@ -20,7 +20,7 @@ const PlayersTable = (props) => {
       </Thead>
       {
         props.players.map(player => (
-          <Tr key={player.id}>
+          <Tr key={player.id} className={props.setTableRowClass && props.setTableRowClass(player.value)}>
             <Td column="rosterAction" className="col-sm-1">
               {
                 props.showRosterAction(player.id) ?
@@ -35,11 +35,11 @@ const PlayersTable = (props) => {
             </Td>
             // TODO: Create a better player summary to show here without leaving the page
             // <Td column="name" value={player.name} className="col-sm-3"><a href={player.url}>{player.name}</a></Td>
-            <Td column="name" value={player.name} className="col-sm-3">{player.name}</Td>
+            <Td column="name" value={player.name.toLowerCase()} className="col-sm-3">{player.name}</Td>
             <Td column="role" value={player.role} className="col-sm-3">
               <button className="btn btn-link table-filter-link" value={player.role} onClick={props.updateFilter}>{player.role}</button>
             </Td>
-            <Td column="team" value={player.team && player.team.name} className="col-sm-3">
+            <Td column="team" value={player.team && player.team.name.toLowerCase()} className="col-sm-3">
               <button className="btn btn-link table-filter-link" value={player.team && player.team.name} onClick={props.updateFilter}>{player.team && player.team.name}</button>
             </Td>
             <Td column="value" className="col-sm-2">{player.value}</Td>
@@ -55,7 +55,8 @@ PlayersTable.propTypes = {
   imageClass: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   showRosterAction: PropTypes.func.isRequired,
-  updateFilter: PropTypes.func.isRequired
+  updateFilter: PropTypes.func.isRequired,
+  setTableRowClass: PropTypes.func
 };
 
 export default PlayersTable;

@@ -32,7 +32,8 @@ class RosterPickerContainer extends React.Component {
       players: [],
       notification: "",
       filter: "",
-      playersPerPage: 10
+      playersPerPage: 10,
+      totalValue: 0
     };
 
     this.fetchRoster = this.fetchRoster.bind(this);
@@ -41,14 +42,16 @@ class RosterPickerContainer extends React.Component {
     this.addToRoster = this.addToRoster.bind(this);
     this.removeFromRoster = this.removeFromRoster.bind(this);
     this.updateRosterState = this.updateRosterState.bind(this);
+    this.updateRosterValue = this.updateRosterValue.bind(this);
     this.colourText = this.colourText.bind(this);
-    this.totalValue = this.totalValue.bind(this);
+    this.formattedTotalValue = this.formattedTotalValue.bind(this);
     this.rosterLockStatus = this.rosterLockStatus.bind(this);
     this.remainingTransfersCount = this.remainingTransfersCount.bind(this);
     this.submitRoster = this.submitRoster.bind(this);
     this.showRosterActionForAllPlayers = this.showRosterActionForAllPlayers.bind(this);
     this.showRosterActionForRosterPlayers = this.showRosterActionForRosterPlayers.bind(this);
     this.updateFilter = this.updateFilter.bind(this);
+    this.setTableRowClass = this.setTableRowClass.bind(this);
     this.clearFilter = this.clearFilter.bind(this);
     this.changePlayersPerPage = this.changePlayersPerPage.bind(this);
   }
@@ -64,6 +67,11 @@ class RosterPickerContainer extends React.Component {
   updateFilter(event) {
     event.preventDefault();
     this.setState({filter: event.target.value});
+  }
+
+  setTableRowClass(value) {
+    let remainingValue = this.props.maxRosterValue - this.state.totalValue;
+    return (value > remainingValue ? "team-red" : "");
   }
 
   clearFilter() {
@@ -99,7 +107,19 @@ class RosterPickerContainer extends React.Component {
 
   updateRosterState(object) {
     let newRoster = Object.assign({}, this.state.roster, object, {dirty: true});
-    this.setState({roster: newRoster});
+    this.setState(
+      {roster: newRoster},
+      () => {
+        this.updateRosterValue();
+      });
+  }
+
+  updateRosterValue() {
+    let total = this.state.roster.players.reduce((value, player) => {
+                  return value + player.value;
+                }, 0);
+    let roundedTotal = Math.round(total * 100)/100;
+    this.setState({totalValue: roundedTotal});
   }
 
   fetchData() {
@@ -117,7 +137,11 @@ class RosterPickerContainer extends React.Component {
   fetchRoster() {
     return rp(this.props.rosterDetailsPath + ".json").
               then(rosterData => {
-                this.setState({roster: JSON.parse(rosterData)});
+                this.setState(
+                  {roster: JSON.parse(rosterData)},
+                  () => {
+                    this.updateRosterValue();
+                  });
               });
   }
 
@@ -140,14 +164,9 @@ class RosterPickerContainer extends React.Component {
     return(<span className={className}>{text}</span>);
   }
 
-  totalValue() {
-    let total = this.state.roster.players.reduce((value, player) => {
-              return value + player.value;
-            }, 0);
-
-    let roundedTotal = Math.round(total * 100)/100;
-    let colour = (roundedTotal > this.props.maxRosterValue ? "red" : "");
-    return(this.colourText(roundedTotal + "/" + this.props.maxRosterValue, colour));
+  formattedTotalValue() {
+    let colour = (this.state.totalValue > this.props.maxRosterValue ? "red" : "");
+    return(this.colourText(this.state.totalValue + "/" + this.props.maxRosterValue, colour));
   }
 
   rosterLockStatus() {
@@ -231,19 +250,19 @@ class RosterPickerContainer extends React.Component {
   render() {
     let playersTableOpts = {
       id: "playersTable",
-      className: "table table-striped table-hover table-sm",
+      className: "table table-hover table-sm",
       filterable: ["name", "role", "team"],
       noDataText: "No matching players found.",
       itemsPerPage: this.state.playersPerPage,
       pageButtonLimit: 5,
       previousPageLabel: "<",
       nextPageLabel: ">",
-      sortable: ["value"],
+      sortable: ["name", "value", "role", "team"],
       filterBy: this.state.filter
     }
     let rosterTableOpts = {
       id: "rosterTable",
-      className: "table table-striped table-hover table-sm",
+      className: "table table-hover table-sm",
       noDataText: "No players in roster."
     }
 
@@ -254,7 +273,7 @@ class RosterPickerContainer extends React.Component {
             {this.state.roster.name}
           </h2>
           <p>
-            Total value: <b>{this.state.roster.players[0] ? this.totalValue() : "0/" + this.props.maxRosterValue}</b>
+            Total value: <b>{this.formattedTotalValue()}</b>
             <br/>
             <b>{this.state.roster.current_gameweek.roster_lock_date && this.rosterLockStatus()}</b>
           </p>
@@ -280,6 +299,7 @@ class RosterPickerContainer extends React.Component {
             players={this.state.players}
             onClick={this.addToRoster}
             showRosterAction={this.showRosterActionForAllPlayers}
+            setTableRowClass={this.setTableRowClass}
             updateFilter={this.updateFilter} />
 
           <input type="submit" value="Update Roster" className="btn btn-primary" onClick={this.submitRoster} />
