@@ -47,7 +47,7 @@ RSpec.describe Identity, type: :model do
           credentials: OpenStruct.new(expires: true, expires_at: 1484498817, token: "XnrZCBJEmb78ZChTO4u60QxDQbi4CgGMB")
         )
       }
-      let(:expected_nickname) { "Rosterpocalypse" }
+      let(:expected_nickname) { "rosterpocalypse" }
 
       it_behaves_like "an Identity"
     end
@@ -68,7 +68,7 @@ RSpec.describe Identity, type: :model do
           credentials: OpenStruct.new(expires: true, expires_at: 1489641616, refresh_token: "1/NH7GFD489", token: "ya29.98q7UI")
         )
       }
-      let(:expected_nickname) { "Rosterpocalypse" }
+      let(:expected_nickname) { "rosterpocalypse" }
 
       it_behaves_like "an Identity"
     end

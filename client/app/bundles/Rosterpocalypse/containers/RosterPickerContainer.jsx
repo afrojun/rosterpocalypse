@@ -173,13 +173,13 @@ class RosterPickerContainer extends React.Component {
     let dateFormat = "hA on ddd, MMM D Y"
     let timeNow = moment();
     let rosterLockDate = moment(this.state.roster.current_gameweek.roster_lock_date);
-    let endOfGameweek = moment(this.state.roster.current_gameweek.end_date);
+    let nextKeyDate = moment(this.state.roster.next_key_date);
     let text = "";
     let colour = "";
 
     if(this.state.roster.free_transfer_mode) {
       if(this.state.roster.full) {
-        text = "No games this week! Unlimited roster changes allowed until " + endOfGameweek.format(dateFormat);
+        text = "Unlimited roster changes allowed until " + nextKeyDate.format(dateFormat);
         colour = "green";
       } else {
         text = "Select " + this.props.maxPlayersInRoster + " players for your roster, including at least one Support and one Warrior player";
@@ -189,7 +189,7 @@ class RosterPickerContainer extends React.Component {
       if(this.state.roster.unlocked) {
         text = "Roster will lock " + rosterLockDate.fromNow() + " at " + rosterLockDate.format(dateFormat);
       } else {
-        text = "LOCKED until " + endOfGameweek.format(dateFormat);
+        text = "LOCKED until " + nextKeyDate.format(dateFormat);
         colour = "red";
       }
     }

@@ -33,6 +33,10 @@ class Tournament < ApplicationRecord
     end_date > Time.now.utc
   end
 
+  def first_roster_lock_date
+    find_gameweek(start_date).roster_lock_date
+  end
+
   # The 'safe' parameter denotes whether we allow the value to be nil
   # When 'safe', we always return a gameweek, the first one for dates before the start
   # of the tournament, and the last one for dates after the end of the tournament

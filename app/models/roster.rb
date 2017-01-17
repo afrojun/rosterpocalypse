@@ -65,7 +65,15 @@ class Roster < ApplicationRecord
   end
 
   def allow_free_transfers?
-    players.size < MAX_PLAYERS || !current_gameweek.is_tournament_week?
+    players.size < MAX_PLAYERS || !current_gameweek.is_tournament_week? || (Time.now.utc < tournament.first_roster_lock_date)
+  end
+
+  def next_key_date
+    if current_gameweek.is_tournament_week?
+      Time.now.utc < current_gameweek.roster_lock_date ? current_gameweek.roster_lock_date : current_gameweek.end_date
+    else
+      current_gameweek.end_date
+    end
   end
 
   def allow_updates?

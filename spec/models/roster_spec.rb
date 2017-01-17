@@ -99,7 +99,7 @@ RSpec.describe Roster, type: :model do
         it "updates the associated players" do
           players.push(warrior_player, support_player)
           expect(roster.update_including_players(players: player_ids)).to eq true
-          expect(roster.players).to eq players
+          expect(roster.players.to_a).to eq players
         end
 
         it "overwrites existing associated players" do
@@ -230,6 +230,31 @@ RSpec.describe Roster, type: :model do
           expect(roster.update_including_players(players: new_player_ids)).to be false
           expect(roster.players.to_a).to eq original_players
           expect(roster.errors.messages).to include(roster: ["has 1 transfer available in this window"])
+        end
+      end
+
+      context "#allow_free_transfers?" do
+        context "no players in roster" do
+          it "returns true" do
+            expect(roster.allow_free_transfers?).to eq true
+          end
+        end
+
+        context "with players in roster" do
+          before :each do
+            players.push(warrior_player, support_player)
+            roster.update_including_players(players: player_ids)
+          end
+
+          it "allows free transfers before the tournament starts" do
+            allow(Time).to receive(:now).and_return(Time.parse "2017-01-01")
+            expect(roster.allow_free_transfers?).to eq true
+          end
+
+          it "allows free transfers before the roster lock date in the first tournament gameweek" do
+            allow(Time).to receive(:now).and_return(Time.parse "2017-01-17")
+            expect(roster.allow_free_transfers?).to eq true
+          end
         end
       end
 
