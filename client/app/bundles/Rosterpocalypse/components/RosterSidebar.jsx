@@ -64,7 +64,7 @@ const RosterSidebar = (props) => {
         }
 
         {
-          props.roster.private_leagues[0] &&
+          props.showPrivateLeagues && props.roster.private_leagues[0] &&
             <div>
               <h5 className="sidebar-subheading">
                 Private Leagues
@@ -140,7 +140,8 @@ const RosterSidebar = (props) => {
 RosterSidebar.propTypes = {
   roster: PropTypes.object.isRequired,
   rosterPath: PropTypes.string.isRequired,
-  remainingTransfersCount: PropTypes.func.isRequired
+  remainingTransfersCount: PropTypes.func.isRequired,
+  showPrivateLeagues: PropTypes.bool.isRequired
 };
 
 export default RosterSidebar;

@@ -16,7 +16,8 @@ class RostersController < RosterpocalypseController
     @gameweek_players_by_player = @gameweek_roster == @roster.current_gameweek_roster ? @gameweek_roster.gameweek_players_by_player(@roster.players) : @gameweek_roster.gameweek_players_by_player
     @sidebar_props = {
       rosterPath: roster_url(@roster),
-      rosterDetailsPath: details_roster_url(@roster)
+      rosterDetailsPath: details_roster_url(@roster),
+      showPrivateLeagues: current_user.manager == @roster.manager
     }
   end
 
@@ -35,7 +36,8 @@ class RostersController < RosterpocalypseController
       playersPath: players_url,
       rosterRegion: @roster.region,
       maxPlayersInRoster: Roster::MAX_PLAYERS,
-      maxRosterValue: Roster::MAX_TOTAL_VALUE
+      maxRosterValue: Roster::MAX_TOTAL_VALUE,
+      showPrivateLeagues: current_user.manager == @roster.manager
     }
   end
 

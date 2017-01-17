@@ -14,7 +14,8 @@ class RosterPickerContainer extends React.Component {
     playersPath: PropTypes.string.isRequired,
     rosterRegion: PropTypes.string.isRequired,
     maxPlayersInRoster: PropTypes.number.isRequired,
-    maxRosterValue: PropTypes.number.isRequired
+    maxRosterValue: PropTypes.number.isRequired,
+    showPrivateLeagues: PropTypes.bool.isRequired
   };
 
   constructor(props, _railsContext) {
@@ -310,7 +311,8 @@ class RosterPickerContainer extends React.Component {
           <RosterSidebar
             roster={this.state.roster}
             remainingTransfersCount={this.remainingTransfersCount}
-            rosterPath={this.props.rosterPath} />
+            rosterPath={this.props.rosterPath}
+            showPrivateLeagues={this.props.showPrivateLeagues} />
         </div>
       </div>
     );
