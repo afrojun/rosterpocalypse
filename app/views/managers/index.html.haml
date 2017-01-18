@@ -1,6 +1,12 @@
 = page_title "Managers"
 
-%h1 Managers
+%h1
+  Managers
+  %small= "(#{Manager.count})"
+
+.center
+  = paginate @managers
+
 %table.table.table-sm.table-striped
   %thead
     %tr
