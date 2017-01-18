@@ -1,0 +1,28 @@
+= page_title heading
+
+= form_for(match, html: {class: "compact-form"}) do |f|
+  %h1.form-heading= heading
+  = render 'layouts/error_messages', object: match
+
+  .field
+    = f.label :team_1_id, class: "sr-only"
+    = f.select :team_1_id, Team.order(:slug).collect { |t| [t.name, t.id] }, {}, include_blank: false, class: "form-control"
+  .field
+    = f.label :team_2_id, class: "sr-only"
+    = f.select :team_2_id, Team.order(:slug).collect { |t| [t.name, t.id] }, {}, include_blank: false, class: "form-control"
+  .field
+    = f.label :gameweek_id, class: "sr-only"
+    = f.number_field :gameweek_id, required: true, class: "form-control", placeholder: "Gameweek ID"
+  .field
+    = f.label :best_of, class: "sr-only"
+    = f.number_field :best_of, required: true, class: "form-control", placeholder: "Best Of"
+  .field
+    = f.label :start_date, class: "sr-only"
+    .form-group
+      .datetimepicker.input-group.date
+        = f.text_field :start_date, required: true, class: "form-control", placeholder: "Start Date"
+        %span.input-group-addon
+          %span.fa.fa-calendar
+
+  .actions
+    = f.submit submit_message, class: "btn btn-lg btn-primary btn-block"

@@ -1,0 +1,20 @@
+%p
+  %strong Teams:
+  = link_to @match.team_1.name, @match.team_1
+  vs
+  = link_to @match.team_2.name, @match.team_2
+%p
+  %strong Tournament:
+  = @match.gameweek.tournament.name
+%p
+  %strong Best of:
+  = @match.best_of
+%p
+  %strong Start date:
+  = @match.start_date
+
+= render "games/games_list", games: @match.games
+
+= link_to 'Edit', edit_match_path(@match)
+|
+= link_to 'Matches', matches_path

@@ -4,6 +4,7 @@ class Game < ApplicationRecord
 
   belongs_to :map
   belongs_to :gameweek
+  belongs_to :match
   has_one :tournament, through: :gameweek
   has_many :game_details, dependent: :destroy
   has_many :players, through: :game_details
@@ -27,6 +28,10 @@ class Game < ApplicationRecord
         }
       end
     end
+  end
+
+  def winner
+    game_details.first.win ? game_details.first.team : other_team(game_details.first.team)
   end
 
   def should_generate_new_friendly_id?

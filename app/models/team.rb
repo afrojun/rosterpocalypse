@@ -21,6 +21,10 @@ class Team < ApplicationRecord
     TeamAlternateName.find_or_create_by(team: self, alternate_name: name.downcase)
   end
 
+  def matches
+    Match.where("team_1_id = ? OR team_2_id = ?", id, id)
+  end
+
   def validate_destroy
     game_count = games.size
     if game_count > 0

@@ -10,10 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170106155216) do
+ActiveRecord::Schema.define(version: 20170117212856) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "pg_stat_statements"
 
   create_table "friendly_id_slugs", force: :cascade do |t|
     t.string   "slug",                      null: false
@@ -55,9 +56,12 @@ ActiveRecord::Schema.define(version: 20170106155216) do
     t.string   "slug",        null: false
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "game_number"
+    t.integer  "match_id"
     t.index ["game_hash"], name: "index_games_on_game_hash", unique: true, using: :btree
     t.index ["gameweek_id"], name: "index_games_on_gameweek_id", using: :btree
     t.index ["map_id"], name: "index_games_on_map_id", using: :btree
+    t.index ["match_id"], name: "index_games_on_match_id", using: :btree
     t.index ["slug"], name: "index_games_on_slug", unique: true, using: :btree
     t.index ["start_date"], name: "index_games_on_start_date", using: :btree
   end
@@ -173,6 +177,21 @@ ActiveRecord::Schema.define(version: 20170106155216) do
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_maps_on_name", unique: true, using: :btree
     t.index ["slug"], name: "index_maps_on_slug", unique: true, using: :btree
+  end
+
+  create_table "matches", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "team_1_id",               null: false
+    t.integer  "team_2_id",               null: false
+    t.integer  "gameweek_id",             null: false
+    t.integer  "best_of",     default: 1, null: false
+    t.datetime "start_date",              null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.index ["gameweek_id"], name: "index_matches_on_gameweek_id", using: :btree
+    t.index ["start_date"], name: "index_matches_on_start_date", using: :btree
+    t.index ["team_1_id"], name: "index_matches_on_team_1_id", using: :btree
+    t.index ["team_2_id"], name: "index_matches_on_team_2_id", using: :btree
   end
 
   create_table "player_alternate_names", force: :cascade do |t|
@@ -294,6 +313,7 @@ ActiveRecord::Schema.define(version: 20170106155216) do
   add_foreign_key "game_details", "teams"
   add_foreign_key "games", "gameweeks"
   add_foreign_key "games", "maps"
+  add_foreign_key "games", "matches"
   add_foreign_key "gameweek_players", "gameweeks"
   add_foreign_key "gameweek_players", "players"
   add_foreign_key "gameweek_rosters", "gameweeks"
@@ -303,6 +323,7 @@ ActiveRecord::Schema.define(version: 20170106155216) do
   add_foreign_key "leagues", "managers"
   add_foreign_key "leagues", "tournaments"
   add_foreign_key "managers", "users"
+  add_foreign_key "matches", "gameweeks"
   add_foreign_key "player_alternate_names", "players"
   add_foreign_key "rosters", "managers"
   add_foreign_key "rosters", "tournaments"
