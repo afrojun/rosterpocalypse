@@ -275,7 +275,7 @@ class RosterPickerContainer extends React.Component {
             {this.state.roster.name}
           </h2>
           <p>
-            Total value: <b>{this.formattedTotalValue()}</b>
+            Total value: <b>{this.formattedTotalValue()} ({Math.round((this.props.maxRosterValue - this.state.totalValue)*100)/100} remaining)</b>
             <br/>
             <b>{this.state.roster.current_gameweek.roster_lock_date && this.rosterLockStatus()}</b>
           </p>
