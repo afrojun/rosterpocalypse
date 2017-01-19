@@ -25,18 +25,18 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     @user = @identity.user || current_user
     if @user.nil?
       @user = if @identity.email.present?
-                User.find_or_create_by(
-                  email: @identity.email,
-                  username: @identity.nickname
-                )
-              elsif @identity.email.blank? && @identity.name.present?
-                User.find_or_create_by(
-                  email: "#{@identity.name}@#{provider}.com",
-                  username: "#{@identity.name}_#{provider}"
-                )
+                User.find_or_create_by(email: @identity.email) do |u|
+                  u.username = @identity.nickname
+                end
+              elsif @identity.name.present?
+                User.find_or_create_by(email: "#{@identity.name}@#{provider}.com") do |u|
+                  u.username = "#{@identity.name}_#{provider}"
+                end
               else
-                logger.error "Unable to infer the email address from the OAuth details provided by #{provider}: #{request.env["omniauth.auth"].except("extra")}"
-                raise "Unable to create the user from the details returned by #{provider}."
+                message = "Unable to infer the email address from the OAuth details provided by #{provider}"
+                logger.error "#{message}: #{request.env["omniauth.auth"].except("extra")}"
+                flash[:notice] = "#{message}."
+                redirect_to new_user_registration_url,
               end
 
       @identity.update_attribute :user_id, @user.id

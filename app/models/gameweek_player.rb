@@ -73,7 +73,7 @@ class GameweekPlayer < ApplicationRecord
   # solo_kills      |       +3      |     +1     |     +1
   # assists         |       +1      |     +1     |     +1
   # time_spent_dead |   -(time/20)  | -(time/30) | -(time/30)
-  # win             |       +2      |     +2     |     +2
+  # win             |       +5      |     +5     |     +5
   # bonus           |    variable   |  variable  |  variable
   #
   def points_breakdown_hash game, detail
