@@ -21,7 +21,8 @@ class RosterPickerContainer extends React.Component {
         players: [],
         public_leagues: [],
         private_leagues: [],
-        transfers: []
+        transfers: [],
+        matches: []
       }
     };
 

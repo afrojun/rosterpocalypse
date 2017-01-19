@@ -21,6 +21,10 @@ class Match < ApplicationRecord
     teams.map(&:name).join(" vs. ")
   end
 
+  def short_description
+    teams.map(&:short_name).join(" vs. ")
+  end
+
   def score
     team_1_wins = 0
     team_2_wins = 0

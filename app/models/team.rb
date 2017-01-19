@@ -38,6 +38,10 @@ class Team < ApplicationRecord
     end
   end
 
+  def short_name
+    alternate_names.map(&:alternate_name).sort { |a, b| a.length <=> b.length }.first
+  end
+
   # Accepts either a string or Array of names as input, returns an array
   def self.find_including_alternate_names team_names
     team_names = [team_names] if team_names.is_a?(String)

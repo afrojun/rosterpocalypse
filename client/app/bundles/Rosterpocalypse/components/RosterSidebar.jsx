@@ -127,11 +127,32 @@ const RosterSidebar = (props) => {
 
       <div className="sidebar-div">
         <h4 className="sidebar-heading">
-          Fixtures
+          Matches
         </h4>
-        <p>
-          Coming soon!
-        </p>
+        {
+          props.roster.matches[0] &&
+            <div>
+              <table className="sidebar-table">
+                <tbody>
+                  {
+                    props.roster.matches.map(match => (
+                      <tr key={match.id}>
+                        <td>{moment(match.start_date).format("dd")}</td>
+                        <td>{moment(match.start_date).format("HH:mm")}</td>
+                        <td className="sidebar-table-value sidebar-match-team1">{match.team_1.short_name}</td>
+                        <td><img src={match.team_1.logo} title={match.team_1.name} width="16" height="16"/></td>
+                        <td className="sidebar-table-value sidebar-match-vs">vs</td>
+                        <td><img src={match.team_2.logo} title={match.team_2.name} width="16" height="16"/></td>
+                        <td className="sidebar-table-value">{match.team_2.short_name}</td>
+                      </tr>
+                    ))
+                  }
+                </tbody>
+
+              </table>
+            </div>
+        }
+        <small>(Times in local timezone)</small>
       </div>
     </div>
   );

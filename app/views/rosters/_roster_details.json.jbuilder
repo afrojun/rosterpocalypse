@@ -33,3 +33,7 @@ end
 json.transfers roster.transfers.first(5) do |transfer|
   json.partial! "rosters/transfer", transfer: transfer
 end
+
+json.matches roster.current_gameweek.matches do |match|
+  json.partial! "matches/match", match: match
+end
