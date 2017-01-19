@@ -26,9 +26,10 @@ RSpec.describe GameDetailsController, type: :controller do
   # Game. As you add validations to Game, be sure to
   # adjust the attributes here as well.
   let(:game) { FactoryGirl.create :game }
+  let(:player) { FactoryGirl.create :player }
   let(:valid_attributes) {
     {
-      player_id: FactoryGirl.create(:player).id,
+      player_id: player.id,
       game_id: game.id,
       team_id: FactoryGirl.create(:team).id,
       hero_id: FactoryGirl.create(:hero).id,
@@ -43,7 +44,7 @@ RSpec.describe GameDetailsController, type: :controller do
 
   let(:invalid_attributes) {
     {
-      player_id: nil,
+      player_id: player.id,
       game_id: game.id,
       team_id: FactoryGirl.create(:team).id,
       hero_id: FactoryGirl.create(:hero).id,
@@ -51,8 +52,8 @@ RSpec.describe GameDetailsController, type: :controller do
       assists: 5,
       deaths: 3,
       time_spent_dead: 50,
-      team_colour: nil,
-      win: true,
+      team_colour: "blue",
+      win: nil,
     }
   }
 

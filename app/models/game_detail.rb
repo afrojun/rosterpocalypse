@@ -3,6 +3,9 @@ class GameDetail < ApplicationRecord
   belongs_to :game
   belongs_to :hero
   belongs_to :team
+
+  validates :team_colour, presence: true
+  validates :win, inclusion: {in: [true, false]}
   # Other attributes
   # solo_kills, assists, deaths, time_spent_dead, team_colour, win
 
