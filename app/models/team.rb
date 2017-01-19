@@ -19,6 +19,7 @@ class Team < ApplicationRecord
   def update_alternate_names
     TeamAlternateName.find_or_create_by(team: self, alternate_name: name)
     TeamAlternateName.find_or_create_by(team: self, alternate_name: name.downcase)
+    TeamAlternateName.find_or_create_by(team: self, alternate_name: slug)
   end
 
   def matches
@@ -35,6 +36,14 @@ class Team < ApplicationRecord
         player.update_attribute(:team, nil)
       end
     end
+  end
+
+  # Accepts either a string or Array of names as input, returns an array
+  def self.find_including_alternate_names team_names
+    team_names = [team_names] if team_names.is_a?(String)
+    downcase_names = team_names.map(&:downcase).uniq
+    alternate_names = TeamAlternateName.where alternate_name: downcase_names
+    alternate_names.map(&:team).uniq
   end
 
   def self.find_or_create_including_alternate_names team_name

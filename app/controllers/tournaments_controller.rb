@@ -12,8 +12,8 @@ class TournamentsController < RosterpocalypseController
   # GET /tournaments/1
   # GET /tournaments/1.json
   def show
-    @gameweeks = @tournament.gameweeks.includes(:games).select { |gameweek| gameweek.games.any? }
-    @tournament_games = @gameweek.games.includes(:map, :tournament, game_details: [:team]) if @gameweek.present?
+    @gameweeks = @tournament.gameweeks.includes(:matches).select { |gameweek| gameweek.matches.any? }
+    @tournament_matches = @gameweek.matches.includes(:team_1, :team_2) if @gameweek.present?
   end
 
   # GET /tournaments/new
@@ -97,7 +97,7 @@ class TournamentsController < RosterpocalypseController
     end
 
     def set_gameweek
-      @gameweek = params[:gameweek_id].present? ? Gameweek.find(params[:gameweek_id]) : @tournament.games.first.try(:gameweek)
+      @gameweek = params[:gameweek_id].present? ? Gameweek.find(params[:gameweek_id]) : @tournament.current_gameweek
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

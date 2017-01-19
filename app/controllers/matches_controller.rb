@@ -4,7 +4,7 @@ class MatchesController < ApplicationController
   # GET /matches
   # GET /matches.json
   def index
-    @matches = Match.order(start_date: :desc)
+    @matches = Match.order(start_date: :desc).page params[:page]
   end
 
   # GET /matches/1

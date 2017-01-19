@@ -1,11 +1,12 @@
 class Gameweek < ApplicationRecord
   belongs_to :tournament
-  has_many :gameweek_players
+  has_many :gameweek_players, dependent: :destroy
   has_many :players, through: :gameweek_players
-  has_many :gameweek_rosters, -> { order "points" }
+  has_many :gameweek_rosters, -> { order "points" }, dependent: :destroy
   has_many :rosters, through: :gameweek_rosters
   has_many :transfers, through: :gameweek_rosters
-  has_many :games, -> { order "games.start_date DESC" }
+  has_many :games, -> { order "games.start_date ASC" }
+  has_many :matches, -> { order "matches.start_date ASC" }, dependent: :destroy
 
   def name_including_dates
     format = "%Y-%m-%d"

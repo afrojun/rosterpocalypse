@@ -1,0 +1,17 @@
+%table.table.table-sm.table-striped
+  %thead
+    %tr
+      %th Teams
+      %th Best Of
+      %th Tournament
+      %th Start date
+      %th{:colspan => "2"}
+  %tbody
+    - matches.each do |match|
+      %tr
+        %td= link_to "#{match.team_1.name} vs #{match.team_2.name}", match
+        %td= "Best Of #{match.best_of}"
+        %td= link_to match.gameweek.tournament.name, match.gameweek.tournament
+        %td= match.start_date
+        %td= link_to 'Edit', edit_match_path(match)
+        %td= link_to 'Destroy', match, method: :delete, data: { confirm: 'Are you sure?' }

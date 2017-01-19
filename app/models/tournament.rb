@@ -5,7 +5,8 @@ class Tournament < ApplicationRecord
   has_many :leagues
   has_many :rosters
   has_many :gameweeks, -> { order 'start_date ASC' }, dependent: :destroy
-  has_many :games, -> { order 'start_date DESC' }, through: :gameweeks
+  has_many :games, -> { order 'start_date ASC' }, through: :gameweeks
+  has_many :matches, -> { order 'start_date ASC' }, through: :gameweeks
 
   GLOBAL_REGION = "Global"
   REGIONS = Team::REGIONS + [GLOBAL_REGION]

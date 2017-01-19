@@ -6,11 +6,13 @@ task :update_player_values => :environment do
   puts "done."
 end
 
+
 task :infer_player_roles => :environment do
   puts "Inferring player roles..."
   Player.all.each { |player| player.infer_role }
   puts "done."
 end
+
 
 task :list_duplicate_players => :environment do
   puts "Listing possible duplicate players..."
@@ -25,7 +27,8 @@ task :list_duplicate_players => :environment do
   puts "done."
 end
 
-task :populate_matches => :environment do
+
+task :populate_past_matches => :environment do
   match_score_sum_to_best_of = {
     [0, 0] => 1,
     [0, 1] => 1,
@@ -87,6 +90,39 @@ task :populate_matches => :environment do
 
     elsif team_date_matches.size > 1
       puts "ERROR: more than 1 possible match found! Unable to add game '#{game.game_hash}' to a match."
+    end
+  end
+end
+
+
+task :populate_future_matches => :environment do
+  cal_path = Rails.root.join("app", "assets", "calendars", "hgc-phase1.ics")
+  puts "Using calendar: #{cal_path}"
+  cal_file = File.open(cal_path)
+  events = Icalendar::Event.parse(cal_file)
+
+  events.each do |event|
+    if ["bye week", "mid-season brawl", "hgc crucible", "hgc playoffs", "eastern clash", "western clash"].include?(event.summary.downcase)
+      puts "Skipping Event: #{event.summary}"
+      next
+    end
+
+    summary, region, team_1_name, team_2_name = event.summary.match(/^(\w{2}) - (.+) vs. (.+)$/).to_a
+
+    puts "region: #{region}; team_1_name: #{team_1_name}; team_2_name: #{team_2_name}; event.dtstart: #{event.dtstart}"
+    if region && team_1_name && team_2_name && event.dtstart
+      tournament = Tournament.active_tournaments.where(region: region).first
+      date = Time.parse(event.dtstart.to_s).utc
+      match = Match.find_or_create_by(
+        team_1: Team.find_including_alternate_names(team_1_name).first,
+        team_2: Team.find_including_alternate_names(team_2_name).first,
+        gameweek: tournament.find_gameweek(date),
+        start_date: date,
+        best_of: 5
+      )
+      puts "Loaded match successfully"
+    else
+      puts "ERROR: Unable to load match - #{event.summary}"
     end
   end
 end
