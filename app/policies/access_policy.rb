@@ -23,6 +23,7 @@ class AccessPolicy
         !target_user.admin?
       end
       can :manage, Manager
+      can :manage, Match
       can :manage, Game
       can :manage, GameDetail
       can :manage, Hero
@@ -42,6 +43,7 @@ class AccessPolicy
     #
     role :member, proc { |user| user.present? && user.registered? } do
       can :read, Manager
+      can :read, Match
       can :read, Game
       can :read, Hero
       can :read, Team

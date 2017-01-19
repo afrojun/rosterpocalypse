@@ -9,7 +9,7 @@
   %tbody
     - matches.each do |match|
       %tr
-        %td= link_to "#{match.team_1.name} vs #{match.team_2.name}", match
+        %td= link_to match.description, match
         %td= "Best Of #{match.best_of}"
         %td= link_to match.gameweek.tournament.name, match.gameweek.tournament
         %td= match.start_date

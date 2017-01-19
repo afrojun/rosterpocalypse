@@ -1,7 +1,8 @@
 %h1 Matches
 
 .center
-  = paginate matches
+  = paginate @matches
+
 = render "matches_list", matches: @matches
 %br/
 = link_to 'New Match', new_match_path
