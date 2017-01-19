@@ -4,6 +4,7 @@ class Match < ApplicationRecord
   belongs_to :team_1, class_name: "Team"
   belongs_to :team_2, class_name: "Team"
   belongs_to :gameweek
+  belongs_to :stage
   has_many :games, -> { order "start_date" }
 
   validate :start_date_in_gameweek

@@ -180,15 +180,16 @@ ActiveRecord::Schema.define(version: 20170117212856) do
   end
 
   create_table "matches", force: :cascade do |t|
-    t.string   "name"
     t.integer  "team_1_id",               null: false
     t.integer  "team_2_id",               null: false
     t.integer  "gameweek_id",             null: false
+    t.integer  "stage_id"
     t.integer  "best_of",     default: 1, null: false
     t.datetime "start_date",              null: false
     t.datetime "created_at",              null: false
     t.datetime "updated_at",              null: false
     t.index ["gameweek_id"], name: "index_matches_on_gameweek_id", using: :btree
+    t.index ["stage_id"], name: "index_matches_on_stage_id", using: :btree
     t.index ["start_date"], name: "index_matches_on_start_date", using: :btree
     t.index ["team_1_id"], name: "index_matches_on_team_1_id", using: :btree
     t.index ["team_2_id"], name: "index_matches_on_team_2_id", using: :btree
@@ -237,6 +238,14 @@ ActiveRecord::Schema.define(version: 20170117212856) do
     t.index ["score"], name: "index_rosters_on_score", using: :btree
     t.index ["slug"], name: "index_rosters_on_slug", unique: true, using: :btree
     t.index ["tournament_id"], name: "index_rosters_on_tournament_id", using: :btree
+  end
+
+  create_table "stages", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "tournament_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["tournament_id"], name: "index_stages_on_tournament_id", using: :btree
   end
 
   create_table "team_alternate_names", force: :cascade do |t|
@@ -324,9 +333,11 @@ ActiveRecord::Schema.define(version: 20170117212856) do
   add_foreign_key "leagues", "tournaments"
   add_foreign_key "managers", "users"
   add_foreign_key "matches", "gameweeks"
+  add_foreign_key "matches", "stages"
   add_foreign_key "player_alternate_names", "players"
   add_foreign_key "rosters", "managers"
   add_foreign_key "rosters", "tournaments"
+  add_foreign_key "stages", "tournaments"
   add_foreign_key "team_alternate_names", "teams"
   add_foreign_key "transfers", "gameweek_rosters"
 end
