@@ -15,6 +15,9 @@
 %p= @league.description
 
 - if @rosters.any?
+  .center
+    = paginate @rosters
+
   = render "rosters/roster_list", rosters: @rosters, show_manager: true
 - else
   %br
