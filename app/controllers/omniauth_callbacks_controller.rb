@@ -36,7 +36,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
                 message = "Unable to infer the email address from the OAuth details provided by #{provider}"
                 logger.error "#{message}: #{request.env["omniauth.auth"].except("extra")}"
                 flash[:notice] = "#{message}."
-                redirect_to new_user_registration_url,
+                redirect_to new_user_registration_url
               end
 
       @identity.update_attribute :user_id, @user.id
