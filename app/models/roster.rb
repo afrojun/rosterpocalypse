@@ -199,7 +199,7 @@ class Roster < ApplicationRecord
   end
 
   def validate_player_value players
-    total_value = players.sum(&:value)
+    total_value = players.sum(&:value).round(2)
     if total_value <= MAX_TOTAL_VALUE
       true
     else

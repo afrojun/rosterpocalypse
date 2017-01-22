@@ -12,7 +12,7 @@ class LeaguesController < RosterpocalypseController
   # GET /leagues/1
   # GET /leagues/1.json
   def show
-    @rosters = @league.rosters.order(score: :desc).page params[:page]
+    @rosters = @league.rosters.includes(:tournament, manager: [:user]).order(score: :desc).page params[:page]
   end
 
   # GET /leagues/new

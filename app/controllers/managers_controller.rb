@@ -4,7 +4,7 @@ class ManagersController < RosterpocalypseController
   # GET /managers
   # GET /managers.json
   def index
-    @managers = Manager.all.page params[:page]
+    @managers = Manager.all.includes(:user).page params[:page]
   end
 
   # GET /managers/1

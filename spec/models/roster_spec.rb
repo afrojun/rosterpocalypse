@@ -99,13 +99,13 @@ RSpec.describe Roster, type: :model do
         it "updates the associated players" do
           players.push(warrior_player, support_player)
           expect(roster.update_including_players(players: player_ids)).to eq true
-          expect(roster.players.to_a).to eq players
+          expect(roster.players.to_a.sort).to eq players.sort
         end
 
         it "overwrites existing associated players" do
           players.push(warrior_player, support_player)
           expect(roster.update_including_players(players: player_ids)).to eq true
-          expect(roster.players.to_a).to eq players
+          expect(roster.players.to_a.sort).to eq players.sort
 
           players.shift
           players << cheap_player
