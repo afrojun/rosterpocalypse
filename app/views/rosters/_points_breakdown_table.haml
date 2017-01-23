@@ -1,0 +1,22 @@
+- show_game_scores ||= false
+
+%table.table.table-sm
+  %thead
+    %tr
+      %th Stat
+      - if show_game_scores
+        %th Value
+      %th Points
+  %tbody
+    - points_breakdown.except(:bonus, :total).each do |category, points|
+      %tr
+        %td= category.to_s.humanize
+        - if show_game_scores
+          %td= player_game_detail.try(:send, category)
+        %td= points
+.roster-status-player-game-details-bonus
+  - if points_breakdown[:bonus].any?
+    %strong Bonus awards:
+    %ul
+      - points_breakdown[:bonus].map { |bonus| bonus.to_s.gsub("_", " ") }.each do |bonus|
+        %li= bonus

@@ -11,7 +11,7 @@
       %tr
         %td= link_to match.description, match
         %td= "Best Of #{match.best_of}"
-        %td= link_to match.gameweek.tournament.name, match.gameweek.tournament
+        %td= link_to match.tournament.name, match.tournament
         %td= match.start_date
         %td= link_to 'Edit', edit_match_path(match)
         %td= link_to 'Destroy', match, method: :delete, data: { confirm: 'Are you sure?' }

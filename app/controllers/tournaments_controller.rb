@@ -12,8 +12,11 @@ class TournamentsController < RosterpocalypseController
   # GET /tournaments/1
   # GET /tournaments/1.json
   def show
-    @gameweeks = @tournament.gameweeks.includes(:matches).select { |gameweek| gameweek.matches.any? }
-    @tournament_matches = @gameweek.matches.includes(:team_1, :team_2) if @gameweek.present?
+    @gameweeks = @tournament.gameweeks.includes(:games, matches: [:tournament]).select { |gameweek| gameweek.matches.any? }
+    if @gameweek.present?
+      @tournament_matches = @gameweek.matches.includes(:team_1, :team_2)
+      @tournament_players = @gameweek.gameweek_players
+    end
   end
 
   # GET /tournaments/new

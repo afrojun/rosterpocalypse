@@ -47,28 +47,14 @@
         - @gameweek_players_by_player.each_with_index do |(player, gameweek_player), index|
           - if gameweek_player.present?
             .col-xs-12.roster-status-player-game-details{id: "gameweek-details-#{player.id}", class: (index == 0 ? "" : "hide")}
+              = render "points_breakdown_table", points_breakdown: gameweek_player.representative_game_points, show_game_scores: false
               - gameweek_player.points_breakdowns_by_game.each do |game, points_breakdown|
                 - player_game_detail = game.game_details.where(player: player).first
 
                 .col-xs-10.roster-status-player-game-details-map{id: "#{player.id}-#{game.id}"}= "vs. #{game.other_team(player_game_detail.team).name} on #{game.map.name}"
                 .col-xs-2.roster-status-player-game-details-points= points_breakdown[:total]
                 .col-xs-12.roster-status-player-game-details-points-breakdown{id: "game-details-#{player.id}-#{game.id}"}
-                  %table.table.table-sm
-                    %thead
-                      %tr
-                        %th Statistic
-                        %th Count
-                        %th Points
-                    %tbody
-                      - points_breakdown.except(:bonus, :total).each do |category, points|
-                        %tr
-                          %td= category.to_s.humanize
-                          %td= player_game_detail.try(:send, category)
-                          %td= points
-                  .roster-status-player-game-details-bonus
-                    - if points_breakdown[:bonus].any?
-                      %strong Bonus awards:
-                      = points_breakdown[:bonus].map { |bonus| bonus.to_s.humanize }.to_sentence
+                  = render "points_breakdown_table", points_breakdown: points_breakdown, player_game_detail: player_game_detail, show_game_scores: true
         #no-games.col-xs-12.roster-status-player-game-details.hide
           .col-xs-12.roster-status-player-no-games-placeholder No games this week
   - else

@@ -5,7 +5,7 @@ class MatchesController < RosterpocalypseController
   # GET /matches
   # GET /matches.json
   def index
-    @matches = Match.order(start_date: :desc).page params[:page]
+    @matches = Match.all.includes(:team_1, :team_2, gameweek: [:tournament]).order(start_date: :desc).page params[:page]
   end
 
   # GET /matches/1

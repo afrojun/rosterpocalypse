@@ -3,7 +3,7 @@ class Player < ApplicationRecord
   friendly_id :name
 
   has_many :game_details
-  has_many :games, through: :game_details
+  has_many :games, -> { order "start_date DESC" }, through: :game_details
   has_many :heroes, through: :game_details
   has_many :alternate_names, class_name: "PlayerAlternateName", dependent: :destroy
   belongs_to :team
@@ -84,7 +84,7 @@ class Player < ApplicationRecord
 
       # We choose the primary player to be the one with the most recent game
       players.sort_by! do |player|
-        player.games.order(start_date: :desc).first
+        player.games.first.try :start_date
       end
       primary = players.shift
 

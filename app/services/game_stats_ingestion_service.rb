@@ -32,7 +32,7 @@ class GameStatsIngestionService
 
             # Update the player's team if:
             # 1. the player's team is not yet defined
-            # 2. the player's team name is "Unknown" OR the imported game is newer than the most recent previously imported game
+            # 2. the player's team name is "Unknown" OR (the team name is not "Unknown" AND the imported game is newer than the most recent previously imported game)
             #
             # Otherwise update the current team to the player's team if the team name is "Unknown"
             most_recent_game = player.games.order(start_date: :desc).first
@@ -54,11 +54,14 @@ class GameStatsIngestionService
               win: player_detail["result"] == "win" ? true : false
             )
           end
-
-          if gameweek.present?
-            GameweekPlayer.update_from_game game, gameweek
-          end
         end
+
+        if gameweek.present?
+          GameweekPlayer.update_from_game game, gameweek
+        end
+
+        # The last step is to add the game to a Match
+        Match.add_game game
       end
 
       game

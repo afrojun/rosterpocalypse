@@ -7,8 +7,8 @@ class GameweekPlayer < ApplicationRecord
   serialize :points_breakdown, Hash
 
   BONUS_AWARD_PERCENTILE = 80
-  MAX_BONUS_POINTS = 4
   MIN_GAMES_FOR_BONUS_AWARD = 30
+  REPRESENTATIVE_GAME_NAME = "representative_game"
 
   def self.update_from_game game, gameweek
     game.game_details.each do |detail|
@@ -17,9 +17,16 @@ class GameweekPlayer < ApplicationRecord
     end
   end
 
+  def remove_game game
+    all_points_breakdowns = points_breakdown || {}
+    all_points_breakdowns.delete(game.game_hash)
+    update points_breakdown: all_points_breakdowns
+    update_points
+  end
+
   # Refresh all game points for this gameweek
   def update_all_games
-    update_attribute :points_breakdown, {}
+    update points_breakdown: {}
     player_game_details.each do |detail|
       refresh detail.game, detail
     end
@@ -36,13 +43,17 @@ class GameweekPlayer < ApplicationRecord
   def refresh game, detail
     all_points_breakdowns = points_breakdown || {}
     all_points_breakdowns[game.game_hash] = points_breakdown_hash(game, detail)
-    update_attribute :points_breakdown, all_points_breakdowns
+    update points_breakdown: all_points_breakdowns
     update_points
+  end
+
+  def representative_game_points
+    points_breakdown[REPRESENTATIVE_GAME_NAME]
   end
 
   def points_breakdowns_by_game
     Hash[
-      points_breakdown.map do |game_hash, breakdown|
+      game_points_breakdowns.map do |game_hash, breakdown|
         [Game.find(game_hash), breakdown]
       end.sort_by { |game, _| game.start_date }
     ]
@@ -51,11 +62,38 @@ class GameweekPlayer < ApplicationRecord
   private
 
   def update_points
-    total_points = points_breakdown.map do |_, game_points_breakdown|
-                     points_for_game game_points_breakdown
-                   end.sum
-    # overall points cannot be negative
-    update_attribute :points, [total_points, 0].max
+    points_arrays = {
+      solo_kills: [],
+      assists: [],
+      time_spent_dead: [],
+      win: [],
+      bonus: []
+    }
+    game_points_breakdowns.each do |_, game_points_breakdown|
+      points_arrays[:solo_kills].push(game_points_breakdown[:solo_kills])
+      points_arrays[:assists].push(game_points_breakdown[:assists])
+      points_arrays[:win].push(game_points_breakdown[:win])
+      points_arrays[:time_spent_dead].push(game_points_breakdown[:time_spent_dead])
+      points_arrays[:bonus].concat(game_points_breakdown[:bonus])
+    end
+
+    representative_points = {}
+    representative_points[:solo_kills] = points_arrays[:solo_kills].extend(DescriptiveStatistics).mean.round
+    representative_points[:assists] = points_arrays[:assists].extend(DescriptiveStatistics).mean.round
+    # Use the ceiling for :win only because we if a player wins at least one game we want to award a point
+    representative_points[:win] = points_arrays[:win].extend(DescriptiveStatistics).mean.ceil
+    representative_points[:time_spent_dead] = points_arrays[:time_spent_dead].extend(DescriptiveStatistics).mean.round
+    representative_points[:bonus] = points_arrays[:bonus]
+    representative_points[:total] = points_for_game(representative_points)
+
+    all_points_breakdowns = points_breakdown
+    all_points_breakdowns[REPRESENTATIVE_GAME_NAME] = representative_points
+
+    update(
+      points_breakdown: all_points_breakdowns,
+      # overall points cannot be negative
+      points: [representative_points[:total], 0].max
+    )
   end
 
   def points_for_game game_points_breakdown
@@ -63,7 +101,11 @@ class GameweekPlayer < ApplicationRecord
       game_points_breakdown[:assists] +
       game_points_breakdown[:win] +
       game_points_breakdown[:time_spent_dead] +
-      [game_points_breakdown[:bonus].count, MAX_BONUS_POINTS].min
+      game_points_breakdown[:bonus].count
+  end
+
+  def game_points_breakdowns
+    points_breakdown.reject { |game_hash, _| game_hash == REPRESENTATIVE_GAME_NAME }
   end
 
   # Points breakdown:
@@ -98,7 +140,7 @@ class GameweekPlayer < ApplicationRecord
   end
 
   # Bonus categories:
-  # +1 point for each, max of +MAX_BONUS_POINTS
+  # +1 point for each
   #
   # Player:
   # All roles:
@@ -141,7 +183,7 @@ class GameweekPlayer < ApplicationRecord
 
       threshold = Player.role_stat_percentile role, stat, BONUS_AWARD_PERCENTILE
       if threshold < detail.send(stat.to_sym)
-        return ["#{BONUS_AWARD_PERCENTILE}th_percentile_in_#{stat}_for_#{role.downcase}".to_sym]
+        return ["#{BONUS_AWARD_PERCENTILE}th percentile in #{stat} for #{role} players"]
       end
     end
     []
@@ -161,7 +203,7 @@ class GameweekPlayer < ApplicationRecord
 
       threshold = detail.hero.stat_percentile stat, BONUS_AWARD_PERCENTILE
       if threshold < detail.send(stat.to_sym)
-        return ["#{BONUS_AWARD_PERCENTILE}th_percentile_in_#{stat}_for_#{hero.slug.underscore}".to_sym]
+        return ["#{BONUS_AWARD_PERCENTILE}th percentile in #{stat} for #{hero.name}"]
       end
     end
     []
@@ -171,12 +213,13 @@ class GameweekPlayer < ApplicationRecord
     if detail.player.role == "Support" && Game.all.size > MIN_GAMES_FOR_BONUS_AWARD
       team = detail.team
       stat = "deaths"
+      Rails.logger.info "Team stats: #{game.team_stats.inspect}"
       team_deaths = game.team_stats[team.name][:deaths]
       # We want this to be low, so we take the inverse percentile
       inverse_percentile = 100 - BONUS_AWARD_PERCENTILE
       threshold = Game.team_stat_percentile stat, inverse_percentile
       if threshold > team_deaths
-        return ["#{inverse_percentile}th_percentile_in_team_#{stat}".to_sym]
+        return ["#{inverse_percentile}th percentile in team #{stat}"]
       end
     end
     []
@@ -189,7 +232,7 @@ class GameweekPlayer < ApplicationRecord
       inverse_percentile = 100 - BONUS_AWARD_PERCENTILE
       threshold = map.duration_percentile inverse_percentile
       if threshold > game.duration_s && detail.win
-        return ["#{inverse_percentile}th_percentile_in_duration_for_#{map.slug.underscore}".to_sym]
+        return ["#{inverse_percentile}th percentile in duration for #{map.name}"]
       end
     end
     []

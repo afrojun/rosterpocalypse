@@ -6,12 +6,20 @@ class Game < ApplicationRecord
   belongs_to :gameweek
   belongs_to :match
   has_one :tournament, through: :gameweek
+  has_many :gameweek_players, through: :gameweek
+  has_many :gameweek_rosters, through: :gameweek
   has_many :game_details, dependent: :destroy
   has_many :players, through: :game_details
   has_many :heroes, through: :game_details
   has_many :teams, -> { distinct }, through: :game_details
 
   validates :game_hash, presence: true, uniqueness: true
+
+  before_destroy :remove_from_gameweek_players
+
+  def remove_from_gameweek_players
+    gameweek_players.where(player: players).each { |gameweek_player| gameweek_player.remove_game(self) }
+  end
 
   def self.team_stat_percentile stat, percentile
     team_stats = Game.all.includes(game_details: [:team]).map { |game| game.team_stats.values }.flatten

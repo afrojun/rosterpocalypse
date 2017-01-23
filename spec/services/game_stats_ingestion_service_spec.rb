@@ -120,15 +120,15 @@ describe GameStatsIngestionService do
     end
 
     it "populates game details from the JSON" do
-      service.populate_from_json
-      game = Game.first
+      game = service.populate_from_json
+      expect(game).to be_persisted
       expect(game.tournament.name).to eq "Summer Global Championship"
       expect(game.game_hash).to eq "31af3b750df2b90e51121833672747969fdd3a89c8bfa1303abd6fec9a8c7758"
       expect(game.tournament.gameweeks).to include game.gameweek
-      expect(GameDetail.all.size).to eq 10
-      expect(Player.all.map(&:name).sort).to eq ["KyoCha", "Sign", "Rich", "Sake", "merryday", "Bakery", "JayPL", "Snitch", "Athero", "Mene"].sort
-      expect(Team.all.map(&:name).sort).to eq ["Dignitas", "MVP BLACK"]
-      expect(Map.first.name).to eq "Tomb of the Spider Queen"
+      expect(game.game_details.size).to eq 10
+      expect(game.players.map(&:name).sort).to eq ["KyoCha", "Sign", "Rich", "Sake", "merryday", "Bakery", "JayPL", "Snitch", "Athero", "Mene"].sort
+      expect(game.teams.map(&:name).sort).to eq ["Dignitas", "MVP BLACK"]
+      expect(game.map.name).to eq "Tomb of the Spider Queen"
     end
 
     it "assigns team names based on the prefixes if it cannot be inferred from the filename" do
