@@ -39,13 +39,13 @@
   #q4.faq-question
     Q4. Once my Roster has been created, how do I manage it over the course of the tournament?
     %small= link_to "link", "#q4"
-  .faq-answer Every week (called a Gameweek) you are allowed to make one player transfer, as long as you continue to adhere to the limitations listed above. Once all your transfers have been made, your Roster will be locked in for that Gameweek.
+  .faq-answer Every week (called a Gameweek) you are allowed to make <b>one</b> player transfer, as long as you continue to adhere to the limitations listed above. Once all your transfers have been made, your Roster will be locked in for that Gameweek.
 
 %p
   #q5.faq-question
     Q5. How are points allocated?
     %small= link_to "link", "#q5"
-  .faq-answer Points are allocated based on player role according to the following rules:
+  .faq-answer Points per game are allocated based on player role according to the following rules, and then averaged across all games played that week (to ensure that there is no advantage for having played more games):
   -# Keep in sync with the table in app/models/gameweek_player.rb
   .col-xs-12
     .col-xs-7
@@ -109,11 +109,21 @@
     %small= link_to "link", "#q9"
   .faq-answer Once the tournament is completed, the final points are tallied and prizes will be awarded to the players with the highest overall score for the tournament in that season! Only Rosters in the main Public League for the tournament will be considered eligible. The exact nature of the prizes will be announced closer to the completion date.
 
+%p
+  #q10.faq-question
+    Q10. When will points be updated?
+    %small= link_to "link", "#q10"
+  .faq-answer <b>Player</b> points will be updated once per Gameday, after all games have been completed. <b>Roster</b> scores will only be updated once per Gameweek, after all scheduled games have been completed.
+
+%p
+  #q11.faq-question
+    Q11. Will player values change over the course of the season?
+    %small= link_to "link", "#q11"
+  .faq-answer No, this is a system that we want to have in place for future seasons, but for Season 1, player points will only change once in the middle of the season, before the Eastern/Western Clash Tournaments. Along with this, all rosters will be granted additional transfer slots to make any adjustments necessary to remain below the max points threshold.
 
 %h1#future Future Improvements
 While the basic functionality of the site is complete we have some more ideas and enhancements in the works which should give you more options to customise your team and improve your scores, including:
 %ul
-  %li integrated fixture calendar
   %li assigning a roster captain, who will earn bonus points
   %li bonus actions that can be invoked once a season to manipulate your team or give a boost to your score
   %li more detailed player stats visible on the roster selection page
