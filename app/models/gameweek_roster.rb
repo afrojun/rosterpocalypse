@@ -29,14 +29,14 @@ class GameweekRoster < ApplicationRecord
         players: players_hash,
         snapshot_time: Time.now.utc
       }
-      update_attribute :roster_snapshot, snapshot
+      update roster_snapshot: snapshot
     else
       Rails.logger.warn "Unable to create a snapshot of an incomplete roster."
     end
   end
 
   def update_points
-    update_attribute :points, gameweek_points
+    update points: gameweek_points
   end
 
   def parse_snapshot
@@ -65,7 +65,7 @@ class GameweekRoster < ApplicationRecord
   end
 
   def gameweek_points
-    gameweek_players.compact.map(&:points).sum.round(2)
+    gameweek_players.compact.map(&:points).sum
   end
 
   def gameweek_players_by_player players = snapshot_players

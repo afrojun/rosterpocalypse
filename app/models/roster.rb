@@ -76,6 +76,10 @@ class Roster < ApplicationRecord
     end
   end
 
+  def update_score
+    update score: gameweek_rosters.map(&:points).compact.sum
+  end
+
   def allow_updates?
     allow_free_transfers? || unlocked?
   end
