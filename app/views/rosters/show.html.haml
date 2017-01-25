@@ -21,12 +21,16 @@
       .roster-status-gameweek-points-title Final Points
       .roster-status-gameweek-points-total= @gameweek_roster.points
     .col-xs-3.roster-status-gameweek-stats
-      .col-xs-9.roster-status-gameweek-stat-name Highest Points:
-      .col-xs-3.roster-status-gameweek-stat-value.float-right= @gameweek.gameweek_rosters.map(&:points).compact.last
-      .col-xs-9.roster-status-gameweek-stat-name Lowest Points:
-      .col-xs-3.roster-status-gameweek-stat-value.float-right= @gameweek.gameweek_rosters.first.points
-      .col-xs-9.roster-status-gameweek-stat-name 50th Percentile:
-      .col-xs-3.roster-status-gameweek-stat-value.float-right= @gameweek.points_percentile(50).round
+      %span.col-xs-9.roster-status-gameweek-stat-name Highest Points:
+      %span.col-xs-3.roster-status-gameweek-stat-value.float-right= @gameweek.gameweek_rosters.map(&:points).compact.last
+      %span.col-xs-9.roster-status-gameweek-stat-name Lowest Points:
+      %span.col-xs-3.roster-status-gameweek-stat-value.float-right= @gameweek.gameweek_rosters.first.points
+      %span.col-xs-9.roster-status-gameweek-stat-name 50th Percentile:
+      %span.col-xs-3.roster-status-gameweek-stat-value.float-right= @gameweek.points_percentile(50).round
+    %span.col-xs-3
+  .col-xs-12
+    %span.col-xs-3
+    .col-xs-6.center= link_to "Detailed stats for #{@gameweek.name}", ""
     %span.col-xs-3
 
   - if @gameweek_players_by_player.any?

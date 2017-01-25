@@ -1,7 +1,7 @@
 json.extract! transfer, :gameweek_roster_id, :player_in_id, :player_out_id, :created_at, :updated_at
 
 json.gameweek do
-  json.partial! "tournaments/gameweek", gameweek: transfer.gameweek_roster.gameweek
+  json.partial! "gameweeks/gameweek", gameweek: transfer.gameweek_roster.gameweek
 end
 
 json.player_in do

@@ -17,12 +17,12 @@ json.tournament do
 end
 
 json.current_gameweek do
-  json.partial! "tournaments/gameweek", gameweek: roster.current_gameweek
+  json.partial! "gameweeks/gameweek", gameweek: roster.current_gameweek
   json.extract! roster.current_gameweek_roster, :available_transfers, :remaining_transfers, :points_string
 end
 
 json.previous_gameweek do
-  json.partial! "tournaments/gameweek", gameweek: roster.previous_gameweek
+  json.partial! "gameweeks/gameweek", gameweek: roster.previous_gameweek
   json.extract! roster.previous_gameweek_roster, :available_transfers, :remaining_transfers, :points_string
 end
 

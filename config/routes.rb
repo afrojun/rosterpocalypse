@@ -8,11 +8,14 @@ Rails.application.routes.draw do
   get 'privacy', to: 'about#privacy'
   get 'terms', to: 'about#terms'
 
-  resources :tournaments
   resources :matches
   resources :heroes
   resources :maps
   resources :managers, only: [:index, :show]
+
+  resources :tournaments do
+    resources :gameweeks, only: [:index, :show]
+  end
 
   resources :rosters, except: [:edit] do
     member do
