@@ -10,7 +10,7 @@
   %tbody
     - points_breakdown.except(:bonus, :total).each do |category, points|
       %tr
-        %td= category.to_s.humanize
+        %td= category.to_s.gsub("solo_", "").humanize
         - if show_game_scores
           %td= player_game_detail.try(:send, category)
         %td= points

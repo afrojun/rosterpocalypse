@@ -33,11 +33,11 @@ class GameweekPlayer < ApplicationRecord
   end
 
   def player_game_details
-    game_details.where(player: player)
+    @player_game_details ||= game_details.where(player: player).includes(:team, :player, :game)
   end
 
   def team
-    player_game_details.first.team
+    @team ||= player_game_details.first.team
   end
 
   def refresh game, detail
@@ -48,11 +48,15 @@ class GameweekPlayer < ApplicationRecord
   end
 
   def representative_game_points
-    points_breakdown[REPRESENTATIVE_GAME_NAME]
+    @representative_game_points ||= points_breakdown[REPRESENTATIVE_GAME_NAME]
+  end
+
+  def game_points_breakdowns
+    @game_points_breakdowns ||= points_breakdown.reject { |game_hash, _| game_hash == REPRESENTATIVE_GAME_NAME }
   end
 
   def points_breakdowns_by_game
-    Hash[
+    @points_breakdowns_by_game ||= Hash[
       game_points_breakdowns.map do |game_hash, breakdown|
         [Game.find(game_hash), breakdown]
       end.sort_by { |game, _| game.start_date }
@@ -102,10 +106,6 @@ class GameweekPlayer < ApplicationRecord
       game_points_breakdown[:win] +
       game_points_breakdown[:time_spent_dead] +
       game_points_breakdown[:bonus].count
-  end
-
-  def game_points_breakdowns
-    points_breakdown.reject { |game_hash, _| game_hash == REPRESENTATIVE_GAME_NAME }
   end
 
   # Points breakdown:

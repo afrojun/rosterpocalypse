@@ -51,7 +51,7 @@
               - gameweek_player.points_breakdowns_by_game.each do |game, points_breakdown|
                 - player_game_detail = game.game_details.where(player: player).first
 
-                .col-xs-10.roster-status-player-game-details-map{id: "#{player.id}-#{game.id}"}= "vs. #{game.other_team(player_game_detail.team).name} on #{game.map.name}"
+                .col-xs-10.roster-status-player-game-details-map{id: "#{player.id}-#{game.id}"}= "&rsaquo; vs. #{game.other_team(player_game_detail.team).name} on #{game.map.name}".html_safe
                 .col-xs-2.roster-status-player-game-details-points= points_breakdown[:total]
                 .col-xs-12.roster-status-player-game-details-points-breakdown{id: "game-details-#{player.id}-#{game.id}"}
                   = render "points_breakdown_table", points_breakdown: points_breakdown, player_game_detail: player_game_detail, show_game_scores: true

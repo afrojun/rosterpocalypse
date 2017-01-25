@@ -12,14 +12,18 @@ class RostersController < RosterpocalypseController
   # GET /rosters/1
   # GET /rosters/1.json
   def show
-    @gameweek_roster = GameweekRoster.where(gameweek: @gameweek, roster: @roster).includes(gameweek: [:gameweek_players], roster: [:tournament, :players]).first
+    @gameweek_roster = GameweekRoster.where(gameweek: @gameweek, roster: @roster).
+                                      includes(gameweek: [:gameweek_players,
+                                                          games: [:map,
+                                                                  game_details: [:team]]],
+                                               roster: [:tournament, :players]).first
     @gameweek_players_by_player = begin
-      if @gameweek_roster == @roster.current_gameweek_roster
-        @gameweek_roster.gameweek_players_by_player(@roster.players)
-      else
-        @gameweek_roster.gameweek_players_by_player
-      end
-    end
+                                    if @gameweek == @roster.current_gameweek
+                                      @gameweek_roster.gameweek_players_by_player @roster.players
+                                    else
+                                      @gameweek_roster.gameweek_players_by_player
+                                    end
+                                  end
     @sidebar_props = {
       rosterPath: roster_url(@roster),
       rosterDetailsPath: details_roster_url(@roster),

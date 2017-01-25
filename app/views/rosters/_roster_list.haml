@@ -1,5 +1,6 @@
 - show_tournament ||= false
 - show_manager ||= false
+- show_transfers ||= false
 
 %table.table.table-sm.table-striped
   %thead
@@ -9,6 +10,8 @@
         %th Manager
       - if show_tournament
         %th Tournament
+      - if show_transfers
+        %th Transfers
       %th Score
       %th{:colspan => "2"}
   %tbody
@@ -19,6 +22,8 @@
           %td= roster.manager.name.include?("_bnet") ? roster.manager.name.split(".").first : roster.manager.name
         - if show_tournament
           %td= roster.tournament.name
+        - if show_transfers
+          %td= roster.available_transfers
         %td= roster.score
         %td
           - if can? :update, roster

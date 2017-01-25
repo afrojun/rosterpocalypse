@@ -54,7 +54,7 @@ class Player < ApplicationRecord
   def self.find_including_alternate_names player_names
     player_names = [player_names] if player_names.is_a?(String)
     downcase_names = player_names.map(&:downcase).uniq
-    alternate_names = PlayerAlternateName.where alternate_name: downcase_names
+    alternate_names = PlayerAlternateName.where(alternate_name: downcase_names).includes(:player)
     alternate_names.map(&:player).uniq
   end
 

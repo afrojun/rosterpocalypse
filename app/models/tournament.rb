@@ -32,18 +32,20 @@ class Tournament < ApplicationRecord
   end
 
   def active?
-    end_date > Time.now.utc
+    @active ||= end_date > Time.now.utc
   end
 
   def first_roster_lock_date
-    find_gameweek(start_date).roster_lock_date
+    @first_roster_lock_date ||= find_gameweek(start_date).roster_lock_date
   end
 
   # The 'safe' parameter denotes whether we allow the value to be nil
   # When 'safe', we always return a gameweek, the first one for dates before the start
   # of the tournament, and the last one for dates after the end of the tournament
   def find_gameweek date, safe = true
-    if safe
+    gameweek = gameweeks.where("start_date <= ? AND end_date >= ?", date, date).first
+
+    if safe && gameweek.nil?
       first_gameweek = gameweeks.first
       last_gameweek = gameweeks.last
 
@@ -54,27 +56,27 @@ class Tournament < ApplicationRecord
       end
     end
 
-    gameweeks.where("start_date < ? AND end_date > ?", date, date).first
+    gameweek
   end
 
   def next_gameweek safe = true
-    find_gameweek Time.now.utc.advance(weeks: 1), safe
+    @next_gameweek ||= find_gameweek Time.now.utc.advance(weeks: 1), safe
   end
 
   def current_gameweek safe = true
-    find_gameweek Time.now.utc, safe
+    @current_gameweek ||= find_gameweek Time.now.utc, safe
   end
 
   def previous_gameweek safe = true
-    find_gameweek Time.now.utc.advance(weeks: -1), safe
+    @previous_gameweek ||= find_gameweek Time.now.utc.advance(weeks: -1), safe
   end
 
   def private_leagues
-    leagues.where(type: "PrivateLeague")
+    @private_leagues ||= leagues.where(type: "PrivateLeague")
   end
 
   def public_leagues
-    leagues.where(type: "PublicLeague")
+    @public_leagues ||= leagues.where(type: "PublicLeague")
   end
 
   def update_gameweeks

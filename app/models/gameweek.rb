@@ -19,11 +19,11 @@ class Gameweek < ApplicationRecord
   end
 
   def next
-    tournament.gameweeks.where(start_date: start_date.advance(weeks: 1)).first
+    tournament.find_gameweek start_date.advance(weeks: 1), false
   end
 
   def previous
-    tournament.gameweeks.where(start_date: start_date.advance(weeks: -1)).first
+    tournament.find_gameweek start_date.advance(weeks: -1), false
   end
 
   def points_percentile percentile

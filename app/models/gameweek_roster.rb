@@ -55,17 +55,19 @@ class GameweekRoster < ApplicationRecord
   end
 
   def snapshot_players
-    parse_snapshot.keys
-  end
-
-  def gameweek_players players = snapshot_players
-    players.map do |player|
-      GameweekPlayer.where(gameweek: gameweek, player: player).first
+    if roster_snapshot.present? && roster_snapshot[:players].present?
+      Player.find_including_alternate_names(roster_snapshot[:players].keys)
+    else
+      []
     end
   end
 
+  def gameweek_players players = snapshot_players
+    GameweekPlayer.where(gameweek: gameweek, player: players)
+  end
+
   def gameweek_points
-    gameweek_players.compact.map(&:points).sum
+    @gameweek_points ||= gameweek_players.compact.map(&:points).sum
   end
 
   def gameweek_players_by_player players = snapshot_players
