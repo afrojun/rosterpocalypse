@@ -29,7 +29,6 @@ class GameweekRoster < ApplicationRecord
       players_hash = {}
       roster.players.each do |player|
         players_hash[player.slug] = player.value
-        gameweek_players << GameweekPlayer.where(gameweek: gameweek, player: player).first
       end
       snapshot = {
         players: players_hash,
