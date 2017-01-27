@@ -41,31 +41,31 @@ class Roster < ApplicationRecord
   end
 
   def next_gameweek safe = true
-    @next_gameweek ||= tournament.next_gameweek(safe)
+    tournament.next_gameweek(safe)
   end
 
   def current_gameweek safe = true
-    @current_gameweek ||= tournament.current_gameweek(safe)
+    tournament.current_gameweek(safe)
   end
 
   def previous_gameweek safe = true
-    @previous_gameweek ||= tournament.previous_gameweek(safe)
+    tournament.previous_gameweek(safe)
   end
 
   def current_gameweek_roster safe = true
-    @current_gameweek_roster ||= gameweek_rosters.where(gameweek: current_gameweek(safe)).first
+    gameweek_rosters.where(gameweek: current_gameweek(safe)).first
   end
 
   def previous_gameweek_roster safe = true
-    @previous_gameweek_roster ||= gameweek_rosters.where(gameweek: previous_gameweek(safe)).first
+    gameweek_rosters.where(gameweek: previous_gameweek(safe)).first
   end
 
   def available_transfers
-    @available_transfers ||= (current_gameweek_roster.remaining_transfers > 0 ? current_gameweek_roster.remaining_transfers : 0)
+    current_gameweek_roster.remaining_transfers > 0 ? current_gameweek_roster.remaining_transfers : 0
   end
 
   def allow_free_transfers?
-    @allow_free_transfers ||= (players.size < MAX_PLAYERS || !current_gameweek.is_tournament_week? || (Time.now.utc < tournament.first_roster_lock_date))
+    players.size < MAX_PLAYERS || !current_gameweek.is_tournament_week? || (Time.now.utc < tournament.first_roster_lock_date)
   end
 
   def next_key_date
@@ -233,7 +233,7 @@ class Roster < ApplicationRecord
   end
 
   def roster_lock_in_place?
-    @roster_lock_in_place ||= (current_gameweek.roster_lock_date < Time.now.utc)
+    current_gameweek.roster_lock_date < Time.now.utc
   end
 
   def copy_errors league

@@ -109,6 +109,9 @@ RSpec.describe Roster, type: :model do
 
           players.shift
           players << cheap_player
+          players.each do |player|
+            FactoryGirl.create :gameweek_player, gameweek: roster.current_gameweek, player: player
+          end
           expect(roster.update_including_players(players: players.map(&:id))).to eq true
           expect(roster.players).to include cheap_player
         end
