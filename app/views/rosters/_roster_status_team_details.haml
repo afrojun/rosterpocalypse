@@ -1,0 +1,43 @@
+- show_game_details ||= false
+
+- if gameweek_players.any?
+  .col-xs-12.roster-status-team-details
+    .col-xs-5.roster-status-player-details
+      = render "roster_status_player_details", gameweek_players: gameweek_players, highlight_first_player: true
+    .col-xs-7.roster-status-gameweek-details.active-player-gameweek
+      = render "roster_status_gameweek_details", gameweek_players: gameweek_players
+      #no-games.col-xs-12.roster-status-player-game-details{class: gameweek_players.first.class == Player ? "" : "hide"}
+        .col-xs-12.roster-status-player-no-games-placeholder No games yet for this week
+- else
+  .col-xs-12.roster-status-no-data-placeholder No data available for this week
+
+
+:javascript
+  $(function() {
+    $('.roster-status-player-game-details-map').click(function(e){
+      var id = e.target.id;
+      var game_details_id = "#game-details-" + id
+      $(game_details_id).slideToggle('fast');
+    });
+
+    $('.roster-status-player-name,.roster-status-player-team-logo,.roster-status-player-team').click(function(e){
+      var id = $(e.currentTarget).data("id");
+      var gameweek_details_id = "#gameweek-details-" + id;
+      var player_id = "#player-" + id;
+
+      $('.roster-status-player').removeClass("active-player-gameweek");
+      $('.roster-status-player').addClass("inactive-player-gameweek");
+      $(player_id).removeClass("inactive-player-gameweek");
+      $(player_id).addClass("active-player-gameweek");
+
+      $('.roster-status-player-game-details').hide();
+      var div = $(gameweek_details_id)
+      if(div[0]) {
+        $(gameweek_details_id).show();
+      }
+      else {
+        $('#no-games').show();
+      }
+
+    });
+  })

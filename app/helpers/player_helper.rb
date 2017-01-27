@@ -12,4 +12,8 @@ module PlayerHelper
     end.to_sentence(two_words_connector: ", ", last_word_connector: ", ").html_safe
   end
 
+  def player_role_icon player, size = 24
+    image_tag "#{player.role.downcase}_icon.png", alt: player.role, size: size
+  end
+
 end

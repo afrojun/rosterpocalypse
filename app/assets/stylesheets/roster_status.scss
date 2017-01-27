@@ -37,6 +37,10 @@
   background-color: $lightgray
 }
 
+.roster-status-player-stats {
+  text-align: center;
+}
+
 .roster-status-gameweek-details {
   padding: 0em;
 }
@@ -69,7 +73,7 @@
 
 .roster-status-player-no-games-placeholder {
   font-weight: bold;
-  padding: 1em;
+  padding: 0.9em;
   background-color: white;
 }
 
@@ -81,8 +85,13 @@
 }
 
 .roster-status-player {
+  padding-left: 0em;
   padding-top: 0.5em;
   padding-bottom: 0.5em;
+}
+
+.roster-status-player-left {
+  padding-left: 0em;
 }
 
 .roster-status-player-name {
@@ -116,25 +125,27 @@
   padding: 1em;
 }
 
+.roster-status-player-game-details-title {
+  background-color: white;
+  padding: 0em;
+}
+
 .roster-status-player-game-details-map {
   font-weight: bold;
   padding: 1em;
   cursor: pointer;
-  background-color: white;
 }
 
 .roster-status-player-game-details-points {
   font-weight: bold;
   padding: 1em;
   text-align: right;
-  background-color: white;
 }
 
 .roster-status-player-game-details-points-breakdown {
   font-size: small;
   padding-top: 1em;
   display: none;
-  background-color: white;
 }
 
 .roster-status-player-game-details-bonus {

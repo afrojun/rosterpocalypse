@@ -6,6 +6,7 @@ class Team < ApplicationRecord
   has_many :games, -> { distinct }, through: :game_details
   has_many :alternate_names, class_name: "TeamAlternateName", dependent: :destroy
   has_many :players
+  has_many :gameweek_players
 
   REGIONS = %w{ CN EU KR NA }
 

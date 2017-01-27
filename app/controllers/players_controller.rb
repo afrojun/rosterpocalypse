@@ -6,7 +6,7 @@ class PlayersController < RosterpocalypseController
   # GET /players.json
   def index
     region_teams = Team.where @teams_filter
-    @players = Player.includes(:game_details, :team).where(team: region_teams).order(:slug)
+    @players = Player.includes(:team).where(team: region_teams).order(:slug)
   end
 
   # GET /players/1

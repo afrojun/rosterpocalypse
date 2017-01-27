@@ -1,8 +1,16 @@
 class GameweekPlayer < ApplicationRecord
   belongs_to :gameweek
   belongs_to :player
+  belongs_to :team
   has_many :games, through: :gameweek
   has_many :game_details, -> { order "games.start_date DESC" }, through: :games
+  has_and_belongs_to_many :gameweek_rosters
+
+  validates :gameweek, presence: true
+  validates :player, presence: true
+  validates :points, presence: true
+  validates :team, presence: true
+  validates :value, presence: true
 
   serialize :points_breakdown, Hash
 
@@ -33,17 +41,13 @@ class GameweekPlayer < ApplicationRecord
   end
 
   def player_game_details
-    @player_game_details ||= game_details.where(player: player).includes(:team, :player, :game)
-  end
-
-  def team
-    @team ||= player_game_details.first.team
+    @player_game_details ||= game_details.where(player: player).includes(:team)
   end
 
   def refresh game, detail
     all_points_breakdowns = points_breakdown || {}
     all_points_breakdowns[game.game_hash] = points_breakdown_hash(game, detail)
-    update points_breakdown: all_points_breakdowns
+    update points_breakdown: all_points_breakdowns, team: detail.team, value: detail.player.value
     update_points
   end
 

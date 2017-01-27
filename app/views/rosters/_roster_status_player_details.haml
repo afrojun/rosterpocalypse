@@ -1,0 +1,15 @@
+- highlight_first_player ||= false
+
+- gameweek_players.each_with_index do |gameweek_player, index|
+  - player = gameweek_player.try(:player).present? ? gameweek_player.player : gameweek_player
+  - team = gameweek_player.present? ? gameweek_player.team : player.team
+
+  .col-xs-12.roster-status-player{id: "player-#{player.id}", class: ((highlight_first_player && index == 0) ? "active-player-gameweek" : "inactive-player-gameweek")}
+    .col-xs-10.roster-status-player-left
+      .col-xs-4.roster-status-player-team-logo{data: {id: player.id}}= image_tag team_logo_filename(team), alt: team.name, size: 42
+      .col-xs-8.roster-status-player-left
+        .roster-status-player-name{data: {id: player.id}}
+          = player_role_icon player, 20
+          = player.name
+        .roster-status-player-team{data: {id: player.id}}= team.name
+    .col-xs-2.float-right.roster-status-player-points= gameweek_player.try :points

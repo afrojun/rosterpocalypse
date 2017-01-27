@@ -5,6 +5,7 @@
 @import "roster_status";
 @import "games";
 @import "about";
+@import "gameweeks";
 
 @font-face {
   font-family: "3rd Man Regular";
@@ -67,6 +68,10 @@
   border-bottom-left-radius: 0;
   border-top-right-radius: 0;
   border-top-left-radius: 0;
+}
+
+.right-align {
+  text-align: right;
 }
 
 .roster-form {

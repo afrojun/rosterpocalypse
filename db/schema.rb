@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170117212856) do
+ActiveRecord::Schema.define(version: 20170126131419) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,7 +56,6 @@ ActiveRecord::Schema.define(version: 20170117212856) do
     t.string   "slug",        null: false
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
-    t.integer  "game_number"
     t.integer  "match_id"
     t.index ["game_hash"], name: "index_games_on_game_hash", unique: true, using: :btree
     t.index ["gameweek_id"], name: "index_games_on_gameweek_id", using: :btree
@@ -73,11 +72,20 @@ ActiveRecord::Schema.define(version: 20170117212856) do
     t.integer  "points",           default: 0, null: false
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
+    t.float    "value"
+    t.integer  "team_id"
     t.index ["gameweek_id", "player_id"], name: "index_gameweek_players_on_gameweek_id_and_player_id", using: :btree
     t.index ["gameweek_id"], name: "index_gameweek_players_on_gameweek_id", using: :btree
     t.index ["player_id", "gameweek_id"], name: "index_gameweek_players_on_player_id_and_gameweek_id", using: :btree
     t.index ["player_id"], name: "index_gameweek_players_on_player_id", using: :btree
     t.index ["points"], name: "index_gameweek_players_on_points", using: :btree
+  end
+
+  create_table "gameweek_players_rosters", id: false, force: :cascade do |t|
+    t.integer "gameweek_roster_id", null: false
+    t.integer "gameweek_player_id", null: false
+    t.index ["gameweek_player_id", "gameweek_roster_id"], name: "index_gameweek_players_rosters_on_gw_player_id_and_gw_roster_id", using: :btree
+    t.index ["gameweek_roster_id", "gameweek_player_id"], name: "index_gameweek_players_rosters_on_gw_roster_id_and_gw_player_id", using: :btree
   end
 
   create_table "gameweek_rosters", force: :cascade do |t|

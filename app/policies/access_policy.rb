@@ -37,6 +37,7 @@ class AccessPolicy
       can :manage, PublicLeague
       can :manage, PrivateLeague
       can :manage, Tournament
+      can :manage, Gameweek
     end
 
     # More privileged role, applies to registered users.
@@ -50,6 +51,7 @@ class AccessPolicy
       can :read, Map
       can :read, Player
       can :read, Tournament
+      can :read, Gameweek
       can :read, PublicLeague
       can [:read, :create], League
       can [:read, :create], PrivateLeague

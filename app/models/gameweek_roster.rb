@@ -2,6 +2,8 @@ class GameweekRoster < ApplicationRecord
   belongs_to :gameweek
   belongs_to :roster
   has_many :transfers, dependent: :destroy
+  has_and_belongs_to_many :gameweek_players
+  has_many :players, through: :gameweek_players
 
   serialize :roster_snapshot, Hash
 
@@ -24,7 +26,11 @@ class GameweekRoster < ApplicationRecord
 
   def create_snapshot
     if roster.players.size == Roster::MAX_PLAYERS
-      players_hash = Hash[roster.players.map { |player| [player.slug, player.value] }]
+      players_hash = {}
+      roster.players.each do |player|
+        players_hash[player.slug] = player.value
+        gameweek_players << player
+      end
       snapshot = {
         players: players_hash,
         snapshot_time: Time.now.utc
@@ -39,39 +45,20 @@ class GameweekRoster < ApplicationRecord
     update points: gameweek_points
   end
 
-  def parse_snapshot
-    @parsed_snapshot ||= begin
-      if roster_snapshot.present?
-        Hash[
-          roster_snapshot[:players].map do |player_slug, value|
-            player = Player.find_including_alternate_names(player_slug).first
-            [player, value]
-          end
-        ]
-      else
-        {}
-      end
-    end
+  def snapshot_time
+    roster_snapshot[:snapshot_time]
   end
 
-  def snapshot_players
-    if roster_snapshot.present? && roster_snapshot[:players].present?
-      Player.find_including_alternate_names(roster_snapshot[:players].keys)
-    else
-      []
-    end
-  end
-
-  def gameweek_players players = snapshot_players
-    GameweekPlayer.where(gameweek: gameweek, player: players)
+  def player_value player
+    gameweek_players.where(player: player).first.try :value
   end
 
   def gameweek_points
-    @gameweek_points ||= gameweek_players.compact.map(&:points).sum
+    @gameweek_points ||= gameweek_players.map(&:points).compact.sum
   end
 
-  def gameweek_players_by_player players = snapshot_players
-    Hash[players.zip gameweek_players(players)]
+  def gameweek_players_by_player
+    Hash[players.zip gameweek_players.includes(:player, :team)]
   end
 
   def points_string

@@ -1,4 +1,76 @@
-%p#notice= notice
-= link_to 'Edit', edit_gameweek_path(@gameweek)
-|
-= link_to 'Back', gameweeks_path
+= page_title @page_title
+
+%ol.breadcrumb
+  %li.breadcrumb-item= link_to 'Rosters', rosters_path
+  %li.breadcrumb-item= link_to @roster.name, @roster
+  %li.breadcrumb-item.active= "#{@gameweek.name} Stats"
+
+= render "gameweeks/gameweek_navigation", gameweek: @gameweek, next_path: @gameweek.next && gameweek_path(@gameweek.next), previous_path: @gameweek.previous && gameweek_path(@gameweek.previous)
+
+.col-xs-12.gameweek-stats-top-section
+  .col-xs-6
+    %h2.gameweek-stats-top-section-heading Dream Team
+    - if @dream_team_gameweek_players.any?
+      .col-xs-6
+        %h4.gameweek-stats-top-section-heading= "Value: #{@dream_team_gameweek_players.map(&:value).sum.round(2)}"
+      .col-xs-6
+        %h4.gameweek-stats-top-section-heading= "Points: #{@dream_team_gameweek_players.map(&:points).sum}"
+      = render "rosters/roster_status_player_details", gameweek: @gameweek, gameweek_players: @dream_team_gameweek_players
+    - else
+      .dream-team-no-data-message Not enough data to build the Dream Team
+  .col-xs-6
+    %h2.gameweek-stats-top-section-heading Transfers
+    .col-xs-6
+      %h4.gameweek-stats-top-section-heading
+        Top Transfers In
+        = content_tag :i, "", class: "fa fa-caret-up text-success"
+      %table.table
+        %tbody
+          - @transfers_in.each do |player_id, num_transfers|
+            - player = Player.find(player_id)
+            %tr
+              %td
+                = team_logo player.team
+                = player_role_icon player
+                = player.name
+              %td= num_transfers
+
+    .col-xs-6
+      %h4.gameweek-stats-top-section-heading
+        Top Transfers Out
+        = content_tag :i, "", class: "fa fa-caret-down text-danger"
+      %table.table
+        %tbody
+          - @transfers_out.each do |player_id, num_transfers|
+            - player = Player.find(player_id)
+            %tr
+              %td
+                = team_logo player.team
+                = player_role_icon player
+                = player.name
+              %td= num_transfers
+
+.gameweek-player-stats-table
+  %h2 Player Stats
+
+  %table.table.table-sm.table-striped.table-hover
+    %thead
+      %tr
+        %th Player
+        %th.right-align Value
+        %th.right-align Pick Rate %
+        %th.right-align Points
+        %th.right-align
+          Efficiency %
+          %small= link_to "[?]", about_path + "#q12"
+    %tbody
+      - @gameweek_players_stats.each do |gameweek_player, player_stats|
+        %tr
+          %td
+            = team_logo gameweek_player.team
+            = player_role_icon gameweek_player.player
+            = gameweek_player.player.name
+          %td.right-align= sprintf "%.2f", gameweek_player.value
+          %td.right-align= sprintf "%.2f", player_stats[:pick_rate]
+          %td.right-align= gameweek_player.points
+          %td.right-align= sprintf "%.2f", player_stats[:efficiency]

@@ -124,6 +124,7 @@ group :development do
   gem 'guard'
   gem 'guard-rspec'
   gem 'pry-rails'
+  gem 'bullet'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

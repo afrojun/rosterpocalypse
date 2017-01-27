@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   resources :managers, only: [:index, :show]
 
   resources :tournaments do
-    resources :gameweeks, only: [:index, :show]
+    resources :gameweeks, only: [:index, :show], shallow: true
   end
 
   resources :rosters, except: [:edit] do
