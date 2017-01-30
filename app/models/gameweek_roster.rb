@@ -41,6 +41,10 @@ class GameweekRoster < ApplicationRecord
   end
 
   def update_points
+    player_slugs = roster_snapshot[:players].keys
+    players = Player.where(slug: player_slugs)
+    snapshot_gameweek_players = GameweekPlayer.where(gameweek: gameweek, player: players)
+    gameweek_players << snapshot_gameweek_players
     update points: gameweek_points
   end
 

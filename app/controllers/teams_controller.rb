@@ -4,13 +4,13 @@ class TeamsController < RosterpocalypseController
   # GET /teams
   # GET /teams.json
   def index
-    @teams = Team.all.includes(:games, :players).order(active: :desc, region: :asc, slug: :asc)
+    @teams = Team.all.includes(:players).order(active: :desc, region: :asc, slug: :asc)
   end
 
   # GET /teams/1
   # GET /teams/1.json
   def show
-    @players = Player.where(team: @team)
+    @players = Player.where(team: @team).includes(:team)
     @team_games = @team.games.includes(:map, :tournament, game_details: [:team]).order(start_date: :desc).distinct.page params[:page]
   end
 

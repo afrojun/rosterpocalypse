@@ -5,7 +5,6 @@
       %th Name
       %th Region
       %th Players
-      %th Games
       - if can? :update, Team
         %th{:colspan => "2"}
   %tbody
@@ -23,7 +22,6 @@
           = link_to team.name, team
         %td= team.region
         %td= team.players.size
-        %td= team.games.distinct.size
         - if can? :update, Team
           %td= link_to 'Edit', edit_team_path(team)
           %td= link_to 'Destroy', team, method: :delete, data: { confirm: 'Are you sure?' }
