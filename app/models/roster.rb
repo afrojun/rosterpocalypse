@@ -129,12 +129,14 @@ class Roster < ApplicationRecord
             Rails.logger.info "Roster #{name}: Freely transferring in players: #{new_players.map(&:name)}"
             players.clear
             players << new_players
+            touch
             return true
           elsif unlocked?
             players_to_add = new_players - players
             players_to_remove = players - new_players
             transfer_players players_to_add, players_to_remove
             current_gameweek_roster.create_snapshot if available_transfers < 1
+            touch
             return true
           end
         end
