@@ -11,7 +11,8 @@
     = render "/layouts/favicons"
 
   %body
-    = render "layouts/google_analytics"
+    - if Rails.env == "production"
+      = render "layouts/google_analytics"
 
     .container
       %nav.navbar.navbar-toggleable-sm.navbar-dark.bg-inverse

@@ -15,57 +15,64 @@
       .dream-team-no-data-message Not enough data to build the Dream Team
   .col-xs-6
     %h2.gameweek-stats-top-section-heading Transfers
-    .col-xs-6
-      %h4.gameweek-stats-top-section-heading
-        Top Transfers In
-        = content_tag :i, "", class: "fa fa-caret-up text-success"
-      %table.table
-        %tbody
-          - @gameweek_statistics.top_transfers_in.each do |player_id, num_transfers|
-            - gameweek_player = GameweekPlayer.where(gameweek: @gameweek, player_id: player_id).first
-            %tr
-              %td
-                = team_logo gameweek_player.team
-                = player_role_icon gameweek_player.player
-                = gameweek_player.player.name
-              %td= num_transfers
+    - if @gameweek.start_date < @gameweek.tournament.start_date || (@gameweek_statistics.top_transfers_in.blank? && @gameweek_statistics.top_transfers_out.blank?)
+      .dream-team-no-data-message No transfers during this Gameweek
+    - else
+      .col-xs-6
+        %h4.gameweek-stats-top-section-heading
+          Top Transfers In
+          = content_tag :i, "", class: "fa fa-caret-up text-success"
+        %table.table
+          %tbody
+            - @gameweek_statistics.top_transfers_in.each do |player_id, num_transfers|
+              - gameweek_player = GameweekPlayer.where(gameweek: @gameweek, player_id: player_id).first
+              %tr
+                %td
+                  = team_logo gameweek_player.team
+                  = player_role_icon gameweek_player.player
+                  = gameweek_player.player.name
+                %td= num_transfers
 
-    .col-xs-6
-      %h4.gameweek-stats-top-section-heading
-        Top Transfers Out
-        = content_tag :i, "", class: "fa fa-caret-down text-danger"
-      %table.table
-        %tbody
-          - @gameweek_statistics.top_transfers_out.each do |player_id, num_transfers|
-            - gameweek_player = GameweekPlayer.where(gameweek: @gameweek, player_id: player_id).first
-            %tr
-              %td
-                = team_logo gameweek_player.team
-                = player_role_icon gameweek_player.player
-                = gameweek_player.player.name
-              %td= num_transfers
+      .col-xs-6
+        %h4.gameweek-stats-top-section-heading
+          Top Transfers Out
+          = content_tag :i, "", class: "fa fa-caret-down text-danger"
+        %table.table
+          %tbody
+            - @gameweek_statistics.top_transfers_out.each do |player_id, num_transfers|
+              - gameweek_player = GameweekPlayer.where(gameweek: @gameweek, player_id: player_id).first
+              %tr
+                %td
+                  = team_logo gameweek_player.team
+                  = player_role_icon gameweek_player.player
+                  = gameweek_player.player.name
+                %td= num_transfers
 
 .gameweek-player-stats-table
   %h2 Player Stats
 
-  %table.table.table-sm.table-striped.table-hover
-    %thead
-      %tr
-        %th Player
-        %th.right-align Value
-        %th.right-align Pick Rate %
-        %th.right-align Points
-        %th.right-align
-          Efficiency %
-          %small= link_to "[?]", about_path + "#q12"
-    %tbody
-      - @gameweek_players.each do |gameweek_player, player_stats|
+  - if @gameweek_players.any?
+
+    %table.table.table-sm.table-striped.table-hover
+      %thead
         %tr
-          %td
-            = team_logo gameweek_player.team
-            = player_role_icon gameweek_player.player
-            = gameweek_player.player.name
-          %td.right-align= sprintf "%.2f", gameweek_player.value
-          %td.right-align= sprintf "%.2f", gameweek_player.pick_rate
-          %td.right-align= gameweek_player.points
-          %td.right-align= sprintf "%.2f", gameweek_player.efficiency
+          %th Player
+          %th.right-align Value
+          %th.right-align Pick Rate %
+          %th.right-align Points
+          %th.right-align
+            Efficiency %
+            %small= link_to "[?]", about_path + "#q12"
+      %tbody
+        - @gameweek_players.each do |gameweek_player, player_stats|
+          %tr
+            %td
+              = team_logo gameweek_player.team
+              = player_role_icon gameweek_player.player
+              = gameweek_player.player.name
+            %td.right-align= sprintf "%.2f", gameweek_player.value
+            %td.right-align= sprintf "%.2f", gameweek_player.pick_rate
+            %td.right-align= gameweek_player.points
+            %td.right-align= sprintf "%.2f", gameweek_player.efficiency
+  - else
+    No Player data available for this Gameweek
