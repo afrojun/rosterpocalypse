@@ -25,12 +25,12 @@ end
 
 task :update_roster_scores => :environment do
   puts "Updating Roster scores"
-  Roster.all.each do |roster|
-    gwr = roster.current_gameweek_roster
+  GameweekRoster.all.each do |gwr|
     next unless gwr.roster_snapshot.present?
 
     gwr.update_points
     roster.update_score
+    print "."
   end
   puts "Done."
 end

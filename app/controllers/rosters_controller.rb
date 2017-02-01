@@ -14,7 +14,13 @@ class RostersController < RosterpocalypseController
   def show
     @gameweek_roster = GameweekRoster.where(gameweek: @gameweek, roster: @roster).first
     @gameweek_rosters = @gameweek.gameweek_rosters.order("points")
-    @gameweek_players = @gameweek_roster.gameweek_players.blank? ? @roster.players.includes(:team).all : @gameweek_roster.gameweek_players.includes(:player, :team).all
+    @gameweek_players = if @gameweek_roster.gameweek_players.blank?
+                          @roster.players.includes(:team).map do |player|
+                            GameweekPlayer.new(gameweek: @gameweek, player: player, team: player.team)
+                          end
+                        else
+                          @gameweek_roster.gameweek_players.includes(:player, :team).all
+                        end
     @sidebar_props = {
       rosterPath: roster_url(@roster),
       rosterDetailsPath: details_roster_url(@roster),

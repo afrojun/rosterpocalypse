@@ -4,7 +4,7 @@ RSpec.describe GameweeksController, type: :routing do
   describe "routing" do
 
     it "routes to #index" do
-      expect(:get => "/tournaments/1/gameweeks").to route_to("gameweeks#index", :tournament_id => "1")
+      expect(:get => "/gameweeks").to route_to("gameweeks#index")
     end
 
     it "routes to #show" do

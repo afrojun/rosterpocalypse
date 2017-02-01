@@ -25,6 +25,23 @@ class GameweekPlayer < ApplicationRecord
     end
   end
 
+  def self.update_pick_rate_and_efficiency_for_gameweek gameweek
+    gameweek_players = gameweek.gameweek_players.includes(:player, :gameweek_rosters)
+    valid_gameweek_rosters = gameweek.gameweek_rosters.includes(transfers: [:player_in, :player_out]).where("points IS NOT NULL")
+
+    max_points = gameweek_players.order(points: :desc).first.try :points
+    min_value = gameweek.players.order(value: :asc).first.try :value
+    efficiency_factor = (max_points && min_value) ? max_points/min_value : 1
+    logger.info "Player Efficiency factor = max_points/min_value = #{max_points}/#{min_value} = #{efficiency_factor}"
+
+    gameweek_players.each do |gameweek_player|
+      gameweek_player.update(
+        pick_rate: ((gameweek_player.gameweek_rosters.size.to_f/valid_gameweek_rosters.size.to_f) * 100).round(2),
+        efficiency: (((gameweek_player.points/gameweek_player.value)/efficiency_factor) * 100).round(2)
+      )
+    end
+  end
+
   def remove_game game
     all_points_breakdowns = points_breakdown || {}
     all_points_breakdowns.delete(game.game_hash)

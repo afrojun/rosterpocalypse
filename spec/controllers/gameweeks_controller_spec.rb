@@ -21,7 +21,7 @@ require 'rails_helper'
 RSpec.describe GameweeksController, type: :controller do
   login_user
 
-  let(:tournament) { FactoryGirl.create :tournament }
+  let(:tournament) { FactoryGirl.create :tournament, start_date: Time.now.utc - 1.hour, end_date: Time.now.utc + 1.hour }
   let(:gameweek) { FactoryGirl.create :gameweek, tournament: tournament }
 
   # This should return the minimal set of values that should be in the session
@@ -30,9 +30,10 @@ RSpec.describe GameweeksController, type: :controller do
   let(:valid_session) { {} }
 
   describe "GET #index" do
-    it "assigns all gameweeks as @gameweeks" do
-      get :index, params: {tournament_id: tournament.id}, session: valid_session
-      expect(assigns(:gameweeks)).to eq(tournament.gameweeks)
+    it "assigns all tournaments as @tournaments" do
+      tournament
+      get :index, params: {}, session: valid_session
+      expect(assigns(:tournaments)).to eq([tournament])
     end
   end
 

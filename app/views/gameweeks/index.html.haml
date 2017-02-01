@@ -1,9 +1,6 @@
-%h1 Gameweeks
-%table.table.table-sm.table-striped
-  %thead
-    %tr
-      %th Gameweek
-  %tbody
-    - @gameweeks.each do |gameweek|
-      %tr
-        %td= link_to gameweek.name, gameweek
+%h1 Statistics
+%h3 Active Tournaments
+
+%ul
+  - @tournaments.each do |tournament|
+    %li= link_to tournament.name, tournament.previous_gameweek

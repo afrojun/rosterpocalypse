@@ -1,5 +1,6 @@
 class Gameweek < ApplicationRecord
   belongs_to :tournament
+  has_one :gameweek_statistic, dependent: :destroy
   has_many :gameweek_players, dependent: :destroy
   has_many :players, through: :gameweek_players
   has_many :gameweek_rosters, dependent: :destroy
@@ -19,11 +20,11 @@ class Gameweek < ApplicationRecord
   end
 
   def next
-    tournament.find_gameweek start_date.advance(weeks: 1), false
+    @next ||= tournament.find_gameweek roster_lock_date.advance(weeks: 1), false
   end
 
   def previous
-    tournament.find_gameweek start_date.advance(weeks: -1), false
+    @previous ||= tournament.find_gameweek roster_lock_date.advance(weeks: -1), false
   end
 
   def points_percentile percentile

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170126131419) do
+ActiveRecord::Schema.define(version: 20170131220229) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,14 +66,16 @@ ActiveRecord::Schema.define(version: 20170126131419) do
   end
 
   create_table "gameweek_players", force: :cascade do |t|
-    t.integer  "gameweek_id",                  null: false
-    t.integer  "player_id",                    null: false
+    t.integer  "gameweek_id",                    null: false
+    t.integer  "player_id",                      null: false
     t.text     "points_breakdown"
-    t.integer  "points",           default: 0, null: false
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.integer  "points",           default: 0,   null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
     t.float    "value"
     t.integer  "team_id"
+    t.float    "pick_rate",        default: 0.0, null: false
+    t.float    "efficiency",       default: 0.0, null: false
     t.index ["gameweek_id", "player_id"], name: "index_gameweek_players_on_gameweek_id_and_player_id", using: :btree
     t.index ["gameweek_id"], name: "index_gameweek_players_on_gameweek_id", using: :btree
     t.index ["player_id", "gameweek_id"], name: "index_gameweek_players_on_player_id_and_gameweek_id", using: :btree
@@ -101,6 +103,16 @@ ActiveRecord::Schema.define(version: 20170126131419) do
     t.index ["points"], name: "index_gameweek_rosters_on_points", using: :btree
     t.index ["roster_id", "gameweek_id"], name: "index_gameweek_rosters_on_roster_id_and_gameweek_id", using: :btree
     t.index ["roster_id"], name: "index_gameweek_rosters_on_roster_id", using: :btree
+  end
+
+  create_table "gameweek_statistics", force: :cascade do |t|
+    t.integer  "gameweek_id",       null: false
+    t.text     "dream_team"
+    t.text     "top_transfers_in"
+    t.text     "top_transfers_out"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.index ["gameweek_id"], name: "index_gameweek_statistics_on_gameweek_id", unique: true, using: :btree
   end
 
   create_table "gameweeks", force: :cascade do |t|
@@ -335,6 +347,7 @@ ActiveRecord::Schema.define(version: 20170126131419) do
   add_foreign_key "gameweek_players", "players"
   add_foreign_key "gameweek_rosters", "gameweeks"
   add_foreign_key "gameweek_rosters", "rosters"
+  add_foreign_key "gameweek_statistics", "gameweeks"
   add_foreign_key "gameweeks", "tournaments"
   add_foreign_key "identities", "users"
   add_foreign_key "leagues", "managers"
