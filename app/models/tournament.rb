@@ -60,7 +60,7 @@ class Tournament < ApplicationRecord
   end
 
   def next_gameweek safe = true
-    @next_gameweek ||= find_gameweek Time.now.utc.advance(weeks: 1), safe
+    @next_gameweek ||= find_gameweek current_gameweek.end_date.advance(days: 1), safe
   end
 
   def current_gameweek safe = true
@@ -68,7 +68,7 @@ class Tournament < ApplicationRecord
   end
 
   def previous_gameweek safe = true
-    @previous_gameweek ||= find_gameweek Time.now.utc.advance(weeks: -1), safe
+    @previous_gameweek ||= find_gameweek current_gameweek.start_date.advance(days: -1), safe
   end
 
   def private_leagues
