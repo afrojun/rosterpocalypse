@@ -25,7 +25,8 @@ end
 
 task :update_roster_scores => :environment do
   puts "Updating Roster scores"
-  GameweekRoster.all.each do |gwr|
+  Roster.all.each do |roster|
+    gwr = roster.current_gameweek_roster
     next unless gwr.roster_snapshot.present?
 
     gwr.update_points
