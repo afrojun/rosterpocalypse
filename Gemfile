@@ -17,6 +17,8 @@ gem 'coffee-rails', '~> 4.2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
+gem 'pry-rails'
+
 # Add helpful information on page performance to the bottom of pages
 # https://github.com/josevalim/rails-footnotes
 gem 'rails-footnotes', '~> 4.0'
@@ -123,7 +125,6 @@ group :development do
   gem 'better_errors'
   gem 'guard'
   gem 'guard-rspec'
-  gem 'pry-rails'
   gem 'bullet'
 end
 
