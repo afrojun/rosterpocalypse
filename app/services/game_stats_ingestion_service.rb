@@ -36,7 +36,7 @@ class GameStatsIngestionService
             #
             # Otherwise update the current team to the player's team if the team name is "Unknown"
             most_recent_game = player.games.order(start_date: :desc).first
-            if player.team.blank? || (team.name != "Unknown" && (player.team.name == "Unknown" || game.start_date > most_recent_game.start_date))
+            if player.team.blank? || (team.name != "Unknown" && (player.team.name == "Unknown" || (most_recent_game && (game.start_date > most_recent_game.start_date))))
               player.update_attribute(:team, team)
             else
               team = player.team if team.name == "Unknown" && player.team.name != "Unknown"
@@ -55,6 +55,8 @@ class GameStatsIngestionService
             )
           end
         end
+
+        Rails.logger.info "Successfully added all game details."
 
         if gameweek.present?
           GameweekPlayer.update_from_game game, gameweek
