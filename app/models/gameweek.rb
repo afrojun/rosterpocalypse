@@ -20,11 +20,11 @@ class Gameweek < ApplicationRecord
   end
 
   def next
-    @next ||= tournament.find_gameweek roster_lock_date.advance(weeks: 1), false
+    @next ||= tournament.find_gameweek end_date.advance(days: 1), false
   end
 
   def previous
-    @previous ||= tournament.find_gameweek roster_lock_date.advance(weeks: -1), false
+    @previous ||= tournament.find_gameweek start_date.advance(days: -1), false
   end
 
   def points_percentile percentile

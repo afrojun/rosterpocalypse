@@ -24,10 +24,10 @@ class GameweekRoster < ApplicationRecord
     safe ? self : p
   end
 
-  def create_snapshot
-    if roster.players.size == Roster::MAX_PLAYERS
+  def create_snapshot players = roster.players
+    if players.size == Roster::MAX_PLAYERS
       players_hash = {}
-      roster.players.each do |player|
+      players.each do |player|
         players_hash[player.slug] = player.value
       end
       snapshot = {
