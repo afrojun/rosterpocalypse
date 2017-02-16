@@ -1,11 +1,11 @@
 FactoryGirl.define do
-  sequence(:player_name) { |n| "Player#{n}" }
+  sequence(:player_name) { |n| sprintf("Player%03d", n) }
 
   factory :player do
     name { generate :player_name }
     role "role"
     country "Country"
     team
-    value { rand 80..100 }
+    value 100
   end
 end
