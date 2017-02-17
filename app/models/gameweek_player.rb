@@ -32,7 +32,7 @@ class GameweekPlayer < ApplicationRecord
     max_points = gameweek_players.order(points: :desc).first.try :points
     min_value = gameweek.players.order(value: :asc).first.try :value
     efficiency_factor = (max_points && min_value) ? max_points/min_value : 1
-    logger.info "Player Efficiency factor = max_points/min_value = #{max_points}/#{min_value} = #{efficiency_factor}"
+    Rails.logger.info "Player Efficiency factor = max_points/min_value = #{max_points}/#{min_value} = #{efficiency_factor}"
 
     gameweek_players.each do |gameweek_player|
       gameweek_player.update(

@@ -15,19 +15,24 @@ class GameweekRoster < ApplicationRecord
   end
 
   def next safe = true
-    n = GameweekRoster.where(gameweek: gameweek.next, roster: roster).first
-    safe ? (n.nil? ? self : n) : n
+    nxt = GameweekRoster.where(gameweek: gameweek.next, roster: roster).first
+    safe ? (nxt.nil? ? self : nxt) : nxt
   end
 
   def previous safe = true
-    p = GameweekRoster.where(gameweek: gameweek.previous, roster: roster).first
-    safe ? (p.nil? ? self : p) : p
+    prev = GameweekRoster.where(gameweek: gameweek.previous, roster: roster).first
+    safe ? (prev.nil? ? self : prev) : prev
   end
 
-  def create_snapshot players = roster.players
-    if players.size == Roster::MAX_PLAYERS
+  def create_snapshot players_to_snapshot = roster.players
+    if roster_snapshot.present?
+      Rails.logger.warn "Roster snapshot for '#{roster.name}' exists, not taking any action."
+      return true
+    end
+
+    if players_to_snapshot.size == Roster::MAX_PLAYERS
       players_hash = {}
-      players.each do |player|
+      players_to_snapshot.each do |player|
         players_hash[player.slug] = player.value
       end
       snapshot = {
@@ -42,22 +47,21 @@ class GameweekRoster < ApplicationRecord
   end
 
   def update_points
-    if snapshot_players.present?
-      players = Player.where(slug: snapshot_players.keys)
-      total_value = snapshot_players.values.sum
+    if snapshot_players_hash.present?
+      snapshot_players = Player.where(slug: snapshot_players_hash.keys)
+      total_value = snapshot_players_hash.values.sum
 
-      if players.size != Roster::MAX_PLAYERS
+      if snapshot_players.size != Roster::MAX_PLAYERS
         Rails.logger.warn "Unable to update points for an incomplete roster."
         return false
       end
 
       if total_value > Roster::MAX_TOTAL_VALUE
-        Rails.logger.warn "Total value of the players in the roster (#{total_value}) exceeds the limit of #{Roster::MAX_TOTAL_VALUE}."
+        Rails.logger.warn "Total value of the players in roster '#{roster.name}' (#{total_value}) exceeds the limit of #{Roster::MAX_TOTAL_VALUE}."
         return false
       end
 
-      snapshot_gameweek_players = GameweekPlayer.where(gameweek: gameweek, player: players)
-      gameweek_players << snapshot_gameweek_players
+      gameweek_players << GameweekPlayer.where(gameweek: gameweek, player: snapshot_players)
       update points: gameweek_points
     else
       Rails.logger.warn "No snapshot present, unable to update points."
@@ -69,7 +73,7 @@ class GameweekRoster < ApplicationRecord
     roster_snapshot[:snapshot_time]
   end
 
-  def snapshot_players
+  def snapshot_players_hash
     roster_snapshot[:players]
   end
 
