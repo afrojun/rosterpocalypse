@@ -52,7 +52,7 @@ class GameweekRoster < ApplicationRecord
       total_value = snapshot_players_hash.values.sum
 
       if snapshot_players.size != Roster::MAX_PLAYERS
-        Rails.logger.warn "Unable to update points for an incomplete roster."
+        Rails.logger.warn "Unable to update points for an incomplete roster: '#{roster.name}'"
         return false
       end
 
@@ -61,10 +61,12 @@ class GameweekRoster < ApplicationRecord
         return false
       end
 
+      gameweek_players.clear
       gameweek_players << GameweekPlayer.where(gameweek: gameweek, player: snapshot_players)
+
       update points: gameweek_points
     else
-      Rails.logger.warn "No snapshot present, unable to update points."
+      Rails.logger.warn "No snapshot present for '#{roster.name}', unable to update points."
       false
     end
   end
