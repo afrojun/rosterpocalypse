@@ -20,11 +20,27 @@ class Gameweek < ApplicationRecord
   end
 
   def next
-    @next ||= tournament.find_gameweek end_date.advance(days: 1), false
+    tournament.find_gameweek end_date.advance(days: 1), false
+  end
+
+  def next_active gameweek = self.next
+    if gameweek.blank?
+      return nil
+    else
+      gameweek.matches.any? ? gameweek : next_active(gameweek.next)
+    end
   end
 
   def previous
-    @previous ||= tournament.find_gameweek start_date.advance(days: -1), false
+    tournament.find_gameweek start_date.advance(days: -1), false
+  end
+
+  def previous_active gameweek = self.previous
+    if gameweek.blank?
+      return nil
+    else
+      gameweek.matches.any? ? gameweek : previous_active(gameweek.previous)
+    end
   end
 
   def points_percentile percentile

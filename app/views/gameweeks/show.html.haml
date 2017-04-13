@@ -1,6 +1,6 @@
 = page_title @page_title
 
-= render "gameweeks/gameweek_navigation", gameweek: @gameweek, next_path: @gameweek.next && gameweek_path(@gameweek.next), previous_path: @gameweek.previous && gameweek_path(@gameweek.previous)
+= render "gameweeks/gameweek_navigation", gameweek: @gameweek, next_path: @gameweek.next_active && gameweek_path(@gameweek.next_active), previous_path: @gameweek.previous_active && gameweek_path(@gameweek.previous_active)
 
 .col-xs-12.gameweek-stats-top-section
   .col-xs-6

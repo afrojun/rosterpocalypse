@@ -2,8 +2,16 @@
   %span.col-xs-2.roster-status-gameweek-navigation
     - if gameweek.previous.present?
       = link_to "&laquo; Prev".html_safe, previous_path, class: "btn btn-link btn-lg btn-wide"
-  %span.col-xs-8.roster-status-heading= gameweek.name
+  %span.col-xs-8
+    .col-xs-12.roster-status-heading= gameweek.name
+    .col-xs-12
+      %span.col-xs-5.roster-status-gameweek-start-date.center= gameweek.start_date.strftime("%R on %b %-d, %Y")
+      %span.col-xs-2
+      %span.col-xs-5.roster-status-gameweek-end-date.center= gameweek.end_date.strftime("%R on %b %-d, %Y")
 
   %span.col-xs-2.roster-status-gameweek-navigation.float-sm-right
     - if gameweek.next.present? && gameweek.next.start_date < Time.now.utc
       = link_to "Next &raquo;".html_safe, next_path, class: "btn btn-link btn-lg btn-wide"
+.col-xs-12
+  %span.col-xs-2
+  %span.col-xs-2

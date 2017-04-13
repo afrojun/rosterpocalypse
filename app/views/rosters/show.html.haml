@@ -5,7 +5,7 @@
   %li.breadcrumb-item.active= @roster.name
 
 .col-xs-10.roster-status-page
-  = render "gameweeks/gameweek_navigation", gameweek: @gameweek, next_path: roster_path(@roster, gameweek: @gameweek.next), previous_path: roster_path(@roster, gameweek: @gameweek.previous)
+  = render "gameweeks/gameweek_navigation", gameweek: @gameweek, next_path: roster_path(@roster, gameweek: @gameweek.next_active), previous_path: roster_path(@roster, gameweek: @gameweek.previous_active)
   .col-xs-12.roster-status-gameweek-summary
     %span.col-xs-3
     .col-xs-3.roster-status-gameweek-points
