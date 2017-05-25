@@ -42,7 +42,7 @@ class AccessPolicy
 
     # More privileged role, applies to registered users.
     #
-    role :member, proc { |user| user.present? && user.registered? } do
+    role :member, proc { |user| user.present? && user.registered? && !user.unconfirmed? } do
       can :read, Manager
       can :read, Match
       can :read, Game
@@ -62,6 +62,22 @@ class AccessPolicy
       can [:update, :destroy], Roster do |roster, user|
         roster.manager.user.id == user.id
       end
+    end
+
+    role :unconfirmed_member, proc { |user| user.present? && user.registered? && user.unconfirmed? } do
+      can :read, Manager
+      can :read, Match
+      can :read, Game
+      can :read, Hero
+      can :read, Team
+      can :read, Map
+      can :read, Player
+      can :read, Tournament
+      can :read, Gameweek
+      can :read, League
+      can :read, PublicLeague
+      can :read, PrivateLeague
+      can :read, Roster
     end
 
     # The base role with no additional conditions.

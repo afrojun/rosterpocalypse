@@ -1,19 +1,19 @@
-%h2 Change your password
-= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f|
+= page_title "Change Password"
+
+= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "compact-form" }) do |f|
+  %h2.form-heading Change Password
   = render 'layouts/error_messages', object: resource
+
   = f.hidden_field :reset_password_token
   .field
-    = f.label :password, "New password"
-    %br/
+    = f.label :password, "New password", class: "sr-only"
     - if @minimum_password_length
       %em
         (#{@minimum_password_length} characters minimum)
-      %br/
-    = f.password_field :password, autofocus: true, autocomplete: "off"
+    = f.password_field :password, autofocus: true, autocomplete: "off", required: true, class: "form-control", placeholder: "New Password"
   .field
-    = f.label :password_confirmation, "Confirm new password"
-    %br/
-    = f.password_field :password_confirmation, autocomplete: "off"
+    = f.label :password_confirmation, "Confirm new password", class: "sr-only"
+    = f.password_field :password_confirmation, autocomplete: "off", required: true, class: "form-control", placeholder: "Confirm new password"
+
   .actions
-    = f.submit "Change my password"
-= render "devise/shared/links"
+    = f.submit "Change my password", class: "btn btn-primary btn-block"

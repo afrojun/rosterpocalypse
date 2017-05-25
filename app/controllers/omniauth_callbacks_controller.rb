@@ -25,10 +25,15 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     @user = @identity.user || current_user
     if @user.nil?
       @user = if @identity.email.present?
+                # Google, Facebook and Twitter provide email addresses
                 User.find_or_create_by(email: @identity.email) do |u|
                   u.username = @identity.nickname
+                  # We assume that emails we get from these providers are accurate
+                  # and don't need to re-confirm them
+                  u.confirmed_at = Time.now.utc
                 end
               elsif @identity.name.present?
+                # This is used for reddit and bnet since they don't provide user emails
                 User.find_or_create_by(email: "#{@identity.name}@#{provider}.com") do |u|
                   u.username = "#{@identity.name}_#{provider}"
                 end
