@@ -43,6 +43,9 @@ gem 'sidekiq'
 # Mailgun for sending emails
 gem 'mailgun-ruby', '~>1.1.6'
 
+# Stripe for payment processing
+gem 'stripe'
+
 # Twitter Bootstrap 4
 gem 'bootstrap', '~> 4.0.0.alpha5'
 # Bootstrap Tooltips and popovers depend on tether for positioning
@@ -72,14 +75,14 @@ gem 'omniauth-oauth2', '~> 1.3.1'
 gem 'omniauth-twitter'
 gem 'omniauth-facebook'
 gem 'omniauth-bnet'
-gem 'omniauth-reddit', :git => 'git://github.com/jackdempsey/omniauth-reddit.git'
+gem 'omniauth-reddit', :git => 'https://github.com/jackdempsey/omniauth-reddit'
 gem 'twitter'
 gem 'omniauth-google-oauth2'
 # gem 'google-api-client', require: 'google/api_client'
 
 # https://github.com/jumph4x/canonical-rails
 # Set rel=canonical in the header for SEO
-gem 'canonical-rails', github: 'jumph4x/canonical-rails'
+gem 'canonical-rails', git: 'https://github.com/jumph4x/canonical-rails'
 
 # https://github.com/tylerhunt/rack-canonical-host
 # To redirect to always use the 'www' subdomain
