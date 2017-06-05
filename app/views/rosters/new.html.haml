@@ -10,7 +10,7 @@
 
   .field
     = f.label :tournament, class: "sr-only"
-    = f.select(:tournament_id, Tournament.active_tournaments.map { |t| [t.name, t.id] }, {include_blank: false}, class: "form-control")
+    = f.select(:tournament_id, Tournament.active_tournaments.map { |t| [t.name, t.id] }, {include_blank: true}, class: "form-control", required: true)
 
   .actions.form-group
     = f.submit "Create Roster", class: "btn btn-lg btn-primary btn-block"
