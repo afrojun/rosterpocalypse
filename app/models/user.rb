@@ -3,9 +3,9 @@ class User < ApplicationRecord
   has_many :identities, dependent: :destroy
 
   # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable
+  # :lockable, :timeoutable
   devise :database_authenticatable, :registerable, :omniauthable,
-         :recoverable, :rememberable, :trackable
+         :recoverable, :rememberable, :trackable, :confirmable
 
   validates :username,
             presence: true,
@@ -33,6 +33,10 @@ class User < ApplicationRecord
 
   def registered?
     self.persisted?
+  end
+
+  def unconfirmed?
+    unconfirmed_email.present? || confirmed_at.blank?
   end
 
   def owner?

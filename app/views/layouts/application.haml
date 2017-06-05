@@ -66,6 +66,9 @@
       - if alert
         %p.alert.alert-danger
           = alert
+      - if user_signed_in? && current_user.unconfirmed?
+        %p.alert.alert-warning
+          = "You need to update and confirm your email address before you can start managing Rosters or Leagues. #{link_to("Click here to do that", edit_user_registration_path)}.".html_safe
 
       = yield
 
