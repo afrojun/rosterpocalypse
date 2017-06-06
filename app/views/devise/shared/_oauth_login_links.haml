@@ -1,17 +1,24 @@
 .oauth-login-links
-  %b Sign in or sign up with:
+  %b
+    - if controller_name == 'registrations'
+      Sign up
+    - else
+      Sign in
+    with:
+
   %br
   %p
-    = link_to user_bnet_omniauth_authorize_path do
-      = identity_provider_logo :bnet
-    = link_to user_reddit_omniauth_authorize_path do
-      = identity_provider_logo :reddit
     = link_to user_twitter_omniauth_authorize_path do
       = identity_provider_logo :twitter
     = link_to user_google_oauth2_omniauth_authorize_path do
       = identity_provider_logo :google_oauth2
     = link_to user_facebook_omniauth_authorize_path do
       = identity_provider_logo :facebook
+    - if controller_name != 'registrations'
+      = link_to user_bnet_omniauth_authorize_path do
+        = identity_provider_logo :bnet
+      = link_to user_reddit_omniauth_authorize_path do
+        = identity_provider_logo :reddit
 
   .login-fine-print
     %p.small= t("login_fine_print").html_safe

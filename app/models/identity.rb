@@ -5,6 +5,10 @@ class Identity < ApplicationRecord
   validates_uniqueness_of :uid, :scope => :provider
 
   def self.find_for_oauth auth
+    where(provider: auth.provider, uid: auth.uid).first
+  end
+
+  def self.find_or_create_for_oauth auth
     find_or_create_by(provider: auth.provider, uid: auth.uid) do |identity|
       identity.accesstoken = auth.credentials.token
       identity.refreshtoken = auth.credentials.refresh_token
