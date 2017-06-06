@@ -73,4 +73,10 @@ Rails.application.routes.draw do
   post 'replay_details', to: 'api/game_stats_ingestion#create'
 
   get '/.well-known/acme-challenge/:id' => 'welcome#letsencrypt'
+
+  require 'sidekiq/web'
+  authenticate :user, lambda { |u| u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
 end
