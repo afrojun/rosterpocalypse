@@ -15,12 +15,11 @@ if Rails.env.production?
         ActiveRecord::Base.connection_pool.disconnect!
 
         ActiveSupport.on_load(:active_record) do
-          config = Rails.application.config.database_configuration[Rails.env]
-          config['host'] = database_url
-          config['reaping_frequency'] = ENV['DATABASE_REAP_FREQ'] || 10 # seconds
-          config['pool'] = ENV['WORKER_DB_POOL_SIZE'] || Sidekiq.options[:concurrency]
-          #config['pool'] = 16
-          ActiveRecord::Base.establish_connection(config)
+          reaping_frequency = ENV['DATABASE_REAP_FREQ'] || 10 # seconds
+          pool = ENV['WORKER_DB_POOL_SIZE'] || Sidekiq.options[:concurrency]
+          ENV['DATABASE_URL'] = "#{database_url}?pool=#{pool}&reaping_frequency=#{reaping_frequency}"
+
+          ActiveRecord::Base.establish_connection
 
           Rails.logger.info("DB Connection Pool size for Sidekiq Server is now: #{ActiveRecord::Base.connection.pool.instance_variable_get('@size')}")
         end
