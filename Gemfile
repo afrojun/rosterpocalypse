@@ -37,6 +37,9 @@ gem 'oj_mimic_json'
 # React on Rails
 gem 'react_on_rails', '~>6'
 
+# Background ActiveJob task handler
+gem 'sidekiq'
+
 # Mailgun for sending emails
 gem 'mailgun-ruby', '~>1.1.6'
 
