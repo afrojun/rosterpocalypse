@@ -40,6 +40,15 @@ class AccessPolicy
       can :manage, Gameweek
     end
 
+    # Role for subscribed users
+    #
+    role :premium_member, proc { |user| user.present? && user.registered? && !user.unconfirmed? && user.paid? } do
+      can [:read, :create], PublicLeague
+      can [:update, :destroy], PublicLeague do |league, user|
+        league.manager.user.id == user.id
+      end
+    end
+
     # More privileged role, applies to registered users.
     #
     role :member, proc { |user| user.present? && user.registered? && !user.unconfirmed? } do
@@ -56,7 +65,7 @@ class AccessPolicy
       can :read, Tournament
       can :read, Gameweek
       can :read, PublicLeague
-      can [:read, :create], League
+      can :read, League
       can [:read, :create], PrivateLeague
       can [:update, :destroy], PrivateLeague do |league, user|
         league.manager.user.id == user.id
