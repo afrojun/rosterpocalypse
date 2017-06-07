@@ -1,0 +1,7 @@
+= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "compact-form" }) do |f|
+  %h1.form-heading Payment Details
+  = render 'layouts/error_messages', object: resource
+
+
+  .actions
+    = f.submit "Update Payment Details", class: "btn btn-lg btn-primary btn-block"

@@ -1,0 +1,62 @@
+= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "compact-form" }) do |f|
+  %h1.form-heading Manage #{resource_name.to_s.humanize}
+  = render 'layouts/error_messages', object: resource
+
+  - if resource.identities.any?
+    %p
+      Logged in via
+      = identity_provider_logos resource
+
+  %h4.form-heading Change username or email
+  - if devise_mapping.confirmable? && resource.unconfirmed?
+    %div Currently awaiting confirmation for: #{resource.confirmation_email}
+    - if valid_email?(resource.confirmation_email)
+      = link_to "Resend confirmation email?", new_confirmation_path(resource)
+      %br
+    - else
+      %div.text-danger Invalid email, please update it below
+    %br
+
+  .field
+    = f.label :username, class: "sr-only"
+    = f.text_field :username, autofocus: true, required: true, class: "form-control", placeholder: "Username"
+
+  .field
+    = f.label :email, class: "sr-only"
+    = f.email_field :email, class: "form-control", required: true, placeholder: "Email address"
+    - unless valid_email?(resource.email)
+      %div.text-danger Invalid email address
+
+  .field
+    = f.label :current_password, class: "sr-only"
+    = f.password_field :current_password, autocomplete: "off", class: "form-control", placeholder: "Password"
+
+  .actions
+    = f.submit "Update User", class: "btn btn-lg btn-primary btn-block"
+
+= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "compact-form" }) do |f|
+  %h4.form-heading Change password
+  = f.hidden_field :username
+  = f.hidden_field :email
+
+  .field
+    = f.label :password, class: "sr-only"
+    = f.password_field :password, autocomplete: "off", required: true, class: "form-control", placeholder: "New password"
+
+  .field
+    = f.label :password_confirmation, class: "sr-only"
+    = f.password_field :password_confirmation, autocomplete: "off", required: true, class: "form-control", placeholder: "Repeat new password"
+
+  .field
+    = f.label :current_password, class: "sr-only"
+    = f.password_field :current_password, autocomplete: "off", class: "form-control", placeholder: "Current password"
+
+  .actions
+    = f.submit "Change Password", class: "btn btn-lg btn-primary btn-block"
+
+.container.compact-form
+  %h4.form-heading Delete account
+
+  %p Remove this account and all associated rosters and private leagues.
+  %p <b>This action is irreversible!</b>
+  = button_to "Delete Account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "btn btn-lg btn-danger btn-block"

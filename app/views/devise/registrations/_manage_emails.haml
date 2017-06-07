@@ -1,0 +1,18 @@
+= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "compact-form" }) do |f|
+  %h1.form-heading Email Settings
+  = render 'layouts/error_messages', object: resource
+
+  I would like to be notified via email when:
+
+  .field
+    = check_box_tag(:scores_updated)
+    = label_tag(:scores_updated, "My roster scores are updated")
+  .field
+    = check_box_tag(:new_feature)
+    = label_tag(:new_feature, "New features are released")
+  .field
+    = check_box_tag(:join_league)
+    = label_tag(:join_league, "Someone joins a league I manage")
+
+  .actions
+    = f.submit "Update Email Preferences", class: "btn btn-lg btn-primary btn-block"
