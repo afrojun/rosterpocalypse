@@ -44,6 +44,9 @@ class AccessPolicy
     #
     role :member, proc { |user| user.present? && user.registered? && !user.unconfirmed? } do
       can :read, Manager
+      can :update, Manager do |manager, user|
+        manager.user.id == user.id
+      end
       can :read, Match
       can :read, Game
       can :read, Hero

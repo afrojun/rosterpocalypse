@@ -1,7 +1,31 @@
-= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "compact-form" }) do |f|
+- manager = resource.manager
+
+.compact-form
   %h1.form-heading Payment Details
-  = render 'layouts/error_messages', object: resource
+  = render 'layouts/error_messages', object: manager
+
+  - if manager.stripe_customer_id.present?
+    %h4.form-heading Stored Cards
+    %ul
+      - manager.stripe_customer.sources.each do |card|
+        %li
+          = form_for(manager, as: :manager, url: remove_payment_source_manager_path(manager), html: { method: :put }) do |f|
+            = "#{card["brand"]} Ends in: ...#{card["last4"]}"
+            = hidden_field_tag :card_id, card["id"]
+            = submit_tag "Remove", class: "btn btn-link"
 
 
-  .actions
-    = f.submit "Update Payment Details", class: "btn btn-lg btn-primary btn-block"
+= form_for(manager, as: :manager, url: update_payment_details_manager_path(manager), html: { method: :put, class: "compact-form" }) do |f|
+  %h4.form-heading Add/Update a card
+
+  .center
+    %script{"src"               => "https://checkout.stripe.com/checkout.js",
+            "class"             => "stripe-button",
+            "data-key"          => Rails.configuration.stripe[:publishable_key],
+            "data-label"        => "Update Card Details",
+            "data-panel-label"  => "Update Card Details",
+            "data-allow-remember-me" => "false",
+            "data-locale"       => "auto",
+            "data-email"        => resource.email,
+            "data-zip-code"     => "true",
+            "data-name"         => "Rosterpocalypse"}

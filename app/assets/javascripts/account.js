@@ -5,7 +5,6 @@ $(document).on('turbolinks:load', function() {
   $('#account_page .nav-pills > li').on("click", "a", function(event) {
     event.preventDefault();
 
-    console.log("Clicked: " + this);
     var active_nav_link = $('.nav-pills > li > a.active');
     var active_tab_id = active_nav_link.attr('href');
 

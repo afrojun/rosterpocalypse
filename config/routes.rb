@@ -13,7 +13,6 @@ Rails.application.routes.draw do
   resources :tournaments
   resources :matches
 
-  resources :managers, only: [:index, :show]
   resources :gameweeks, only: [:index, :show]
 
 
@@ -65,6 +64,13 @@ Rails.application.routes.draw do
     member do
       post "join"
       post "leave"
+    end
+  end
+
+  resources :managers, only: [:index, :show, :update] do
+    member do
+      put "update_payment_details"
+      put "remove_payment_source"
     end
   end
 
