@@ -4,22 +4,22 @@ require "ostruct"
 shared_examples_for "an Identity" do
   describe "<<" do
     it "creates a new Identity" do
-      response = Identity.find_for_oauth auth
+      response = Identity.find_or_create_for_oauth auth
       expect(response.class).to eq(Identity)
     end
 
     it "finds an existing Identity" do
-      response = Identity.find_for_oauth auth
+      response = Identity.find_or_create_for_oauth auth
     end
 
     it "sets nickname correctly" do
-      expect(Identity.find_for_oauth(auth).nickname).to eq expected_nickname
+      expect(Identity.find_or_create_for_oauth(auth).nickname).to eq expected_nickname
     end
   end
 end
 
 RSpec.describe Identity, type: :model do
-  context "#find_for_oauth" do
+  context "#find_or_create_for_oauth" do
     context "reddit" do
       let(:auth) {
         OpenStruct.new(

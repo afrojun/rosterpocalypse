@@ -42,7 +42,7 @@ class AccessPolicy
 
     # Role for subscribed users
     #
-    role :premium_member, proc { |user| user.present? && user.registered? && !user.unconfirmed? && user.paid? } do
+    role :premium_member, proc { |user| user.present? && user.registered? && !user.unconfirmed? && user.manager.paid? } do
       can [:read, :create], PublicLeague
       can [:update, :destroy], PublicLeague do |league, user|
         league.manager.user.id == user.id
