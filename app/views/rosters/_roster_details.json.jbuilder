@@ -1,19 +1,9 @@
 json.partial! "rosters/roster", roster: roster
 
 json.league do
-  json.partial! "leagues/league", league: roster.leagues.first
-end
-
-json.public_leagues roster.public_leagues do |league|
-  json.partial! "leagues/league", league: league
-  json.roster_rank league.roster_rank(roster)
-  json.roster_count league.rosters.size
-end
-
-json.private_leagues roster.private_leagues do |league|
-  json.partial! "leagues/league", league: league
-  json.roster_rank league.roster_rank(roster)
-  json.roster_count league.rosters.size
+  json.partial! "leagues/league", league: roster.league
+  json.roster_rank roster.league.roster_rank(roster)
+  json.roster_count roster.league.rosters.size
 end
 
 json.tournament do

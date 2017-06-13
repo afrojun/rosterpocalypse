@@ -5,3 +5,36 @@
 .stat-point-modifier-table {
   width: 500px;
 }
+
+#featuredLeaguesCarouselContainer {
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  .carousel-control-arrow {
+    position: relative;
+    font-size: x-large;
+    padding: 15px;
+    padding-top: 140px;
+    padding-bottom: 180px;
+  }
+
+  #featuredLeaguesCarouselSlides {
+    display: flex;
+    margin: 10px;
+    position: relative;
+  }
+
+  #carouselImage {
+    max-height: 100%;
+    max-width: 100%;
+  }
+
+  #featuredLeagueTitle {
+    font-size: 25px;
+    padding-bottom: 5px;
+  }
+
+  #featuredLeagueDescription {
+    padding-bottom: 5px;
+  }
+}

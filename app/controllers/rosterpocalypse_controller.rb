@@ -37,7 +37,7 @@ class RosterpocalypseController < ApplicationController
   end
 
   def set_page_title
-    @page_title = "#{model_class}: #{send(set_method_symbol).name}"
+    @page_title = "#{model_class.to_s.titleize}: #{send(set_method_symbol).name}"
   end
 
 end

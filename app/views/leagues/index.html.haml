@@ -1,6 +1,38 @@
 = page_title "Leagues"
-
 %h1 Leagues
+
+%h2 Featured Leagues
+
+- league1 = @public_leagues.first
+- league2 = @public_leagues.second
+
+#featuredLeaguesCarouselContainer
+
+  #featuredLeaguesCarouselSlides.carousel.slide{"data-ride" => "carousel"}
+    %a.carousel-control-arrow{"data-slide" => "prev", :href => "#featuredLeaguesCarouselSlides", :role => "button"}
+      %i.fa.fa-chevron-left{"aria-hidden" => "true"}
+      %span.sr-only Previous
+
+    .carousel-inner{:role => "listbox"}
+      .carousel-item.active
+        = render "featured_league", image: "heroes_powerhour_logo.jpg", alt: "Heroes Powerhour", league: @heroes_powerhour_featured_league
+      .carousel-item
+        - region = league1.tournament.region
+        = render "featured_league", image: "#{region.downcase}_flag.jpg", alt: "HGC #{region}", league: league1
+      .carousel-item
+        - region = league2.tournament.region
+        = render "featured_league", image: "#{region.downcase}_flag.jpg", alt: "HGC #{region}", league: league2
+
+    %a.carousel-control-arrow{"data-slide" => "next", :href => "#featuredLeaguesCarouselSlides", :role => "button"}
+      %i.fa.fa-chevron-right{"aria-hidden" => "true"}
+      %span.sr-only Next
+
+  /%ol.carousel-indicators
+  /  %li.active{"data-slide-to" => "0", "data-target" => "#featuredLeaguesCarouselSlides"}
+  /  %li{"data-slide-to" => "1", "data-target" => "#featuredLeaguesCarouselSlides"}
+  /  %li{"data-slide-to" => "2", "data-target" => "#featuredLeaguesCarouselSlides"}
+
+%h2 Public Leagues
 - if @public_leagues.any?
   = render "leagues_list", leagues: @public_leagues, show_manager: true
 - else
@@ -11,3 +43,7 @@
   = link_to 'New Public League', new_public_league_path, class: "btn btn-success"
 - if can? :create, PrivateLeague
   = link_to 'New Private League', new_private_league_path, class: "btn btn-primary"
+
+= render "league_rules_modal", league: @heroes_powerhour_featured_league
+= render "league_rules_modal", league: league1
+= render "league_rules_modal", league: league2

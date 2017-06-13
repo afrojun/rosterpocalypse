@@ -14,7 +14,8 @@
 
 %p= @league.description
 
-= render "league_rules"
+.premium-features-info
+  = render "league_rules", league: @league
 
 - if @rosters.any?
   .center

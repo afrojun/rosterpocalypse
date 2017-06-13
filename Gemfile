@@ -42,6 +42,8 @@ gem 'react_on_rails', '~>6'
 
 # Background ActiveJob task handler
 gem 'sidekiq'
+# Keep track of failures and allow us to view them in the dashboard
+gem 'sidekiq-failures'
 
 # Mailgun for sending emails
 gem 'mailgun-ruby', '~>1.1.6'

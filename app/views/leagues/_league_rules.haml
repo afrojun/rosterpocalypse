@@ -1,43 +1,42 @@
-.premium-features-info
-  %h4 League Rules
-  %ul
-    %li
-      Roster starting budget:
-      = @league.starting_budget
-    %li
-      Maximum players allowed per HGC team:
-      = @league.max_players_per_team
-    %li
-      Number of transfers available per week:
-      = @league.num_transfers
-    %li
-      = @league.use_representative_game ? "Points are calculated using the average game score per week" : "All games played per week count for points"
-    %li
-      - limits = @league.active_required_player_role_limitations
-      - if limits.any?
-        Rosters must include
-        = limits.map { |role, num| "#{num} #{role}" }.to_sentence
-      - else
-        No player role limitations enforced
+%h4 League Rules
+%ul
+  %li
+    Roster starting budget:
+    = league.starting_budget
+  %li
+    Maximum players allowed per HGC team:
+    = league.max_players_per_team
+  %li
+    Number of transfers available per week:
+    = league.num_transfers
+  %li
+    = league.use_representative_game ? "Points are calculated using the average game score per week" : "All games played per week count for points"
+  %li
+    - limits = league.active_required_player_role_limitations
+    - if limits.any?
+      Rosters must include
+      = limits.map { |role, num| "#{num} #{role}" }.to_sentence
+    - else
+      No player role limitations enforced
 
-  %h5 Point Modifiers
-  %p
-    = render "leagues/stat_point_modifiers_blurb"
-  %table.table.table-sm.stat-point-modifier-table
-    %head
+%h5 Point Modifiers
+%p
+  = render "leagues/stat_point_modifiers_blurb"
+%table.table.table-sm.stat-point-modifier-table
+  %head
+    %tr
+      %th
+      %th Role
+      %th Kills
+      %th Assists
+      %th Win
+      %th Time Spent Dead
+  %tbody
+    - league.role_stat_modifiers.each do |role, mods|
       %tr
-        %th
-        %th Role
-        %th Kills
-        %th Assists
-        %th Win
-        %th Time Spent Dead
-    %tbody
-      - @league.role_stat_modifiers.each do |role, mods|
-        %tr
-          %td= role_icon role
-          %td= role.capitalize
-          %td= mods[:solo_kills]
-          %td= mods[:assists]
-          %td= mods[:win]
-          %td= mods[:time_spent_dead]
+        %td= role_icon role
+        %td= role.capitalize
+        %td= mods[:solo_kills]
+        %td= mods[:assists]
+        %td= mods[:win]
+        %td= mods[:time_spent_dead]

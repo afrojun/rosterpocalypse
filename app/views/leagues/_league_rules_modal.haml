@@ -1,0 +1,9 @@
+.modal.fade{id: "rulesModal#{league.id}", tabindex: "-1", role: "dialog", "aria-labelledby" => "leagueRulesModal#{league.id}", "aria-hidden" => "true"}
+  .modal-dialog{role: "document"}
+    .modal-content
+      .modal-header
+        %h4.modal-title= league.name
+      .modal-body
+        = render "leagues/league_rules", league: league
+      .modal-footer
+        = button_tag "Close", class: "btn btn-secondary", "data-dismiss" => "modal"

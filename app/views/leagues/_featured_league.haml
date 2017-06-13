@@ -1,0 +1,13 @@
+.col-md-8
+  = link_to league do
+    = image_tag image, class: "d-block.img-fluid", alt: alt, id: "carouselImage"
+.col-md-4
+  #featuredLeagueTitle.row
+    = link_to league.name, league
+  #featuredLeagueDescription.row
+    = league.description
+    %br/
+    %br/
+    = button_tag "View League Rules", class: "btn btn-secondary", data: {toggle: "modal", target: "#rulesModal#{league.id}"}
+
+    = league_membership_change league, "btn-md"
