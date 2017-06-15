@@ -69,6 +69,9 @@ Rails.application.routes.draw do
 
   resources :managers, only: [:index, :show, :update] do
     member do
+      post "subscribe"
+      post "unsubscribe"
+      post "reactivate_subscription"
       put "update_payment_details"
       put "remove_payment_source"
     end
@@ -79,6 +82,8 @@ Rails.application.routes.draw do
   post 'replay_details', to: 'api/game_stats_ingestion#create'
 
   get '/.well-known/acme-challenge/:id' => 'welcome#letsencrypt'
+
+  mount StripeEvent::Engine, at: '/stripe_webhooks'
 
   require 'sidekiq/web'
   authenticate :user, lambda { |u| u.admin? } do

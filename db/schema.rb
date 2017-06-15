@@ -183,15 +183,17 @@ ActiveRecord::Schema.define(version: 20170607140416) do
 
   create_table "managers", force: :cascade do |t|
     t.integer  "user_id"
-    t.string   "slug",                                 null: false
-    t.datetime "created_at",                           null: false
-    t.datetime "updated_at",                           null: false
-    t.integer  "customer_type",        default: 0,     null: false
+    t.string   "slug",                                   null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.integer  "customer_type",          default: 0,     null: false
     t.string   "stripe_customer_id"
-    t.integer  "subscription_status",  default: 0,     null: false
-    t.boolean  "email_scores_updated", default: false, null: false
-    t.boolean  "email_new_feature",    default: false, null: false
-    t.boolean  "email_join_league",    default: false, null: false
+    t.string   "stripe_subscription_id"
+    t.string   "stripe_payment_plan_id"
+    t.integer  "subscription_status",    default: 0,     null: false
+    t.boolean  "email_scores_updated",   default: false, null: false
+    t.boolean  "email_new_feature",      default: false, null: false
+    t.boolean  "email_join_league",      default: false, null: false
     t.index ["slug"], name: "index_managers_on_slug", unique: true, using: :btree
     t.index ["stripe_customer_id"], name: "index_managers_on_stripe_customer_id", unique: true, using: :btree
     t.index ["user_id"], name: "index_managers_on_user_id", using: :btree

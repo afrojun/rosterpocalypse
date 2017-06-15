@@ -1,24 +1,84 @@
-- manager = resource.manager
+.compact-form
+  %h1.form-heading Subscriptions
+  = render 'layouts/error_messages', object: manager
+
+  - if manager.unsubscribed? || manager.canceled?
+    %h4.form-heading Subscribe
+    %p
+      Subscribe to our Premium service for
+      %b $4.99
+      per month!
+    - if manager.unsubscribed?
+      %p
+        There's a
+        %b 14 day free trial
+        during which you may cancel at any time and not be charged.
+      %p You do not need to give us a card to sign up, just be sure to add one before your trial period is up.
+
+    = form_for(manager, as: :manager, url: subscribe_manager_path(manager), html: { method: :post }) do |f|
+      - if manager.stripe_customer_id.present? && manager.stripe_customer_sources.any?
+        .center
+          = submit_tag "Subscribe using stored card", class: "btn btn-lg btn-primary btn-block"
+      - else
+        %script{"src"               => "https://checkout.stripe.com/checkout.js",
+                "class"             => "stripe-button",
+                "data-key"          => Rails.configuration.stripe[:publishable_key],
+                "data-label"        => "Add a card and Subscribe",
+                "data-panel-label"  => "Subscribe",
+                "data-amount"       => "$4.99",
+                "data-locale"       => "auto",
+                "data-email"        => resource.email,
+                "data-zip-code"     => "true",
+                "data-name"         => "Rosterpocalypse"}
+        = submit_tag "Add a card and Subscribe", class: "btn btn-lg btn-primary btn-block"
+    - if manager.unsubscribed? && (manager.stripe_customer_id.blank? || !manager.any_stripe_customer_sources? )
+      = button_to "Subscribe without a card", subscribe_manager_path(manager), class: "btn btn-lg btn-success btn-block", method: :post
+  - else
+    = render "subscription_details", plan: manager.stripe_subscription.plan
+
+    - case manager.subscription_status
+    - when "pending"
+      %h5.form-heading Confirming Subscription
+      %p We are confirming your subscription. You will recieve an email once the subscription has been confirmed.
+      = button_to "Unsubscribe", unsubscribe_manager_path(manager), class: "btn btn-lg btn-danger btn-block", method: :post
+    - when "trialing"
+      %h5.form-heading Trial Period Active
+      %b Time Remaining:
+      = distance_of_time_in_words Time.now, Time.at(manager.stripe_subscription["trial_end"])
+      = button_to "Unsubscribe", unsubscribe_manager_path(manager), class: "btn btn-lg btn-danger btn-block", method: :post
+    - when "active"
+      %h5.form-heading Subscription Active
+      %b Next billing cycle in:
+      = distance_of_time_in_words Time.now, Time.at(manager.stripe_subscription["current_period_end"])
+      = button_to "Unsubscribe", unsubscribe_manager_path(manager), class: "btn btn-lg btn-danger btn-block", method: :post
+    - when "past_due"
+      %h5.form-heading Payment Past Due
+      %p We were unable to charge your card for the last bill.
+      = button_to "Unsubscribe", unsubscribe_manager_path(manager), class: "btn btn-lg btn-danger btn-block", method: :post
+    - when "do_not_renew"
+      %h5.form-heading Subscription Cancelled
+      Your subscription will stop at the end of the current billing cycle in:
+      = distance_of_time_in_words Time.now, Time.at(manager.stripe_subscription["current_period_end"])
+      = button_to "Reactivate Subscription", reactivate_subscription_manager_path(manager), class: "btn btn-lg btn-success btn-block", method: :post
 
 .compact-form
   %h1.form-heading Payment Details
-  = render 'layouts/error_messages', object: manager
 
-  - if manager.stripe_customer_id.present?
+  - if manager.any_stripe_customer_sources?
     %h4.form-heading Stored Cards
     %ul
       - manager.stripe_customer.sources.each do |card|
         %li
           = form_for(manager, as: :manager, url: remove_payment_source_manager_path(manager), html: { method: :put }) do |f|
-            = "#{card["brand"]} Ends in: ...#{card["last4"]}"
+            %b= "#{card["brand"]}"
+            = "#{card["exp_month"]}/#{card["exp_year"]} ...#{card["last4"]}"
             = hidden_field_tag :card_id, card["id"]
             = submit_tag "Remove", class: "btn btn-link"
 
 
-= form_for(manager, as: :manager, url: update_payment_details_manager_path(manager), html: { method: :put, class: "compact-form" }) do |f|
-  %h4.form-heading Add/Update a card
+  = form_for(manager, as: :manager, url: update_payment_details_manager_path(manager), html: { method: :put }) do |f|
+    %h4.form-heading Add/Update a card
 
-  .center
     %script{"src"               => "https://checkout.stripe.com/checkout.js",
             "class"             => "stripe-button",
             "data-key"          => Rails.configuration.stripe[:publishable_key],
@@ -29,3 +89,11 @@
             "data-email"        => resource.email,
             "data-zip-code"     => "true",
             "data-name"         => "Rosterpocalypse"}
+
+    = submit_tag "Update Card Details", class: "btn btn-lg btn-primary btn-block"
+
+:javascript
+  var stripeButtons = document.getElementsByClassName("stripe-button-el")
+  for(var i=0; i<stripeButtons.length; i++ ) {
+    stripeButtons[i].style.display = 'none';
+  }

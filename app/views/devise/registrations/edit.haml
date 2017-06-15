@@ -9,11 +9,11 @@
       %li.nav-item
         = link_to "Email Settings", "#manage_emails", class: "nav-link"
       %li.nav-item
-        = link_to "Payment Details", "#manage_payments", class: "nav-link"
+        = link_to "Subscriptions", "#manage_payments", class: "nav-link"
 
   #manage_user
-    = render "manage_user", locals: {resource: resource}
+    = render "manage_user", resource: resource
   #manage_emails.hide
-    = render "manage_emails", locals: {resource: resource}
+    = render "manage_emails", resource: resource
   #manage_payments.hide
-    = render "manage_payments", locals: {resource: resource}
+    = render "manage_payments", resource: resource, manager: resource.manager

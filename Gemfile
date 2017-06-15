@@ -45,6 +45,8 @@ gem 'mailgun-ruby', '~>1.1.6'
 
 # Stripe for payment processing
 gem 'stripe'
+# Gem to help with Stripe webhooks
+gem 'stripe_event'
 
 # Twitter Bootstrap 4
 gem 'bootstrap', '~> 4.0.0.alpha5'

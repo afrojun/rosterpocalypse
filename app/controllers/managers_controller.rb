@@ -1,5 +1,7 @@
 class ManagersController < RosterpocalypseController
-  before_action :set_manager, only: [:show, :update, :update_payment_details, :remove_payment_source]
+  before_action :set_manager, only: [:show, :update, :subscribe, :unsubscribe,
+                                     :reactivate_subscription, :update_payment_details,
+                                     :remove_payment_source]
 
   # GET /managers
   # GET /managers.json
@@ -35,6 +37,8 @@ class ManagersController < RosterpocalypseController
         @manager.create_stripe_customer update_payment_params[:stripeToken]
       end
 
+      # TODO: Send email
+
       "Card details updated successfully"
     end
   end
@@ -47,6 +51,43 @@ class ManagersController < RosterpocalypseController
     end
   end
 
+  def subscribe
+    stripe_api_call do
+      # Create a new Stripe customer if one doesn't exist. stripeToken is optional
+      if @manager.stripe_customer_id.blank?
+        @manager.create_stripe_customer params[:stripeToken]
+      end
+
+      @manager.create_stripe_subscription
+
+      # TODO: Send email
+
+      "Subscription request being processed."
+    end
+  end
+
+  def unsubscribe
+    stripe_api_call do
+
+      @manager.delete_stripe_subscription
+
+      # TODO: Send email
+
+      "Successfully unsubscribed"
+    end
+  end
+
+  def reactivate_subscription
+    stripe_api_call do
+
+      @manager.reactivate_stripe_subscription
+
+      # TODO: Send email
+
+      "Subscription has been re-activated "
+    end
+  end
+
 
   private
 
@@ -56,7 +97,25 @@ class ManagersController < RosterpocalypseController
       message = yield
       redirect_back(fallback_location: edit_user_registration_path, notice: message)
     rescue Stripe::CardError => e
-      redirect_back(fallback_location: edit_user_registration_path, error: e.message)
+      # This is usually a card decline
+      body = e.json_body
+      err  = body[:error]
+
+      logger.warn "[Stripe] [#{e.http_status}, #{err[:type]}] #{err[:message]} - " +
+                   "Charge ID(#{err[:charge]}), Error Code( #{err[:code]}), " +
+                   "Decline Code(#{err[:decline_code]}), Error Param(#{err[:param]}), "
+      logger.warn "[Stripe] #{e.message}"
+
+      redirect_back(fallback_location: edit_user_registration_path,
+                    alert: "There was an error trying to use the card details provided.")
+    rescue Stripe::RateLimitError => e
+      logger.error "[Stripe] Too many requests made to the Stripe API too quickly: #{e.message}"
+      redirect_back(fallback_location: edit_user_registration_path,
+                    alert: "We were unable to complete the transaction, please try again.")
+    rescue Stripe::StripeError => e
+      logger.error "[Stripe] [#{e.http_status}, #{e.class}] - #{e.message}"
+      redirect_back(fallback_location: edit_user_registration_path,
+                    alert: "There was an internal error while processing the payment.")
     end
 
     # Use callbacks to share common setup or constraints between actions.
