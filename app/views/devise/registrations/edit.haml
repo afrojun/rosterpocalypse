@@ -10,6 +10,15 @@
       = identity_provider_logos resource
 
   %h4.form-heading Change username or email
+  - if devise_mapping.confirmable? && resource.unconfirmed?
+    %div Currently awaiting confirmation for: #{resource.confirmation_email}
+    - if valid_email?(resource.confirmation_email)
+      = link_to "Resend confirmation email?", new_confirmation_path(resource)
+      %br
+    - else
+      %div.text-danger Invalid email, please update it below
+    %br
+
   .field
     = f.label :username, class: "sr-only"
     = f.text_field :username, autofocus: true, required: true, class: "form-control", placeholder: "Username"
@@ -17,10 +26,8 @@
   .field
     = f.label :email, class: "sr-only"
     = f.email_field :email, class: "form-control", required: true, placeholder: "Email address"
-
-  - if devise_mapping.confirmable? && resource.unconfirmed?
-    %div Currently awaiting confirmation for: #{resource.unconfirmed_email.present? ? resource.unconfirmed_email : resource.email}
-    = link_to "Resend confirmation email?", new_confirmation_path(resource)
+    - unless valid_email?(resource.email)
+      %div.text-danger Invalid email address
 
   .field
     = f.label :current_password, class: "sr-only"

@@ -39,6 +39,10 @@ class User < ApplicationRecord
     unconfirmed_email.present? || confirmed_at.blank?
   end
 
+  def confirmation_email
+    pending_reconfirmation? ? unconfirmed_email : email
+  end
+
   def owner?
     username == "rosterpocalypse" && email == "rosterpocalypse@gmail.com"
   end

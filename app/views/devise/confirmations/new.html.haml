@@ -6,6 +6,6 @@
 
   .field
     = f.label :email, class: "sr-only"
-    = f.email_field :email, autofocus: true, value: (user_signed_in? ? (current_user.pending_reconfirmation? ? current_user.unconfirmed_email : current_user.email) : nil), required: true, class: "form-control", placeholder: "Email address"
+    = f.email_field :email, autofocus: true, value: (user_signed_in? ? valid_confirmation_email(current_user) : nil), required: true, class: "form-control", placeholder: "Email address"
   .actions
     = f.submit "Send confirmation instructions", class: "btn btn-primary btn-block"

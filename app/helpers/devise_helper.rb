@@ -1,5 +1,24 @@
 module DeviseHelper
 
+  # This returns the confirmation email if it is valid, or nil otherwise
+  def valid_confirmation_email user
+    if valid_email? user.confirmation_email
+      user.confirmation_email
+    else
+      nil
+    end
+  end
+
+  def valid_email? email
+    # These domains were used to create fake email addresses for users that
+    # created accounts using Reddit or Battle.net logins. We need to move away
+    # from this now so these domains are treated as invalid.
+    invalid_email_domains = ["reddit.com", "bnet.com"]
+
+    email_domain = email && email.split("@").last
+    !invalid_email_domains.include?(email_domain)
+  end
+
   def identity_provider_logo provider
     if provider == :bnet
       battlenet_logo
