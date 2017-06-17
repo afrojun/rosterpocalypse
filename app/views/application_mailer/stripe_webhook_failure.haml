@@ -1,0 +1,17 @@
+%h3 Stripe Webhook Failure
+
+%p
+  Event Type:
+  = @event.type
+
+%p
+  Event Payload:
+  = @event.inspect
+
+%p
+  Error:
+  = "[#{@error.class}]: "
+  = @error.message
+
+%p Backtrace:
+%pre= @error.backtrace.join("\n")

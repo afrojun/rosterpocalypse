@@ -51,6 +51,12 @@ class CustomerSubscriptionEvent < StripeEventHandler
     else
       logger.error "[Stripe Webhook] Unable to find a Manager with Stripe customer_id: #{customer_id}"
     end
+  rescue => e
+    logger.error "An unexpected error occurred: [#{e.class}] #{e.message}"
+    logger.error "Backtrace: #{e.backtrace.join("\n")}"
+
+    # Send an email to the Rosterpocalypse admin email address to investigate further
+    ApplicationMailer.stripe_webhook_failure(event, e).deliver_later
   end
 
 end
