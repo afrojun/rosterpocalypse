@@ -1,9 +1,10 @@
 
 $(document).on('turbolinks:load', function() {
   // Hide Stripe-styled payment buttons and use our buttons instead
-  $(".stripe-button-el").each(function(index) {
-    $(this)[index].style.display = 'none';
-  });
+  var stripeButtons = $(".stripe-button-el")
+  for(var i=0; i<stripeButtons.length; i++ ) {
+    stripeButtons[i].style.display = 'none';
+  }
 
   // Code to handle the sidebar actions on the User Account page to switch
   // between the various tabs
