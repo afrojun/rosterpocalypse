@@ -1,7 +1,12 @@
-// Code to handle the sidebar actions on the User Account page to switch
-// between the various tabs
 
 $(document).on('turbolinks:load', function() {
+  // Hide Stripe-styled payment buttons and use our buttons instead
+  $(".stripe-button-el").each(function(index) {
+    $(this)[index].style.display = 'none';
+  });
+
+  // Code to handle the sidebar actions on the User Account page to switch
+  // between the various tabs
   $('#account_page .nav-pills > li').on("click", "a", function(event) {
     event.preventDefault();
 
