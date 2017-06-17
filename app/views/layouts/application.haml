@@ -13,6 +13,9 @@
     - if Rails.env == "production"
       = render "layouts/crazyegg"
 
+    - if Rails.env == "production"
+      = render "layouts/mixpanel"
+
   %body
     - if Rails.env == "production"
       = render "layouts/google_analytics"
