@@ -37,17 +37,22 @@ class ManagersController < RosterpocalypseController
         @manager.create_stripe_customer update_payment_params[:stripeToken]
       end
 
-      # TODO: Send email
-
       "Card details updated successfully"
     end
   end
 
   def remove_payment_source
     stripe_api_call do
-      @manager.remove_stripe_customer_source(remove_payment_params[:card_id])
+      if @manager.allow_payment_source_removal?
+        @manager.remove_stripe_customer_source(remove_payment_params[:card_id])
 
-      "Card successfully removed"
+        "Card successfully removed"
+      else
+        message = "Unable to remove the only card on record for an active subscription. " +
+                  "Please add a new card first then remove this one."
+        redirect_back(fallback_location: edit_user_registration_path,
+                      alert: message) and return
+      end
     end
   end
 
@@ -57,10 +62,7 @@ class ManagersController < RosterpocalypseController
       if @manager.stripe_customer_id.blank?
         @manager.create_stripe_customer params[:stripeToken]
       end
-
       @manager.create_stripe_subscription
-
-      # TODO: Send email
 
       "Subscription request being processed."
     end
@@ -68,10 +70,9 @@ class ManagersController < RosterpocalypseController
 
   def unsubscribe
     stripe_api_call do
-
       @manager.delete_stripe_subscription
 
-      # TODO: Send email
+      UserMailer.subscription_cancelled(@manager.user).deliver_later
 
       "Successfully unsubscribed"
     end
@@ -79,12 +80,18 @@ class ManagersController < RosterpocalypseController
 
   def reactivate_subscription
     stripe_api_call do
+      if @manager.stripe_customer_sources.count > 0
+        @manager.reactivate_stripe_subscription
 
-      @manager.reactivate_stripe_subscription
+        UserMailer.subscription_reactivated(@manager.user).deliver_later
 
-      # TODO: Send email
-
-      "Subscription has been re-activated "
+        "Subscription has been re-activated "
+      else
+        message = "In order to re-activate the subscription we need a card on record. " +
+                  "Please add a new card then try re-activating again."
+        redirect_back(fallback_location: edit_user_registration_path,
+                      alert: message) and return
+      end
     end
   end
 

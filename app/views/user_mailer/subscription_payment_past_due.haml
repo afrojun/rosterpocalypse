@@ -1,0 +1,11 @@
+%p We wanted to let you know that a recent attempt to charge you for your Rosterpocalypse Premuim service has failed.
+
+- if @card.present?
+  %p
+    The card on record is:
+    = render "layouts/stripe_card_details", card: @card
+
+%p
+  Please log in to your
+  = link_to "Rosterpocalypse account", edit_user_registration_url
+  and ensure that the card details are present and accurate.

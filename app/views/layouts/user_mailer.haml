@@ -1,0 +1,22 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=utf-8", "http-equiv" => "Content-Type"}/
+    :css
+      /* Email styles need to be inline */
+  %body
+    %p
+      Hi #{@user.username}!
+
+    = yield
+
+    %p
+      If you have any questions feel free to reach out to us directly
+      = mail_to "rosterpocalypse@gmail.com", "via email"
+      or on
+      = link_to "Twitter.", "https://twitter.com/rosterpocalypse"
+
+    %p
+      Cheers!
+      %br
+      Rosterpocalypse

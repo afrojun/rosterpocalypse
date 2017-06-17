@@ -44,8 +44,12 @@ class Manager < ApplicationRecord
 
   def stripe_customer_default_source
     @stripe_customer_default_source ||= begin
-      card_id = stripe_customer["default_source"]
-      stripe_customer_sources.retrieve(card_id)
+      if any_stripe_customer_sources?
+        card_id = stripe_customer["default_source"]
+        stripe_customer_sources.retrieve card_id
+      else
+        nil
+      end
     end
   end
 
@@ -65,6 +69,11 @@ class Manager < ApplicationRecord
 
   def remove_stripe_customer_source card_id
     stripe_customer_sources.retrieve(card_id).delete()
+  end
+
+  def allow_payment_source_removal?
+    ["unsubscribed", "canceled", "do_not_renew"].include?(subscription_status) ||
+      stripe_customer_sources.count > 1
   end
 
   def stripe_subscription
@@ -94,7 +103,6 @@ class Manager < ApplicationRecord
       sub.plan = stripe_payment_plan_id
       sub.save
     end
-
-    update(subscription_status: stripe_subscription.status)
+    update(subscription_status: :pending)
   end
 end

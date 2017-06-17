@@ -1,4 +1,4 @@
-class StripeEventSubscriber
+class StripeEventHandler
 
   attr_reader :logger
 

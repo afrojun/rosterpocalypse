@@ -57,6 +57,6 @@
 .container.compact-form
   %h4.form-heading Delete account
 
-  %p Remove this account and all associated rosters and private leagues.
+  %p Remove this account and all associated rosters and leagues.
   %p <b>This action is irreversible!</b>
   = button_to "Delete Account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "btn btn-lg btn-danger btn-block"

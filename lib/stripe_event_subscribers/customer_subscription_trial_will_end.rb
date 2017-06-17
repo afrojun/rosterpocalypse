@@ -1,19 +1,18 @@
 # Check whether we have a stored payment source for this customer. Email the
 # customer notifying them if it is missing
 
-require "stripe_event_subscribers/stripe_event_subscriber"
+require "stripe_event_subscribers/customer_subscription_event"
 
-class CustomerSubscriptionTrialWillEnd < StripeEventSubscriber
+class CustomerSubscriptionTrialWillEnd < CustomerSubscriptionEvent
 
   def call event
-    customer_id = event.data.object.customer
-    manager = Manager.where(stripe_customer_id: customer_id).first
-
-    if manager.present?
-      logger.info "[Stripe Webhook] Setting customer type for Manager '#{manager.slug}' to 'paid'"
-      manager.update(customer_type: :paid)
-    else
-      logger.error "[Stripe Webhook] Unable to find a customer with Stripe customer_id: #{customer_id}"
+    super do |manager|
+      if manager.stripe_customer_sources.count == 0
+        logger.info "[Stripe Webhook] Sending email to ask the user to add a card."
+        UserMailer.subscription_trial_will_end(manager.user).deliver_later
+      else
+        logger.info "[Stripe Webhook] Not sending trial end email."
+      end
     end
   end
 

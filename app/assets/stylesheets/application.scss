@@ -8,6 +8,9 @@
 @import "account";
 @import "gameweeks";
 
+// Rosterpocalypse Title Font
+// --------------------------
+
 @font-face {
   font-family: "3rd Man Regular";
   src: asset-url('3rdMan.eot');
@@ -17,6 +20,9 @@
   font-weight: normal;
   font-style: normal;
 }
+
+// Navbar styles
+// -------------
 
 .logo-image {
   filter: invert(100%) brightness(200%);
@@ -29,10 +35,18 @@
   padding-right: 0.4em;
 }
 
+
+
+// Home page styles
+// ----------------
+
 .info-box-image {
   height: 180px;
   width: 100%;
 }
+
+// Login/Registration page styles
+// ------------------------------
 
 .devise-links {
   text-align: center;
@@ -42,6 +56,13 @@
   text-align: center;
   line-height: 3em;
 }
+
+.login-fine-print {
+  padding-top: 1.5em;
+}
+
+// Form styles
+// -----------
 
 .compact-form {
   max-width: 330px;
@@ -75,15 +96,11 @@
   border-top-left-radius: 0;
 }
 
+// General styles
+// --------------
+
 .right-align {
   text-align: right;
-}
-
-.roster-form {
-  max-width: 100%;
-  padding: 15px;
-  margin: 0 auto;
-  width: 80%;
 }
 
 .facebook-blue {
@@ -112,6 +129,12 @@
   display: none;
 }
 
-.login-fine-print {
-  padding-top: 1.5em;
+// Other styles
+// ------------
+
+.roster-form {
+  max-width: 100%;
+  padding: 15px;
+  margin: 0 auto;
+  width: 80%;
 }

@@ -2,21 +2,18 @@
 # field to :free when a subscription is deleted
 # Email the customer to let them know that the subscription has ended
 
-require "stripe_event_subscribers/stripe_event_subscriber"
+require "stripe_event_subscribers/customer_subscription_event"
 
-class CustomerSubscriptionDeleted < StripeEventSubscriber
+class CustomerSubscriptionDeleted < CustomerSubscriptionEvent
 
   def call event
-    customer_id = event.data.object.customer
-    manager = Manager.where(stripe_customer_id: customer_id).first
-
-    if manager.present?
+    super do |manager|
       logger.info "[Stripe Webhook] Cancelling subscription for Manager '#{manager.slug}'"
       manager.update(stripe_subscription_id: nil,
                      stripe_payment_plan_id: nil,
                      customer_type: :free)
-    else
-      logger.error "[Stripe Webhook] Unable to find a Manager with Stripe customer_id: #{customer_id}"
+
+      UserMailer.subscription_deleted(manager.user).deliver_later
     end
   end
 

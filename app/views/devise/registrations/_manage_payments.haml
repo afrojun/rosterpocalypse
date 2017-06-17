@@ -70,8 +70,7 @@
       - manager.stripe_customer.sources.each do |card|
         %li
           = form_for(manager, as: :manager, url: remove_payment_source_manager_path(manager), html: { method: :put }) do |f|
-            %b= "#{card["brand"]}"
-            = "#{card["exp_month"]}/#{card["exp_year"]} ...#{card["last4"]}"
+            = render "layouts/stripe_card_details", card: card
             = hidden_field_tag :card_id, card["id"]
             = submit_tag "Remove", class: "btn btn-link"
 
