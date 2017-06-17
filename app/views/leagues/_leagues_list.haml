@@ -19,7 +19,9 @@
           %td= l.truncated_description
           - if show_manager
             %td= link_to l.manager.name, l.manager
-          %td= league_membership_change league, "btn-sm"
+          %td
+            - if league.tournament.active?
+              = league_membership_change league, "btn-sm"
           - if can? :update, league
             %td= link_to 'Edit', edit_league_path(league)
             %td= link_to 'Destroy', league, method: :delete, data: { confirm: 'Are you sure?' }

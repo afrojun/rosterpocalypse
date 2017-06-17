@@ -7,20 +7,12 @@ RSpec.describe RostersController, type: :routing do
       expect(:get => "/rosters").to route_to("rosters#index")
     end
 
-    it "routes to #new" do
-      expect(:get => "/rosters/new").to route_to("rosters#new")
-    end
-
     it "routes to #show" do
       expect(:get => "/rosters/1").to route_to("rosters#show", :id => "1")
     end
 
     it "routes to #manage" do
       expect(:get => "/rosters/1/manage").to route_to("rosters#manage", :id => "1")
-    end
-
-    it "routes to #create" do
-      expect(:post => "/rosters").to route_to("rosters#create")
     end
 
     it "routes to #update via PUT" do

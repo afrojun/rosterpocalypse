@@ -6,7 +6,7 @@ class RostersController < RosterpocalypseController
   # GET /rosters
   # GET /rosters.json
   def index
-    @my_rosters = Roster.includes(:tournament).where("manager_id = ?", current_user.manager.id)
+    @my_rosters = Roster.includes(:tournament).where("manager_id = ? AND tournament_id in (?)", current_user.manager.id, Tournament.active_tournaments.map(&:id))
   end
 
   # GET /rosters/1
@@ -28,11 +28,6 @@ class RostersController < RosterpocalypseController
     }
   end
 
-  # GET /rosters/new
-  def new
-    @roster = Roster.new
-  end
-
   # GET /rosters/1/manage
   def manage
     authorize! :update, @roster
@@ -46,35 +41,6 @@ class RostersController < RosterpocalypseController
       maxRosterValue: Roster::MAX_TOTAL_VALUE,
       showPrivateLeagues: current_user.manager == @roster.manager
     }
-  end
-
-  # POST /rosters
-  # POST /rosters.json
-  def create
-    @roster = Roster.new(roster_params)
-
-    respond_to do |format|
-      if @roster.save
-        # Try to enroll the roster one of the associated tournament's public leagues, if any
-        # This is best-effort and we simply carry on if we don't find a League that matches our criteria
-        if @roster.tournament.active?
-          public_league = @roster.tournament.public_leagues.first
-          league_message = ""
-          if public_league.present?
-            logger.info "Adding the Roster '#{@roster.name}' to Public League '#{public_league.name}'"
-            if public_league.add @roster
-              league_message = " and added to the '#{public_league.name}' League"
-            end
-          end
-        end
-
-        format.html { redirect_to manage_roster_path(@roster), notice: "Your roster was successfully created#{league_message}!" }
-        format.json { render :show, status: :created, location: @roster }
-      else
-        format.html { render :new }
-        format.json { render json: @roster.errors, status: :unprocessable_entity }
-      end
-    end
   end
 
   # PATCH/PUT /rosters/1

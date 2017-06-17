@@ -23,19 +23,28 @@ class League < ApplicationRecord
   end
 
   def join manager
-    if roster = Roster.find_by_manager_and_tournament(manager, tournament)
-      Rails.logger.info "Adding Roster '#{roster.name}' to League '#{name}'."
-      add(roster) && roster
+    if tournament.active?
+      if validate_one_roster_per_league manager
+        roster_name = "#{manager.slug}_#{slug}"
+        roster = Roster.create(name: roster_name, tournament: tournament, manager: manager)
+        Rails.logger.info "Creating and adding Roster '#{roster.slug}' to League '#{slug}'."
+        add(roster) && roster
+      else
+        false
+      end
     else
-      errors.add(:base, "You do not have a Roster for this League's tournament '#{tournament.name}'. Please create one and try again.")
+      message = "Unable to join a league for an inactive tournament."
+      errors.add(:base, message)
+      Rails.logger.warn message
       false
     end
   end
 
   def leave manager
     if roster = rosters.where(manager: manager).first
-      Rails.logger.info "Removing Roster '#{roster.name}' from League '#{name}'."
-      remove(roster) && roster
+      Rails.logger.info "Removing Roster '#{roster.slug}' from League '#{slug}'."
+      remove roster
+      roster.destroy
     else
       errors.add(:base, "You do not have any Rosters in this League.")
       false
@@ -43,13 +52,17 @@ class League < ApplicationRecord
   end
 
   def add roster
-    if roster.tournament == tournament
-      rosters << roster
-      true
+    if validate_one_roster_per_league roster.manager
+      if roster.tournament == tournament
+        rosters << roster
+        true
+      else
+        message = "Unable to add Roster '#{roster.slug}' to League '#{slug}' since they are not for the same tournament."
+        errors.add(:base, message)
+        Rails.logger.warn message
+        false
+      end
     else
-      message = "Unable to add Roster '#{roster.name}' to League '#{name}' since they are not for the same tournament."
-      errors.add(:base, message)
-      Rails.logger.warn message
       false
     end
   end
@@ -58,4 +71,18 @@ class League < ApplicationRecord
     rosters.delete roster
     true
   end
+
+  private
+
+  def validate_one_roster_per_league manager
+    if manager.rosters.map(&:leagues).flatten.include?(self)
+      message = "Only one roster per manager is allowed in a League."
+      errors.add(:base, message)
+      Rails.logger.warn message
+      false
+    else
+      true
+    end
+  end
+
 end

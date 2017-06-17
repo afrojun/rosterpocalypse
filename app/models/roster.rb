@@ -4,6 +4,8 @@ class Roster < ApplicationRecord
 
   belongs_to :manager
   has_and_belongs_to_many :players, -> { order "slug" }
+  # For now we are limiting this to only allow one roster per league,
+  # even though we can support more
   has_and_belongs_to_many :leagues, -> { order "slug" }
   belongs_to :tournament
   has_many :gameweek_rosters, dependent: :destroy
@@ -12,9 +14,8 @@ class Roster < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
   validates_format_of :name, with: /^[a-zA-Z0-9\- _\.]*$/, multiline: true
-  validates_length_of :name, minimum: 4, maximum: 20
+  validates_length_of :name, minimum: 4, maximum: 65
 
-  before_create :validate_one_roster_per_tournament
   after_create :create_gameweek_rosters
 
   MAX_PLAYERS = 5
@@ -26,10 +27,6 @@ class Roster < ApplicationRecord
 
   def region
     @region ||= tournament.region
-  end
-
-  def gameweek_rosters_for_tournament tournament
-    gameweek_rosters.where(gameweek: tournament.gameweeks)
   end
 
   def private_leagues
@@ -155,13 +152,6 @@ class Roster < ApplicationRecord
         players.delete(player_out)
         players << player_in
       end
-    end
-  end
-
-  def validate_one_roster_per_tournament
-    if manager.rosters.map(&:tournament).include?(tournament)
-      errors.add(:roster, "managers may only have one roster per tournament")
-      throw :abort
     end
   end
 

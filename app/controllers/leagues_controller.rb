@@ -4,9 +4,11 @@ class LeaguesController < RosterpocalypseController
   # GET /leagues
   # GET /leagues.json
   def index
-    @public_leagues = PublicLeague.all.includes(:tournament)
+    @public_leagues = PublicLeague.includes(:tournament).where("tournament_id in (?)", Tournament.active_tournaments.map(&:id))
     # Get leagues owned by the manager or in which they have rosters
-    @private_leagues = PrivateLeague.all.includes(:tournament, manager: [:user]).where(id: current_user.manager.participating_in_private_leagues)
+    @private_leagues = PrivateLeague.all.includes(:tournament, manager: [:user]).
+                                         where(id: current_user.manager.participating_in_private_leagues).
+                                         where("tournament_id in (?)", Tournament.active_tournaments.map(&:id))
   end
 
   # GET /leagues/1
@@ -62,7 +64,7 @@ class LeaguesController < RosterpocalypseController
   def destroy
     @league.destroy
     respond_to do |format|
-      format.html { redirect_to leagues_url, notice: 'League was successfully destroyed.' }
+      format.html { redirect_to leagues_path, notice: 'League was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -72,7 +74,10 @@ class LeaguesController < RosterpocalypseController
   def join
     respond_to do |format|
       if roster = @league.join(current_user.manager)
-        format.html { redirect_to @league, notice: "Roster '#{roster.name}' was added to '#{@league.name}'." }
+        format.html {
+          redirect_to manage_roster_path(roster),
+                      notice: "Successfully joined League '#{@league.name}', now create a Roster for it!"
+        }
         format.json { render :show, status: :ok, location: @league }
       else
         message = @league.errors[:base].to_sentence
@@ -87,11 +92,11 @@ class LeaguesController < RosterpocalypseController
   def leave
     respond_to do |format|
       if roster = @league.leave(current_user.manager)
-        format.html { redirect_to leagues_url, notice: "Roster '#{roster.name}' was removed from '#{@league.name}'." }
+        format.html { redirect_to leagues_path, notice: "Roster '#{roster.name}' was removed from '#{@league.name}'." }
         format.json { render :show, status: :ok, location: @league }
       else
         message = @league.errors[:base].to_sentence
-        format.html { redirect_to leagues_url, alert: message }
+        format.html { redirect_to leagues_path, alert: message }
         format.json { render json: { message: message }, status: :unprocessable_entity }
       end
     end

@@ -5,8 +5,9 @@ RSpec.describe Roster, type: :model do
   let(:start_date) { Time.parse("2017-01-20") }
   let(:end_date) { Time.parse("2017-02-20") }
   let(:tournament) { FactoryGirl.create :tournament, region: region, start_date: start_date, end_date: end_date }
+  let(:manager) { FactoryGirl.create :manager }
   let(:league) { FactoryGirl.create :public_league, tournament: tournament }
-  let(:roster) { FactoryGirl.create :roster, tournament: tournament }
+  let(:roster) { FactoryGirl.create :roster, tournament: tournament, manager: manager }
 
   before :each do
     allow(Time).to receive(:now).and_return(Time.parse "2017-02-01")
@@ -29,14 +30,14 @@ RSpec.describe Roster, type: :model do
       end
     end
 
-    context "#validate_one_roster_per_tournament" do
-      let(:manager) { FactoryGirl.create :manager }
-
-      it "fails to create the roster when another exists for that tournament" do
-        success = FactoryGirl.create :roster, tournament: tournament, manager: manager
-        expect(success).to be_persisted
-        manager.rosters = [success]
-        expect { FactoryGirl.create :roster, tournament: tournament, manager: manager }.to raise_error ActiveRecord::RecordNotSaved
+    context "#validate_one_roster_per_league" do
+      it "fails to join a league when another exists for that league" do
+        roster.add_to league
+        expect(league.rosters).to include(roster)
+        manager.rosters = [roster]
+        another_roster = FactoryGirl.create :roster, tournament: tournament, manager: manager
+        another_roster.add_to league
+        expect(league.rosters).not_to include(another_roster)
       end
     end
 
@@ -99,13 +100,13 @@ RSpec.describe Roster, type: :model do
         it "updates the associated players" do
           players.push(warrior_player, support_player)
           expect(roster.update_including_players(players: player_ids)).to eq true
-          expect(roster.players.to_a.sort).to eq players.sort
+          expect(roster.players).to contain_exactly *players
         end
 
         it "overwrites existing associated players" do
           players.push(warrior_player, support_player)
           expect(roster.update_including_players(players: player_ids)).to eq true
-          expect(roster.players.to_a.sort).to eq players.sort
+          expect(roster.players).to contain_exactly *players
 
           players.shift
           players << cheap_player
@@ -125,7 +126,7 @@ RSpec.describe Roster, type: :model do
         it "allows free updates to empty rosters" do
           players.push(warrior_player, support_player)
           expect(roster.update_including_players(players: player_ids)).to eq true
-          expect(roster.players).to eq players
+          expect(roster.players).to contain_exactly *players
         end
 
         it "restricts updates once the roster has been created" do
@@ -137,7 +138,7 @@ RSpec.describe Roster, type: :model do
           players.push sub_player, cheap_player
           new_player_ids = players.map(&:id)
           expect(roster.update_including_players(players: new_player_ids)).to be false
-          expect(roster.players.to_a).to eq original_players
+          expect(roster.players).to contain_exactly *original_players
           expect(roster.errors.messages).to include(roster: ["has 1 transfer available in this window"])
         end
       end
@@ -231,7 +232,7 @@ RSpec.describe Roster, type: :model do
           new_player_ids = players.map(&:id)
 
           expect(roster.update_including_players(players: new_player_ids)).to be false
-          expect(roster.players.to_a).to eq original_players
+          expect(roster.players).to contain_exactly *original_players
           expect(roster.errors.messages).to include(roster: ["has 1 transfer available in this window"])
         end
       end
@@ -274,7 +275,7 @@ RSpec.describe Roster, type: :model do
           players.push cheap_player
 
           expect(roster.update_including_players(players: players.map(&:id))).to be false
-          expect(roster.players).to eq original_players
+          expect(roster.players).to contain_exactly *original_players
           expect(roster.errors.messages).to include(roster: ["is currently locked until the end of the Gameweek"])
         end
       end

@@ -16,7 +16,7 @@ Rails.application.routes.draw do
   resources :gameweeks, only: [:index, :show]
 
 
-  resources :rosters, except: [:edit] do
+  resources :rosters, except: [:new, :create, :edit] do
     member do
       get "manage"
       get "details"
