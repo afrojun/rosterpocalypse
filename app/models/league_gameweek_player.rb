@@ -1,22 +1,23 @@
-class GameweekPlayer < ApplicationRecord
-  belongs_to :gameweek
-  belongs_to :player
-  belongs_to :team
-  has_many :games, through: :gameweek
-  has_many :game_details, -> { order "games.start_date DESC" }, through: :games
-  has_and_belongs_to_many :gameweek_rosters
+class LeagueGameweekPlayer < ApplicationRecord
+  belongs_to :league
+  belongs_to :gameweek_player
+  has_one :gameweek, through: :gameweek_player
+  has_one :player, through: :gameweek_player
 
-  validates :gameweek, presence: true
-  validates :player, presence: true
+  validates :league, presence: true
+  validates :gameweek_player, presence: true
   validates :points, presence: true
-  validates :team, presence: true
-  validates :value, presence: true
 
   serialize :points_breakdown, Hash
 
   BONUS_AWARD_PERCENTILE = 80
   MIN_GAMES_FOR_BONUS_AWARD = 30
   REPRESENTATIVE_GAME_NAME = "representative_game"
+
+  #
+  # TODO: Reconcile the parts of the code below that belongs here and the part that
+  #       belongs in GameweekPlayer
+  #
 
   def self.update_from_game game, gameweek
     game.game_details.each do |detail|

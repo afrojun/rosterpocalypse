@@ -29,6 +29,10 @@ class Roster < ApplicationRecord
     @region ||= tournament.region
   end
 
+  def league
+    leagues.first
+  end
+
   def private_leagues
     @private_leagues ||= leagues.where(type: "PrivateLeague")
   end
@@ -55,6 +59,12 @@ class Roster < ApplicationRecord
 
   def previous_gameweek_roster safe = true
     gameweek_rosters.where(gameweek: previous_gameweek(safe)).first
+  end
+
+  def set_available_transfers number
+    gameweek_rosters.each do |gameweek_roster|
+      gameweek_roster.update available_transfers: number
+    end
   end
 
   def available_transfers

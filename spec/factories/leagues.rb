@@ -8,6 +8,8 @@ FactoryGirl.define do
     manager
     tournament
     type "PublicLeague"
+    role_stat_modifiers League::DEFAULT_ROLE_STAT_MODIFIERS
+    required_player_roles League::DEFAULT_REQUIRED_PLAYER_ROLES
   end
 
   factory :private_league do
@@ -16,5 +18,7 @@ FactoryGirl.define do
     manager
     tournament
     type "PrivateLeague"
+    role_stat_modifiers League::DEFAULT_ROLE_STAT_MODIFIERS
+    required_player_roles League::DEFAULT_REQUIRED_PLAYER_ROLES
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170607140416) do
+ActiveRecord::Schema.define(version: 20170618025959) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -158,15 +158,34 @@ ActiveRecord::Schema.define(version: 20170607140416) do
     t.index ["user_id"], name: "index_identities_on_user_id", using: :btree
   end
 
+  create_table "league_gameweek_players", force: :cascade do |t|
+    t.integer  "league_id",                      null: false
+    t.integer  "gameweek_player_id",             null: false
+    t.text     "points_breakdown"
+    t.integer  "points",             default: 0, null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.index ["gameweek_player_id", "league_id"], name: "idx_league_gameweek_players_on_gameweek_player_id_and_league_id", using: :btree
+    t.index ["gameweek_player_id"], name: "index_league_gameweek_players_on_gameweek_player_id", using: :btree
+    t.index ["league_id", "gameweek_player_id"], name: "idx_league_gameweek_players_on_league_id_and_gameweek_player_id", using: :btree
+    t.index ["league_id"], name: "index_league_gameweek_players_on_league_id", using: :btree
+  end
+
   create_table "leagues", force: :cascade do |t|
-    t.string   "name",          null: false
+    t.string   "name",                                    null: false
     t.text     "description"
-    t.integer  "manager_id",    null: false
-    t.integer  "tournament_id", null: false
-    t.string   "type",          null: false
-    t.string   "slug",          null: false
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.integer  "manager_id",                              null: false
+    t.integer  "tournament_id",                           null: false
+    t.string   "type",                                    null: false
+    t.string   "slug",                                    null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
+    t.float    "starting_budget",         default: 500.0, null: false
+    t.integer  "num_transfers",           default: 1,     null: false
+    t.integer  "max_players_per_team",    default: 5,     null: false
+    t.boolean  "use_representative_game", default: false, null: false
+    t.text     "role_stat_modifiers",                     null: false
+    t.text     "required_player_roles",                   null: false
     t.index ["manager_id"], name: "index_leagues_on_manager_id", using: :btree
     t.index ["name"], name: "index_leagues_on_name", unique: true, using: :btree
     t.index ["slug"], name: "index_leagues_on_slug", unique: true, using: :btree
@@ -364,6 +383,8 @@ ActiveRecord::Schema.define(version: 20170607140416) do
   add_foreign_key "gameweek_statistics", "gameweeks"
   add_foreign_key "gameweeks", "tournaments"
   add_foreign_key "identities", "users"
+  add_foreign_key "league_gameweek_players", "gameweek_players"
+  add_foreign_key "league_gameweek_players", "leagues"
   add_foreign_key "leagues", "managers"
   add_foreign_key "leagues", "tournaments"
   add_foreign_key "managers", "users"

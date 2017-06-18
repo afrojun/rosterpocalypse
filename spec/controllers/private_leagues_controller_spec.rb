@@ -32,13 +32,15 @@ RSpec.describe PrivateLeaguesController, type: :controller do
   let(:valid_attributes) {
     {
       name: "Big League",
-      tournament_id: tournament.id
+      tournament_id: tournament.id,
+      role_stat_modifiers: League::DEFAULT_ROLE_STAT_MODIFIERS,
+      required_player_roles: League::DEFAULT_REQUIRED_PLAYER_ROLES
     }
   }
 
   let(:invalid_attributes) {
     {
-      name: nil,
+      name: "a",
       tournament_id: tournament.id
     }
   }

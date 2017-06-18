@@ -14,7 +14,24 @@ class League < ApplicationRecord
 
   validate :limit_active_leagues_per_manager, on: :create
 
+  serialize :role_stat_modifiers,   Hash
+  serialize :required_player_roles, Hash
+
   MAX_ACTIVE_LEAGUES_PER_MANAGER = 10
+
+  DEFAULT_ROLE_STAT_MODIFIERS = {
+    assassin: { solo_kills: 3, assists: 1, time_spent_dead: 20.0, win: 5 },
+    flex:     { solo_kills: 3, assists: 1, time_spent_dead: 20.0, win: 5 },
+    warrior:  { solo_kills: 1, assists: 1, time_spent_dead: 30.0, win: 5 },
+    support:  { solo_kills: 1, assists: 1, time_spent_dead: 30.0, win: 5 },
+  }
+
+  DEFAULT_REQUIRED_PLAYER_ROLES = {
+    assassin: 0,
+    flex:     0,
+    warrior:  1,
+    support:  1,
+  }
 
   def roster_rank roster
     rosters.select(:id, :score).order(score: :desc).to_a.index(roster).try(:+, 1)
@@ -31,6 +48,7 @@ class League < ApplicationRecord
       if validate_one_roster_per_league manager
         roster_name = "#{manager.slug}_#{slug}"
         roster = Roster.create(name: roster_name, tournament: tournament, manager: manager)
+        roster.set_available_transfers num_transfers
         Rails.logger.info "Creating and adding Roster '#{roster.slug}' to League '#{slug}'."
         add(roster) && roster
       else
