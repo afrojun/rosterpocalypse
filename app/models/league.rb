@@ -12,6 +12,10 @@ class League < ApplicationRecord
   validates_length_of :name, minimum: 4, maximum: 30
   validates :type, presence: true
 
+  validate :limit_active_leagues_per_manager, on: :create
+
+  MAX_ACTIVE_LEAGUES_PER_MANAGER = 10
+
   def roster_rank roster
     rosters.select(:id, :score).order(score: :desc).to_a.index(roster).try(:+, 1)
   end
@@ -74,8 +78,19 @@ class League < ApplicationRecord
 
   private
 
+  def limit_active_leagues_per_manager
+    active_leagues = manager.leagues.includes(:tournament).where("tournament_id in (?)", Tournament.active_tournaments.map(&:id))
+
+    if !manager.user.admin? && active_leagues.size >= MAX_ACTIVE_LEAGUES_PER_MANAGER
+      message = "Creating more than #{MAX_ACTIVE_LEAGUES_PER_MANAGER} active leagues per manager is not permitted."
+      Rails.logger.warn message
+      errors.add(:base, message)
+      false
+    end
+  end
+
   def validate_one_roster_per_league manager
-    if manager.rosters.map(&:leagues).flatten.include?(self)
+    if manager.roster_leagues.include?(self)
       message = "Only one roster per manager is allowed in a League."
       errors.add(:base, message)
       Rails.logger.warn message

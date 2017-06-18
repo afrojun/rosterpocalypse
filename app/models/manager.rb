@@ -11,6 +11,7 @@ class Manager < ApplicationRecord
   belongs_to :user
   has_many :rosters, dependent: :destroy
   has_many :leagues, dependent: :destroy
+  has_many :roster_leagues, through: :rosters, source: :leagues
 
   def name
     user.try :username

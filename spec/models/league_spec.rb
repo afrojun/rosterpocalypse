@@ -9,6 +9,29 @@ RSpec.describe League, type: :model do
   let(:league) { FactoryGirl.create :public_league, tournament: tournament }
   let(:private_league) { FactoryGirl.create :private_league, tournament: tournament, manager: manager }
 
+
+  context "validations" do
+    it "doesn't allow creation of more than 10 active leagues per manager" do
+      10.times do
+        FactoryGirl.create :private_league, manager: manager, tournament: tournament
+      end
+      expect {
+        FactoryGirl.create :private_league, manager: manager, tournament: tournament
+      }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+
+    it "allows site admins to create more than 10 active leagues" do
+      allow(manager.user).to receive(:admin?).and_return true
+
+      10.times do
+        FactoryGirl.create :private_league, manager: manager, tournament: tournament
+      end
+      expect {
+        FactoryGirl.create :private_league, manager: manager, tournament: tournament
+      }.not_to raise_error
+    end
+  end
+
   context "#join" do
     it "adds the manager's roster to the league" do
       expect { league.join(manager) }.to change(league.rosters, :count).by(1)

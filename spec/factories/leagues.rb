@@ -1,6 +1,9 @@
 FactoryGirl.define do
+  sequence(:private_league_name) { |n| "PrivateLeague#{n}" }
+  sequence(:public_league_name) { |n| "PublicLeague#{n}" }
+
   factory :public_league do
-    name "My Public League"
+    name { generate :private_league_name }
     description "League description"
     manager
     tournament
@@ -8,7 +11,7 @@ FactoryGirl.define do
   end
 
   factory :private_league do
-    name "My Private League"
+    name { generate :public_league_name }
     description "League description"
     manager
     tournament
