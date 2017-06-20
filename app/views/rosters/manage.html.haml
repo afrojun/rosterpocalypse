@@ -1,3 +1,15 @@
 = page_title "Manage Roster: #{@roster.name}"
 
 = react_component("RosterPickerContainer", props: @roster_props, prerender: false)
+
+
+#rulesModal.modal.fade{tabindex: "-1", role: "dialog", "aria-labelledby" => "leagueRulesModal", "aria-hidden" => "true"}
+  .modal-dialog{role: "document"}
+    .modal-content
+      .modal-header
+        = button_tag class: "close", "data-dismiss" => "modal", "aria-label" => "Close" do
+          %span{"aria-hidden" => "true"} &times;
+      .modal-body
+        = render "leagues/league_rules"
+      .modal-footer
+        = button_tag "Close", class: "btn btn-secondary", "data-dismiss" => "modal"

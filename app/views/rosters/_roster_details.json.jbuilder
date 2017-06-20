@@ -1,5 +1,9 @@
 json.partial! "rosters/roster", roster: roster
 
+json.league do
+  json.partial! "leagues/league", league: roster.leagues.first
+end
+
 json.public_leagues roster.public_leagues do |league|
   json.partial! "leagues/league", league: league
   json.roster_rank league.roster_rank(roster)

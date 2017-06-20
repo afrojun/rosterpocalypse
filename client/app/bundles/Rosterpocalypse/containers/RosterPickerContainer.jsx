@@ -25,6 +25,7 @@ class RosterPickerContainer extends React.Component {
         current_gameweek: {},
         previous_gameweek: {},
         tournament: {},
+        league: {},
         players: [],
         public_leagues: [],
         private_leagues: [],
@@ -184,7 +185,7 @@ class RosterPickerContainer extends React.Component {
         text = "Unlimited roster changes allowed until " + nextKeyDate.format(dateFormat);
         colour = "green";
       } else {
-        text = "Select " + this.props.maxPlayersInRoster + " players for your roster, including at least one Support and one Warrior player";
+        text = "Select " + this.props.maxPlayersInRoster + " players for your roster";
         colour = "blue";
       }
     } else {
@@ -272,12 +273,16 @@ class RosterPickerContainer extends React.Component {
       <div>
         <div className="form roster-form col-xs-10">
           <h2 className="form-heading">
-            {this.state.roster.name}
+            Manage Your Roster
           </h2>
           <p>
             Total value: <b>{this.formattedTotalValue()} ({Math.round((this.props.maxRosterValue - this.state.totalValue)*100)/100} remaining)</b>
             <br/>
             <b>{this.state.roster.current_gameweek.roster_lock_date && this.rosterLockStatus()}</b>
+            <br/>
+            <button type="button" className="btn btn-link" data-toggle="modal" data-target="#rulesModal">
+              View League Rules
+            </button>
           </p>
           <PlayersTable
             tableOpts={rosterTableOpts}
@@ -308,6 +313,7 @@ class RosterPickerContainer extends React.Component {
           <span className="roster-pick-notification">{this.state.notification}</span>
 
         </div>
+
         <div className="roster-sidebar col-xs-2">
           <RosterSidebar
             roster={this.state.roster}

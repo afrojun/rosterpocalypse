@@ -6,10 +6,12 @@ const RosterSidebar = (props) => {
 
       <div className="sidebar-div">
         <h4 className="sidebar-heading">
-          {props.roster.name}
+          Roster for {props.roster.league.name}
         </h4>
         <div>
-          <p className="sidebar-subheading">
+          <p>
+            <span className="sidebar-subheading">Tournament:</span>
+            {" "}
             {props.roster.tournament.name}
           </p>
           <a href={props.rosterPath}>Status</a>

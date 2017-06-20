@@ -24,11 +24,16 @@ RSpec.describe RostersController, type: :controller do
 
   let(:manager) { FactoryGirl.create :manager, user: subject.current_user }
   let(:roster) { FactoryGirl.create :roster, valid_attributes.merge(manager: manager) }
+  let(:league) { FactoryGirl.create :private_league, tournament: tournament }
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # RostersController. Be sure to keep this updated too.
   let(:valid_session) { {} }
+
+  before :each do
+    roster.add_to league
+  end
 
   describe "GET #index" do
     it "assigns user's rosters as @my_rosters" do

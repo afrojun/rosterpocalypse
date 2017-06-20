@@ -33,6 +33,10 @@ class Roster < ApplicationRecord
     leagues.first
   end
 
+  def budget
+    league.starting_budget
+  end
+
   def private_leagues
     @private_leagues ||= leagues.where(type: "PrivateLeague")
   end

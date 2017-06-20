@@ -31,6 +31,7 @@ class RostersController < RosterpocalypseController
   # GET /rosters/1/manage
   def manage
     authorize! :update, @roster
+    @league = @roster.league
 
     @roster_props = {
       rosterPath: roster_url(@roster),
@@ -38,7 +39,7 @@ class RostersController < RosterpocalypseController
       playersPath: players_url,
       rosterRegion: @roster.region,
       maxPlayersInRoster: Roster::MAX_PLAYERS,
-      maxRosterValue: Roster::MAX_TOTAL_VALUE,
+      maxRosterValue: @roster.budget,
       showPrivateLeagues: current_user.manager == @roster.manager
     }
   end

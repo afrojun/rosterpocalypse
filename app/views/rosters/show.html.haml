@@ -2,7 +2,7 @@
 
 %ol.breadcrumb
   %li.breadcrumb-item= link_to 'Rosters', rosters_path
-  %li.breadcrumb-item.active= @roster.name
+  %li.breadcrumb-item.active= "Roster for #{@roster.league.name}"
 
 .col-xs-10.roster-status-page
   = render "gameweeks/gameweek_navigation", gameweek: @gameweek, next_path: roster_path(@roster, gameweek: @gameweek.next_active), previous_path: roster_path(@roster, gameweek: @gameweek.previous_active)
