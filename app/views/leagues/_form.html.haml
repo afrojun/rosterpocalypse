@@ -11,6 +11,9 @@
   %h1.form-heading= heading
   = render 'layouts/error_messages', object: league
 
+  %p.alert.alert-warning
+    %i.fa.fa-warning.text-warning
+    <b>Note:</b> All settings other than the name and description will not be able to be changed after you first create the league.
   .field
     = f.label :name, class: "sr-only"
     = f.text_field :name, autofocus: true, required: true, class: "form-control", placeholder: "League Name"
@@ -64,15 +67,10 @@
               = render "required_roles_modifier", r: r, role: "support"
 
       %br
-      %h4 Stat Point Modifiers
-      .premium-features-info
-        %p
-          %i.fa.fa-info-circle.text-primary
-          Change the number of points awarded to players for their achievements in game.
-        %p
-          Points awarded per <b>Kill</b>, <b>Assist</b> and <b>Win</b> are calculated by simply multipling the game score by this value.
-        %p
-          <b>Time Spent Dead</b> is different in that the seconds that a player spends dead is divided by this value.
+      %h4 Point Modifiers
+      %p.premium-features-info
+        %i.fa.fa-info-circle.text-primary
+        = render "stat_point_modifiers_blurb"
       .field
         - role_stat_mods = f.object.role_stat_modifiers.blank? ? League::DEFAULT_ROLE_STAT_MODIFIERS : f.object.role_stat_modifiers
         = f.fields_for :role_stat_modifiers, OpenStruct.new(role_stat_mods) do |s|

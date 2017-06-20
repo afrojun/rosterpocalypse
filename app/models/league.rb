@@ -24,15 +24,13 @@ class League < ApplicationRecord
   serialize :role_stat_modifiers,   Hash
   serialize :required_player_roles, Hash
 
-  before_create :populate_default_options
-
   MAX_ACTIVE_LEAGUES_PER_MANAGER = 10
 
   DEFAULT_ROLE_STAT_MODIFIERS = {
-    assassin: { solo_kills: 3, assists: 1, time_spent_dead: 20.0, win: 5 },
-    flex:     { solo_kills: 3, assists: 1, time_spent_dead: 20.0, win: 5 },
-    warrior:  { solo_kills: 1, assists: 1, time_spent_dead: 30.0, win: 5 },
-    support:  { solo_kills: 1, assists: 1, time_spent_dead: 30.0, win: 5 },
+    assassin: { solo_kills: 3, assists: 1, time_spent_dead: 20, win: 5 },
+    flex:     { solo_kills: 3, assists: 1, time_spent_dead: 20, win: 5 },
+    warrior:  { solo_kills: 1, assists: 1, time_spent_dead: 30, win: 5 },
+    support:  { solo_kills: 1, assists: 1, time_spent_dead: 30, win: 5 },
   }
 
   DEFAULT_REQUIRED_PLAYER_ROLES = {
@@ -49,6 +47,20 @@ class League < ApplicationRecord
 
     if required_player_roles.blank?
       update required_player_roles: DEFAULT_REQUIRED_PLAYER_ROLES
+    end
+  end
+
+  def numeric_required_player_roles
+    @numeric_required_player_roles ||= Hash.new.tap do |req|
+      required_player_roles.each do |role, num|
+        req[role] = num.to_i
+      end
+    end
+  end
+
+  def active_required_player_role_limitations
+    numeric_required_player_roles.select do |role, num|
+      num > 0
     end
   end
 

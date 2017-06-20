@@ -8,10 +8,10 @@ class AddLeagueCustomisationOptionsToLeague < ActiveRecord::Migration[5.0]
     add_column :leagues, :required_player_roles,    :text
 
     role_stat_modifiers = {
-      assassin: { solo_kills: 3, assists: 1, time_spent_dead: 20.0, win: 5 },
-      flex:     { solo_kills: 3, assists: 1, time_spent_dead: 20.0, win: 5 },
-      warrior:  { solo_kills: 1, assists: 1, time_spent_dead: 30.0, win: 5 },
-      support:  { solo_kills: 1, assists: 1, time_spent_dead: 30.0, win: 5 },
+      assassin: { solo_kills: 3, assists: 1, time_spent_dead: 20, win: 5 },
+      flex:     { solo_kills: 3, assists: 1, time_spent_dead: 20, win: 5 },
+      warrior:  { solo_kills: 1, assists: 1, time_spent_dead: 30, win: 5 },
+      support:  { solo_kills: 1, assists: 1, time_spent_dead: 30, win: 5 },
     }
     required_player_roles = {
       assassin: 0,
