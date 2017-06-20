@@ -10,12 +10,20 @@ class League < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates_format_of :name, with: /^[a-zA-Z0-9\/\- _\.]*$/, multiline: true
   validates_length_of :name, minimum: 4, maximum: 30
+  validates :tournament, presence: true
   validates :type, presence: true
+  validates :starting_budget, presence: true
+  validates :num_transfers, presence: true
+  validates :max_players_per_team, presence: true
+  validates :role_stat_modifiers, presence: true
+  validates :required_player_roles, presence: true
 
   validate :limit_active_leagues_per_manager, on: :create
 
   serialize :role_stat_modifiers,   Hash
   serialize :required_player_roles, Hash
+
+  before_create :populate_default_options
 
   MAX_ACTIVE_LEAGUES_PER_MANAGER = 10
 
@@ -32,6 +40,16 @@ class League < ApplicationRecord
     warrior:  1,
     support:  1,
   }
+
+  def populate_default_options
+    if role_stat_modifiers.blank?
+      update role_stat_modifiers: DEFAULT_ROLE_STAT_MODIFIERS
+    end
+
+    if required_player_roles.blank?
+      update required_player_roles: DEFAULT_REQUIRED_PLAYER_ROLES
+    end
+  end
 
   def roster_rank roster
     rosters.select(:id, :score).order(score: :desc).to_a.index(roster).try(:+, 1)

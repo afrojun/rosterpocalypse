@@ -1,0 +1,4 @@
+%tr
+  %td= role_icon role
+  %td= role.titleize
+  %td= r.select role.to_sym, [0,1,2,3,4,5], required: true, class: "form-control"
