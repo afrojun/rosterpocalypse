@@ -280,7 +280,7 @@ class RosterPickerContainer extends React.Component {
             <br/>
             <b>{this.state.roster.current_gameweek.roster_lock_date && this.rosterLockStatus()}</b>
             <br/>
-            <button type="button" className="btn btn-link" data-toggle="modal" data-target="#rulesModal">
+            <button type="button" className="btn btn-secondary" data-toggle="modal" data-target="#rulesModal">
               View League Rules
             </button>
           </p>

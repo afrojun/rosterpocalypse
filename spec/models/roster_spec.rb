@@ -237,6 +237,16 @@ RSpec.describe Roster, type: :model do
           end
         end
 
+        context "#validate_players_in_same_team" do
+          it "limits the number of players from the same team on a roster" do
+            league.update max_players_per_team: 3
+            players.push support_player, warrior_player
+            expect(roster.update_including_players(players: player_ids)).to be false
+            expect(roster.players).to eq []
+            expect(roster.errors.messages).to include(roster: ["may not include more than 3 players from the same team"])
+          end
+        end
+
         context "#allow_free_transfers?" do
           context "no players in roster" do
             it "returns true" do

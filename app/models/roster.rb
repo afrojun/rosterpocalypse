@@ -153,6 +153,7 @@ class Roster < ApplicationRecord
         if(validate_teams_active(new_players) &&
            validate_transfers(new_players) &&
            validate_player_roles(new_players) &&
+           validate_players_in_same_team(new_players) &&
            validate_player_value(new_players))
           if allow_free_transfers?
             Rails.logger.info "Roster #{name}: Freely transferring in players: " +
@@ -225,6 +226,21 @@ class Roster < ApplicationRecord
       valid
     else
       # If no league is present, anything goes
+      true
+    end
+  end
+
+  def validate_players_in_same_team players
+    if league.present?
+      players_by_team = players.group_by(&:team)
+      if players_by_team.any? { |team, players| players.size > league.max_players_per_team }
+        errors.add(:roster, "may not include more than #{league.max_players_per_team} " +
+                            "players from the same team")
+        false
+      else
+        true
+      end
+    else
       true
     end
   end
