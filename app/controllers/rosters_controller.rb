@@ -6,7 +6,16 @@ class RostersController < RosterpocalypseController
   # GET /rosters
   # GET /rosters.json
   def index
-    @my_rosters = Roster.includes(:tournament).where("manager_id = ? AND tournament_id in (?)", current_user.manager.id, Tournament.active_tournaments.map(&:id))
+    @my_rosters = Roster.includes(:tournament).
+                         where("manager_id = ? AND tournament_id in (?)",
+                                current_user.manager.id,
+                                Tournament.active_tournaments.map(&:id))
+
+    # Get leagues owned by the manager or in which they have rosters
+    @my_leagues = League.includes(:tournament, manager: [:user]).
+                         where(id: current_user.manager.participating_in_leagues).
+                         where("tournament_id in (?)", Tournament.active_tournaments.map(&:id))
+
   end
 
   # GET /rosters/1
@@ -53,7 +62,10 @@ class RostersController < RosterpocalypseController
         format.json { render :details, status: :ok, location: @roster }
       else
         format.html { render :manage }
-        format.json { render json: @roster.errors.map{ |key, message| "#{key.capitalize} #{message}" }.to_sentence, status: :unprocessable_entity }
+        format.json { render json: @roster.errors.map { |key, message|
+                                     "#{key.capitalize} #{message}"
+                                   }.to_sentence,
+                             status: :unprocessable_entity }
       end
     end
   end
@@ -87,7 +99,9 @@ class RostersController < RosterpocalypseController
   end
 
   def set_gameweek
-    @gameweek = Gameweek.where(id: params[:gameweek]).first || (@roster.current_gameweek_roster.points.present? ? @roster.current_gameweek : @roster.previous_gameweek)
+    @gameweek = Gameweek.where(
+                  id: params[:gameweek]).first ||
+                  (@roster.current_gameweek_roster.points.present? ? @roster.current_gameweek : @roster.previous_gameweek)
   end
 
   def set_page_title

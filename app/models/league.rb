@@ -40,6 +40,11 @@ class League < ApplicationRecord
     support:  1,
   }
 
+  # Override name setter to strip whitespace
+  def name=(nom)
+    super(nom.squish)
+  end
+
   def populate_default_options
     if role_stat_modifiers.blank?
       update role_stat_modifiers: DEFAULT_ROLE_STAT_MODIFIERS

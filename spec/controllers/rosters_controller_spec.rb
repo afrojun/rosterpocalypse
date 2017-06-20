@@ -41,6 +41,12 @@ RSpec.describe RostersController, type: :controller do
       get :index, params: {}, session: valid_session
       expect(assigns(:my_rosters)).to eq([roster])
     end
+
+    it "assigns user's leagues as @my_leagues" do
+      league
+      get :index, params: {}, session: valid_session
+      expect(assigns(:my_leagues)).to eq([league])
+    end
   end
 
   describe "GET #show" do

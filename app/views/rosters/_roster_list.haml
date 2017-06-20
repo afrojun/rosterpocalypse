@@ -1,13 +1,15 @@
 - show_tournament ||= false
-- show_manager ||= false
-- show_transfers ||= false
+- show_manager    ||= false
+- show_league     ||= false
+- show_transfers  ||= false
 
 %table.table.table-sm.table-striped
   %thead
     %tr
-      %th Name
       - if show_manager
-        %th Manager
+        %th Roster for Manager
+      - if show_league
+        %th Roster for League
       - if show_tournament
         %th Tournament
       - if show_transfers
@@ -17,9 +19,11 @@
   %tbody
     - rosters.each do |roster|
       %tr
-        %td= link_to roster.name, roster
         - if show_manager
-          %td= roster.manager.name.include?("_bnet") ? roster.manager.name.split(".").first : roster.manager.name
+          - roster_manager_name = roster.manager.name.include?("_bnet") ? roster.manager.name.split(".").first : roster.manager.name
+          %td= link_to roster_manager_name, roster
+        - if show_league
+          %td= link_to roster.league.name, roster
         - if show_tournament
           %td= roster.tournament.name
         - if show_transfers

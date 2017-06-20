@@ -1,7 +1,13 @@
 = page_title "Rosters"
 
-%h1 Your Rosters
+%h1 My Rosters
 - if @my_rosters.any?
-  = render 'roster_list', rosters: @my_rosters, show_tournament: true, show_transfers: true
+  = render 'roster_list', rosters: @my_rosters, show_league: true, show_tournament: true, show_transfers: true
 - else
   %p No Rosters found
+
+%h1 My Leagues
+- if @my_leagues.any?
+  = render "leagues/leagues_list", leagues: @my_leagues
+- else
+  %p No Leagues found

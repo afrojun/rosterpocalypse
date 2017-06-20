@@ -1,6 +1,6 @@
 .jumbotron
   .container
-    %h1.display-3 Prepare for the Rosterpocalypse!
+    %h1.display-3 Rosterpocalypse 2.0
     %p.lead
 
 
@@ -8,24 +8,23 @@
   .row
     .col-md-4
       .card
-        = image_tag "DraftTeam.png", class: "info-box-image"
-        .card-block
-          %h4.card-title Draft Your Roster
-          %p.card-text Get started by creating a roster of the best players in one of the 4 HGC regions. Choose wisely as you have a limited pool of points to work with and only one transfer available every week.
-          %a.btn.btn-primary{href: new_roster_path, role: "button"} Create a Roster &raquo;
-
-
-    .col-md-4
-      .card
         = image_tag "HGC_Leagues.png", class: "info-box-image"
         .card-block
           %h4.card-title Join a League
-          %p.card-text Join the public league for each tournament and also create your own private leagues to compete with a smaller group of friends. Private leagues are hidden, but not restricted. To invite a friend to join your private league simply send them the link to it.
+          %p.card-text Join a league to begin drafting your roster of 5 players. Manage your team over the course of the season by transfering players in and out every week. Choose wisely as you have a limited pool of points to spend on acquiring players and player values will change over the course of the season.
+          %a.btn.btn-primary{href: leagues_path, role: "button"} Find a League &raquo;
+
+    .col-md-4
+      .card
+        = image_tag "DraftTeam.png", class: "info-box-image"
+        .card-block
+          %h4.card-title Premium Season Pass
+          %p.card-text Creating private leagues with standard rules is free. If you would like to create private or public leagues with different rule-sets the Premium Season Pass is for you. Create an all Support league, or one where wins give negative points, or allow players to change their entire team every week! Your league, your rules.
+          %a.btn.btn-success{href: leagues_path, role: "button"} Sign Up with a free trial &raquo;
 
     .col-md-4
       .card
         = image_tag "gold.gif", class: "info-box-image"
         .card-block
           %h4.card-title Win Prizes!
-          %p.card-text To add a little extra incentive, at the end of the season, the top scoring rosters of each public league will win exciting prizes in the form of heroes, bundles or battle.net gift cards.
-          %p.card-text The Rosterpocalypse will be streamed!
+          %p.card-text To add a little extra incentive, at the end of the season, the top scoring rosters of the main Rosterpocalypse-run public leagues will win exciting prizes in the form of heroes, bundles or Battle.net gift cards.

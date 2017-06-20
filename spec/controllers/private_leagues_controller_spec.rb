@@ -32,14 +32,6 @@ RSpec.describe PrivateLeaguesController, type: :controller do
   # LeaguesController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
-  describe "GET #index" do
-    it "assigns all private leagues as @private_leagues" do
-      league
-      get :index, params: {}, session: valid_session
-      expect(assigns(:private_leagues)).to eq([league])
-    end
-  end
-
   describe "GET #show" do
     it "assigns the requested league as @league" do
       get :show, params: {id: league.to_param}, session: valid_session

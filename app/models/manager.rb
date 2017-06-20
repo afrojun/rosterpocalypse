@@ -25,8 +25,8 @@ class Manager < ApplicationRecord
     leagues.where(type: "PrivateLeague")
   end
 
-  def participating_in_private_leagues
-    (rosters.map(&:private_leagues).flatten + private_leagues.to_a).uniq
+  def participating_in_leagues
+    (rosters.map(&:leagues).flatten + leagues.to_a).uniq
   end
 
   def stripe_customer

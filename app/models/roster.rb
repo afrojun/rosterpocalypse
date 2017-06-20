@@ -21,8 +21,9 @@ class Roster < ApplicationRecord
   MAX_PLAYERS = 5
   MAX_TOTAL_VALUE = 500
 
-  def self.find_by_manager_and_tournament manager, tournament
-    Roster.where(manager: manager, tournament: tournament).first
+  def self.find_by_manager_and_league manager, league
+    tournament_rosters = Roster.where(manager: manager, tournament: league.tournament)
+    tournament_rosters.detect { |r| r.league == league }
   end
 
   def region

@@ -1,11 +1,10 @@
 = page_title "Leagues"
 
-%h1 Public Leagues
-= render "leagues_list", leagues: @public_leagues
-
-- if @private_leagues.any?
-  %h1 Private Leagues
-  = render "leagues_list", leagues: @private_leagues, show_manager: true
+%h1 Leagues
+- if @public_leagues.any?
+  = render "leagues_list", leagues: @public_leagues, show_manager: true
+- else
+  %p No Leagues found
 
 %br/
 - if can? :create, PublicLeague

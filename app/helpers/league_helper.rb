@@ -1,7 +1,7 @@
 module LeagueHelper
 
   def league_membership_change league, button_size_class
-    roster = Roster.find_by_manager_and_tournament(current_user.manager, league.tournament)
+    roster = Roster.find_by_manager_and_league current_user.manager, league
     if league.rosters.include? roster
       link_to_leave_league league, button_size_class
     else
@@ -20,7 +20,10 @@ module LeagueHelper
   def link_to_manage_league_membership league, action, button_size_class
     join_path = "#{action}_#{league.class.to_s.underscore}_path"
     button_colour_class = action.to_sym == :join ? "btn-info" : "btn-danger"
-    link_to "#{action.to_s.titleize}", send(join_path.to_sym, league), method: :post, class: "btn #{button_colour_class} #{button_size_class}"
+    link_to "#{action.to_s.titleize}",
+            send(join_path.to_sym, league),
+            method: :post,
+            class: "btn #{button_colour_class} #{button_size_class}"
   end
 
 end
