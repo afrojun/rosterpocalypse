@@ -8,9 +8,9 @@
 
 %div{id: "update_#{role}_stat_modifiers"}
   = s.fields_for role.to_sym, role_stats_ostruct do |m|
-    = render "role_stat_modifier_slider", m: m, role: role, stat: "solo_kills", role_stats_ostruct: role_stats_ostruct, min: -10, max: 10
-    = render "role_stat_modifier_slider", m: m, role: role, stat: "assists", role_stats_ostruct: role_stats_ostruct, min: -10, max: 10
-    = render "role_stat_modifier_slider", m: m, role: role, stat: "win", role_stats_ostruct: role_stats_ostruct, min: -10, max: 10
-    = render "role_stat_modifier_slider", m: m, role: role, stat: "time_spent_dead", role_stats_ostruct: role_stats_ostruct, min: 0, max: 50
+    = render "role_stat_modifier_slider", m: m, role: role, stat: "solo_kills", label: "Kills", role_stats_ostruct: role_stats_ostruct, min: -10, max: 10
+    = render "role_stat_modifier_slider", m: m, role: role, stat: "assists", label: "Assists", role_stats_ostruct: role_stats_ostruct, min: -10, max: 10
+    = render "role_stat_modifier_slider", m: m, role: role, stat: "win", label: "Win", role_stats_ostruct: role_stats_ostruct, min: -10, max: 10
+    = render "role_stat_modifier_slider", m: m, role: role, stat: "time_spent_dead", label: "Time Spent Dead", role_stats_ostruct: role_stats_ostruct, min: 0, max: 60
 
 %br

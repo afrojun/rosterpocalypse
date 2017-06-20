@@ -19,6 +19,7 @@ class League < ApplicationRecord
   validates :required_player_roles, presence: true
 
   validate :limit_active_leagues_per_manager, on: :create
+  validate :check_required_player_roles, on: :create
 
   serialize :role_stat_modifiers,   Hash
   serialize :required_player_roles, Hash
@@ -113,6 +114,15 @@ class League < ApplicationRecord
   end
 
   private
+
+  def check_required_player_roles
+    if required_player_roles.values.map(&:to_i).sum > 5
+      message = "role requirement specification is invalid. The maximum total value across all roles is 5."
+      errors.add(:league, message)
+      Rails.logger.warn message
+      false
+    end
+  end
 
   def limit_active_leagues_per_manager
     active_leagues = manager.leagues.includes(:tournament).where("tournament_id in (?)", Tournament.active_tournaments.map(&:id))

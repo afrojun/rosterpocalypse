@@ -29,11 +29,14 @@
     - if current_user.manager.paid?
       %br
       %h4 Basic Customization
+      %p.premium-features-info
+        %i.fa.fa-info-circle.text-primary
+        These settings offer some basic customisation options for the league. The <b>average match score</b> option governs whether every game played counts for points, or to use the average game points across all games played in a week.
       .field
       %table.table.table-sm
         %tbody
           %tr
-            %td= f.label :max_players_per_team
+            %td= f.label :max_players_per_team, "Players per HGC team"
             %td= f.select :max_players_per_team, [0,1,2,3,4,5], required: true
           %tr
             %td= f.label :num_transfers, "Transfers per week"
@@ -42,11 +45,14 @@
             %td= f.label :starting_budget
             %td= f.number_field :starting_budget, in: 300..700, required: true, class: "form-control-small"
           %tr
-            %td= f.label :use_representative_game, "Use average match score"
+            %td= f.label :use_representative_game, "Use average game score"
             %td= f.check_box :use_representative_game
 
       %br
       %h4 Role Requirements
+      %p.premium-features-info
+        %i.fa.fa-info-circle.text-primary
+        Specify the minimum number of players for each role that needs to be in every roster. Since a roster only has 5 players, the sum of all the role limitations <b>should not exceed 5</b>.
       .field
         - req_roles = f.object.required_player_roles.blank? ? League::DEFAULT_REQUIRED_PLAYER_ROLES : f.object.required_player_roles
         = f.fields_for :required_player_roles, OpenStruct.new(req_roles) do |r|
@@ -59,6 +65,14 @@
 
       %br
       %h4 Stat Point Modifiers
+      .premium-features-info
+        %p
+          %i.fa.fa-info-circle.text-primary
+          Change the number of points awarded to players for their achievements in game.
+        %p
+          Points awarded per <b>Kill</b>, <b>Assist</b> and <b>Win</b> are calculated by simply multipling the game score by this value.
+        %p
+          <b>Time Spent Dead</b> is different in that the seconds that a player spends dead is divided by this value.
       .field
         - role_stat_mods = f.object.role_stat_modifiers.blank? ? League::DEFAULT_ROLE_STAT_MODIFIERS : f.object.role_stat_modifiers
         = f.fields_for :role_stat_modifiers, OpenStruct.new(role_stat_mods) do |s|
