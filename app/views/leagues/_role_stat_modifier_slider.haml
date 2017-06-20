@@ -1,0 +1,5 @@
+.field
+  %b= "#{stat.titleize}: "
+  %span{id: "#{role}_#{stat}_modifier"}= role_stats_ostruct.send(stat.to_sym)
+.field{class: "update_#{role}_stat_modifiers hide"}
+  = m.range_field stat.to_sym, in: min..max, class: "form-control role_stat_range_slider", data: {role: role, stat: stat}

@@ -13,7 +13,10 @@ module PlayerHelper
   end
 
   def player_role_icon player, size = 24
-    image_tag "#{player.role.downcase}_icon.png", alt: player.role, size: size
+    role_icon player.role, size
   end
 
+  def role_icon role, size = 24
+    image_tag "#{role.downcase}_icon.png", alt: role, size: size
+  end
 end

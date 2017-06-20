@@ -1,5 +1,25 @@
 = page_title heading
 
+- if true #current_user.manager.free?
+  .col-md-3
+  .col-md-6
+    .premium-features-info
+      %h3 Rosterpocalypse Premium
+      %p
+        Buy a
+        %b premium season pass
+        to support the site and enable awesome league customization features, including:
+      %ul
+        %li customise per-role point allocations for kills, deaths and assists
+        %li specify the minimum required player roles in the roster (e.g. 1 warrior and 1 support)
+        %li limit the number of players per team allowed in a roster
+        %li decide on how many transfers to allow per week
+        %li set the initial budget for rosters in the league
+        %li create and manage Public leagues, accessible by all users
+      = link_to "Find out more", "#", class: "btn btn-info"
+      = link_to "Start a free 14-day trial", "#", class: "btn btn-success"
+  .col-md-3
+
 = form_for(league, html: {class: "compact-form"}) do |f|
   %h1.form-heading= heading
   = render 'layouts/error_messages', object: league
@@ -10,8 +30,48 @@
   .field
     = f.label :description, class: "sr-only"
     = f.text_area :description, class: "form-control", placeholder: "League Description (optional)"
-  .field
-    = f.label :tournament, class: "sr-only"
-    = f.select(:tournament_id, Tournament.active_tournaments.map { |t| [t.name, t.id] }, {include_blank: true}, class: "form-control", required: true)
+
+  %br
+  %h4 Tournament
+  - Tournament.active_tournaments.each do |t|
+    .field
+      = f.radio_button :tournament_id, t.id
+      = f.label "tournament_id_#{t.id}".to_sym, t.name
+
+  - if true #current_user.manager.paid?
+    %br
+    %h4 Role Requirements
+    .field
+      - req_roles = f.object.required_player_roles.blank? ? League::DEFAULT_REQUIRED_PLAYER_ROLES : f.object.required_player_roles
+      = f.fields_for :required_player_roles, OpenStruct.new(req_roles) do |r|
+        %table.table.table-sm
+          %tbody
+            %tr
+              %td= role_icon "assassin"
+              %td Assassin
+              %td= r.select :assassin, [0,1,2,3,4,5], required: true, class: "form-control"
+            %tr
+              %td= role_icon "flex"
+              %td Flex
+              %td= r.select :flex,     [0,1,2,3,4,5], required: true, class: "form-control"
+            %tr
+              %td= role_icon "warrior"
+              %td Warrior
+              %td= r.select :warrior,  [0,1,2,3,4,5], required: true, class: "form-control"
+            %tr
+              %td= role_icon "support"
+              %td Support
+              %td= r.select :support,  [0,1,2,3,4,5], required: true, class: "form-control"
+
+    %br
+    %h4 Stat Point Modifiers
+    .field
+      - role_stat_mods = f.object.role_stat_modifiers.blank? ? League::DEFAULT_ROLE_STAT_MODIFIERS : f.object.role_stat_modifiers
+      = f.fields_for :role_stat_modifiers, OpenStruct.new(role_stat_mods) do |s|
+        = render "role_stat_modifiers", s: s, role: "assassin"
+        = render "role_stat_modifiers", s: s, role: "flex"
+        = render "role_stat_modifiers", s: s, role: "warrior"
+        = render "role_stat_modifiers", s: s, role: "support"
+
   .actions
     = f.submit submit_message, class: "btn btn-lg btn-primary btn-block"

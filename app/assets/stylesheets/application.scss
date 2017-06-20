@@ -88,6 +88,10 @@
 .compact-form .form-control:focus {
   z-index: 2;
 }
+.compact-form table tbody tr td {
+  border: none;
+}
+
 .compact-form input {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
@@ -95,6 +99,11 @@
   border-top-right-radius: 0;
   border-top-left-radius: 0;
 }
+
+.compact-form input[type="range"] {
+  border: none;
+}
+
 
 // General styles
 // --------------
@@ -137,4 +146,10 @@
   padding: 15px;
   margin: 0 auto;
   width: 80%;
+}
+
+.premium-features-info {
+  background-color: aliceblue;
+  padding: 10px;
+  margin-bottom: 10px;
 }

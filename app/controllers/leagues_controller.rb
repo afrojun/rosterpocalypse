@@ -112,7 +112,15 @@ class LeaguesController < RosterpocalypseController
     # Never trust parameters from the scary internet, only allow the white list through.
     def league_params
       league_symbol = league_class.to_s.underscore.to_sym
-      params.require(league_symbol).permit(:name, :tournament_id, :description).tap do |lp|
+      params.require(league_symbol).permit(:name, :tournament_id, :description,
+                                           required_player_roles: [:assassin, :flex, :warrior, :support],
+                                           role_stat_modifiers: [
+                                                                  {assassin: [:solo_kills, :assists, :time_spent_dead, :win]},
+                                                                  {flex:     [:solo_kills, :assists, :time_spent_dead, :win]},
+                                                                  {warrior:  [:solo_kills, :assists, :time_spent_dead, :win]},
+                                                                  {support:  [:solo_kills, :assists, :time_spent_dead, :win]}
+                                                                ]
+                                          ).tap do |lp|
         lp[:manager_id] = current_user.manager.id
       end
     end
