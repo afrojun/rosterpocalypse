@@ -34,7 +34,11 @@ class Roster < ApplicationRecord
   end
 
   def budget
-    league.starting_budget
+    if league.present?
+      league.starting_budget
+    else
+      MAX_TOTAL_VALUE
+    end
   end
 
   def private_leagues
@@ -72,17 +76,27 @@ class Roster < ApplicationRecord
   end
 
   def available_transfers
-    current_gameweek_roster.remaining_transfers > 0 ? current_gameweek_roster.remaining_transfers : 0
+    if current_gameweek_roster.remaining_transfers > 0
+      current_gameweek_roster.remaining_transfers
+    else
+      0
+    end
   end
 
   def allow_free_transfers?
-    players.size < MAX_PLAYERS || !current_gameweek.is_tournament_week? || (Time.now.utc < tournament.first_roster_lock_date)
+    players.size < MAX_PLAYERS ||
+      !current_gameweek.is_tournament_week? ||
+      (Time.now.utc < tournament.first_roster_lock_date)
   end
 
   def next_key_date
     @next_key_date ||= begin
       if current_gameweek.is_tournament_week?
-        Time.now.utc < current_gameweek.roster_lock_date ? current_gameweek.roster_lock_date : current_gameweek.end_date
+        if Time.now.utc < current_gameweek.roster_lock_date
+          current_gameweek.roster_lock_date
+        else
+          current_gameweek.end_date
+        end
       else
         current_gameweek.end_date
       end
@@ -131,13 +145,18 @@ class Roster < ApplicationRecord
   private
 
   def update_players player_ids
-    return true if players.map(&:id).sort == player_ids.sort # Short circuit when the players aren't changing
+    # Short circuit when the players aren't changing
+    return true if players.map(&:id).sort == player_ids.sort
 
     if allow_updates?
       if new_players = validate_roster_size(player_ids)
-        if validate_teams_active(new_players) && validate_transfers(new_players) && validate_player_roles(new_players) && validate_player_value(new_players)
+        if(validate_teams_active(new_players) &&
+           validate_transfers(new_players) &&
+           validate_player_roles(new_players) &&
+           validate_player_value(new_players))
           if allow_free_transfers?
-            Rails.logger.info "Roster #{name}: Freely transferring in players: #{new_players.map(&:name)}"
+            Rails.logger.info "Roster #{name}: Freely transferring in players: " +
+                              "#{new_players.map(&:name)}"
             players.clear
             players << new_players
             touch
@@ -160,9 +179,12 @@ class Roster < ApplicationRecord
     in_out_pairs = players_to_add.zip players_to_remove
 
     in_out_pairs.each do |player_in, player_out|
-      Rails.logger.info "Roster #{name}: Transferring #{player_in.name} IN and #{player_out.name} OUT"
+      Rails.logger.info "Roster #{name}: Transferring #{player_in.name} IN " +
+                        "and #{player_out.name} OUT"
       transaction do
-        Transfer.create gameweek_roster: current_gameweek_roster, player_in: player_in, player_out: player_out
+        Transfer.create(gameweek_roster: current_gameweek_roster,
+                        player_in: player_in,
+                        player_out: player_out)
         players.delete(player_out)
         players << player_in
       end
@@ -187,16 +209,23 @@ class Roster < ApplicationRecord
     end
   end
 
-  # Require at least 1 Supprt and 1 Warrior player on all teams
+  # The associated league specifies the role limitations
   def validate_player_roles players
-    support_present = players.any? { |player| player.role == "Support" }
-    warrior_present = players.any? { |player| player.role == "Warrior" }
-    if support_present && warrior_present
-      true
+    if league.present?
+      valid = true
+      league.active_required_player_role_limitations.each do |role, min|
+
+        role_players = players.select { |player| player.role.downcase == role.to_s }
+        unless role_players.size >= min
+          errors.add :roster, "needs #{min} #{role} #{"player".pluralize min}"
+          valid = false
+        end
+      end
+
+      valid
     else
-      errors.add(:roster, "needs to include at least one dedicated Support player") unless support_present
-      errors.add(:roster, "needs to include at least one dedicated Warrior player") unless warrior_present
-      false
+      # If no league is present, anything goes
+      true
     end
   end
 
@@ -212,10 +241,10 @@ class Roster < ApplicationRecord
 
   def validate_player_value players
     total_value = players.sum(&:value).round(2)
-    if total_value <= MAX_TOTAL_VALUE
+    if total_value <= budget
       true
     else
-      errors.add(:roster, "may have a maximum total player value of #{MAX_TOTAL_VALUE}")
+      errors.add(:roster, "may have a maximum total player value of #{budget}")
       false
     end
   end
@@ -230,10 +259,12 @@ class Roster < ApplicationRecord
       if diff.size <= max_transfers
         return true
       else
-        errors.add(:roster, "has #{max_transfers} #{"transfer".pluralize(max_transfers)} available in this window")
+        errors.add(:roster, "has #{max_transfers} " +
+                   "#{"transfer".pluralize(max_transfers)} available in this window")
       end
     else
-      errors.add(:roster, "transfers must maintain the roster size, please ensure you are adding as many players as you remove")
+      errors.add(:roster, "transfers must maintain the roster size, " +
+                 "please ensure you are adding as many players as you remove")
     end
     false
   end
