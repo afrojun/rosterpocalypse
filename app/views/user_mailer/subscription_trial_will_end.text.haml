@@ -1,0 +1,5 @@
+Your Rosterpocalypse Season Pass trial period will end in #{distance_of_time_in_words Time.now, Time.at(@user.manager.stripe_subscription["trial_end"])}.
+
+Please log in to your Rosterpocalypse account and ensure that you have a valid payment card on record: #{edit_user_registration_url + "#manage_payments"}
+
+If you do not have one when we attempt to charge you, your subscription will be suspended and any Premium leagues you manage will not have their points updated when new results are available.

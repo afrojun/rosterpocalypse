@@ -1,6 +1,16 @@
 class UserMailer < ApplicationMailer
   layout 'user_mailer'
 
+  # Announcement email for Phase 2. We need the deliver_by param to stagger
+  # deliveries over a few hours since we have a limit of 100 emails per hour.
+  # deliver_by needs to be a RFC2822 formatted timestamp
+  def phase_2_announcement user, deliver_by = nil
+    @user = user
+    headers["X-Mailgun-Deliver-By"] = deliver_by if deliver_by
+    mail(to: %("#{@user.username}" <#{@user.email}>),
+         subject: "Rosterpocalypse: HGC Phase 2 has begun!")
+  end
+
   # New subscription confirmation email
   def subscription_created user
     send_email user, 'Premium subscription confirmation'

@@ -1,6 +1,10 @@
 # Preview all emails at http://localhost:5000/rails/mailers/user_mailer
 class UserMailerPreview < ActionMailer::Preview
 
+  def phase_2_announcement
+    UserMailer.phase_2_announcement User.first
+  end
+
   def subscription_created
     UserMailer.subscription_created User.first
   end
