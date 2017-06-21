@@ -26,6 +26,9 @@ gem 'rails-footnotes', '~> 4.0'
 # Kaminari for pagination
 gem 'kaminari'
 
+# Mixpanel to track user engagement
+gem 'mixpanel-ruby'
+
 # Use Haml for cleaner view templates
 gem 'haml'
 gem 'html2haml'

@@ -214,6 +214,7 @@ GEM
     mini_racer (0.1.7)
       libv8 (~> 5.3)
     minitest (5.9.1)
+    mixpanel-ruby (2.2.0)
     momentjs-rails (2.15.1)
       railties (>= 3.1)
     multi_json (1.12.1)
@@ -455,6 +456,7 @@ DEPENDENCIES
   listen (~> 3.0.5)
   mailgun-ruby (~> 1.1.6)
   mini_racer
+  mixpanel-ruby
   momentjs-rails (>= 2.9.0)
   oj
   oj_mimic_json

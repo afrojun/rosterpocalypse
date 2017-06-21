@@ -77,7 +77,7 @@ Rails.application.routes.draw do
     end
   end
 
-  devise_for :users, class_name: 'FormUser', controllers: { omniauth_callbacks: 'omniauth_callbacks', registrations: 'registrations' }
+  devise_for :users, class_name: 'FormUser', controllers: { omniauth_callbacks: 'omniauth_callbacks', registrations: 'registrations', sessions: 'sessions' }
 
   post 'replay_details', to: 'api/game_stats_ingestion#create'
 
