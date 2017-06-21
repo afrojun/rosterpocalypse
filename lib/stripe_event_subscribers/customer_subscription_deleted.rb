@@ -13,7 +13,7 @@ class CustomerSubscriptionDeleted < CustomerSubscriptionEvent
                      stripe_payment_plan_id: nil,
                      customer_type: :free)
 
-      UserMailer.subscription_deleted(manager.user).deliver_later
+      #UserMailer.subscription_deleted(manager.user).deliver_later
     end
   end
 

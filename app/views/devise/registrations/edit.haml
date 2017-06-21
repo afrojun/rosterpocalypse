@@ -5,11 +5,11 @@
   .col-md-3.bg-faded.sidebar
     %ul.nav.nav-pills.flex-column
       %li.nav-item
-        = link_to "Manage User", "#manage_user", class: "nav-link active"
+        = link_to "Manage User", "#manage_user", class: "nav-link active", id: "manage_user_nav"
       %li.nav-item
-        = link_to "Email Settings", "#manage_emails", class: "nav-link"
+        = link_to "Email Settings", "#manage_emails", class: "nav-link", id: "manage_emails_nav"
       %li.nav-item
-        = link_to "Subscriptions", "#manage_payments", class: "nav-link"
+        = link_to "Season Pass", "#manage_payments", class: "nav-link", id: "manage_payments_nav"
 
   #manage_user
     = render "manage_user", resource: resource

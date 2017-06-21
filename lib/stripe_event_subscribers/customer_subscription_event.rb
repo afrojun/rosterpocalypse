@@ -34,11 +34,14 @@ class CustomerSubscriptionEvent < StripeEventHandler
 
           # Handle state transition to/from :past_due and :do_not_renew
           if new_status == :past_due
+            manager.free!
             UserMailer.subscription_payment_past_due(manager.user).deliver_later
           elsif new_status == :do_not_renew
             UserMailer.subscription_cancelled(manager.user).deliver_later
           elsif [:trialing, :active].include?(new_status) && old_status == :do_not_renew
             UserMailer.subscription_reactivated(manager.user).deliver_later
+          elsif [:past_due, :unpaid].include?(old_status) && new_status == :active
+            manager.paid!
           end
         end
 

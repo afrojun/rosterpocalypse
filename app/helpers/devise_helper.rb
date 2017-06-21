@@ -9,6 +9,14 @@ module DeviseHelper
     end
   end
 
+  def user_manage_payments_url
+    edit_user_registration_url + "#manage_payments"
+  end
+
+  def user_manage_payments_page
+    edit_user_registration_path + "#manage_payments"
+  end
+
   def valid_email? email
     # These domains were used to create fake email addresses for users that
     # created accounts using Reddit or Battle.net logins. We need to move away

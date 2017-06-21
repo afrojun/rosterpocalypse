@@ -1,40 +1,39 @@
 .compact-form
-  %h1.form-heading Subscriptions
+  %h1.form-heading Season Pass
   = render 'layouts/error_messages', object: manager
 
   - if manager.unsubscribed? || manager.canceled?
-    %h4.form-heading Subscribe
+    %h4.form-heading Season Pass
     %p
-      Subscribe to our Premium service for
-      %b $4.99
-      per month!
+      Purchase the Season Pass for <b>$14.99</b>. This will allow the use of all the
+      = link_to "Premium features", "#", data: {toggle: "modal", target: "#premiumInfoModal"}
+      until the end of the current season in September.
     - if manager.unsubscribed?
-      %p
-        There's a
-        %b 14 day free trial
-        during which you may cancel at any time and not be charged.
-      %p You do not need to give us a card to sign up, just be sure to add one before your trial period is up.
+      %p There's a <b>14-day free trial</b> during which you may cancel at any time and not be charged.
+      %p You do not need to give us card details to sign up, just be sure to add one before your trial period is up to ensure your league scores are updated. We will send you an email reminder 3 days before payment is due.
 
     = form_for(manager, as: :manager, url: subscribe_manager_path(manager), html: { method: :post }) do |f|
       - if manager.stripe_customer_id.present? && manager.stripe_customer_sources.any?
         .center
-          = submit_tag "Subscribe using stored card", class: "btn btn-lg btn-primary btn-block"
+          = submit_tag "Purchase using stored card", class: "btn btn-lg btn-primary btn-block"
       - else
         %script{"src"               => "https://checkout.stripe.com/checkout.js",
                 "class"             => "stripe-button",
                 "data-key"          => Rails.configuration.stripe[:publishable_key],
-                "data-label"        => "Add a card and Subscribe",
+                "data-label"        => "Add a card and Purchase",
                 "data-panel-label"  => "Subscribe",
-                "data-amount"       => "$4.99",
+                "data-amount"       => "$14.99",
                 "data-locale"       => "auto",
                 "data-email"        => resource.email,
                 "data-zip-code"     => "true",
                 "data-name"         => "Rosterpocalypse"}
-        = submit_tag "Add a card and Subscribe", class: "btn btn-lg btn-primary btn-block"
+        = submit_tag "Add a card and Purchase", class: "btn btn-lg btn-primary btn-block"
     - if manager.unsubscribed? && (manager.stripe_customer_id.blank? || !manager.any_stripe_customer_sources? )
-      = button_to "Subscribe without a card", subscribe_manager_path(manager), class: "btn btn-lg btn-success btn-block", method: :post
+      = button_to "Start trial without a card", subscribe_manager_path(manager), class: "btn btn-lg btn-success btn-block", method: :post
   - else
-    = render "subscription_details", plan: manager.stripe_subscription.plan
+    %h4.form-heading Subscription Details
+    You are currently subscribed to
+    %b= manager.stripe_subscription.plan.name
 
     - case manager.subscription_status
     - when "pending"
@@ -90,3 +89,14 @@
             "data-name"         => "Rosterpocalypse"}
 
     = submit_tag "Update Card Details", class: "btn btn-lg btn-primary btn-block"
+
+#premiumInfoModal.modal.fade{tabindex: "-1", role: "dialog", "aria-labelledby" => "premiumInfoModal", "aria-hidden" => "true"}
+  .modal-dialog{role: "document"}
+    .modal-content
+      .modal-header
+        = button_tag class: "close", "data-dismiss" => "modal", "aria-label" => "Close" do
+          %span{"aria-hidden" => "true"} &times;
+      .modal-body
+        = render "layouts/rosterpocalypse_premium_info"
+      .modal-footer
+        = button_tag "Close", class: "btn btn-secondary", "data-dismiss" => "modal"
