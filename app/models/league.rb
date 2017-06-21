@@ -27,9 +27,9 @@ class League < ApplicationRecord
   MAX_ACTIVE_LEAGUES_PER_MANAGER = 10
 
   DEFAULT_ROLE_STAT_MODIFIERS = {
-    assassin: { solo_kills: 3, assists: 1, time_spent_dead: 20, win: 5 },
-    flex:     { solo_kills: 3, assists: 1, time_spent_dead: 20, win: 5 },
-    warrior:  { solo_kills: 1, assists: 1, time_spent_dead: 30, win: 5 },
+    assassin: { solo_kills: 2, assists: 1, time_spent_dead: 20, win: 5 },
+    flex:     { solo_kills: 2, assists: 1, time_spent_dead: 20, win: 5 },
+    warrior:  { solo_kills: 1, assists: 1, time_spent_dead: 40, win: 5 },
     support:  { solo_kills: 1, assists: 1, time_spent_dead: 30, win: 5 },
   }
 
