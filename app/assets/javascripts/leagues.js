@@ -32,7 +32,8 @@ $(document).on("turbolinks:load", function() {
   $(".role_stat_range_slider").on("input", function() {
     var role = $(this).data("role");
     var stat = $(this).data("stat");
-    var slider_id = "#private_league_role_stat_modifiers_" + role + "_" + stat
+    var league_type = location.pathname.split("/")[1].slice(0, -1);
+    var slider_id = "#" + league_type + "_role_stat_modifiers_" + role + "_" + stat
     var text_id = "#" + role + "_" + stat + "_modifier"
 
     $(text_id).text($(slider_id).val())
@@ -41,7 +42,8 @@ $(document).on("turbolinks:load", function() {
   // When the range slider input changes update the corresponding text to show the value
   $(".req_roles_range_slider").on("input", function() {
     var role = $(this).data("role");
-    var slider_id = "#private_league_required_player_roles_" + role
+    var league_type = location.pathname.split("/")[1].slice(0, -1);
+    var slider_id = "#" + league_type + "_required_player_roles_" + role
     var text_id = "#" + role + "_req_roles_modifier"
 
     $(text_id).text($(slider_id).val())
