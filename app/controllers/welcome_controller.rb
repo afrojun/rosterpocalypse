@@ -4,11 +4,13 @@ class WelcomeController < ApplicationController
            current_user.id
          else
            attributes = JSON.parse cookies["mp_#{ENV["MIXPANEL_ID"]}_mixpanel"]
-           distinct_id = attributes.delete('distinct_id')
+           distinct_id = attributes.delete('distinct_id') if attributes.present?
          end
 
-    mixpanel = Mixpanel::Tracker.new(ENV["MIXPANEL_ID"])
-    mixpanel.track id, 'View Homepage'
+    if id.present?
+      mixpanel = Mixpanel::Tracker.new(ENV["MIXPANEL_ID"])
+      mixpanel.track id, 'View Homepage'
+    end
   rescue => e
     logger.error "Failed to track user with Mixpanel: [#{e.class}] #{e.message}"
     logger.error "#{e.backtrace}"
