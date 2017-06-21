@@ -47,6 +47,9 @@ class RegistrationsController < Devise::RegistrationsController
       ip = resource.current_sign_in_ip.present? ? resource.current_sign_in_ip.to_s : 0
       mixpanel.people.set resource.id, mixpanel_params, ip
       mixpanel.track resource.id, 'User Signed Up'
+    rescue => e
+      logger.error "Failed to track user with Mixpanel: [#{e.class}] #{e.message}"
+      logger.error "#{e.backtrace}"
     end
 
 end

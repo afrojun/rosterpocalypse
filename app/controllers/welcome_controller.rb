@@ -9,6 +9,9 @@ class WelcomeController < ApplicationController
 
     mixpanel = Mixpanel::Tracker.new(ENV["MIXPANEL_ID"])
     mixpanel.track id, 'View Homepage'
+  rescue => e
+    logger.error "Failed to track user with Mixpanel: [#{e.class}] #{e.message}"
+    logger.error "#{e.backtrace}"
   end
 
   def letsencrypt
