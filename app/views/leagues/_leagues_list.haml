@@ -18,7 +18,7 @@
           %td= l.tournament.name
           %td= l.truncated_description
           - if show_manager
-            %td= link_to l.manager.name, l.manager
+            %td= l.manager.name
           %td
             - if league.tournament.active?
               = league_membership_change league, "btn-sm"
