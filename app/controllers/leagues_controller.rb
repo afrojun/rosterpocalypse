@@ -5,7 +5,7 @@ class LeaguesController < RosterpocalypseController
   # GET /leagues.json
   def index
     @public_leagues = PublicLeague.includes(:tournament).
-                                   where("tournament_id in (?)",
+                                   where("tournament_id in (?) AND manager_id = 9",
                                           Tournament.active_tournaments.map(&:id))
   end
 

@@ -7,7 +7,7 @@
 %h1= @manager.name
 
 %h3 Rosters
-= render "rosters/roster_list", rosters: @manager.rosters, show_leagues: true
+= render "rosters/roster_list", rosters: @manager.rosters, show_league: true
 
 %h3 Leagues
 = render "leagues/leagues_list", leagues: @manager.leagues
