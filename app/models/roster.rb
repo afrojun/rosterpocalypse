@@ -26,6 +26,23 @@ class Roster < ApplicationRecord
     tournament_rosters.detect { |r| r.league == league }
   end
 
+  # Dynamically define the current, previous and next gameweek and
+  # gameweek_roster finder methods. This should generate 6 methods
+  # for each combination of:
+  # [:previous, :current, :next] * [gameweek, gameweek_roster]
+  [:previous, :current, :next].each do |attribute|
+    gameweek_method = :"#{attribute}_gameweek"
+    gameweek_roster_method = :"#{attribute}_gameweek_roster"
+
+    define_method gameweek_method do |safe = true|
+      tournament.send gameweek_method, safe
+    end
+
+    define_method gameweek_roster_method do |safe = true|
+      gameweek_rosters.where(gameweek: send(gameweek_method, safe)).first
+    end
+  end
+
   def region
     @region ||= tournament.region
   end
@@ -48,26 +65,6 @@ class Roster < ApplicationRecord
 
   def public_leagues
     @public_leagues ||= leagues.where(type: "PublicLeague")
-  end
-
-  def next_gameweek safe = true
-    tournament.next_gameweek(safe)
-  end
-
-  def current_gameweek safe = true
-    tournament.current_gameweek(safe)
-  end
-
-  def previous_gameweek safe = true
-    tournament.previous_gameweek(safe)
-  end
-
-  def current_gameweek_roster safe = true
-    gameweek_rosters.where(gameweek: current_gameweek(safe)).first
-  end
-
-  def previous_gameweek_roster safe = true
-    gameweek_rosters.where(gameweek: previous_gameweek(safe)).first
   end
 
   def set_available_transfers number
