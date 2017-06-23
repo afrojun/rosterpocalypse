@@ -17,6 +17,8 @@
       .carousel-item.active
         = render "featured_league", image: "heroes_powerhour_logo.jpg", alt: "Heroes Powerhour", league: @heroes_powerhour_featured_league
       .carousel-item
+        = render "featured_league", image: "lords_of_the_storm_logo.jpg", alt: "Lords of the Storm", league: @lords_of_the_storm_featured_league
+      .carousel-item
         - region = league1.tournament.region
         = render "featured_league", image: "#{region.downcase}_flag.jpg", alt: "HGC #{region}", league: league1
       .carousel-item

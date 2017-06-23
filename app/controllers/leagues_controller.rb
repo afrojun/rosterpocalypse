@@ -5,9 +5,10 @@ class LeaguesController < RosterpocalypseController
   # GET /leagues.json
   def index
     @public_leagues = PublicLeague.includes(:tournament).
-                                   where("tournament_id in (?) AND manager_id = 9",
+                                   where("tournament_id in (?)",
                                           Tournament.active_tournaments.map(&:id))
-    @heroes_powerhour_featured_league = PublicLeague.find('heroes-powerhour-s2-league')
+    @heroes_powerhour_featured_league = PublicLeague.where(slug: 'heroes-powerhour-s2-league').first
+    @lords_of_the_storm_featured_league = PublicLeague.where(slug: 'lords-of-the-storm-league').first
   end
 
   # GET /leagues/1
