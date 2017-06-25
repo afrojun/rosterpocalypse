@@ -1,6 +1,6 @@
 .col-md-8
   = link_to league do
-    = image_tag image, class: "d-block.img-fluid", alt: alt, id: "carouselImage"
+    = image_tag "featured_league_#{league.slug.underscore}_logo.jpg", class: "d-block.img-fluid", alt: "#{league.name}", id: "carouselImage"
 .col-md-4
   #featuredLeagueTitle.row
     = link_to league.name, league

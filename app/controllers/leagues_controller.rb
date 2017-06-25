@@ -9,6 +9,9 @@ class LeaguesController < RosterpocalypseController
                                           Tournament.active_tournaments.map(&:id))
     @heroes_powerhour_featured_league = PublicLeague.where(slug: 'heroes-powerhour-s2-league').first
     @lords_of_the_storm_featured_league = PublicLeague.where(slug: 'lords-of-the-storm-league').first
+    @featured_leagues = [@heroes_powerhour_featured_league,
+                         @lords_of_the_storm_featured_league] +
+                         @public_leagues.to_a
   end
 
   # GET /leagues/1
