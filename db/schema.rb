@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170618025959) do
+ActiveRecord::Schema.define(version: 20170625132758) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -186,6 +186,8 @@ ActiveRecord::Schema.define(version: 20170618025959) do
     t.boolean  "use_representative_game", default: false, null: false
     t.text     "role_stat_modifiers",                     null: false
     t.text     "required_player_roles",                   null: false
+    t.boolean  "featured",                default: false, null: false
+    t.index ["featured"], name: "index_leagues_on_featured", using: :btree
     t.index ["manager_id"], name: "index_leagues_on_manager_id", using: :btree
     t.index ["name"], name: "index_leagues_on_name", unique: true, using: :btree
     t.index ["slug"], name: "index_leagues_on_slug", unique: true, using: :btree

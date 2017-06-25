@@ -7,11 +7,9 @@ class LeaguesController < RosterpocalypseController
     @public_leagues = PublicLeague.includes(:tournament).
                                    where("tournament_id in (?)",
                                           Tournament.active_tournaments.map(&:id))
-    @heroes_powerhour_featured_league = PublicLeague.where(slug: 'heroes-powerhour-s2-league').first
-    @lords_of_the_storm_featured_league = PublicLeague.where(slug: 'lords-of-the-storm-league').first
-    @featured_leagues = [@heroes_powerhour_featured_league,
-                         @lords_of_the_storm_featured_league] +
-                         @public_leagues.to_a
+
+    @featured_leagues = League.where(featured: true)
+    @featured_leagues = @featured_leagues.sample(@featured_leagues.size)
   end
 
   # GET /leagues/1
