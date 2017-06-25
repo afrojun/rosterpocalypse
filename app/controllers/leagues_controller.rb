@@ -115,7 +115,7 @@ class LeaguesController < RosterpocalypseController
     def league_params
       league_symbol = league_class.to_s.underscore.to_sym
       params.require(league_symbol).permit(:name, :tournament_id, :description,
-                                           :starting_budget, :num_transfers,
+                                           :starting_budget, :num_transfers, :premium,
                                            :max_players_per_team, :use_representative_game,
                                            required_player_roles: [:assassin, :flex, :warrior, :support],
                                            role_stat_modifiers: [
