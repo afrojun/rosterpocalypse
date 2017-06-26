@@ -16,8 +16,9 @@
       %span.col-xs-3.roster-status-gameweek-stat-value.float-right= @gameweek.points_percentile(50).round
     %span.col-xs-3
 
-  .col-xs-12.roster-status-player-stats
-    = link_to "More gameweek stats", @gameweek
+  /.col-xs-12.roster-status-player-stats
+  /  = link_to "More gameweek stats", @gameweek
+
   = render "roster_status_team_details", gameweek: @gameweek, gameweek_players: @gameweek_players, show_game_details: true
 
 .roster-sidebar.col-xs-2

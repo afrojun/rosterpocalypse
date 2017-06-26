@@ -31,10 +31,11 @@ class GameweekRoster < ApplicationRecord
     if players_to_snapshot.size == Roster::MAX_PLAYERS
       players_hash = {}
       players_to_snapshot.each do |player|
-        players_hash[player.slug] = player.value
+        players_hash[player.id] = player.value
       end
       snapshot = {
         players: players_hash,
+        budget: roster.budget,
         snapshot_time: Time.now.utc
       }
       update roster_snapshot: snapshot
@@ -46,16 +47,15 @@ class GameweekRoster < ApplicationRecord
 
   def update_points
     if snapshot_players_hash.present?
-      snapshot_players = Player.where(slug: snapshot_players_hash.keys)
-      total_value = snapshot_players_hash.values.sum
-
+      snapshot_players = Player.where(id: snapshot_players_hash.keys)
       if snapshot_players.size != Roster::MAX_PLAYERS
         Rails.logger.warn "Unable to update points for an incomplete roster: '#{roster.name}'"
         return false
       end
 
-      if total_value > Roster::MAX_TOTAL_VALUE
-        Rails.logger.warn "Total value of the players in roster '#{roster.name}' (#{total_value}) exceeds the limit of #{Roster::MAX_TOTAL_VALUE}."
+      total_value = snapshot_players_hash.values.sum
+      if total_value > roster_snapshot[:budget]
+        Rails.logger.warn "Total value of the players in roster '#{roster.name}' (#{total_value}) exceeds the limit of #{roster_snapshot[:budget]}."
         return false
       end
 
