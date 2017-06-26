@@ -6,7 +6,8 @@ class LeaguesController < RosterpocalypseController
   def index
     @public_leagues = PublicLeague.includes(:tournament).
                                    where("tournament_id in (?)",
-                                          Tournament.active_tournaments.map(&:id))
+                                          Tournament.active_tournaments.map(&:id)).
+                                   order("manager_id asc")
 
     @featured_leagues = League.where(featured: true)
     @featured_leagues = @featured_leagues.sample(@featured_leagues.size)

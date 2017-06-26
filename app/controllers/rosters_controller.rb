@@ -21,11 +21,15 @@ class RostersController < RosterpocalypseController
   # GET /rosters/1
   # GET /rosters/1.json
   def show
+    @league = @roster.league
     @gameweek_roster = GameweekRoster.where(gameweek: @gameweek, roster: @roster).first
-    @gameweek_rosters = @gameweek.gameweek_rosters.order("points")
+    @gameweek_rosters = @gameweek.gameweek_rosters.where(roster: @league.rosters).order("points")
     @gameweek_players = if @gameweek_roster.gameweek_players.blank?
                           @roster.players.includes(:team).map do |player|
-                            GameweekPlayer.new(gameweek: @gameweek, player: player, team: player.team)
+                            GameweekPlayer.new(gameweek: @gameweek,
+                                               player: player,
+                                               team: player.team,
+                                               role: player.role)
                           end
                         else
                           @gameweek_roster.gameweek_players.includes(:player, :team).all

@@ -5,7 +5,9 @@ class League < ApplicationRecord
   belongs_to :manager
   belongs_to :tournament
   has_and_belongs_to_many :rosters
+  has_many :league_gameweek_players
   has_many :gameweek_rosters, -> { distinct }, through: :rosters
+  has_many :gameweek_players, through: :league_gameweek_players
 
   validates :name, presence: true, uniqueness: true
   validates_format_of :name, with: /^[a-zA-Z0-9\/\- _\.]*$/, multiline: true
@@ -67,6 +69,12 @@ class League < ApplicationRecord
     numeric_required_player_roles.select do |role, num|
       num > 0
     end
+  end
+
+  # If any of the role_stat_modifiers are negative numbers, we assume that
+  # the league admin allows overall roster scores to also be negative
+  def allow_negative_scores?
+    role_stat_modifiers.values.map(&:values).flatten.uniq.sort.first.to_i < 0
   end
 
   def roster_rank roster

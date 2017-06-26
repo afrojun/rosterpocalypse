@@ -1,7 +1,13 @@
+# This class is a cache of the Player attributes during a particular gameweek.
+# This allows us to refer to players that may have changed teams or roles later
+# but know what those were for this gameweek
+
 class GameweekPlayer < ApplicationRecord
   belongs_to :gameweek
   belongs_to :player
   belongs_to :team
+  has_many :league_gameweek_players
+  has_many :leagues, through: :league_gameweek_players
   has_many :games, through: :gameweek
   has_many :game_details, -> { order "games.start_date DESC" }, through: :games
   has_and_belongs_to_many :gameweek_rosters
@@ -9,22 +15,26 @@ class GameweekPlayer < ApplicationRecord
   validates :gameweek, presence: true
   validates :player, presence: true
   validates :points, presence: true
+  validates :role, presence: true
   validates :team, presence: true
   validates :value, presence: true
 
   serialize :points_breakdown, Hash
 
-  BONUS_AWARD_PERCENTILE = 80
+  BONUS_AWARD_PERCENTILE = 90
   MIN_GAMES_FOR_BONUS_AWARD = 30
-  REPRESENTATIVE_GAME_NAME = "representative_game"
 
   def self.update_from_game game, gameweek
     game.game_details.each do |detail|
       gameweek_player = GameweekPlayer.find_or_create_by gameweek: gameweek, player: detail.player
+      gameweek.leagues.each do |league|
+        LeagueGameweekPlayer.find_or_create_by league: league, gameweek_player: gameweek_player
+      end
       gameweek_player.refresh game, detail
     end
   end
 
+  # FIXME: This method needs to be updated to use LeagueGameweekPlayer instead
   def self.update_pick_rate_and_efficiency_for_gameweek gameweek
     gameweek_players = gameweek.gameweek_players.includes(:player, :gameweek_rosters)
     valid_gameweek_rosters = gameweek.gameweek_rosters.includes(transfers: [:player_in, :player_out]).where("points IS NOT NULL")
@@ -43,15 +53,14 @@ class GameweekPlayer < ApplicationRecord
   end
 
   def remove_game game
-    all_points_breakdowns = points_breakdown || {}
-    all_points_breakdowns.delete(game.game_hash)
-    update points_breakdown: all_points_breakdowns
-    update_points
+    league_gameweek_players.each { |lgwp| lgwp.remove_game game }
   end
 
   # Refresh all game points for this gameweek
   def update_all_games
-    update points_breakdown: {}
+    update points: 0, points_breakdown: {}
+    league_gameweek_players.update_all points: 0, points_breakdown: {}
+
     player_game_details.each do |detail|
       refresh detail.game, detail
     end
@@ -62,104 +71,35 @@ class GameweekPlayer < ApplicationRecord
   end
 
   def refresh game, detail
-    all_points_breakdowns = points_breakdown || {}
-    all_points_breakdowns[game.game_hash] = points_breakdown_hash(game, detail)
-    update points_breakdown: all_points_breakdowns, team: detail.team, value: detail.player.value
-    update_points
-  end
-
-  def representative_game_points
-    @representative_game_points ||= points_breakdown[REPRESENTATIVE_GAME_NAME]
-  end
-
-  def game_points_breakdowns
-    @game_points_breakdowns ||= points_breakdown.reject { |game_hash, _| game_hash == REPRESENTATIVE_GAME_NAME }
-  end
-
-  def points_breakdowns_by_game
-    @points_breakdowns_by_game ||= Hash[
-      game_points_breakdowns.map do |game_hash, breakdown|
-        [Game.find(game_hash), breakdown]
-      end.sort_by { |game, _| game.start_date }
-    ]
-  end
-
-  private
-
-  def update_points
-    points_arrays = {
-      solo_kills: [],
-      assists: [],
-      time_spent_dead: [],
-      win: [],
-      bonus: []
-    }
-    game_points_breakdowns.each do |_, game_points_breakdown|
-      points_arrays[:solo_kills].push(game_points_breakdown[:solo_kills])
-      points_arrays[:assists].push(game_points_breakdown[:assists])
-      points_arrays[:win].push(game_points_breakdown[:win])
-      points_arrays[:time_spent_dead].push(game_points_breakdown[:time_spent_dead])
-      points_arrays[:bonus].concat(game_points_breakdown[:bonus])
-    end
-
-    representative_points = {}
-    representative_points[:solo_kills] = points_arrays[:solo_kills].extend(DescriptiveStatistics).mean.round
-    representative_points[:assists] = points_arrays[:assists].extend(DescriptiveStatistics).mean.round
-    # Use the ceiling for :win only because we if a player wins at least one game we want to award a point
-    representative_points[:win] = points_arrays[:win].extend(DescriptiveStatistics).mean.ceil
-    representative_points[:time_spent_dead] = points_arrays[:time_spent_dead].extend(DescriptiveStatistics).mean.round
-    representative_points[:bonus] = points_arrays[:bonus]
-    representative_points[:total] = points_for_game(representative_points)
-
-    all_points_breakdowns = points_breakdown
-    all_points_breakdowns[REPRESENTATIVE_GAME_NAME] = representative_points
-
-    update(
-      points_breakdown: all_points_breakdowns,
-      # overall points cannot be negative
-      points: [representative_points[:total], 0].max
-    )
-  end
-
-  def points_for_game game_points_breakdown
-    game_points_breakdown[:solo_kills] +
-      game_points_breakdown[:assists] +
-      game_points_breakdown[:win] +
-      game_points_breakdown[:time_spent_dead] +
-      game_points_breakdown[:bonus].count
-  end
-
-  # Points breakdown:
-  #
-  # Category        |  Assasin/Flex |   Warrior  |  Support
-  # ----------------|---------------|------------|------------
-  # solo_kills      |       +3      |     +1     |     +1
-  # assists         |       +1      |     +1     |     +1
-  # time_spent_dead |   -(time/20)  | -(time/30) | -(time/30)
-  # win             |       +5      |     +5     |     +5
-  # bonus           |    variable   |  variable  |  variable
-  #
-  def role_stat_modifiers
-    {
-      assassin: { solo_kills: 3, assists: 1, time_spent_dead: 20.0, win: 5 },
-      flex:     { solo_kills: 3, assists: 1, time_spent_dead: 20.0, win: 5 },
-      warrior:  { solo_kills: 1, assists: 1, time_spent_dead: 30.0, win: 5 },
-      support:  { solo_kills: 1, assists: 1, time_spent_dead: 30.0, win: 5 },
-    }
-  end
-
-  def points_breakdown_hash game, detail
-    # Assume the player is an assassin if we cannot figure out the role
-    role = detail.player.role.present? ? detail.player.role.downcase.to_sym : :assassin
-    breakdown = {
-      solo_kills: detail.solo_kills * role_stat_modifiers[role][:solo_kills],
-      assists: detail.assists * role_stat_modifiers[role][:assists],
-      time_spent_dead: -(detail.time_spent_dead.to_f/role_stat_modifiers[role][:time_spent_dead]).round,
-      win: detail.win_int * role_stat_modifiers[role][:win],
+    # Bonus point awards are common across all leagues, so calculate them first
+    # and store them in the GameweekPlayer's points_breakdown Hash
+    bonus_points_breakdown = points_breakdown || {}
+    bonus_points_breakdown[game.game_hash] = {
       bonus: bonus_awards(game, detail)
     }
-    breakdown[:total] = points_for_game(breakdown)
-    breakdown
+    update team: detail.team,
+           value: detail.player.value,
+           role: detail.player.role,
+           points_breakdown: bonus_points_breakdown
+
+    # Group the associated leagues by whether they share a common role_stat_modifiers
+    # Hash, then group them again by whether they use a representative_game. This
+    # greatly reduces the number of actual league_gameweek_players we need to process.
+    # Once we finish processing the sample one, we simply copy the key attributes
+    # (points_breakdown and points) to all the other league_gameweek_players.
+    leagues.group_by { |l| l.role_stat_modifiers }.each do |_, same_mods_leagues|
+      same_mods_leagues.group_by { |l| l.use_representative_game }.each do |_, rep_game_leagues|
+        sample_league = rep_game_leagues.shift
+        sample_league_gameweek_player = league_gameweek_players.where(league: sample_league).first
+        sample_league_gameweek_player.refresh game, detail
+
+        league_gameweek_players.
+          includes(:league).
+          where(league: rep_game_leagues).
+          update_all(points_breakdown: sample_league_gameweek_player.points_breakdown,
+                     points: sample_league_gameweek_player.points)
+      end
+    end
   end
 
   # Bonus categories:
@@ -206,6 +146,7 @@ class GameweekPlayer < ApplicationRecord
 
       threshold = Player.role_stat_percentile role, stat, BONUS_AWARD_PERCENTILE
       if threshold < detail.send(stat.to_sym)
+        renamed_stat = stat == "solo_kills" ? "kills" : stat
         return ["#{BONUS_AWARD_PERCENTILE}th percentile in #{stat} for #{role} players"]
       end
     end
@@ -226,6 +167,7 @@ class GameweekPlayer < ApplicationRecord
 
       threshold = detail.hero.stat_percentile stat, BONUS_AWARD_PERCENTILE
       if threshold < detail.send(stat.to_sym)
+        renamed_stat = stat == "solo_kills" ? "kills" : stat
         return ["#{BONUS_AWARD_PERCENTILE}th percentile in #{stat} for #{hero.name}"]
       end
     end

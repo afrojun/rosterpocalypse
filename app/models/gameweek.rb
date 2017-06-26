@@ -6,6 +6,7 @@ class Gameweek < ApplicationRecord
   has_many :gameweek_rosters, dependent: :destroy
   has_many :rosters, through: :gameweek_rosters
   has_many :transfers, through: :gameweek_rosters
+  has_many :leagues, through: :tournament
   has_many :games, -> { order "games.start_date ASC" }
   has_many :matches, -> { order "matches.start_date ASC" }, dependent: :destroy
 
@@ -45,5 +46,13 @@ class Gameweek < ApplicationRecord
 
   def points_percentile percentile
     gameweek_rosters.extend(DescriptiveStatistics).percentile(percentile) { |gameweek_roster| gameweek_roster.points }
+  end
+
+  def update_all_gameweek_players
+    gameweek_players.each(&:update_all_games)
+  end
+
+  def update_all_gameweek_rosters
+    gameweek_rosters.each(&:update_points)
   end
 end

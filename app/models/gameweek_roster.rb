@@ -7,8 +7,6 @@ class GameweekRoster < ApplicationRecord
 
   serialize :roster_snapshot, Hash
 
-  DEFAULT_TRANSFERS_PER_GAMEWEEK = 1
-
   def remaining_transfers
     remaining = available_transfers - transfers.size
     [remaining, 0].max
@@ -84,7 +82,10 @@ class GameweekRoster < ApplicationRecord
   end
 
   def gameweek_points
-    @gameweek_points ||= gameweek_players.map(&:points).compact.sum
+    @gameweek_points ||= LeagueGameweekPlayer.
+                           where(league: roster.league,
+                                 gameweek_player: gameweek_players).
+                           map(&:points).compact.sum
   end
 
   def gameweek_players_by_player

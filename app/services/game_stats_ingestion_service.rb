@@ -123,10 +123,6 @@ class GameStatsIngestionService
     end
   end
 
-  def gameweek_player player
-    GameweekPlayer.find_or_create_by gameweek: gameweek, player: player
-  end
-
   def find_or_create_team team_colour
     Team.find_or_create_including_alternate_names(team_name(team_colour)).tap do |team|
       TeamAlternateName.find_or_create_by(team: team, alternate_name: team_name_prefix_by_team_colour[team_colour]) if team_name_prefix_by_team_colour[team_colour].present?

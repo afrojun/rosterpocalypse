@@ -5,9 +5,11 @@
     .col-xs-5.roster-status-player-details
       = render "roster_status_player_details", gameweek_players: gameweek_players, highlight_first_player: true
     .col-xs-7.roster-status-gameweek-details.active-player-gameweek
-      = render "roster_status_gameweek_details", gameweek_players: gameweek_players
-      #no-games.col-xs-12.roster-status-player-game-details{class: gameweek_players.first.class == Player ? "" : "hide"}
-        .col-xs-12.roster-status-player-no-games-placeholder No games yet for this week
+      - if gameweek_players.first.persisted?
+        = render "roster_status_gameweek_details", gameweek_players: gameweek_players
+      - else
+        #no-games.col-xs-12.roster-status-player-game-details
+          .col-xs-12.roster-status-player-no-games-placeholder No games available for this week
 - else
   .col-xs-12.roster-status-no-data-placeholder No data available for this week
 
