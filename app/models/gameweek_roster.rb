@@ -40,7 +40,7 @@ class GameweekRoster < ApplicationRecord
       }
       update roster_snapshot: snapshot
     else
-      Rails.logger.warn "Unable to create a snapshot of an incomplete roster."
+      Rails.logger.warn "Unable to create a snapshot of an incomplete roster: '#{roster.name}'"
       false
     end
   end
@@ -55,7 +55,7 @@ class GameweekRoster < ApplicationRecord
 
       total_value = snapshot_players_hash.values.sum
       if total_value > roster_snapshot[:budget]
-        Rails.logger.warn "Total value of the players in roster '#{roster.name}' (#{total_value}) exceeds the limit of #{roster_snapshot[:budget]}."
+        Rails.logger.warn "Total value of the players in roster '#{roster.name}' (#{total_value}) exceeds the budget of #{roster_snapshot[:budget]}."
         return false
       end
 
