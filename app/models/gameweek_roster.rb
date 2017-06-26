@@ -22,19 +22,15 @@ class GameweekRoster < ApplicationRecord
     safe ? (prev.nil? ? self : prev) : prev
   end
 
-  def create_snapshot players_to_snapshot = roster.players
-    if roster_snapshot.present?
+  def create_snapshot players_to_snapshot = roster.players, force = false
+    if !force && roster_snapshot.present?
       Rails.logger.warn "Roster snapshot for '#{roster.name}' exists, not taking any action."
       return true
     end
 
     if players_to_snapshot.size == Roster::MAX_PLAYERS
-      players_hash = {}
-      players_to_snapshot.each do |player|
-        players_hash[player.id] = player.value
-      end
       snapshot = {
-        players: players_hash,
+        player_ids: players_to_snapshot.map(&:id),
         budget: roster.budget,
         snapshot_time: Time.now.utc
       }
@@ -46,21 +42,23 @@ class GameweekRoster < ApplicationRecord
   end
 
   def update_points
-    if snapshot_players_hash.present?
-      snapshot_players = Player.where(id: snapshot_players_hash.keys)
-      if snapshot_players.size != Roster::MAX_PLAYERS
+    if snapshot_player_ids.present?
+      snapshot_gameweek_players = GameweekPlayer.where(gameweek: gameweek, player_id: snapshot_player_ids)
+
+      if snapshot_gameweek_players.size != Roster::MAX_PLAYERS
         Rails.logger.warn "Unable to update points for an incomplete roster: '#{roster.name}'"
         return false
       end
 
-      total_value = snapshot_players_hash.values.sum
-      if total_value > roster_snapshot[:budget]
-        Rails.logger.warn "Total value of the players in roster '#{roster.name}' (#{total_value}) exceeds the budget of #{roster_snapshot[:budget]}."
+      total_value = snapshot_gameweek_players.map(&:value).sum
+      if total_value > snapshot_budget
+        Rails.logger.warn "Total value of the players in roster '#{roster.name}' " +
+                          "(#{total_value}) exceeds the budget of #{snapshot_budget}."
         return false
       end
 
       gameweek_players.clear
-      gameweek_players << GameweekPlayer.where(gameweek: gameweek, player: snapshot_players)
+      gameweek_players << snapshot_gameweek_players
 
       update points: gameweek_points
     else
@@ -69,16 +67,12 @@ class GameweekRoster < ApplicationRecord
     end
   end
 
-  def snapshot_time
-    roster_snapshot[:snapshot_time]
+  def snapshot_budget
+    roster_snapshot[:budget]
   end
 
-  def snapshot_players_hash
-    roster_snapshot[:players]
-  end
-
-  def player_value player
-    gameweek_players.where(player: player).first.try :value
+  def snapshot_player_ids
+    roster_snapshot[:player_ids]
   end
 
   def gameweek_points
@@ -86,10 +80,6 @@ class GameweekRoster < ApplicationRecord
                            where(league: roster.league,
                                  gameweek_player: gameweek_players).
                            map(&:points).compact.sum
-  end
-
-  def gameweek_players_by_player
-    Hash[players.zip gameweek_players.includes(:player, :team)]
   end
 
   def points_string
