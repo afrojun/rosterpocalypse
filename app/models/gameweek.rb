@@ -48,6 +48,12 @@ class Gameweek < ApplicationRecord
     gameweek_rosters.extend(DescriptiveStatistics).percentile(percentile) { |gameweek_roster| gameweek_roster.points }
   end
 
+  def move_end_date offset
+    next_gameweek = self.next
+    update end_date: end_date+offset
+    next_gameweek.update start_date: next_gameweek.start_date+offset
+  end
+
   def update_all_gameweek_players
     gameweek_players.each(&:update_all_games)
   end
