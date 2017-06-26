@@ -70,6 +70,8 @@ gem "font-awesome-rails"
 # https://github.com/thirtysixthspan/descriptive_statistics
 gem 'descriptive_statistics', '~> 2.4.0', :require => 'descriptive_statistics/safe'
 
+gem 'thor-rails'
+
 # https://github.com/icalendar/icalendar
 # Gem to create and read iCalendar files
 gem "icalendar"

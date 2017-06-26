@@ -8,13 +8,13 @@ end
 
 task :snapshot_gameweek_rosters => :environment do
   puts "Snapshotting all valid Rosters for this Gameweek"
-  rosters_to_snapshot = Tournament.active_tournaments.map do |tournament|
-    tournament.rosters.includes(:players, tournament: [:gameweeks]).select do |roster|
-      roster.full? &&
-        roster.created_at < roster.current_gameweek.roster_lock_date &&
-        roster.updated_at < roster.current_gameweek.roster_lock_date
-    end
-  end.flatten
+  rosters_to_snapshot = Roster.
+        where(tournament: Tournament.active_tournaments).
+        includes(:players, tournament: [:gameweeks]).select do |roster|
+    roster.full? &&
+    roster.created_at < roster.current_gameweek.roster_lock_date &&
+    roster.updated_at < roster.current_gameweek.roster_lock_date
+  end
 
   puts "Snapshotting #{rosters_to_snapshot.size} Rosters..."
   rosters_to_snapshot.each do |roster|
