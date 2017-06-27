@@ -1,0 +1,6 @@
+- if @gameweek_players.any?
+  .col-xs-12.roster-status-team-details
+    .col-xs-4.roster-status-player-details
+      = render "roster_status_player_details", gameweek_players: @gameweek_players
+- else
+  No players in this roster

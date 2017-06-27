@@ -1,8 +1,14 @@
 class RostersController < RosterpocalypseController
   before_action :authenticate_user!, except: [:show, :details]
-  before_action :set_roster, only: [:show, :manage, :update, :destroy, :status, :details]
-  before_action :set_gameweek, only: [:show]
+  before_action :set_roster, only: [:show, :manage, :players, :update, :destroy,
+                                    :status, :details]
+  before_action :set_gameweek, only: [:show, :players]
+  before_action :set_gameweek_roster, only: [:show, :players]
+  before_action :set_gameweek_players, only: [:show, :players]
+
   before_action :set_page_title, only: [:show, :edit]
+
+  layout "simple_application_layout", only: [:players]
 
   # GET /rosters
   # GET /rosters.json
@@ -23,18 +29,7 @@ class RostersController < RosterpocalypseController
   # GET /rosters/1.json
   def show
     @league = @roster.league
-    @gameweek_roster = GameweekRoster.where(gameweek: @gameweek, roster: @roster).first
     @gameweek_rosters = @gameweek.gameweek_rosters.where(roster: @league.rosters).order("points")
-    @gameweek_players = if @gameweek_roster.gameweek_players.blank?
-                          @roster.players.includes(:team).map do |player|
-                            GameweekPlayer.new(gameweek: @gameweek,
-                                               player: player,
-                                               team: player.team,
-                                               role: player.role)
-                          end
-                        else
-                          @gameweek_roster.gameweek_players.includes(:player, :team).all
-                        end
     @sidebar_props = {
       rosterPath: roster_url(@roster),
       rosterDetailsPath: details_roster_url(@roster),
@@ -56,6 +51,19 @@ class RostersController < RosterpocalypseController
       maxRosterValue: @roster.budget,
       showManageRoster: current_user.present? && current_user.manager == @roster.manager
     }
+  end
+
+  def players
+    authorize! :read, @roster
+
+    respond_to do |format|
+      format.html { }
+      format.json { render json: @gameweek_players }
+      format.png {
+                   kit = IMGKit.new(render_to_string)#, "header-html" => "layouts/min_header",)
+                   send_data(kit.to_png, :type => "image/png", :disposition => 'inline')
+                 }
+    end
   end
 
   # PATCH/PUT /rosters/1
@@ -101,6 +109,25 @@ class RostersController < RosterpocalypseController
     params.require(:roster).permit(:name, :tournament_id, players: []).tap do |rp|
       rp[:manager_id] = current_user.manager.id
     end
+  end
+
+  def set_gameweek_players
+    @gameweek_players = begin
+      if @gameweek_roster.gameweek_players.blank?
+        @roster.players.includes(:team).map do |player|
+          GameweekPlayer.new(gameweek: @gameweek,
+                             player: player,
+                             team: player.team,
+                             role: player.role)
+        end
+      else
+        @gameweek_roster.gameweek_players.includes(:player, :team).all
+      end
+    end
+  end
+
+  def set_gameweek_roster
+    @gameweek_roster = GameweekRoster.where(gameweek: @gameweek, roster: @roster).first
   end
 
   def set_gameweek

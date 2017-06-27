@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     member do
       get "manage"
       get "details"
+      get "players"
     end
   end
 

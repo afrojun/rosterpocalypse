@@ -4,11 +4,12 @@
   - league_gameweek_player = gameweek_player.league_gameweek_players.where(league: @league).first
   .col-xs-12.roster-status-player{id: "player-#{gameweek_player.player.id}", class: ((highlight_first_player && index == 0) ? "active-player-gameweek" : "inactive-player-gameweek")}
     .col-xs-10.roster-status-player-left
-      .col-xs-4.roster-status-player-team-logo{data: {id: gameweek_player.player.id}}= image_tag team_logo_filename(gameweek_player.team), alt: gameweek_player.team.name, size: 42
+      .col-xs-4.roster-status-player-team-logo{data: {id: gameweek_player.player.id}}= team_logo gameweek_player.team, 42
       .col-xs-8.roster-status-player-left
         .roster-status-player-name{data: {id: gameweek_player.player.id}}
           = player_role_icon gameweek_player, 20
           = gameweek_player.player.name
         .roster-status-player-team{data: {id: gameweek_player.player.id}}= gameweek_player.team.name
-    - if league_gameweek_player.present?
-      .col-xs-2.float-right.roster-status-player-points= league_gameweek_player.points
+    .col-xs-2.float-right.roster-status-player-points
+      - if league_gameweek_player.present?
+        = league_gameweek_player.points
