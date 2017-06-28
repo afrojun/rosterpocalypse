@@ -26,11 +26,14 @@ const RosterSidebar = (props) => {
           {props.roster.tournament.name}
         </p>
 
-        <p>
-          <a href={props.rosterPath}>Status</a>
-          {"  |  "}
-          <a href={props.rosterPath + "/manage"}>Manage</a>
-        </p>
+        {
+          props.showManageRoster &&
+            <p>
+              <a href={props.rosterPath}>Status</a>
+              {"  |  "}
+              <a href={props.rosterPath + "/manage"}>Manage</a>
+            </p>
+        }
       </div>
 
       <div className="sidebar-div">
@@ -127,7 +130,7 @@ RosterSidebar.propTypes = {
   roster: PropTypes.object.isRequired,
   rosterPath: PropTypes.string.isRequired,
   remainingTransfersCount: PropTypes.func.isRequired,
-  showPrivateLeagues: PropTypes.bool.isRequired
+  showManageRoster: PropTypes.bool.isRequired
 };
 
 export default RosterSidebar;

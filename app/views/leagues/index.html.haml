@@ -20,9 +20,9 @@
         %i.fa.fa-chevron-right{"aria-hidden" => "true"}
         %span.sr-only Next
 
-      /%ol.carousel-indicators
-      /  - @featured_leagues.each_with_index do |featured_league, index|
-      /    %li{class: index == 0 ? "active" : "", "data-slide-to" => index, "data-target" => "#featuredLeaguesCarouselSlides"}
+      -#%ol.carousel-indicators
+      -#  - @featured_leagues.each_with_index do |featured_league, index|
+      -#    %li{class: index == 0 ? "active" : "", "data-slide-to" => index, "data-target" => "#featuredLeaguesCarouselSlides"}
 
 %h2 Public Leagues
 - if @public_leagues.any?

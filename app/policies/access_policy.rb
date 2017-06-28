@@ -52,51 +52,28 @@ class AccessPolicy
     # More privileged role, applies to registered users.
     #
     role :member, proc { |user| user.present? && user.registered? && !user.unconfirmed? } do
-      can :read, Manager
       can :update, Manager do |manager, user|
         manager.user.id == user.id
       end
-      can :read, Match
-      can :read, Game
-      can :read, Hero
-      can :read, Team
-      can :read, Map
-      can :read, Player
-      can :read, Tournament
-      can :read, Gameweek
-      can :read, PublicLeague
-      can :read, League
-      can [:read, :create], PrivateLeague
+      can :create, PrivateLeague
       can [:update, :destroy], PrivateLeague do |league, user|
         league.manager.user.id == user.id
       end
-      can [:read, :create], Roster
+      can :create, Roster
       can [:update, :destroy], Roster do |roster, user|
         roster.manager.user.id == user.id
       end
-    end
-
-    role :unconfirmed_member, proc { |user| user.present? && user.registered? && user.unconfirmed? } do
-      can :read, Manager
-      can :read, Match
-      can :read, Game
-      can :read, Hero
-      can :read, Team
-      can :read, Map
-      can :read, Player
-      can :read, Tournament
-      can :read, Gameweek
-      can :read, League
-      can :read, PublicLeague
-      can :read, PrivateLeague
-      can :read, Roster
     end
 
     # The base role with no additional conditions.
     # Applies to every user.
     #
     role :guest do
-      # Very limited access, can only view the home page and sign up
+      can :read, League
+      can :read, PublicLeague
+      can :read, PrivateLeague
+      can :read, Roster
+      can :read, Gameweek
     end
   end
 end

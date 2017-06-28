@@ -1,4 +1,5 @@
 class RostersController < RosterpocalypseController
+  before_action :authenticate_user!, except: [:show, :details]
   before_action :set_roster, only: [:show, :manage, :update, :destroy, :status, :details]
   before_action :set_gameweek, only: [:show]
   before_action :set_page_title, only: [:show, :edit]
@@ -37,7 +38,7 @@ class RostersController < RosterpocalypseController
     @sidebar_props = {
       rosterPath: roster_url(@roster),
       rosterDetailsPath: details_roster_url(@roster),
-      showPrivateLeagues: current_user.manager == @roster.manager
+      showManageRoster: current_user.present? && current_user.manager == @roster.manager
     }
   end
 
@@ -53,7 +54,7 @@ class RostersController < RosterpocalypseController
       rosterRegion: @roster.region,
       maxPlayersInRoster: Roster::MAX_PLAYERS,
       maxRosterValue: @roster.budget,
-      showPrivateLeagues: current_user.manager == @roster.manager
+      showManageRoster: current_user.present? && current_user.manager == @roster.manager
     }
   end
 
