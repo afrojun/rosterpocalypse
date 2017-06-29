@@ -59,7 +59,6 @@ class GameweekRoster < ApplicationRecord
 
       gameweek_players.clear
       gameweek_players << snapshot_gameweek_players
-
       update points: gameweek_points
     else
       Rails.logger.warn "No snapshot present for '#{roster.name}', unable to update points."
