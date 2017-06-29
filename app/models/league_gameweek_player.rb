@@ -134,8 +134,12 @@ class LeagueGameweekPlayer < ApplicationRecord
   #
 
   def points_breakdown_hash game, detail
+    Rails.logger.info "Getting the points breakdown hash for the '#{league.name}' " +
+                      "league using the role stat modifiers: #{league.role_stat_modifiers}."
+
     # Assume the player is an assassin if we cannot figure out the role
     role = detail.player.role.present? ? detail.player.role.downcase : "assassin"
+    Rails.logger.info "League Gameweek Player role: #{role}"
     breakdown = {
       solo_kills: detail.solo_kills * league.role_stat_modifiers[role]["solo_kills"].to_i,
       assists: detail.assists * league.role_stat_modifiers[role]["assists"].to_i,

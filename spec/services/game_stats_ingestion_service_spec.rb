@@ -109,7 +109,7 @@ describe GameStatsIngestionService do
         }
       },
       "start_epoch_time_utc": 1477681743,
-      "filename": "../replays/02.12.16_MVP_BLACK_vs_Dignitas_GAME_1_at_Summer_Global_Championship.StormReplay",
+      "filename": "../replays/02.12.16_MVP_BLACK_vs_Dignitas_game_1_at_Summer_Global_Championship.StormReplay",
       "unique_id": "31af3b750df2b90e51121833672747969fdd3a89c8bfa1303abd6fec9a8c7758"
     }'
   }
@@ -183,7 +183,7 @@ describe GameStatsIngestionService do
 
     it "strips extra characters from the end of the tournament name if another tournament exists without them" do
       FactoryGirl.create :tournament, name: "Summer Europe Championship 2017", region: "EU"
-      game_stats_json["filename"] = "02.12.16_mYinsanity_vs_Dignitas_GAME_1_at_Summer_Europe_Championship_2017_X8y27Lk.StormReplay"
+      game_stats_json["filename"] = "02.12.16_mYinsanity_vs_Dignitas_game_1_at_Summer_Europe_Championship_2017_X8y27Lk.StormReplay"
       expect(service.send :tournament_name).to eq "Summer Europe Championship 2017"
     end
   end
@@ -194,12 +194,12 @@ describe GameStatsIngestionService do
     end
 
     it "handles simple regions" do
-      game_stats_json["filename"] = "02.12.16_mYinsanity_vs_Dignitas_GAME_1_at_Summer_EU_Championship_2017.StormReplay"
+      game_stats_json["filename"] = "02.12.16_mYinsanity_vs_Dignitas_game_1_at_Summer_EU_Championship_2017.StormReplay"
       expect(service.send :region).to eq "EU"
     end
 
     it "detects regions by keyword" do
-      game_stats_json["filename"] = "02.12.16_mYinsanity_vs_Dignitas_GAME_1_at_Summer_Europe_Championship_2017.StormReplay"
+      game_stats_json["filename"] = "02.12.16_mYinsanity_vs_Dignitas_game_1_at_Summer_Europe_Championship_2017.StormReplay"
       expect(service.send :region).to eq "EU"
     end
   end

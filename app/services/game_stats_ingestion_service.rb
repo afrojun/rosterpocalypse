@@ -1,6 +1,6 @@
 class GameStatsIngestionService
 
-  FILENAME_FORMAT_REGEX = /^\d{2}\.\d{2}\.\d{2}_(.+)_vs_(.+)_GAME_\d_at_(.+)\.StormReplay$/
+  FILENAME_FORMAT_REGEX = /^\d{2}\.\d{2}\.\d{2}_(.+)_vs_(.+)_game_\d_at_(.+)\.StormReplay$/
 
   private
   # Lazy loaded attributes
@@ -185,11 +185,12 @@ class GameStatsIngestionService
     end
   end
 
+  def basename
+    File.basename json["filename"]
+  end
+
   def filename_regex_match
-    @filename_regex_match ||= begin
-      basename = File.basename json["filename"]
-      basename.match FILENAME_FORMAT_REGEX
-    end
+    @filename_regex_match ||= basename.match FILENAME_FORMAT_REGEX
   end
 
   # Detect the team name as follows:

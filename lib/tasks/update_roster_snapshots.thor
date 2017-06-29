@@ -1,13 +1,13 @@
 require "thor/rails"
 
-class SnapshotGameweekRosters < Thor
+class GameweekRosterActions < Thor
   include Thor::Rails
 
-  desc "update", "Update roster snapshots for the current gameweek"
+  desc "snapshot", "Create roster snapshots for the current gameweek"
 
   method_option :force, default: false, aliases: '-f', type: :boolean, desc: 'Force snapshot updates'
 
-  def update
+  def snapshot
     puts "Snapshotting all valid Rosters for this Gameweek"
     rosters_to_snapshot = Roster.
           where(tournament: Tournament.active_tournaments).
@@ -22,6 +22,27 @@ class SnapshotGameweekRosters < Thor
     rosters_to_snapshot.each do |roster|
       gwr = roster.current_gameweek_roster
       gwr.create_snapshot roster.players, options.force
+    end
+
+    puts "Done."
+  end
+
+  desc "update_points", "Update gameweek roster points and roster scores"
+
+  method_option :previous, default: false, aliases: '-p', type: :boolean, desc: 'Update the previous gameweek rosters'
+
+  def update_points
+    print "Updating Roster scores for the "
+    puts(options.previous ? "previous gameweek" : " current gameweek")
+    Tournament.active_tournaments.each do |tournament|
+      tournament.rosters.each do |roster|
+        gwr = options.previous ? roster.previous_gameweek_roster : roster.current_gameweek_roster
+        next unless gwr.roster_snapshot.present?
+
+        gwr.update_points
+        roster.update_score
+        print "."
+      end
     end
 
     puts "Done."

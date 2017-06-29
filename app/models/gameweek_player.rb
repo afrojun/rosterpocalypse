@@ -6,7 +6,7 @@ class GameweekPlayer < ApplicationRecord
   belongs_to :gameweek
   belongs_to :player
   belongs_to :team
-  has_many :league_gameweek_players
+  has_many :league_gameweek_players, dependent: :destroy
   has_many :leagues, through: :league_gameweek_players
   has_many :games, through: :gameweek
   has_many :game_details, -> { order "games.start_date DESC" }, through: :games
@@ -26,7 +26,12 @@ class GameweekPlayer < ApplicationRecord
 
   def self.update_from_game game, gameweek
     game.game_details.each do |detail|
-      gameweek_player = GameweekPlayer.find_or_create_by gameweek: gameweek, player: detail.player
+      gameweek_player = GameweekPlayer.find_or_create_by(gameweek: gameweek,
+                                                         player: detail.player,
+                                                         team: detail.team,
+                                                         value: detail.player.value,
+                                                         role: detail.player.role)
+
       gameweek.leagues.each do |league|
         LeagueGameweekPlayer.find_or_create_by league: league, gameweek_player: gameweek_player
       end
@@ -53,6 +58,10 @@ class GameweekPlayer < ApplicationRecord
   end
 
   def remove_game game
+    all_points_breakdowns = points_breakdown || {}
+    all_points_breakdowns.delete(game.game_hash)
+    update points_breakdown: all_points_breakdowns
+
     league_gameweek_players.each { |lgwp| lgwp.remove_game game }
   end
 

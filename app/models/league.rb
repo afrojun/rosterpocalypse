@@ -5,7 +5,7 @@ class League < ApplicationRecord
   belongs_to :manager
   belongs_to :tournament
   has_and_belongs_to_many :rosters
-  has_many :league_gameweek_players
+  has_many :league_gameweek_players, dependent: :destroy
   has_many :gameweek_rosters, -> { distinct }, through: :rosters
   has_many :gameweek_players, through: :league_gameweek_players
 
