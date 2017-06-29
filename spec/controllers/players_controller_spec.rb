@@ -53,7 +53,7 @@ RSpec.describe PlayersController, type: :controller do
   end
 
   context "a normal user" do
-    it_should_behave_like "a normal user", Player, :player
+    it_should_behave_like "a normal user", Player, :player, true
   end
 
   context "an admin user" do

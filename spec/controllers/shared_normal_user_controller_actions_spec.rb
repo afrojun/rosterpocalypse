@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-shared_examples_for "a normal user" do |model_class, model_symbol|
+shared_examples_for "a normal user" do |model_class, model_symbol, allow_read=false|
   describe "<<" do
     login_user
 
@@ -16,8 +16,13 @@ shared_examples_for "a normal user" do |model_class, model_symbol|
 
     describe "GET #index" do
       it "assigns all #{model_symbol.to_s.pluralize} as @#{model_symbol.to_s.pluralize}" do
+        model = model_class.create! valid_attributes
         get :index, params: {}, session: valid_session
-        check_access_denied
+        if allow_read
+          expect(assigns(model_symbol.to_s.pluralize.to_sym)).to eq([model])
+        else
+          check_access_denied
+        end
       end
     end
 
@@ -25,7 +30,11 @@ shared_examples_for "a normal user" do |model_class, model_symbol|
       it "assigns the requested #{model_symbol} as @#{model_symbol}" do
         model = model_class.create! valid_attributes
         get :show, params: {id: model.to_param}, session: valid_session
-        check_access_denied
+        if allow_read
+          expect(assigns(model_symbol)).to eq(model)
+        else
+          check_access_denied
+        end
       end
     end
 

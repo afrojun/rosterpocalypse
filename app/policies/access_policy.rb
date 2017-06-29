@@ -74,6 +74,7 @@ class AccessPolicy
       can :read, PrivateLeague
       can :read, Roster
       can :read, Gameweek
+      can :read, Player
     end
   end
 end
