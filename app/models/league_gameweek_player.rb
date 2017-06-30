@@ -138,7 +138,7 @@ class LeagueGameweekPlayer < ApplicationRecord
                       "league using the role stat modifiers: #{league.role_stat_modifiers}."
 
     # Assume the player is an assassin if we cannot figure out the role
-    role = gameweek_player.role
+    role = gameweek_player.role.downcase
     Rails.logger.info "League Gameweek Player role: #{role}"
     breakdown = {
       solo_kills: detail.solo_kills * league.role_stat_modifiers[role]["solo_kills"].to_i,
