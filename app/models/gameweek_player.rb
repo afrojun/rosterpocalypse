@@ -94,10 +94,7 @@ class GameweekPlayer < ApplicationRecord
     bonus_points_breakdown[game.game_hash] = {
       bonus: bonus_awards(game, detail)
     }
-    update team: detail.team,
-           value: detail.player.value,
-           role: detail.player.role,
-           points_breakdown: bonus_points_breakdown
+    update points_breakdown: bonus_points_breakdown
 
     # Group the associated leagues by whether they share a common role_stat_modifiers
     # Hash, then group them again by whether they use a representative_game. This
