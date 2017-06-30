@@ -48,6 +48,10 @@ class Gameweek < ApplicationRecord
     gameweek_rosters.extend(DescriptiveStatistics).percentile(percentile) { |gameweek_roster| gameweek_roster.points }
   end
 
+  def default_league
+    League.where(name: "HGC #{tournament.region} 2017 - Phase 2").first
+  end
+
   def move_end_date offset
     next_gameweek = self.next
     update end_date: end_date+offset

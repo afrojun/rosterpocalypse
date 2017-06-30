@@ -26,11 +26,10 @@ class GameweekPlayer < ApplicationRecord
 
   def self.update_from_game game, gameweek
     game.game_details.each do |detail|
-      gameweek_player = GameweekPlayer.find_or_create_by(gameweek: gameweek,
-                                                         player: detail.player,
-                                                         team: detail.team,
-                                                         value: detail.player.value,
-                                                         role: detail.player.role)
+      gameweek_player = GameweekPlayer.find_or_initialize_by gameweek: gameweek, player: detail.player
+      gameweek_player.update_attributes!(team: detail.team,
+                                         value: detail.player.value,
+                                         role: detail.player.role)
 
       gameweek.leagues.each do |league|
         LeagueGameweekPlayer.find_or_create_by league: league, gameweek_player: gameweek_player
@@ -41,18 +40,23 @@ class GameweekPlayer < ApplicationRecord
 
   # FIXME: This method needs to be updated to use LeagueGameweekPlayer instead
   def self.update_pick_rate_and_efficiency_for_gameweek gameweek
+    league = gameweek.default_league
+
     gameweek_players = gameweek.gameweek_players.includes(:player, :gameweek_rosters)
+    league_gameweek_players = league.league_gameweek_players.where(gameweek_player: gameweek_players).includes(:gameweek_player)
     valid_gameweek_rosters = gameweek.gameweek_rosters.includes(transfers: [:player_in, :player_out]).where("points IS NOT NULL")
 
-    max_points = gameweek_players.order(points: :desc).first.try :points
-    min_value = gameweek.players.order(value: :asc).first.try :value
+    max_points = league_gameweek_players.order(points: :desc).first.try :points
+    min_value = gameweek_players.order(value: :asc).first.try :value
     efficiency_factor = (max_points && min_value) ? max_points/min_value : 1
     Rails.logger.info "Player Efficiency factor = max_points/min_value = #{max_points}/#{min_value} = #{efficiency_factor}"
 
     gameweek_players.each do |gameweek_player|
+      Rails.logger.info "Player: #{gameweek_player.player.name}"
+      league_gameweek_player = league_gameweek_players.where(gameweek_player: gameweek_player).first
       gameweek_player.update(
         pick_rate: ((gameweek_player.gameweek_rosters.size.to_f/valid_gameweek_rosters.size.to_f) * 100).round(2),
-        efficiency: (((gameweek_player.points/gameweek_player.value)/efficiency_factor) * 100).round(2)
+        efficiency: (((league_gameweek_player.points/gameweek_player.value)/efficiency_factor) * 100).round(2)
       )
     end
   end
@@ -68,7 +72,11 @@ class GameweekPlayer < ApplicationRecord
   # Refresh all game points for this gameweek
   def update_all_games
     update points: 0, points_breakdown: {}
-    league_gameweek_players.update_all points: 0, points_breakdown: {}
+    league_gameweek_players.destroy_all
+
+    gameweek.leagues.each do |league|
+      LeagueGameweekPlayer.find_or_create_by league: league, gameweek_player: self
+    end
 
     player_game_details.each do |detail|
       refresh detail.game, detail

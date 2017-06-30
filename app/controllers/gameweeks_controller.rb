@@ -13,7 +13,11 @@ class GameweeksController < RosterpocalypseController
   # GET /gameweeks/1.json
   def show
     @gameweek_statistics = GameweekStatistic.find_or_initialize_by(gameweek: @gameweek)
-    @gameweek_players = @gameweek.gameweek_players.includes(:team, player: [:team]).order(points: :desc)
+    @league_gameweek_players = @gameweek.default_league.league_gameweek_players.
+                                       joins(:gameweek_player).
+                                       where("gameweek_players.gameweek_id = ?", @gameweek.id).
+                                       includes(:gameweek_player).
+                                       order(points: :desc)
   end
 
   private

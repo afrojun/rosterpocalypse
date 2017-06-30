@@ -21,8 +21,10 @@ require 'rails_helper'
 RSpec.describe GameweeksController, type: :controller do
   login_user
 
-  let(:tournament) { FactoryGirl.create :tournament, start_date: Time.now.utc - 1.hour, end_date: Time.now.utc + 1.hour }
+  let(:tournament) { FactoryGirl.create :tournament, region: "EU", start_date: Time.now.utc - 1.hour, end_date: Time.now.utc + 1.hour }
   let(:gameweek) { FactoryGirl.create :gameweek, tournament: tournament }
+  let(:league) { FactoryGirl.create(:private_league, name: "HGC EU 2017 - Phase 2", tournament: tournament) }
+
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
@@ -40,6 +42,7 @@ RSpec.describe GameweeksController, type: :controller do
   describe "GET #show" do
     it "assigns the requested gameweek as @gameweek" do
       gameweek
+      league
       get :show, params: {id: gameweek.to_param}, session: valid_session
       expect(assigns(:gameweek)).to eq(gameweek)
     end

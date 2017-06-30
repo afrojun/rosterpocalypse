@@ -51,7 +51,7 @@
 .gameweek-player-stats-table
   %h2 Player Stats
 
-  - if @gameweek_players.any?
+  - if @league_gameweek_players.any?
 
     %table.table.table-sm.table-striped.table-hover
       %thead
@@ -64,7 +64,8 @@
             Efficiency %
             %small= link_to "[?]", about_path + "#q12"
       %tbody
-        - @gameweek_players.each do |gameweek_player, player_stats|
+        - @league_gameweek_players.each do |league_gameweek_player, player_stats|
+          - gameweek_player = league_gameweek_player.gameweek_player
           %tr
             %td
               = team_logo gameweek_player.team
@@ -72,7 +73,7 @@
               = gameweek_player.player.name
             %td.right-align= sprintf "%.2f", gameweek_player.value
             %td.right-align= sprintf "%.2f", gameweek_player.pick_rate
-            %td.right-align= gameweek_player.points
+            %td.right-align= league_gameweek_player.points
             %td.right-align= sprintf "%.2f", gameweek_player.efficiency
   - else
     No Player data available for this Gameweek

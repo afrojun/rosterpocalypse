@@ -31,9 +31,8 @@
               %a.nav-link{href: rosters_path} Rosters
             %li.nav-item
               %a.nav-link{href: leagues_path} Leagues
-            - if false # Hide this for now since there are no stats to show
-              %li.nav-item
-                %a.nav-link{href: gameweeks_path} Statistics
+            %li.nav-item
+              %a.nav-link{href: gameweeks_path} Statistics
           - if user_signed_in? && current_user.admin?
             %li.nav-item.dropdown
               %a.nav-link.dropdown-toggle{href: "#", id: "navbarAdminDropdownMenuLink", "data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false"}
@@ -83,12 +82,12 @@
   .row
     .col-md-6.footer-links
       = link_to "About & FAQ", about_path
-      / %b &#8226;
-      / = link_to "Credits", credits_path
-      / %b &#8226;
-      / = link_to "Privacy Policy", privacy_path
-      / %b &#8226;
-      / = link_to "Terms and Conditions", terms_path
+      -# %b &#8226;
+      -# = link_to "Credits", credits_path
+      -# %b &#8226;
+      -# = link_to "Privacy Policy", privacy_path
+      -# %b &#8226;
+      -# = link_to "Terms and Conditions", terms_path
     .col-md-6
       .float-xs-right
         %i.fa.fa-copyright
