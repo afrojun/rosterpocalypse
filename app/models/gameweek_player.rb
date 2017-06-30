@@ -147,7 +147,6 @@ class GameweekPlayer < ApplicationRecord
   end
 
   def player_role_awards detail
-    role = detail.player.role
     if Player.players_in_role(role).size > MIN_GAMES_FOR_BONUS_AWARD
       stat = case role
              when "Support"
@@ -189,7 +188,7 @@ class GameweekPlayer < ApplicationRecord
   end
 
   def team_awards game, detail
-    if detail.player.role == "Support" && Game.all.size > MIN_GAMES_FOR_BONUS_AWARD
+    if role == "Support" && Game.all.size > MIN_GAMES_FOR_BONUS_AWARD
       team = detail.team
       stat = "deaths"
       Rails.logger.info "Team stats: #{game.team_stats.inspect}"
