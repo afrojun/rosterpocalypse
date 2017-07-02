@@ -1,5 +1,5 @@
 class RostersController < RosterpocalypseController
-  before_action :authenticate_user!, except: [:show, :details]
+  before_action :authenticate_user!, except: [:show, :details, :players]
   before_action :set_roster, only: [:show, :manage, :players, :update, :destroy,
                                     :status, :details]
   before_action :set_gameweek, only: [:show, :players]
