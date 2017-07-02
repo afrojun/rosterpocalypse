@@ -60,7 +60,7 @@ class RostersController < RosterpocalypseController
       format.html { }
       format.json { render json: @gameweek_players }
       format.png {
-                   kit = IMGKit.new(render_to_string)#, "header-html" => "layouts/min_header",)
+                   kit = IMGKit.new(render_to_string, "quality" => 80, "crop-w" => 676)
                    send_data(kit.to_png, :type => "image/png", :disposition => 'inline')
                  }
     end
