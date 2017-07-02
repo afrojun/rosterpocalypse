@@ -39,7 +39,7 @@ class Game < ApplicationRecord
   end
 
   def winner
-    game_details.first.win ? game_details.first.team : other_team(game_details.first.team)
+    game_details.detect(&:win).team
   end
 
   def should_generate_new_friendly_id?

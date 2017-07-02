@@ -10,8 +10,6 @@ class Match < ApplicationRecord
 
   validate :start_date_in_gameweek
 
-
-
   MATCH_SCORE_TO_BEST_OF = {
     [0, 0] => 1,
     [0, 1] => 1,
@@ -70,7 +68,7 @@ class Match < ApplicationRecord
       match = candidate_matches.first
       game.update(match: match)
       match.reload
-      score = match.score.sort
+      score = match.score.values.sort
       Rails.logger.info "score: #{score}"
 
       match.update(
@@ -93,7 +91,7 @@ class Match < ApplicationRecord
   end
 
   def description
-    teams.map(&:name).join(" vs. ")
+    score.map { |team, score| "#{team.name} (#{score})" }.join(" vs. ")
   end
 
   def short_description
@@ -103,12 +101,9 @@ class Match < ApplicationRecord
   def score
     team_1_wins = 0
     team_2_wins = 0
-    games.each do |game|
-      winner = game.winner
-      team_1_wins = (team_1_wins + 1) if winner == team_1
-      team_2_wins = (team_2_wins + 1) if winner == team_2
-    end
+    game_winners = games.includes(:game_details).map(&:winner)
 
-    [team_1_wins, team_2_wins]
+    Hash[team_1, game_winners.count(team_1),
+         team_2, game_winners.count(team_2)]
   end
 end
