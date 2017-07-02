@@ -76,10 +76,12 @@ class GameweekRoster < ApplicationRecord
   end
 
   def gameweek_points
-    @gameweek_points ||= LeagueGameweekPlayer.
-                           where(league: roster.league,
-                                 gameweek_player: gameweek_players).
-                           map(&:points).compact.sum
+    league_gameweek_players.map(&:points).compact.sum
+  end
+
+  def league_gameweek_players
+    LeagueGameweekPlayer.where(league: roster.league,
+                               gameweek_player: gameweek_players)
   end
 
   def points_string
