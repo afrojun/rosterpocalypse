@@ -70,7 +70,12 @@ gem "font-awesome-rails"
 # https://github.com/thirtysixthspan/descriptive_statistics
 gem 'descriptive_statistics', '~> 2.4.0', :require => 'descriptive_statistics/safe'
 
+# Robust alternative to Rake for building CLI tools
 gem 'thor-rails'
+
+# Used to create images dynamically from webpages
+gem 'wkhtmltoimage-binary'
+gem 'imgkit'
 
 # https://github.com/icalendar/icalendar
 # Gem to create and read iCalendar files

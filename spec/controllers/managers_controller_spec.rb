@@ -45,7 +45,8 @@ RSpec.describe ManagersController, type: :controller do
     it "assigns all managers as @managers" do
       manager = Manager.create! valid_attributes
       get :index, params: {}, session: valid_session
-      expect(assigns(:managers)).to include(manager)
+      expect(response).to redirect_to root_path
+      expect(flash[:alert]).to eq "You don't have permission to take this action."
     end
   end
 
@@ -53,7 +54,8 @@ RSpec.describe ManagersController, type: :controller do
     it "assigns the requested manager as @manager" do
       manager = Manager.create! valid_attributes
       get :show, params: {id: manager.to_param}, session: valid_session
-      expect(assigns(:manager)).to eq(manager)
+      expect(response).to redirect_to root_path
+      expect(flash[:alert]).to eq "You don't have permission to take this action."
     end
   end
 

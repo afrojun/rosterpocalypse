@@ -1,5 +1,5 @@
 class RosterpocalypseController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :authorize_read!, only: [:index, :show]
   before_action :authorize_update!, only: [:edit, :update]
   before_action :authorize_create!, only: [:new, :create]

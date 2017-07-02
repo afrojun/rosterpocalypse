@@ -1,5 +1,9 @@
 = page_title @page_title
 
+= content_for :header do
+  = render "layouts/twitter_roster_card_meta_tags", roster: @roster
+
+
 .col-xs-10.roster-status-page
   = render "gameweeks/gameweek_navigation", gameweek: @gameweek, next_path: roster_path(@roster, gameweek: @gameweek.next_active), previous_path: roster_path(@roster, gameweek: @gameweek.previous_active)
   .col-xs-12.roster-status-gameweek-summary

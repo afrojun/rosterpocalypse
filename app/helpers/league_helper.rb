@@ -1,11 +1,13 @@
 module LeagueHelper
 
   def league_membership_change league, button_size_class
-    roster = Roster.find_by_manager_and_league current_user.manager, league
-    if league.rosters.include? roster
-      link_to_leave_league league, button_size_class
-    else
-      link_to_join_league league, button_size_class
+    if user_signed_in?
+      roster = Roster.find_by_manager_and_league current_user.manager, league
+      if league.rosters.include? roster
+        link_to_leave_league league, button_size_class
+      else
+        link_to_join_league league, button_size_class
+      end
     end
   end
 

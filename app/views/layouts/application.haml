@@ -3,18 +3,8 @@
 %html
   %head
     %title= title
-    = csrf_meta_tags
-    = canonical_tag
-
-    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload'
-    = javascript_include_tag 'application', 'data-turbolinks-track': 'reload'
-    = render "/layouts/favicons"
-
-    - if Rails.env == "production"
-      = render "layouts/crazyegg"
-
-    - if Rails.env == "production"
-      = render "layouts/mixpanel"
+    = render "layouts/header"
+    = yield :header
 
   %body
     - if Rails.env == "production"
@@ -29,10 +19,10 @@
           - if user_signed_in?
             %li.nav-item
               %a.nav-link{href: rosters_path} Rosters
-            %li.nav-item
-              %a.nav-link{href: leagues_path} Leagues
-            %li.nav-item
-              %a.nav-link{href: gameweeks_path} Statistics
+          %li.nav-item
+            %a.nav-link{href: leagues_path} Leagues
+          %li.nav-item
+            %a.nav-link{href: gameweeks_path} Statistics
           - if user_signed_in? && current_user.admin?
             %li.nav-item.dropdown
               %a.nav-link.dropdown-toggle{href: "#", id: "navbarAdminDropdownMenuLink", "data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "false"}

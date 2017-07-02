@@ -2,13 +2,20 @@ require 'rails_helper'
 
 RSpec.describe GameweekRoster, type: :model do
   let(:tournament) { FactoryGirl.create :tournament }
+  let(:league) { FactoryGirl.create :private_league, tournament: tournament }
   let(:roster) { FactoryGirl.create :roster, tournament: tournament }
   let(:gameweek_roster) { roster.gameweek_rosters[1] }
+  let(:gameweek) { gameweek_roster.gameweek }
   let(:num_players) { 5 }
   let(:players) { FactoryGirl.create_list :player, num_players }
   let(:gameweek_players) {
     players.map do |player|
-      FactoryGirl.create :gameweek_player, player: player, gameweek: gameweek_roster.gameweek
+      FactoryGirl.create :gameweek_player, player: player, gameweek: gameweek
+    end
+  }
+  let(:league_gameweek_players) {
+    gameweek_players.map do |gameweek_player|
+      FactoryGirl.create :league_gameweek_player, gameweek_player: gameweek_player, league: league
     end
   }
 
@@ -42,19 +49,19 @@ RSpec.describe GameweekRoster, type: :model do
 
   context "#create_snapshot" do
     it "returns false if there are no players" do
-      expect(gameweek_roster.roster_snapshot).to eq Hash.new
       expect(gameweek_roster.create_snapshot).to eq false
+      expect(gameweek_roster.roster_snapshot).to eq Hash.new
     end
 
     it "creates the snapshot if there are 5 players" do
       expect(gameweek_roster.create_snapshot(players)).to eq true
-      expect(gameweek_roster.roster_snapshot[:players].keys).to eq players.map(&:slug)
+      expect(gameweek_roster.roster_snapshot[:player_ids]).to eq players.map(&:id)
     end
 
     it "defaults to getting the players from the roster" do
       roster.players << players
       expect(gameweek_roster.create_snapshot).to eq true
-      expect(gameweek_roster.roster_snapshot[:players].keys.sort).to eq players.map(&:slug)
+      expect(gameweek_roster.roster_snapshot[:player_ids]).to eq players.map(&:id)
     end
   end
 
@@ -86,7 +93,9 @@ RSpec.describe GameweekRoster, type: :model do
     end
 
     it "updates points for valid snapshots" do
-      gameweek_players
+      roster.add_to league
+      league_gameweek_players
+
       gameweek_roster.create_snapshot(players)
       expect(gameweek_roster.update_points).to eq true
       expect(gameweek_roster.points).to eq 75
