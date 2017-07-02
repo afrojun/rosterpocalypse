@@ -20,8 +20,7 @@
     - rosters.each do |roster|
       %tr
         - if show_manager
-          - roster_manager_name = roster.manager.name.include?("_bnet") ? roster.manager.name.split(".").first : roster.manager.name
-          %td= link_to roster_manager_name, roster
+          %td= link_to roster.manager.sanitized_name, roster
         - if show_league
           %td= link_to roster.league.name, roster
         - if show_tournament

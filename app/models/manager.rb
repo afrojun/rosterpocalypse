@@ -17,6 +17,16 @@ class Manager < ApplicationRecord
     user.try :username
   end
 
+  def sanitized_name
+    if name.include? "_bnet"
+      name.split(".").first
+    elsif name.ends_with? "_reddit"
+      name.split("_reddit").first
+    else
+      name
+    end
+  end
+
   def name_changed?
     user.try :username_changed?
   end
