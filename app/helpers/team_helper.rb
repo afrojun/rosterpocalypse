@@ -7,7 +7,7 @@ module TeamHelper
   end
 
   def team_logo team, size = 24
-    absolute_image_tag team_logo_filename(team), alt: team.name, size: size
+    image_tag team_logo_filename(team), alt: team.name, size: size
   end
 
   def team_logo_filename team
