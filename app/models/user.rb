@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  include Csvable
+
   has_one :manager, dependent: :destroy
   has_many :identities, dependent: :destroy
 
@@ -17,6 +19,14 @@ class User < ApplicationRecord
 
   after_create :create_manager
   before_update :update_manager
+
+  def self.csv_collection
+    all.includes(manager: [:rosters])
+  end
+
+  def self.csv_attributes
+    attributes = %w{id username manager.slug unconfirmed? created_at manager.rosters.size}
+  end
 
   def create_manager
     Manager.create user: self

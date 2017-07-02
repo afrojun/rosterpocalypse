@@ -1,4 +1,6 @@
 class Roster < ApplicationRecord
+  include Csvable
+
   extend FriendlyId
   friendly_id :name
 
@@ -24,6 +26,14 @@ class Roster < ApplicationRecord
   def self.find_by_manager_and_league manager, league
     tournament_rosters = Roster.where(manager: manager, tournament: league.tournament)
     tournament_rosters.detect { |r| r.league == league }
+  end
+
+  def self.csv_collection
+    all.includes(:tournament, :leagues, :players, :transfers, manager: [:user])
+  end
+
+  def self.csv_attributes
+    %w{id manager.user.id manager.slug tournament.slug tournament.region leagues.size players.size transfers.size created_at}
   end
 
   # Dynamically define the current, previous and next gameweek and
