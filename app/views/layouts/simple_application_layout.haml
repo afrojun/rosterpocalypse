@@ -4,5 +4,7 @@
   %head
     %title= title
     = render "layouts/min_header"
+    = yield :header
+
   %body
     = yield

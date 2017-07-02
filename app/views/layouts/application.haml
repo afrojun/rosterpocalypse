@@ -4,6 +4,8 @@
   %head
     %title= title
     = render "layouts/header"
+    = yield :header
+
   %body
     - if Rails.env == "production"
       = render "layouts/google_analytics"
