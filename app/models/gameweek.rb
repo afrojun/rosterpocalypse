@@ -58,8 +58,8 @@ class Gameweek < ApplicationRecord
     next_gameweek.update start_date: next_gameweek.start_date+offset
   end
 
-  def update_all_gameweek_players
-    gameweek_players.each(&:update_all_games)
+  def refresh_all_gameweek_players
+    gameweek_players.each(&:refresh_all_games)
   end
 
   def update_all_gameweek_rosters

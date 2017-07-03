@@ -21,11 +21,14 @@ class Roster < ApplicationRecord
   after_create :create_gameweek_rosters
 
   MAX_PLAYERS = 5
-  MAX_TOTAL_VALUE = 500
 
   def self.find_by_manager_and_league manager, league
     tournament_rosters = Roster.where(manager: manager, tournament: league.tournament)
     tournament_rosters.detect { |r| r.league == league }
+  end
+
+  def self.active_rosters
+    Roster.where(tournament: Tournament.active_tournaments)
   end
 
   def self.csv_collection
@@ -59,14 +62,6 @@ class Roster < ApplicationRecord
 
   def league
     leagues.first
-  end
-
-  def budget
-    if league.present?
-      league.starting_budget
-    else
-      MAX_TOTAL_VALUE
-    end
   end
 
   def private_leagues
@@ -109,6 +104,20 @@ class Roster < ApplicationRecord
 
   def update_score
     update score: gameweek_rosters.map(&:points).compact.sum
+  end
+
+  def update_budget gameweek_roster = current_gameweek_roster
+    if gameweek_roster.gameweek_players.any?
+      old_total_player_value = gameweek_roster.gameweek_players.sum(&:value)
+      new_total_player_value = players.sum(&:value)
+
+      player_value_diff = new_total_player_value - old_total_player_value
+      new_budget = (budget + player_value_diff).round(2)
+      Rails.logger.info "Updating roster budget for #{slug}: #{budget} -> #{new_budget}"
+      update budget: new_budget
+    else
+      Rails.logger.info "Not updating budget for roster '#{slug}' as it has no gameweek_players"
+    end
   end
 
   def allow_updates?

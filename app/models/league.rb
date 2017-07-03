@@ -91,7 +91,8 @@ class League < ApplicationRecord
     if tournament.active?
       if validate_one_roster_per_league manager
         roster_name = "#{manager.slug}_#{slug}"
-        roster = Roster.create(name: roster_name, tournament: tournament, manager: manager)
+        roster = Roster.create(name: roster_name, tournament: tournament,
+                               manager: manager, budget: starting_budget)
         roster.set_available_transfers num_transfers
         Rails.logger.info "Creating and adding Roster '#{roster.slug}' to League '#{slug}'."
         add(roster) && roster

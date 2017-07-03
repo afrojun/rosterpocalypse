@@ -37,8 +37,8 @@ class GameweekStatistic < ApplicationRecord
   end
 
   def update_top_transfers
-    transfers_in = gameweek.transfers.select("player_in_id, count(player_in_id)").group(:player_in_id).size.sort  { |(_, a), (_, b)| a <=> b }.last(5).reverse
-    transfers_out = gameweek.transfers.select("player_out_id, count(player_out_id)").group(:player_out_id).size.sort  { |(_, a), (_, b)| a <=> b }.last(5).reverse
+    transfers_in = Transfer.gameweek_transfers_in(gameweek).sort  { |(_, a), (_, b)| a <=> b }.last(5).reverse
+    transfers_out = Transfer.gameweek_transfers_out(gameweek).sort  { |(_, a), (_, b)| a <=> b }.last(5).reverse
 
     update!(
       top_transfers_in: transfers_in,

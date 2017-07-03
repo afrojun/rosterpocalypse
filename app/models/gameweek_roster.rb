@@ -41,7 +41,7 @@ class GameweekRoster < ApplicationRecord
     end
   end
 
-  def update_points
+  def add_gameweek_players
     if snapshot_player_ids.present?
       snapshot_gameweek_players = GameweekPlayer.where(gameweek: gameweek, player_id: snapshot_player_ids)
 
@@ -59,9 +59,17 @@ class GameweekRoster < ApplicationRecord
 
       gameweek_players.clear
       gameweek_players << snapshot_gameweek_players
-      update points: gameweek_points
     else
       Rails.logger.warn "No snapshot present for '#{roster.name}', unable to update points."
+      false
+    end
+  end
+
+  def update_points
+    if gameweek_players.size == Roster::MAX_PLAYERS
+      update points: gameweek_points
+    else
+      Rails.logger.warn "gameweek_players size for '#{roster.name}' is not #{Roster::MAX_PLAYERS}, unable to update points."
       false
     end
   end

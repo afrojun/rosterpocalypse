@@ -97,6 +97,7 @@ RSpec.describe GameweekRoster, type: :model do
       league_gameweek_players
 
       gameweek_roster.create_snapshot(players)
+      gameweek_roster.add_gameweek_players
       expect(gameweek_roster.update_points).to eq true
       expect(gameweek_roster.points).to eq 75
     end

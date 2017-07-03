@@ -15,6 +15,7 @@
       - if show_transfers
         %th Transfers
       %th Score
+      %th Budget
       %th{:colspan => "2"}
   %tbody
     - rosters.each do |roster|
@@ -28,6 +29,7 @@
         - if show_transfers
           %td= roster.available_transfers
         %td= roster.score
+        %td= roster.budget
         %td
           - if can? :update, roster
             = link_to 'Manage', manage_roster_path(roster)

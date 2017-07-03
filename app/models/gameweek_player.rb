@@ -24,17 +24,29 @@ class GameweekPlayer < ApplicationRecord
   BONUS_AWARD_PERCENTILE = 90
   MIN_GAMES_FOR_BONUS_AWARD = 30
 
+  def self.create_all_gameweek_players_for_gameweek gameweek
+    Player.active_players.joins(:team).
+           where(teams: {region: gameweek.tournament.region}).each do |player|
+      find_or_create_by(gameweek: gameweek, player: player) do |gwp|
+        gwp.team  = player.team
+        gwp.value = player.value
+        gwp.role  = player.role
+      end
+    end
+  end
+
   def self.update_from_game game, gameweek
     game.game_details.each do |detail|
-      gameweek_player = GameweekPlayer.find_or_initialize_by gameweek: gameweek, player: detail.player
-      gameweek_player.update_attributes!(team: detail.team,
-                                         value: detail.player.value,
-                                         role: detail.player.role)
-
-      gameweek.leagues.each do |league|
-        LeagueGameweekPlayer.find_or_create_by league: league, gameweek_player: gameweek_player
+      gameweek_player = find_by(gameweek: gameweek, player: detail.player)
+      if gameweek_player.present?
+        gameweek_player.find_or_create_league_gameweek_players
+        gameweek_player.add game, detail
+      else
+        message = "Unable to find gameweek player for " +
+                  "gameweek: #{gameweek.id}, player: #{player.slug}"
+        Rails.logger.error message
+        raise message
       end
-      gameweek_player.refresh game, detail
     end
   end
 
@@ -70,16 +82,14 @@ class GameweekPlayer < ApplicationRecord
   end
 
   # Refresh all game points for this gameweek
-  def update_all_games
+  def refresh_all_games
     update points: 0, points_breakdown: {}
-    league_gameweek_players.destroy_all
 
-    gameweek.leagues.each do |league|
-      LeagueGameweekPlayer.find_or_create_by league: league, gameweek_player: self
-    end
+    league_gameweek_players.destroy_all
+    find_or_create_league_gameweek_players
 
     player_game_details.each do |detail|
-      refresh detail.game, detail
+      add detail.game, detail
     end
   end
 
@@ -87,7 +97,7 @@ class GameweekPlayer < ApplicationRecord
     @player_game_details ||= game_details.where(player: player).includes(:team)
   end
 
-  def refresh game, detail
+  def add game, detail
     # Bonus point awards are common across all leagues, so calculate them first
     # and store them in the GameweekPlayer's points_breakdown Hash
     bonus_points_breakdown = points_breakdown || {}
@@ -105,7 +115,7 @@ class GameweekPlayer < ApplicationRecord
       same_mods_leagues.group_by { |l| l.use_representative_game }.each do |_, rep_game_leagues|
         sample_league = rep_game_leagues.shift
         sample_league_gameweek_player = league_gameweek_players.where(league: sample_league).first
-        sample_league_gameweek_player.refresh game, detail
+        sample_league_gameweek_player.add game, detail
 
         league_gameweek_players.
           includes(:league).
@@ -115,6 +125,14 @@ class GameweekPlayer < ApplicationRecord
       end
     end
   end
+
+  def find_or_create_league_gameweek_players
+    gameweek.leagues.each do |league|
+      LeagueGameweekPlayer.find_or_create_by league: league, gameweek_player: self
+    end
+  end
+
+  private
 
   # Bonus categories:
   # +1 point for each

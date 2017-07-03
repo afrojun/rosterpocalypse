@@ -15,7 +15,7 @@
     = f.text_field :country, class: "form-control", placeholder: "Country"
   .field
     = f.label :value, class: "sr-only"
-    = f.number_field :value, required: true, class: "form-control", placeholder: "Value"
+    = f.number_field :value, required: true, class: "form-control", placeholder: "Value", step: 0.01
   .field
     = f.label :team, class: "sr-only"
     = f.select :team_id, @teams.map { |team| [team.name, team.id] }, {include_blank: true}, {class: "form-control"}

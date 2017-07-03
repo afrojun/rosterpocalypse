@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170625235759) do
+ActiveRecord::Schema.define(version: 20170702203438) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -279,13 +279,14 @@ ActiveRecord::Schema.define(version: 20170625235759) do
   end
 
   create_table "rosters", force: :cascade do |t|
-    t.string   "name",                      null: false
-    t.integer  "manager_id",                null: false
-    t.integer  "tournament_id",             null: false
-    t.integer  "score",         default: 0, null: false
-    t.string   "slug",                      null: false
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.string   "name",                          null: false
+    t.integer  "manager_id",                    null: false
+    t.integer  "tournament_id",                 null: false
+    t.integer  "score",         default: 0,     null: false
+    t.string   "slug",                          null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.float    "budget",        default: 500.0, null: false
     t.index ["manager_id"], name: "index_rosters_on_manager_id", using: :btree
     t.index ["name"], name: "index_rosters_on_name", unique: true, using: :btree
     t.index ["score"], name: "index_rosters_on_score", using: :btree

@@ -50,6 +50,10 @@ class Player < ApplicationRecord
     end
   end
 
+  def self.active_players
+    where(team: Team.active_teams)
+  end
+
   # Accepts either a string or Array of names as input
   def self.find_including_alternate_names player_names
     player_names = [player_names] if player_names.is_a?(String)
@@ -125,7 +129,7 @@ class Player < ApplicationRecord
         gameweek = other_gameweek_player.gameweek
         if gameweeks.include? gameweek
           gameweek_player = gameweek_players.where(gameweek: gameweek).first
-          gameweek_player.update_all_games
+          gameweek_player.refresh_all_games
         else
           other_gameweek_player.update_attribute :player, self
         end
@@ -154,6 +158,14 @@ class Player < ApplicationRecord
         PlayerAlternateName.find_or_create_by(player: self, alternate_name: alt_name)
       end
     end
+  end
+
+  # The 'transfers' parameter is a positive number if it refers to transfers IN
+  # and negative if it refers to transfers OUT.
+  def update_value_from_gameweek_transfers transfers
+    new_value = (value + (transfers * 0.1)).round(2)
+    Rails.logger.info "Updating player value for #{name}: #{value} -> #{new_value}"
+    update value: new_value
   end
 
   def update_value

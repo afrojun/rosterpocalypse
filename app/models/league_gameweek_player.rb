@@ -37,7 +37,7 @@ class LeagueGameweekPlayer < ApplicationRecord
     update_points
   end
 
-  def refresh game, detail
+  def add game, detail
     all_points_breakdowns = points_breakdown || {}
     all_points_breakdowns[game.game_hash] = points_breakdown_hash(game, detail)
     update points_breakdown: all_points_breakdowns
