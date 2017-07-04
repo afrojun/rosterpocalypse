@@ -27,11 +27,12 @@ class GameweekPlayer < ApplicationRecord
   def self.create_all_gameweek_players_for_gameweek gameweek
     Player.active_players.joins(:team).
            where(teams: {region: gameweek.tournament.region}).each do |player|
-      find_or_create_by(gameweek: gameweek, player: player) do |gwp|
+      gameweek_player = find_or_create_by(gameweek: gameweek, player: player) do |gwp|
         gwp.team  = player.team
         gwp.value = player.value
         gwp.role  = player.role
       end
+      gameweek_player.find_or_create_league_gameweek_players
     end
   end
 
@@ -39,7 +40,6 @@ class GameweekPlayer < ApplicationRecord
     game.game_details.each do |detail|
       gameweek_player = find_by(gameweek: gameweek, player: detail.player)
       if gameweek_player.present?
-        gameweek_player.find_or_create_league_gameweek_players
         gameweek_player.add game, detail
       else
         message = "Unable to find gameweek player for " +
