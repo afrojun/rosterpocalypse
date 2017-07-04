@@ -59,7 +59,10 @@ class GameweekRosterActions < Thor
       gameweek = tournament.current_gameweek
 
       Transfer.net_gameweek_transfers(gameweek).each do |player_id, net_transfers|
-        Player.find(player_id).update_value_from_gameweek_transfers net_transfers
+        gameweek_player = gameweek.gameweek_players.where(player_id: player_id).first
+        gameweek_player.player.update_value_from_gameweek_transfers net_transfers
+        value_change = gameweek_player.player.value - gameweek_player.value
+        gameweek_player.update player_value_change: value_change.round(2)
       end
     end
   end

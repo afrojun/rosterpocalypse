@@ -29,6 +29,7 @@ class Player < ApplicationRecord
   MIN_VALUE = 50.0
   MAX_VALUE = 200.0
   INITIAL_VALUE = 100.0
+  VALUE_CHANGE_FACTOR = 0.1
 
   def update_alternate_names
     PlayerAlternateName.find_or_create_by(player: self, alternate_name: name)
@@ -163,7 +164,7 @@ class Player < ApplicationRecord
   # The 'transfers' parameter is a positive number if it refers to transfers IN
   # and negative if it refers to transfers OUT.
   def update_value_from_gameweek_transfers transfers
-    new_value = (value + (transfers * 0.1)).round(2)
+    new_value = (value + (transfers * VALUE_CHANGE_FACTOR)).round(2)
     Rails.logger.info "Updating player value for #{name}: #{value} -> #{new_value}"
     update value: new_value
   end

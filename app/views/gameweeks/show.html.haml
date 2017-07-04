@@ -58,6 +58,7 @@
         %tr
           %th Player
           %th.right-align Value
+          %th.right-align Value Change
           %th.right-align Pick Rate %
           %th.right-align Points
           %th.right-align
@@ -72,6 +73,7 @@
               = player_role_icon gameweek_player.player
               = gameweek_player.player.name
             %td.right-align= sprintf "%.2f", gameweek_player.value
+            %td.right-align= sprintf "%.2f", gameweek_player.player_value_change
             %td.right-align= sprintf "%.2f", gameweek_player.pick_rate
             %td.right-align= league_gameweek_player.points
             %td.right-align= sprintf "%.2f", gameweek_player.efficiency

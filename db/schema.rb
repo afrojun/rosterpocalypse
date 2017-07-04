@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170702203438) do
+ActiveRecord::Schema.define(version: 20170704145255) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,17 +66,18 @@ ActiveRecord::Schema.define(version: 20170702203438) do
   end
 
   create_table "gameweek_players", force: :cascade do |t|
-    t.integer  "gameweek_id",                    null: false
-    t.integer  "player_id",                      null: false
+    t.integer  "gameweek_id",                       null: false
+    t.integer  "player_id",                         null: false
     t.text     "points_breakdown"
-    t.integer  "points",           default: 0,   null: false
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.integer  "points",              default: 0,   null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.float    "value"
     t.integer  "team_id"
-    t.float    "pick_rate",        default: 0.0, null: false
-    t.float    "efficiency",       default: 0.0, null: false
-    t.string   "role",             default: "",  null: false
+    t.float    "pick_rate",           default: 0.0, null: false
+    t.float    "efficiency",          default: 0.0, null: false
+    t.string   "role",                default: "",  null: false
+    t.float    "player_value_change", default: 0.0, null: false
     t.index ["gameweek_id", "player_id"], name: "index_gameweek_players_on_gameweek_id_and_player_id", using: :btree
     t.index ["gameweek_id"], name: "index_gameweek_players_on_gameweek_id", using: :btree
     t.index ["player_id", "gameweek_id"], name: "index_gameweek_players_on_player_id_and_gameweek_id", using: :btree

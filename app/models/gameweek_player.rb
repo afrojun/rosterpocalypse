@@ -18,6 +18,7 @@ class GameweekPlayer < ApplicationRecord
   validates :role, presence: true
   validates :team, presence: true
   validates :value, presence: true
+  validates :player_value_change, presence: true
 
   serialize :points_breakdown, Hash
 
