@@ -44,7 +44,7 @@ class GameweekPlayer < ApplicationRecord
         gameweek_player.add game, detail
       else
         message = "Unable to find gameweek player for " +
-                  "gameweek: #{gameweek.id}, player: #{player.slug}"
+                  "gameweek: #{gameweek.id}, player: #{detail.player.slug}"
         Rails.logger.error message
         raise message
       end

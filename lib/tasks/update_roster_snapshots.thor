@@ -28,11 +28,17 @@ class GameweekRosterActions < Thor
 
 
   desc "add_gameweek_players_from_snapshot", "Associate gameweek_players with gameweek_rosters based on the snapshot data"
+  method_option :previous, default: false, aliases: '-p', type: :boolean, desc: 'Adds gameweek players for the previous gameweek'
 
   def add_gameweek_players_from_snapshot
+    print "Adding gameweek players to gameweek rosters based on snapshots for the "
+    puts(options.previous ? "previous gameweek" : " current gameweek")
+
     Tournament.active_tournaments.each do |tournament|
+      gameweek = options.previous ? tournament.previous_gameweek : tournament.current_gameweek
+
       tournament.gameweek_rosters.
-                 where(gameweek: tournament.current_gameweek).
+                 where(gameweek: gameweek).
                  each do |gameweek_roster|
         gameweek_roster.add_gameweek_players
         print "."
@@ -44,11 +50,17 @@ class GameweekRosterActions < Thor
 
 
   desc "create_gameweek_players", "Create all GameweekPlayers for the current gameweek"
+  method_option :previous, default: false, aliases: '-p', type: :boolean, desc: 'Creates gameweek players for the previous gameweek'
 
   def create_gameweek_players
+    print "Creating gameweek players for the "
+    puts(options.previous ? "previous gameweek" : " current gameweek")
+
     Tournament.active_tournaments.each do |tournament|
-      GameweekPlayer.create_all_gameweek_players_for_gameweek tournament.current_gameweek
+      gameweek = options.previous ? tournament.previous_gameweek : tournament.current_gameweek
+      GameweekPlayer.create_all_gameweek_players_for_gameweek gameweek
     end
+    puts "Done."
   end
 
 
@@ -104,4 +116,20 @@ class GameweekRosterActions < Thor
 
     puts "Done."
   end
+
+  desc "update_gameweek_stats", "Update stats for the gameweek"
+  method_option :previous, default: false, aliases: '-p', type: :boolean, desc: 'Use the previous gameweek'
+
+  def update_gameweek_stats
+    print "Updating Gameweek stats for the "
+    puts(options.previous ? "previous gameweek" : " current gameweek")
+
+    Tournament.active_tournaments.each do |tournament|
+      gameweek = options.previous ? tournament.previous_gameweek : tournament.current_gameweek
+      GameweekPlayer.update_pick_rate_and_efficiency_for_gameweek gameweek
+      GameweekStatistic.update_all_stats_for_gameweek gameweek
+    end
+    puts "Done."
+  end
+
 end

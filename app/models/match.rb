@@ -10,6 +10,8 @@ class Match < ApplicationRecord
 
   validate :start_date_in_gameweek
 
+  before_destroy :disassociate_games
+
   MATCH_SCORE_TO_BEST_OF = {
     [0, 0] => 1,
     [0, 1] => 1,
@@ -47,7 +49,7 @@ class Match < ApplicationRecord
                           if match.games.any?
                             (match.games.last.start_date - game.start_date).abs < 4.hours
                           else
-                            (match.start_date - game.start_date).abs < 4.hours
+                            (match.start_date - game.start_date).abs < 5.hours
                           end
                         end
 
@@ -80,6 +82,10 @@ class Match < ApplicationRecord
       Rails.logger.error "More than 1 possible Match found! Unable to add game '#{game.game_hash}' to a match."
       false
     end
+  end
+
+  def disassociate_games
+    games.each { |game| game.update! match: nil }
   end
 
   def start_date_in_gameweek
