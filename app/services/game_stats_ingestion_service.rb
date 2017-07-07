@@ -9,10 +9,11 @@ class GameStatsIngestionService
 
   public
 
-  attr_accessor :json
+  attr_accessor :json, :create_or_update_models
 
-  def initialize json
+  def initialize json, create_or_update_models = false
     @json = json
+    @create_or_update_models = create_or_update_models
   end
 
   def populate_from_json
@@ -124,28 +125,41 @@ class GameStatsIngestionService
   end
 
   def find_or_create_team team_colour
-    Team.find_or_create_including_alternate_names(team_name(team_colour)).tap do |team|
-      TeamAlternateName.find_or_create_by(team: team, alternate_name: team_name_prefix_by_team_colour[team_colour]) if team_name_prefix_by_team_colour[team_colour].present?
-      team.update_attribute(:region, region) if team.region.blank? && region != Tournament::GLOBAL_REGION
+    if create_or_update_models
+      Team.find_or_create_including_alternate_names(team_name(team_colour)).tap do |team|
+        TeamAlternateName.find_or_create_by(team: team, alternate_name: team_name_prefix_by_team_colour[team_colour]) if team_name_prefix_by_team_colour[team_colour].present?
+        team.update_attribute(:region, region) if team.region.blank? && region != Tournament::GLOBAL_REGION
+      end
+    else
+      Team.find_including_alternate_names(team_name(team_colour)).first
     end
   end
 
   def find_or_create_player player_name, hero, team_colour
     # If the team name is prefixed to player names, strip it out
     sanitized_player_name = strip_team_name_prefix_from_player_name team_name_prefix_by_team_colour[team_colour], player_name
-    Player.find_or_create_including_alternate_names(sanitized_player_name).tap do |player|
-      player.set_role_from_class(hero.classification) if player.role.blank?
+
+    if create_or_update_models
+      Player.find_or_create_including_alternate_names(sanitized_player_name).tap do |player|
+        player.set_role_from_class(hero.classification) if player.role.blank?
+      end
+    else
+      Player.find_including_alternate_names(sanitized_player_name).first
     end
   end
 
   def find_or_create_hero hero_name
-    Hero.find_or_create_by internal_name: hero_name do |h|
-      if hero_details = Hero::HEROES[hero_name]
-        h.name = hero_details[:name]
-        h.classification = hero_details[:classification]
-      else
-        h.name = hero_name
+    if create_or_update_models
+      Hero.find_or_create_by internal_name: hero_name do |h|
+        if hero_details = Hero::HEROES[hero_name]
+          h.name = hero_details[:name]
+          h.classification = hero_details[:classification]
+        else
+          h.name = hero_name
+        end
       end
+    else
+      Hero.where(internal_name: hero_name).first
     end
   end
 
