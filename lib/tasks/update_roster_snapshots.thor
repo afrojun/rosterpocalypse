@@ -54,7 +54,7 @@ class GameweekRosterActions < Thor
 
   def create_gameweek_players
     print "Creating gameweek players for the "
-    puts(options.previous ? "previous gameweek" : " current gameweek")
+    puts(options.previous ? "previous gameweek" : "current gameweek")
 
     Tournament.active_tournaments.each do |tournament|
       gameweek = options.previous ? tournament.previous_gameweek : tournament.current_gameweek

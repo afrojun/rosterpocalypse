@@ -46,21 +46,22 @@ class GameweekRoster < ApplicationRecord
       snapshot_gameweek_players = GameweekPlayer.where(gameweek: gameweek, player_id: snapshot_player_ids)
 
       if snapshot_gameweek_players.size != Roster::MAX_PLAYERS
-        Rails.logger.warn "Unable to update points for an incomplete roster: '#{roster.name}'"
+        Rails.logger.warn "Unable to associate gameweek players for an incomplete roster: '#{roster.name}'"
         return false
       end
 
       total_value = snapshot_gameweek_players.map(&:value).sum
       if total_value > snapshot_budget
         Rails.logger.warn "Total value of the players in roster '#{roster.name}' " +
-                          "(#{total_value}) exceeds the budget of #{snapshot_budget}."
-        return false
+                          "(#{total_value}) exceeds the budget of #{snapshot_budget}." +
+                          "Proceeding anyway..."
       end
 
       gameweek_players.clear
       gameweek_players << snapshot_gameweek_players
     else
-      Rails.logger.warn "No snapshot present for '#{roster.name}', unable to update points."
+      Rails.logger.warn "No snapshot present for '#{roster.name}', " +
+                        "unable to associate gameweek players."
       false
     end
   end
