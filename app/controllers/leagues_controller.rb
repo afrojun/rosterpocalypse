@@ -5,7 +5,7 @@ class LeaguesController < RosterpocalypseController
   # GET /leagues.json
   def index
     @public_leagues = PublicLeague.active_leagues
-    @private_leagues = current_user.admin? ? PrivateLeague.active_leagues : []
+    @private_leagues = (current_user.present? && current_user.admin?) ? PrivateLeague.active_leagues : []
     # Randomize the order of the featured leagues
     @featured_leagues = League.where(featured: true)
     @featured_leagues = @featured_leagues.sample(@featured_leagues.size)
