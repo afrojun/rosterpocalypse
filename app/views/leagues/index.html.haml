@@ -30,6 +30,10 @@
 - else
   %p No Active Public Leagues found
 
+- if @private_leagues.any?
+  %h2 Private Leagues
+  = render "leagues_list", leagues: @private_leagues, show_manager: true
+
 %br/
 - if can? :create, PublicLeague
   = link_to 'New Public League', new_public_league_path, class: "btn btn-success"

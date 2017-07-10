@@ -42,6 +42,12 @@ class League < ApplicationRecord
     "support"  => "1",
   }
 
+  def self.active_leagues
+    includes(:tournament).
+      where(tournament: Tournament.active_tournaments).
+      order("manager_id asc")
+  end
+
   # Override name setter to strip whitespace
   def name=(nom)
     super(nom.squish)
@@ -151,9 +157,11 @@ class League < ApplicationRecord
   end
 
   def limit_active_leagues_per_manager
-    active_leagues = manager.leagues.includes(:tournament).where("tournament_id in (?)", Tournament.active_tournaments.map(&:id))
+    active_leagues_for_manager = manager.leagues.
+                                         includes(:tournament).
+                                         where(tournament: Tournament.active_tournaments)
 
-    if !manager.user.admin? && active_leagues.size >= MAX_ACTIVE_LEAGUES_PER_MANAGER
+    if !manager.user.admin? && active_leagues_for_manager.size >= MAX_ACTIVE_LEAGUES_PER_MANAGER
       message = "Creating more than #{MAX_ACTIVE_LEAGUES_PER_MANAGER} active leagues per manager is not permitted."
       Rails.logger.warn message
       errors.add(:base, message)
