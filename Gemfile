@@ -19,6 +19,9 @@ gem 'coffee-rails', '~> 4.2'
 
 gem 'pry-rails'
 
+# Rubocop for Ruby style checking
+gem 'rubocop', require: false
+
 # Add helpful information on page performance to the bottom of pages
 # https://github.com/josevalim/rails-footnotes
 gem 'rails-footnotes', '~> 4.0'
@@ -108,6 +111,7 @@ gem 'access-granted', '~> 1.1.0'
 gem 'dotiw'
 # friendly_id for non-numeric IDs in URLs
 gem 'friendly_id', '~> 5.2.0'
+# library for creating slugs.
 gem 'babosa'
 
 # Use jquery as the JavaScript library
