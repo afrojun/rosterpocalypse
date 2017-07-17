@@ -18,6 +18,4 @@ FactoryGirl.define do
       FactoryGirl.create_list :game_details, evaluator.number_of_details, :game => game
     end
   end
-
-
 end

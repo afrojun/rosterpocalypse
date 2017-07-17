@@ -1,5 +1,4 @@
 module PlayerHelper
-
   def link_to_heroes heroes
     heroes.collect do |hero|
       link_to hero.name, hero

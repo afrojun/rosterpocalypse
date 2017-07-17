@@ -2,7 +2,6 @@ require "rails_helper"
 
 RSpec.describe HeroesController, type: :routing do
   describe "routing" do
-
     it "routes to #index" do
       expect(:get => "/heroes").to route_to("heroes#index")
     end
@@ -34,6 +33,5 @@ RSpec.describe HeroesController, type: :routing do
     it "routes to #destroy" do
       expect(:delete => "/heroes/1").to route_to("heroes#destroy", :id => "1")
     end
-
   end
 end

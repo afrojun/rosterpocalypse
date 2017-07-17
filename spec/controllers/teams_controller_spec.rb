@@ -59,5 +59,4 @@ RSpec.describe TeamsController, type: :controller do
   context "an admin user" do
     it_should_behave_like "an admin user", Team, :team
   end
-
 end

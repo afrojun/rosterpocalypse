@@ -5,7 +5,6 @@
 require "stripe_event_subscribers/customer_subscription_event"
 
 class CustomerSubscriptionDeleted < CustomerSubscriptionEvent
-
   def call event
     super do |manager|
       logger.info "[Stripe Webhook] Cancelling subscription for Manager '#{manager.slug}'"
@@ -16,5 +15,4 @@ class CustomerSubscriptionDeleted < CustomerSubscriptionEvent
       #UserMailer.subscription_deleted(manager.user).deliver_later
     end
   end
-
 end

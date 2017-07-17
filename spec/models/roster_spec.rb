@@ -40,7 +40,6 @@ RSpec.describe Roster, type: :model do
         expect(league.rosters).not_to include(another_roster)
       end
     end
-
   end
 
   context "#available_transfers" do
@@ -141,8 +140,6 @@ RSpec.describe Roster, type: :model do
           expect(roster.players).to contain_exactly *original_players
           expect(roster.errors.messages).to include(roster: ["has 1 transfer available in this window"])
         end
-
-
 
         context "#validate_player_roles" do
           it "requires at least 1 support player and 1 warrior player" do

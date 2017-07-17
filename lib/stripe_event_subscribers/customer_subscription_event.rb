@@ -11,7 +11,6 @@
 require "stripe_event_subscribers/stripe_event_handler"
 
 class CustomerSubscriptionEvent < StripeEventHandler
-
   def call event
     customer_id = event.data.object.customer
     stripe_object_id = event.data.object.id
@@ -61,5 +60,4 @@ class CustomerSubscriptionEvent < StripeEventHandler
     # Send an email to the Rosterpocalypse admin email address to investigate further
     ApplicationMailer.stripe_webhook_failure(event, e).deliver_later
   end
-
 end

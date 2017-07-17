@@ -6,7 +6,6 @@ task :infer_player_roles => :environment do
   puts "done."
 end
 
-
 task :list_duplicate_players => :environment do
   puts "Listing possible duplicate players..."
   Player.all.each do |player|

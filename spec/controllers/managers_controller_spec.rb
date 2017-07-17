@@ -58,5 +58,4 @@ RSpec.describe ManagersController, type: :controller do
       expect(flash[:alert]).to eq "You don't have permission to take this action."
     end
   end
-
 end

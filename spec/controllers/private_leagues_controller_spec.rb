@@ -135,5 +135,4 @@ RSpec.describe PrivateLeaguesController, type: :controller do
       expect(response).to redirect_to(leagues_url)
     end
   end
-
 end

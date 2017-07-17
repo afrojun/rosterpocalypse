@@ -2,7 +2,6 @@ require "rails_helper"
 
 RSpec.describe RostersController, type: :routing do
   describe "routing" do
-
     it "routes to #index" do
       expect(:get => "/rosters").to route_to("rosters#index")
     end
@@ -26,6 +25,5 @@ RSpec.describe RostersController, type: :routing do
     it "routes to #destroy" do
       expect(:delete => "/rosters/1").to route_to("rosters#destroy", :id => "1")
     end
-
   end
 end

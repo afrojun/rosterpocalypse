@@ -4,11 +4,10 @@ RSpec.describe League, type: :model do
   let(:region) { "EU" }
   let(:manager) { FactoryGirl.create :manager }
   let(:now) { Time.now.utc }
-  let(:tournament) { FactoryGirl.create :tournament, region: region, start_date:  now - 1.day, end_date: now + 1.day }
+  let(:tournament) { FactoryGirl.create :tournament, region: region, start_date: now - 1.day, end_date: now + 1.day }
   let(:roster) { FactoryGirl.create :roster, manager: manager, tournament: tournament }
   let(:league) { FactoryGirl.create :public_league, tournament: tournament }
   let(:private_league) { FactoryGirl.create :private_league, tournament: tournament, manager: manager }
-
 
   context "validations" do
     it "doesn't allow creation of more than 10 active leagues per manager" do

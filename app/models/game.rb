@@ -61,7 +61,6 @@ class Game < ApplicationRecord
       errors.add(:base, "Only games with exactly 2 teams can be swapped.")
       false
     end
-
   end
 
   def pretty_start_date

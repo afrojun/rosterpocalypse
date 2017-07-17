@@ -22,7 +22,6 @@ class RostersController < RosterpocalypseController
     @my_leagues = League.includes(:tournament, manager: [:user]).
                          where(id: current_user.manager.participating_in_leagues).
                          where("tournament_id in (?)", Tournament.active_tournaments.map(&:id))
-
   end
 
   # GET /rosters/1

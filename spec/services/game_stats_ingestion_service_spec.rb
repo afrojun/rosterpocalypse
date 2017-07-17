@@ -308,5 +308,4 @@ describe GameStatsIngestionService do
       expect(service.send :strip_team_name_prefix_from_player_name, nil, "DIGBakery").to eq "DIGBakery"
     end
   end
-
 end

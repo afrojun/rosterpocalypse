@@ -95,7 +95,6 @@ class ManagersController < RosterpocalypseController
     end
   end
 
-
   private
 
   def stripe_api_call

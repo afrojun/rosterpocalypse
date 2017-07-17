@@ -1,5 +1,4 @@
 class SessionsController < Devise::SessionsController
-
   def create
     super do |resource|
       track_sign_in resource
@@ -12,5 +11,4 @@ class SessionsController < Devise::SessionsController
     mixpanel = Mixpanel::Tracker.new(ENV["MIXPANEL_ID"])
     mixpanel.track resource.id, 'User Signed In'
   end
-
 end

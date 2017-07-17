@@ -1,5 +1,4 @@
 module DeviseHelper
-
   # This returns the confirmation email if it is valid, or nil otherwise
   def valid_confirmation_email user
     if valid_email? user.confirmation_email
@@ -53,5 +52,4 @@ module DeviseHelper
       google_oauth2: "fa-google google-plus-red"
     }
   end
-
 end

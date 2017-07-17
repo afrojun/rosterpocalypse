@@ -1,5 +1,4 @@
 module ApplicationHelper
-
   def present model, model_klass = model.class
     klass = "#{model_klass}Presenter".constantize
     presenter = klass.new model, self

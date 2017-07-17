@@ -92,7 +92,6 @@ class PlayersController < RosterpocalypseController
       format.html { redirect_to players_url(region: @teams_filter[:region], active: @teams_filter[:active]), message }
       format.json { render json: message }
     end
-
   end
 
   private

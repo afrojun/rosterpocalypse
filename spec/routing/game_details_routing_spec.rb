@@ -2,7 +2,6 @@ require "rails_helper"
 
 RSpec.describe GameDetailsController, type: :routing do
   describe "routing" do
-
     it "routes to #new" do
       expect(:get => "/games/1/details/new").to route_to("game_details#new", game_id: "1")
     end
@@ -26,6 +25,5 @@ RSpec.describe GameDetailsController, type: :routing do
     it "routes to #destroy" do
       expect(:delete => "/details/1").to route_to("game_details#destroy", id: "1")
     end
-
   end
 end

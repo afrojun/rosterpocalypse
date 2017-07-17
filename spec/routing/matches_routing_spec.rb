@@ -2,7 +2,6 @@ require "rails_helper"
 
 RSpec.describe MatchesController, type: :routing do
   describe "routing" do
-
     it "routes to #index" do
       expect(:get => "/matches").to route_to("matches#index")
     end
@@ -34,6 +33,5 @@ RSpec.describe MatchesController, type: :routing do
     it "routes to #destroy" do
       expect(:delete => "/matches/1").to route_to("matches#destroy", :id => "1")
     end
-
   end
 end

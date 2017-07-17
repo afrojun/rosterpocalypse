@@ -1,5 +1,4 @@
 class RegistrationsController < Devise::RegistrationsController
-
   def create
     super do |resource|
       track_sign_up resource
@@ -51,5 +50,4 @@ class RegistrationsController < Devise::RegistrationsController
     logger.error "Failed to track user with Mixpanel: [#{e.class}] #{e.message}"
     logger.error "#{e.backtrace}"
   end
-
 end

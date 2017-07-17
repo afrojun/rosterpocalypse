@@ -4,5 +4,4 @@ FactoryGirl.define do
   factory :map do
     name { generate :map_name}
   end
-
 end

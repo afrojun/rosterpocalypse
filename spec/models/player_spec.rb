@@ -2,7 +2,6 @@ require 'rails_helper'
 
 RSpec.describe Player, type: :model do
   context "#update_alternate_names" do
-
     context "after create" do
       it "creates an entry in the alternate name table" do
         player = FactoryGirl.create :player
@@ -17,7 +16,6 @@ RSpec.describe Player, type: :model do
         expect(player.alternate_names.map(&:alternate_name)).to eq ["Joe", "joe", "Bob", "bob"]
       end
     end
-
   end
 
   context "#find_or_create_including_alternate_names" do
@@ -135,7 +133,6 @@ RSpec.describe Player, type: :model do
     end
 
     context "multi-hero classification players" do
-
       context "with a single role" do
         it "identifies majority Assassin players as Assassin" do
           expect(player).to receive(:player_heroes_by_classification).at_least(:once).and_return({"Assassin" => [1,2,3], "Specialist" => [9]})

@@ -21,7 +21,6 @@ require 'controllers/shared_admin_user_controller_actions_spec'
 # that an instance is receiving a specific message.
 
 RSpec.describe GameDetailsController, type: :controller do
-
   # This should return the minimal set of attributes required to create a valid
   # Game. As you add validations to Game, be sure to
   # adjust the attributes here as well.
@@ -236,5 +235,4 @@ RSpec.describe GameDetailsController, type: :controller do
       end
     end
   end
-
 end

@@ -4,7 +4,6 @@
 require "stripe_event_subscribers/customer_subscription_event"
 
 class CustomerSubscriptionCreated < CustomerSubscriptionEvent
-
   def call event
     super do |manager|
       logger.info "[Stripe Webhook] Setting customer type for Manager '#{manager.slug}' to 'paid'"
@@ -13,5 +12,4 @@ class CustomerSubscriptionCreated < CustomerSubscriptionEvent
       UserMailer.subscription_created(manager.user).deliver_later
     end
   end
-
 end

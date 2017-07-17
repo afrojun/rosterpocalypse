@@ -51,5 +51,4 @@ class UserMailer < ApplicationMailer
          bcc: "rosterpocalypse@gmail.com",
          subject: "Rosterpocalypse: #{subject}")
   end
-
 end

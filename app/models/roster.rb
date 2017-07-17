@@ -228,7 +228,6 @@ class Roster < ApplicationRecord
     if league.present?
       valid = true
       league.active_required_player_role_limitations.each do |role, min|
-
         role_players = players.select { |player| player.role.downcase == role.to_s }
         unless role_players.size >= min
           errors.add :roster, "needs #{min} #{role} #{"player".pluralize min}"
@@ -308,5 +307,4 @@ class Roster < ApplicationRecord
     end
     false
   end
-
 end

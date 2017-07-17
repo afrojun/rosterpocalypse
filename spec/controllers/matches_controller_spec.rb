@@ -21,7 +21,6 @@ require 'controllers/shared_admin_user_controller_actions_spec'
 # that an instance is receiving a specific message.
 
 RSpec.describe MatchesController, type: :controller do
-
   # This should return the minimal set of attributes required to create a valid
   # Match. As you add validations to Match, be sure to
   # adjust the attributes here as well.
@@ -72,5 +71,4 @@ RSpec.describe MatchesController, type: :controller do
   context "an admin user" do
     it_should_behave_like "an admin user", Match, :match
   end
-
 end

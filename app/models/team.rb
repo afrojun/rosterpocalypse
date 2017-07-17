@@ -88,5 +88,4 @@ class Team < ApplicationRecord
       end
     end
   end
-
 end

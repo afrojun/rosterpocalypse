@@ -97,5 +97,4 @@ class User < ApplicationRecord
     end
     @google_oauth2_client
   end
-
 end

@@ -1,8 +1,8 @@
 class GameStatsIngestionService
-
   FILENAME_FORMAT_REGEX = /^\d{2}\.\d{2}\.\d{2}_(.+)_vs_(.+)_game_\d_at_(.+)\.StormReplay$/
 
   private
+
   # Lazy loaded attributes
   attr_reader :start_date, :map, :game, :tournament, :gameweek, :tournament_name, :region, :filename_regex_match,
               :team_name_prefix_by_team_colour, :team_names_by_team_colour, :player_details_by_team_colour
@@ -324,5 +324,4 @@ class GameStatsIngestionService
       name.slice!(team_name_prefix) if team_name_prefix.present?
     end
   end
-
 end

@@ -35,7 +35,6 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       flash[:alert] = "#{message}. Please use one of the other supported services or email."
       redirect_to new_user_registration_url
     end
-
   end
 
   # Log in or create a new account based on the OAuth information provided

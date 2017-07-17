@@ -1,5 +1,4 @@
 class PrivateLeaguesController < LeaguesController
-
   private
 
   def set_private_league

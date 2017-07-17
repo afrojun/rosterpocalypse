@@ -1,5 +1,4 @@
 module Api
-
   class GameStatsIngestionController < Api::BaseApiController
     #before_action :authenticate_user!
 
@@ -9,5 +8,4 @@ module Api
       GameStatsIngestionService.new(response).populate_from_json
     end
   end
-
 end

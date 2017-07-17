@@ -2,7 +2,6 @@ require "rails_helper"
 
 RSpec.describe LeaguesController, type: :routing do
   describe "routing" do
-
     it "routes to #index" do
       expect(:get => "/leagues").to route_to("leagues#index")
     end
@@ -34,6 +33,5 @@ RSpec.describe LeaguesController, type: :routing do
     it "routes to #destroy" do
       expect(:delete => "/leagues/1").to route_to("leagues#destroy", :id => "1")
     end
-
   end
 end

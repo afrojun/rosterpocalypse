@@ -4,7 +4,6 @@
 require "stripe_event_subscribers/customer_subscription_event"
 
 class CustomerSubscriptionTrialWillEnd < CustomerSubscriptionEvent
-
   def call event
     super do |manager|
       if manager.stripe_customer_sources.count == 0
@@ -15,5 +14,4 @@ class CustomerSubscriptionTrialWillEnd < CustomerSubscriptionEvent
       end
     end
   end
-
 end

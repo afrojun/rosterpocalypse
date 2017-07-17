@@ -55,5 +55,4 @@ RSpec.describe MapsController, type: :controller do
   context "an admin user" do
     it_should_behave_like "an admin user", Map, :map
   end
-
 end

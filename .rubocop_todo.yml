@@ -29,94 +29,11 @@ Layout/DotPosition:
     - 'lib/tasks/scheduler.rake'
     - 'lib/tasks/update_roster_snapshots.thor'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Layout/EmptyLineAfterMagicComment:
-  Exclude:
-    - 'bin/_guard-core'
-    - 'bin/guard'
-
-# Offense count: 16
-# Cop supports --auto-correct.
-Layout/EmptyLines:
-  Exclude:
-    - 'app/controllers/managers_controller.rb'
-    - 'config/routes.rb'
-    - 'db/migrate/20161115120602_devise_create_users.rb'
-    - 'lib/tasks/cucumber.rake'
-    - 'lib/tasks/maintenance_tasks.rake'
-    - 'lib/tasks/update_roster_snapshots.thor'
-    - 'spec/controllers/gameweeks_controller_spec.rb'
-    - 'spec/factories/games.rb'
-    - 'spec/factories/users.rb'
-    - 'spec/models/league_spec.rb'
-    - 'spec/models/roster_spec.rb'
-
-# Offense count: 11
-# Cop supports --auto-correct.
-Layout/EmptyLinesAroundAccessModifier:
-  Exclude:
-    - 'app/controllers/api/sessions_controller.rb'
-    - 'app/controllers/game_details_controller.rb'
-    - 'app/controllers/games_controller.rb'
-    - 'app/controllers/gameweeks_controller.rb'
-    - 'app/controllers/heroes_controller.rb'
-    - 'app/controllers/maps_controller.rb'
-    - 'app/controllers/matches_controller.rb'
-    - 'app/controllers/players_controller.rb'
-    - 'app/controllers/teams_controller.rb'
-    - 'app/controllers/tournaments_controller.rb'
-    - 'app/services/game_stats_ingestion_service.rb'
-
-# Offense count: 65
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: empty_lines, no_empty_lines
-Layout/EmptyLinesAroundBlockBody:
-  Enabled: false
-
-# Offense count: 35
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines
-Layout/EmptyLinesAroundClassBody:
-  Enabled: false
-
-# Offense count: 6
-# Cop supports --auto-correct.
-Layout/EmptyLinesAroundMethodBody:
-  Exclude:
-    - 'app/controllers/api/registrations_controller.rb'
-    - 'app/controllers/omniauth_callbacks_controller.rb'
-    - 'app/controllers/players_controller.rb'
-    - 'app/controllers/rosters_controller.rb'
-    - 'app/models/game.rb'
-    - 'db/migrate/20170618014743_create_league_gameweek_players.rb'
-
-# Offense count: 16
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: empty_lines, empty_lines_except_namespace, empty_lines_special, no_empty_lines
-Layout/EmptyLinesAroundModuleBody:
-  Exclude:
-    - 'app/controllers/api/game_stats_ingestion_controller.rb'
-    - 'app/helpers/application_helper.rb'
-    - 'app/helpers/devise_helper.rb'
-    - 'app/helpers/game_helper.rb'
-    - 'app/helpers/league_helper.rb'
-    - 'app/helpers/player_helper.rb'
-    - 'app/helpers/team_helper.rb'
-    - 'app/models/concerns/csvable.rb'
-    - 'spec/support/devise_request_spec_helpers.rb'
-
 # Offense count: 34
 # Cop supports --auto-correct.
 # Configuration parameters: AllowForAlignment, ForceEqualSignAlignment.
 Layout/ExtraSpacing:
   Exclude:
-    - 'app/controllers/api/sessions_controller.rb'
-    - 'app/models/gameweek_player.rb'
-    - 'app/models/gameweek_statistic.rb'
     - 'db/migrate/20161116103301_create_gameweeks.rb'
     - 'db/migrate/20161116103515_create_teams.rb'
     - 'db/migrate/20161116110417_create_games.rb'
@@ -127,8 +44,6 @@ Layout/ExtraSpacing:
     - 'db/migrate/20170117211511_create_matches.rb'
     - 'db/migrate/20170618014743_create_league_gameweek_players.rb'
     - 'db/schema.rb'
-    - 'spec/controllers/rosters_controller_spec.rb'
-    - 'spec/models/league_spec.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.

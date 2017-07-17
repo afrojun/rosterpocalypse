@@ -223,7 +223,7 @@ class GameweekPlayer < ApplicationRecord
   end
 
   def map_awards game, detail
-    map  = game.map
+    map = game.map
     if map.games.size > MIN_GAMES_FOR_BONUS_AWARD
       # We want this to be low, so we take the inverse percentile
       inverse_percentile = 100 - BONUS_AWARD_PERCENTILE

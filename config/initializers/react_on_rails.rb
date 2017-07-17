@@ -73,5 +73,4 @@ ReactOnRails.configure do |config|
   # For any asset matching this regex, non-digested symlink will be created (what webpack's css wants)
   # To disable symlinks set this parameter to nil.
   config.symlink_non_digested_assets_regex = /\.(png|jpg|jpeg|gif|tiff|woff|ttf|eot|svg|map)/
-
 end

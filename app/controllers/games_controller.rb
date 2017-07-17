@@ -110,5 +110,4 @@ class GamesController < RosterpocalypseController
   def set_page_title
     @page_title = nil
   end
-
 end

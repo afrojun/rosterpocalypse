@@ -179,5 +179,4 @@ class League < ApplicationRecord
       true
     end
   end
-
 end

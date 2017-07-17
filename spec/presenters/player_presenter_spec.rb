@@ -49,5 +49,4 @@ RSpec.describe PlayerPresenter do
       expect(presenter.top_winrate_heroes).to eq [[hero5, 67], [hero3, 67], [hero2, 60]]
     end
   end
-
 end

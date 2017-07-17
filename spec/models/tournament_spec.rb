@@ -122,7 +122,6 @@ RSpec.describe Tournament, type: :model do
           end
         end
       end
-
     end
   end
 
@@ -146,5 +145,4 @@ RSpec.describe Tournament, type: :model do
 
     it_should_behave_like "a tournament"
   end
-
 end

@@ -26,7 +26,6 @@ class GameweekRosterActions < Thor
     puts "Done."
   end
 
-
   desc "add_gameweek_players_from_snapshot", "Associate gameweek_players with gameweek_rosters based on the snapshot data"
   method_option :previous, default: false, aliases: '-p', type: :boolean, desc: 'Adds gameweek players for the previous gameweek'
 
@@ -48,7 +47,6 @@ class GameweekRosterActions < Thor
     puts "Done."
   end
 
-
   desc "create_gameweek_players", "Create all GameweekPlayers for the current gameweek"
   method_option :previous, default: false, aliases: '-p', type: :boolean, desc: 'Creates gameweek players for the previous gameweek'
 
@@ -62,7 +60,6 @@ class GameweekRosterActions < Thor
     end
     puts "Done."
   end
-
 
   desc "update_player_values", "Update player values based on transfers"
 
@@ -79,13 +76,11 @@ class GameweekRosterActions < Thor
     end
   end
 
-
   desc "update_roster_budgets", "Update all roster budgets based on player value change"
 
   def update_roster_budgets
     Roster.active_rosters.each(&:update_budget)
   end
-
 
   desc "update_points", "Update gameweek roster points and roster scores"
   method_option :previous, default: false, aliases: '-p', type: :boolean, desc: 'Update the previous gameweek rosters'
@@ -131,5 +126,4 @@ class GameweekRosterActions < Thor
     end
     puts "Done."
   end
-
 end

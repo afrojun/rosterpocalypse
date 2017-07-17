@@ -7,7 +7,7 @@ RSpec.describe RostersController, type: :controller do
   # Roster. As you add validations to Roster, be sure to
   # adjust the attributes here as well.
   let(:now) { Time.now.utc }
-  let(:tournament) { FactoryGirl.create :tournament, start_date:  now - 1.day, end_date: now + 1.day }
+  let(:tournament) { FactoryGirl.create :tournament, start_date: now - 1.day, end_date: now + 1.day }
   let(:valid_attributes) {
     {
       name: "AwesomeRoster",
@@ -132,5 +132,4 @@ RSpec.describe RostersController, type: :controller do
       expect(response).to redirect_to(rosters_url)
     end
   end
-
 end

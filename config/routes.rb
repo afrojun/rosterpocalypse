@@ -15,7 +15,6 @@ Rails.application.routes.draw do
 
   resources :gameweeks, only: [:index, :show]
 
-
   resources :rosters, except: [:new, :create, :edit] do
     member do
       get "manage"
@@ -90,5 +89,4 @@ Rails.application.routes.draw do
   authenticate :user, lambda { |u| u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
   end
-
 end

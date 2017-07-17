@@ -1,5 +1,4 @@
 module LeagueHelper
-
   def league_membership_change league, button_size_class
     if user_signed_in?
       roster = Roster.find_by_manager_and_league current_user.manager, league
@@ -27,5 +26,4 @@ module LeagueHelper
             method: :post,
             class: "btn #{button_colour_class} #{button_size_class}"
   end
-
 end

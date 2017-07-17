@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 shared_examples_for "a restricted index page request" do |model_index_path_method|
-
   describe "GET /#{model_index_path_method.to_s.gsub("_path", "")}" do
     context "user not signed in" do
       it "redirects to the welcome page" do

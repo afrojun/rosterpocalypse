@@ -1,5 +1,4 @@
 module DeviseRequestSpecHelpers
-
   include Warden::Test::Helpers
 
   def sign_in(resource_or_scope, resource = nil)
@@ -12,5 +11,4 @@ module DeviseRequestSpecHelpers
     scope = Devise::Mapping.find_scope!(resource_or_scope)
     logout(scope)
   end
-
 end

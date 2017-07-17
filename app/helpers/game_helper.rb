@@ -1,5 +1,4 @@
 module GameHelper
-
   def teams_with_bold_winner teams_by_win
     winner = embolden(teams_by_win[true])
     loser = teams_by_win[false]
@@ -9,5 +8,4 @@ module GameHelper
   def embolden text
     "<b>#{text}</b>"
   end
-
 end

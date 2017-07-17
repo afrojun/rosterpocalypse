@@ -25,7 +25,6 @@ RSpec.describe GameweeksController, type: :controller do
   let(:gameweek) { FactoryGirl.create :gameweek, tournament: tournament }
   let(:league) { FactoryGirl.create(:private_league, name: "HGC EU 2017 - Phase 2", tournament: tournament) }
 
-
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # GameweeksController. Be sure to keep this updated too.
@@ -47,5 +46,4 @@ RSpec.describe GameweeksController, type: :controller do
       expect(assigns(:gameweek)).to eq(gameweek)
     end
   end
-
 end

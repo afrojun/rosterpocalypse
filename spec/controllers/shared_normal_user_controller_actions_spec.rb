@@ -75,6 +75,5 @@ shared_examples_for "a normal user" do |model_class, model_symbol, allow_read=fa
         check_access_denied
       end
     end
-
   end
 end

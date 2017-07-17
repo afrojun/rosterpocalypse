@@ -4,7 +4,6 @@ module Csvable
   extend ActiveSupport::Concern
 
   module ClassMethods
-
     def to_csv
       CSV.generate(headers: true) do |csv|
         csv << csv_attributes
@@ -26,6 +25,5 @@ module Csvable
     def csv_collection
       raise NotImplementedError.new "self.csv_collection must be implemented"
     end
-
   end
 end

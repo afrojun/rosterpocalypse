@@ -206,5 +206,4 @@ RSpec.describe PublicLeaguesController, type: :controller do
       end
     end
   end
-
 end

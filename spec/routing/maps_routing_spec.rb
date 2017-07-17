@@ -2,7 +2,6 @@ require "rails_helper"
 
 RSpec.describe MapsController, type: :routing do
   describe "routing" do
-
     it "routes to #index" do
       expect(:get => "/maps").to route_to("maps#index")
     end
@@ -34,6 +33,5 @@ RSpec.describe MapsController, type: :routing do
     it "routes to #destroy" do
       expect(:delete => "/maps/1").to route_to("maps#destroy", :id => "1")
     end
-
   end
 end

@@ -124,6 +124,5 @@ shared_examples_for "an admin user" do |model_class, model_symbol|
         expect(response).to redirect_to(send("#{model_symbol.to_s.pluralize}_url".to_sym))
       end
     end
-
   end
 end
