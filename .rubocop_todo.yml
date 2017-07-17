@@ -14,36 +14,6 @@ Bundler/OrderedGems:
   Exclude:
     - 'Gemfile'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Layout/AlignArray:
-  Exclude:
-    - 'config/initializers/friendly_id.rb'
-
-# Offense count: 7
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
-# SupportedStyles: with_first_parameter, with_fixed_indentation
-Layout/AlignParameters:
-  Exclude:
-    - 'app/controllers/rosters_controller.rb'
-    - 'app/controllers/tournaments_controller.rb'
-    - 'app/views/leagues/_league.json.jbuilder'
-    - 'bin/_guard-core'
-    - 'bin/guard'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Layout/BlockEndNewline:
-  Exclude:
-    - 'app/controllers/rosters_controller.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Layout/ClosingParenthesisIndentation:
-  Exclude:
-    - 'app/controllers/tournaments_controller.rb'
-
 # Offense count: 29
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
@@ -58,12 +28,6 @@ Layout/DotPosition:
     - 'db/migrate/20170625235758_add_premium_to_leagues.rb'
     - 'lib/tasks/scheduler.rake'
     - 'lib/tasks/update_roster_snapshots.thor'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Layout/ElseAlignment:
-  Exclude:
-    - 'lib/stripe_event_subscribers/customer_subscription_event.rb'
 
 # Offense count: 2
 # Cop supports --auto-correct.

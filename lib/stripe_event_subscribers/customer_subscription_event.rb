@@ -23,7 +23,7 @@ class CustomerSubscriptionEvent < StripeEventHandler
         old_status = manager.subscription_status.to_sym
         new_status = if event.data.object.status != "canceled" && event.data.object.cancel_at_period_end
                    :do_not_renew
-                 else
+                     else
                    event.data.object.status.to_sym
                  end
 

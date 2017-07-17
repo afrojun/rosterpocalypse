@@ -27,9 +27,11 @@ class TournamentsController < RosterpocalypseController
 
   # GET /tournaments/1/edit
   def edit
-    @tournament_games = Game.where("
-      (gameweek_id IS NULL OR gameweek_id IN (?)) AND (start_date >= ? AND start_date <= ?)",
-      @tournament.gameweeks.map(&:id), @tournament.start_date, @tournament.end_date
+    @tournament_games = Game.where(
+      "(gameweek_id IS NULL OR gameweek_id IN (?)) AND (start_date >= ? AND start_date <= ?)",
+      @tournament.gameweeks.map(&:id),
+      @tournament.start_date,
+      @tournament.end_date
     ).includes(:map, gameweek: [:tournament], game_details: [:team])
   end
 
