@@ -45,11 +45,11 @@ class UserMailer < ApplicationMailer
 
   protected
 
-    def send_email user, subject
-      @user = user
-      mail(to: %("#{@user.username}" <#{@user.email}>),
-           bcc: "rosterpocalypse@gmail.com",
-           subject: "Rosterpocalypse: #{subject}")
-    end
+  def send_email user, subject
+    @user = user
+    mail(to: %("#{@user.username}" <#{@user.email}>),
+         bcc: "rosterpocalypse@gmail.com",
+         subject: "Rosterpocalypse: #{subject}")
+  end
 
 end

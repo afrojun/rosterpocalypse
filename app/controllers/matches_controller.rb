@@ -63,17 +63,18 @@ class MatchesController < RosterpocalypseController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_match
-      @match = Match.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def match_params
-      params.require(:match).permit(:team_1_id, :team_2_id, :gameweek_id, :best_of, :start_date, :stage_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_match
+    @match = Match.find(params[:id])
+  end
 
-    def set_page_title
-      @page_title = @match.description
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def match_params
+    params.require(:match).permit(:team_1_id, :team_2_id, :gameweek_id, :best_of, :start_date, :stage_id)
+  end
+
+  def set_page_title
+    @page_title = @match.description
+  end
 end

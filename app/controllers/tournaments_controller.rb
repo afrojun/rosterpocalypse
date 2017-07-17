@@ -94,21 +94,22 @@ class TournamentsController < RosterpocalypseController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_tournament
-      @tournament = Tournament.find(params[:id])
-    end
 
-    def set_gameweek
-      @gameweek = params[:gameweek_id].present? ? Gameweek.find(params[:gameweek_id]) : @tournament.current_gameweek
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_tournament
+    @tournament = Tournament.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def tournament_params
-      params.require(:tournament).permit(:name, :region, :cycle_hours, :start_date, :end_date)
-    end
+  def set_gameweek
+    @gameweek = params[:gameweek_id].present? ? Gameweek.find(params[:gameweek_id]) : @tournament.current_gameweek
+  end
 
-    def set_page_title
-      @page_title = "#{@tournament.name}#{@gameweek.present? ? " : #{@gameweek.name}" : ""}"
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def tournament_params
+    params.require(:tournament).permit(:name, :region, :cycle_hours, :start_date, :end_date)
+  end
+
+  def set_page_title
+    @page_title = "#{@tournament.name}#{@gameweek.present? ? " : #{@gameweek.name}" : ""}"
+  end
 end

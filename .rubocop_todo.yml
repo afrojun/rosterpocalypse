@@ -181,27 +181,6 @@ Layout/FirstParameterIndentation:
 Layout/IndentArray:
   EnforcedStyle: align_brackets
 
-# Offense count: 36
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: normal, rails
-Layout/IndentationConsistency:
-  Exclude:
-    - 'app/controllers/game_details_controller.rb'
-    - 'app/controllers/games_controller.rb'
-    - 'app/controllers/gameweeks_controller.rb'
-    - 'app/controllers/heroes_controller.rb'
-    - 'app/controllers/leagues_controller.rb'
-    - 'app/controllers/managers_controller.rb'
-    - 'app/controllers/maps_controller.rb'
-    - 'app/controllers/matches_controller.rb'
-    - 'app/controllers/players_controller.rb'
-    - 'app/controllers/registrations_controller.rb'
-    - 'app/controllers/sessions_controller.rb'
-    - 'app/controllers/teams_controller.rb'
-    - 'app/controllers/tournaments_controller.rb'
-    - 'app/mailers/user_mailer.rb'
-
 # Offense count: 3
 # Cop supports --auto-correct.
 # Configuration parameters: Width, IgnoredPatterns.
@@ -723,17 +702,7 @@ Style/EmptyLiteral:
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: compact, expanded
 Style/EmptyMethod:
-  Exclude:
-    - 'app/controllers/about_controller.rb'
-    - 'app/controllers/credits_controller.rb'
-    - 'app/controllers/game_details_controller.rb'
-    - 'app/controllers/games_controller.rb'
-    - 'app/controllers/heroes_controller.rb'
-    - 'app/controllers/leagues_controller.rb'
-    - 'app/controllers/managers_controller.rb'
-    - 'app/controllers/maps_controller.rb'
-    - 'app/controllers/matches_controller.rb'
-    - 'app/controllers/teams_controller.rb'
+  EnforcedStyle: expanded
 
 # Offense count: 1
 # Cop supports --auto-correct.

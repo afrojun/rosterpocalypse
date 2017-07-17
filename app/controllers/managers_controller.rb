@@ -98,54 +98,54 @@ class ManagersController < RosterpocalypseController
 
   private
 
-    def stripe_api_call
-      authorize! :update, @manager
+  def stripe_api_call
+    authorize! :update, @manager
 
-      message = yield
-      redirect_back(fallback_location: edit_user_registration_path, notice: message)
-    rescue Stripe::CardError => e
-      # This is usually a card decline
-      body = e.json_body
-      err  = body[:error]
+    message = yield
+    redirect_back(fallback_location: edit_user_registration_path, notice: message)
+  rescue Stripe::CardError => e
+    # This is usually a card decline
+    body = e.json_body
+    err  = body[:error]
 
-      logger.warn "[Stripe] [#{e.http_status}, #{err[:type]}] #{err[:message]} - " +
-                   "Charge ID(#{err[:charge]}), Error Code( #{err[:code]}), " +
-                   "Decline Code(#{err[:decline_code]}), Error Param(#{err[:param]}), "
-      logger.warn "[Stripe] #{e.message}"
+    logger.warn "[Stripe] [#{e.http_status}, #{err[:type]}] #{err[:message]} - " +
+                 "Charge ID(#{err[:charge]}), Error Code( #{err[:code]}), " +
+                 "Decline Code(#{err[:decline_code]}), Error Param(#{err[:param]}), "
+    logger.warn "[Stripe] #{e.message}"
 
-      redirect_back(fallback_location: edit_user_registration_path,
-                    alert: "There was an error trying to use the card details provided.")
-    rescue Stripe::RateLimitError => e
-      logger.error "[Stripe] Too many requests made to the Stripe API too quickly: #{e.message}"
-      redirect_back(fallback_location: edit_user_registration_path,
-                    alert: "We were unable to complete the transaction, please try again.")
-    rescue Stripe::StripeError => e
-      logger.error "[Stripe] [#{e.http_status}, #{e.class}] - #{e.message}"
-      redirect_back(fallback_location: edit_user_registration_path,
-                    alert: "There was an internal error while processing the payment.")
+    redirect_back(fallback_location: edit_user_registration_path,
+                  alert: "There was an error trying to use the card details provided.")
+  rescue Stripe::RateLimitError => e
+    logger.error "[Stripe] Too many requests made to the Stripe API too quickly: #{e.message}"
+    redirect_back(fallback_location: edit_user_registration_path,
+                  alert: "We were unable to complete the transaction, please try again.")
+  rescue Stripe::StripeError => e
+    logger.error "[Stripe] [#{e.http_status}, #{e.class}] - #{e.message}"
+    redirect_back(fallback_location: edit_user_registration_path,
+                  alert: "There was an internal error while processing the payment.")
+  end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_manager
+    @manager = Manager.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def manager_params
+    params.require(:manager).permit(:email_scores_updated,
+                                    :email_new_feature,
+                                    :email_join_league)
+  end
+
+  def update_payment_params
+    params.permit(:stripeToken).tap do |payment_params|
+      payment_params.require(:stripeToken)
     end
+  end
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_manager
-      @manager = Manager.find(params[:id])
+  def remove_payment_params
+    params.permit(:card_id).tap do |payment_params|
+      payment_params.require(:card_id)
     end
-
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def manager_params
-      params.require(:manager).permit(:email_scores_updated,
-                                      :email_new_feature,
-                                      :email_join_league)
-    end
-
-    def update_payment_params
-      params.permit(:stripeToken).tap do |payment_params|
-        payment_params.require(:stripeToken)
-      end
-    end
-
-    def remove_payment_params
-      params.permit(:card_id).tap do |payment_params|
-        payment_params.require(:card_id)
-      end
-    end
+  end
 end

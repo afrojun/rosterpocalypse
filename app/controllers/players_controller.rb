@@ -96,22 +96,23 @@ class PlayersController < RosterpocalypseController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_player
-      @player = Player.find(params[:id])
-    end
 
-    def set_team_filter
-      region = params[:region]
-      active = params[:active]
+  # Use callbacks to share common setup or constraints between actions.
+  def set_player
+    @player = Player.find(params[:id])
+  end
 
-      @teams_filter = {}
-      @teams_filter[:region] = region if region && Team::REGIONS.include?(region)
-      @teams_filter[:active] = (active == "true") if active && ["true", "false"].include?(active)
-    end
+  def set_team_filter
+    region = params[:region]
+    active = params[:active]
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def player_params
-      params.require(:player).permit(:name, :role, :country, :value, :team_id)
-    end
+    @teams_filter = {}
+    @teams_filter[:region] = region if region && Team::REGIONS.include?(region)
+    @teams_filter[:active] = (active == "true") if active && ["true", "false"].include?(active)
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def player_params
+    params.require(:player).permit(:name, :role, :country, :value, :team_id)
+  end
 end

@@ -95,19 +95,20 @@ class GamesController < RosterpocalypseController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_game
-      @game = Game.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def game_params
-      params.require(:game).permit(:map_id, :start_date, :duration_s, :game_hash, :match_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_game
+    @game = Game.find(params[:id])
+  end
 
-    # We use the presenter to set this from the view
-    def set_page_title
-      @page_title = nil
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def game_params
+    params.require(:game).permit(:map_id, :start_date, :duration_s, :game_hash, :match_id)
+  end
+
+  # We use the presenter to set this from the view
+  def set_page_title
+    @page_title = nil
+  end
 
 end

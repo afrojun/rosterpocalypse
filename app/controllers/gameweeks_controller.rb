@@ -21,16 +21,17 @@ class GameweeksController < RosterpocalypseController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_gameweek
-      @gameweek = Gameweek.find(params[:id])
-    end
 
-    def set_tournament
-      @tournament = @gameweek.tournament
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_gameweek
+    @gameweek = Gameweek.find(params[:id])
+  end
 
-    def set_page_title
-      @page_title = "#{@tournament.name}: #{@gameweek.name}"
-    end
+  def set_tournament
+    @tournament = @gameweek.tournament
+  end
+
+  def set_page_title
+    @page_title = "#{@tournament.name}: #{@gameweek.name}"
+  end
 end
