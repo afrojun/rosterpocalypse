@@ -2,15 +2,15 @@ require 'rails_helper'
 
 RSpec.describe Roster, type: :model do
   let(:region) { "EU" }
-  let(:start_date) { Time.parse("2017-01-20") }
-  let(:end_date) { Time.parse("2017-02-20") }
+  let(:start_date) { Time.parse("2017-01-20").utc }
+  let(:end_date) { Time.parse("2017-02-20").utc }
   let(:tournament) { FactoryGirl.create :tournament, region: region, start_date: start_date, end_date: end_date }
   let(:manager) { FactoryGirl.create :manager }
   let(:league) { FactoryGirl.create :public_league, tournament: tournament }
   let(:roster) { FactoryGirl.create :roster, tournament: tournament, manager: manager }
 
   before :each do
-    allow(Time).to receive(:now).and_return(Time.parse "2017-02-01")
+    allow(Time).to receive(:now).and_return(Time.parse("2017-02-01").utc)
   end
 
   context "#create" do
@@ -257,12 +257,12 @@ RSpec.describe Roster, type: :model do
             end
 
             it "allows free transfers before the tournament starts" do
-              allow(Time).to receive(:now).and_return(Time.parse "2017-01-01")
+              allow(Time).to receive(:now).and_return(Time.parse("2017-01-01").utc)
               expect(roster.allow_free_transfers?).to eq true
             end
 
             it "allows free transfers before the roster lock date in the first tournament gameweek" do
-              allow(Time).to receive(:now).and_return(Time.parse "2017-01-17")
+              allow(Time).to receive(:now).and_return(Time.parse("2017-01-17").utc)
               expect(roster.allow_free_transfers?).to eq true
             end
           end

@@ -17,7 +17,7 @@ RSpec.describe Tournament, type: :model do
 
       context "#current_gameweek" do
         it "returns the current gameweek" do
-          allow(Time).to receive(:now).and_return(Time.parse(date))
+          allow(Time).to receive(:now).and_return(Time.parse(date).utc)
           expect(tournament.current_gameweek).to eq tournament.gameweeks.second
         end
       end
@@ -26,35 +26,35 @@ RSpec.describe Tournament, type: :model do
         context "CN" do
           let(:region) { "CN" }
           it "Asia/Shanghai timezone" do
-            expect(tournament.gameweeks.second.roster_lock_date).to eq Time.parse("2017-01-06 04:00:00 UTC")
+            expect(tournament.gameweeks.second.roster_lock_date).to eq Time.parse("2017-01-06 04:00:00 UTC").utc
           end
         end
 
         context "EU" do
           let(:region) { "EU" }
           it "UTC" do
-            expect(tournament.gameweeks.second.roster_lock_date).to eq Time.parse("2017-01-06 12:00:00 UTC")
+            expect(tournament.gameweeks.second.roster_lock_date).to eq Time.parse("2017-01-06 12:00:00 UTC").utc
           end
         end
 
         context "KR" do
           let(:region) { "KR" }
           it "Asia/Seoul timezone" do
-            expect(tournament.gameweeks.second.roster_lock_date).to eq Time.parse("2017-01-06 03:00:00 UTC")
+            expect(tournament.gameweeks.second.roster_lock_date).to eq Time.parse("2017-01-06 03:00:00 UTC").utc
           end
         end
 
         context "NA" do
           let(:region) { "NA" }
           it "America/Los_Angeles timezone" do
-            expect(tournament.gameweeks.second.roster_lock_date).to eq Time.parse("2017-01-06 20:00:00 UTC")
+            expect(tournament.gameweeks.second.roster_lock_date).to eq Time.parse("2017-01-06 20:00:00 UTC").utc
           end
         end
 
         context "Global" do
           let(:region) { "Global" }
           it "UTC" do
-            expect(tournament.gameweeks.second.roster_lock_date).to eq Time.parse("2017-01-06 12:00:00 UTC")
+            expect(tournament.gameweeks.second.roster_lock_date).to eq Time.parse("2017-01-06 12:00:00 UTC").utc
           end
         end
       end
@@ -72,7 +72,7 @@ RSpec.describe Tournament, type: :model do
 
           it "handles tournaments with start dates between midnight on Monday and the start of the gameweek at noon" do
             expect(tournament.gameweeks.count).to eq 3
-            new_start_date = Time.parse("2016-12-26 10:30:00 UTC")
+            new_start_date = Time.parse("2016-12-26 10:30:00 UTC").utc
             tournament.update start_date: new_start_date
             expect(tournament.gameweeks.where('start_date <= ? AND end_date >= ?', new_start_date, new_start_date).first).to eq tournament.gameweeks.first
           end
