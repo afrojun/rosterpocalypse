@@ -166,7 +166,7 @@ class GameStatsIngestionService
   def tournament_name
     @tournament_name ||= begin
       if filename_regex_match && filename_regex_match.size == 4
-        tournament_name = filename_regex_match.to_a.last.gsub("_", " ")
+        tournament_name = filename_regex_match.to_a.last.tr("_", " ")
 
         # Sometimes the tournament name has some extra characters at the end of it, try to remove them if we can
         unless Tournament.where(name: tournament_name).any?
@@ -240,7 +240,7 @@ class GameStatsIngestionService
     @team_names_by_team_colour ||= begin
       if filename_regex_match && filename_regex_match.size == 4
         # We try to match the team names to colours based on the prefix and players in the team, but if that fails, we just guess the team colours
-        _, team_name1, team_name2, _ = filename_regex_match.to_a.map { |val| val.gsub("_", " ") }
+        _, team_name1, team_name2, _ = filename_regex_match.to_a.map { |val| val.tr("_", " ") }
 
         if (match_team_name?(team_name1, team_name_prefix_by_team_colour["red"], player_details_by_team_colour["red"]) ||
             match_team_name?(team_name2, team_name_prefix_by_team_colour["blue"], player_details_by_team_colour["blue"]))

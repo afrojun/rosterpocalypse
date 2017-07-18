@@ -341,76 +341,10 @@ Metrics/MethodLength:
 Metrics/PerceivedComplexity:
   Max: 18
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Performance/CompareWithBlock:
-  Exclude:
-    - 'app/models/team.rb'
-
-# Offense count: 4
-# Cop supports --auto-correct.
-Performance/StringReplacement:
-  Exclude:
-    - 'app/models/identity.rb'
-    - 'app/services/game_stats_ingestion_service.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles, Include.
-# SupportedStyles: action, filter
-# Include: app/controllers/**/*.rb
-Rails/ActionFilter:
-  Exclude:
-    - 'app/controllers/api/sessions_controller.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: NilOrEmpty, NotPresent, UnlessPresent.
-Rails/Blank:
-  Exclude:
-    - 'lib/tasks/scheduler.rake'
-    - 'lib/tasks/update_roster_snapshots.thor'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: Whitelist.
-# Whitelist: find_by_sql
-Rails/DynamicFindBy:
-  Exclude:
-    - 'app/helpers/league_helper.rb'
-
 # Offense count: 2
 Rails/FilePath:
   Exclude:
-    - 'config/environments/development.rb'
     - 'lib/tasks/cucumber.rake'
-
-# Offense count: 16
-# Cop supports --auto-correct.
-# Configuration parameters: Include.
-# Include: app/models/**/*.rb
-Rails/FindBy:
-  Exclude:
-    - 'app/models/gameweek.rb'
-    - 'app/models/gameweek_player.rb'
-    - 'app/models/gameweek_roster.rb'
-    - 'app/models/gameweek_statistic.rb'
-    - 'app/models/identity.rb'
-    - 'app/models/league.rb'
-    - 'app/models/player.rb'
-    - 'app/models/roster.rb'
-    - 'app/models/tournament.rb'
-    - 'app/models/user.rb'
-
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: Include.
-# Include: app/models/**/*.rb
-Rails/FindEach:
-  Exclude:
-    - 'app/models/game.rb'
-    - 'app/models/gameweek_player.rb'
-    - 'app/models/tournament.rb'
 
 # Offense count: 6
 # Configuration parameters: Include.

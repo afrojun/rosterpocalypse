@@ -129,7 +129,7 @@ class Player < ApplicationRecord
       other_player.gameweek_players.each do |other_gameweek_player|
         gameweek = other_gameweek_player.gameweek
         if gameweeks.include? gameweek
-          gameweek_player = gameweek_players.where(gameweek: gameweek).first
+          gameweek_player = gameweek_players.find_by(gameweek: gameweek)
           gameweek_player.refresh_all_games
         else
           other_gameweek_player.update_attribute :player, self
@@ -177,7 +177,7 @@ class Player < ApplicationRecord
     inflation_adjustment_factor = -10
     player_value = player_value.round(2) + inflation_adjustment_factor
 
-    if player_value <= MAX_VALUE and player_value >= MIN_VALUE
+    if player_value <= MAX_VALUE && player_value >= MIN_VALUE
       update_attribute :value, player_value
     elsif player_value > MAX_VALUE
       update_attribute :value, MAX_VALUE

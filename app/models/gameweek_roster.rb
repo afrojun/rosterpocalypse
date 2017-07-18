@@ -13,12 +13,12 @@ class GameweekRoster < ApplicationRecord
   end
 
   def next safe = true
-    nxt = GameweekRoster.where(gameweek: gameweek.next, roster: roster).first
+    nxt = GameweekRoster.find_by gameweek: gameweek.next, roster: roster
     safe ? (nxt.nil? ? self : nxt) : nxt
   end
 
   def previous safe = true
-    prev = GameweekRoster.where(gameweek: gameweek.previous, roster: roster).first
+    prev = GameweekRoster.find_by gameweek: gameweek.previous, roster: roster
     safe ? (prev.nil? ? self : prev) : prev
   end
 

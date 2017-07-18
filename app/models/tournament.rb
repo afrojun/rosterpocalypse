@@ -44,7 +44,7 @@ class Tournament < ApplicationRecord
   # When 'safe', we always return a gameweek, the first one for dates before the start
   # of the tournament, and the last one for dates after the end of the tournament
   def find_gameweek date, safe = true
-    gameweek = gameweeks.where("start_date <= ? AND end_date >= ?", date, date).first
+    gameweek = gameweeks.find_by("start_date <= ? AND end_date >= ?", date, date)
 
     if safe && gameweek.nil?
       first_gameweek = gameweeks.first
@@ -110,7 +110,7 @@ class Tournament < ApplicationRecord
 
   def destroy_gameweeks
     # Gameweeks where the Tournament start_date is after the Gameweek end_date OR the Gameweek start_date is after the Tournament end_date
-    gameweeks.where("start_date > ? OR end_date < ?", end_date, start_date - 1.week).each do |gameweek|
+    gameweeks.where("start_date > ? OR end_date < ?", end_date, start_date - 1.week).find_each do |gameweek|
       if gameweek.games.blank? && gameweek.gameweek_rosters.blank? && gameweek.gameweek_players.blank?
         Rails.logger.info "Destroying orphaned gameweek: #{gameweek.inspect}."
         gameweek.destroy

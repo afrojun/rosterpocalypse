@@ -30,7 +30,7 @@ task :update_roster_scores => :environment do
   Tournament.active_tournaments.each do |tournament|
     tournament.rosters.each do |roster|
       gwr = roster.current_gameweek_roster
-      next unless gwr.roster_snapshot.present?
+      next if gwr.roster_snapshot.blank?
 
       gwr.update_points
       roster.update_score

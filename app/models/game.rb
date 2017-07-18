@@ -18,7 +18,7 @@ class Game < ApplicationRecord
   before_destroy :remove_from_gameweek_players
 
   def remove_from_gameweek_players
-    gameweek_players.where(player: players).each { |gameweek_player| gameweek_player.remove_game(self) }
+    gameweek_players.where(player: players).find_each { |gameweek_player| gameweek_player.remove_game(self) }
   end
 
   def self.team_stat_percentile stat, percentile

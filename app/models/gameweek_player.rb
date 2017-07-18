@@ -27,7 +27,7 @@ class GameweekPlayer < ApplicationRecord
 
   def self.create_all_gameweek_players_for_gameweek gameweek
     Player.active_players.joins(:team).
-           where(teams: {region: gameweek.tournament.region}).each do |player|
+           where(teams: {region: gameweek.tournament.region}).find_each do |player|
       gameweek_player = find_or_create_by(gameweek: gameweek, player: player) do |gwp|
         gwp.team  = player.team
         gwp.value = player.value
@@ -66,7 +66,7 @@ class GameweekPlayer < ApplicationRecord
 
     gameweek_players.each do |gameweek_player|
       Rails.logger.info "Player: #{gameweek_player.player.name}"
-      league_gameweek_player = league_gameweek_players.where(gameweek_player: gameweek_player).first
+      league_gameweek_player = league_gameweek_players.find_by gameweek_player: gameweek_player
       gameweek_player.update(
         pick_rate: ((gameweek_player.gameweek_rosters.size.to_f/valid_gameweek_rosters.size.to_f) * 100).round(2),
         efficiency: (((league_gameweek_player.points/gameweek_player.value)/efficiency_factor) * 100).round(2)
@@ -115,7 +115,7 @@ class GameweekPlayer < ApplicationRecord
     leagues.group_by { |l| l.role_stat_modifiers }.each do |_, same_mods_leagues|
       same_mods_leagues.group_by { |l| l.use_representative_game }.each do |_, rep_game_leagues|
         sample_league = rep_game_leagues.shift
-        sample_league_gameweek_player = league_gameweek_players.where(league: sample_league).first
+        sample_league_gameweek_player = league_gameweek_players.find_by league: sample_league
         sample_league_gameweek_player.add game, detail
 
         league_gameweek_players.

@@ -29,7 +29,7 @@ class GameweekStatistic < ApplicationRecord
           gameweek_player_ids: dream_team_gameweek_players.map(&:id),
           value: dream_team_gameweek_players.map(&:value).sum.round(2),
           points: dream_team_gameweek_players.map do |gameweek_player|
-                    LeagueGameweekPlayer.where(league: gameweek.default_league, gameweek_player: gameweek_player).first.try(:points)
+                    LeagueGameweekPlayer.find_by(league: gameweek.default_league, gameweek_player: gameweek_player).try(:points)
                   end.compact.sum
         }
       )

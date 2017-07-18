@@ -89,7 +89,7 @@ class League < ApplicationRecord
 
   def historic_roster_rank gameweek, roster
     league_gameweek_rosters = gameweek_rosters.select(:id, :points).where(gameweek: gameweek).order(points: :desc).to_a
-    gameweek_roster = roster.gameweek_rosters.where(gameweek: gameweek).first
+    gameweek_roster = roster.gameweek_rosters.find_by(gameweek: gameweek)
     league_gameweek_rosters.index(gameweek_roster).try(:+, 1)
   end
 
@@ -114,7 +114,7 @@ class League < ApplicationRecord
   end
 
   def leave manager
-    if roster = rosters.where(manager: manager).first
+    if roster = rosters.find_by(manager: manager)
       Rails.logger.info "Removing Roster '#{roster.slug}' from League '#{slug}'."
       remove roster
       roster.destroy

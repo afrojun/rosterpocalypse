@@ -51,7 +51,7 @@ class ManagersController < RosterpocalypseController
         message = "Unable to remove the only card on record for an active subscription. " +
                   "Please add a new card first then remove this one."
         redirect_back(fallback_location: edit_user_registration_path,
-                      alert: message) and return
+                      alert: message) && return
       end
     end
   end
@@ -90,7 +90,7 @@ class ManagersController < RosterpocalypseController
         message = "In order to re-activate the subscription we need a card on record. " +
                   "Please add a new card then try re-activating again."
         redirect_back(fallback_location: edit_user_registration_path,
-                      alert: message) and return
+                      alert: message) && return
       end
     end
   end

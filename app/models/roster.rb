@@ -52,7 +52,7 @@ class Roster < ApplicationRecord
     end
 
     define_method gameweek_roster_method do |safe = true|
-      gameweek_rosters.where(gameweek: send(gameweek_method, safe)).first
+      gameweek_rosters.find_by(gameweek: send(gameweek_method, safe))
     end
   end
 

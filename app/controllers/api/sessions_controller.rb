@@ -1,7 +1,7 @@
 class Api::SessionsController < Api::BaseApiController
-  prepend_before_filter :equire_no_authentication, only: [:create ]
+  prepend_before_action :equire_no_authentication, only: [:create ]
 
-  before_filter :ensure_params_exist
+  before_action :ensure_params_exist
 
   respond_to :json
 

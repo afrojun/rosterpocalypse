@@ -63,7 +63,7 @@ class User < ApplicationRecord
 
   # OAuth handlers
   def twitter
-    identities.where(:provider => "twitter").first
+    identities.find_by(:provider => "twitter")
   end
 
   def twitter_client
@@ -71,7 +71,7 @@ class User < ApplicationRecord
   end
 
   def facebook
-    identities.where(:provider => "facebook").first
+    identities.find_by(:provider => "facebook")
   end
 
   def facebook_client
@@ -79,7 +79,7 @@ class User < ApplicationRecord
   end
 
   def reddit
-    identities.where(:provider => "reddit").first
+    identities.find_by(:provider => "reddit")
   end
 
   def reddit_client
@@ -87,7 +87,7 @@ class User < ApplicationRecord
   end
 
   def google_oauth2
-    identities.where(:provider => "google_oauth2").first
+    identities.find_by(:provider => "google_oauth2")
   end
 
   def google_oauth2_client

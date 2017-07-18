@@ -40,7 +40,7 @@ class Team < ApplicationRecord
   end
 
   def short_name
-    alternate_names.map(&:alternate_name).sort { |a, b| a.length <=> b.length }.first
+    alternate_names.map(&:alternate_name).sort_by(&:length).first
   end
 
   def self.active_teams
