@@ -4,7 +4,7 @@ class WelcomeController < ApplicationController
            current_user.id
          else
            attributes = JSON.parse cookies["mp_#{ENV["MIXPANEL_ID"]}_mixpanel"]
-           distinct_id = attributes.delete('distinct_id') if attributes.present?
+           attributes.delete('distinct_id') if attributes.present?
          end
 
     if id.present?

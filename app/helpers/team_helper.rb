@@ -1,7 +1,7 @@
 module TeamHelper
   def link_to_team_with_logo team, size = 24
     link_to team do
-      team_logo team
+      team_logo team, size
     end
   end
 

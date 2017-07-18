@@ -105,8 +105,6 @@ class Match < ApplicationRecord
   end
 
   def score
-    team_1_wins = 0
-    team_2_wins = 0
     game_winners = games.includes(:game_details).map(&:winner)
 
     Hash[team_1, game_winners.count(team_1),

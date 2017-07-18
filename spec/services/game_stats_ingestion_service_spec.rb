@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe GameStatsIngestionService do
-  let(:service) { GameStatsIngestionService.new(game_stats_json) }
+  let(:service) { GameStatsIngestionService.new(game_stats_json, true) }
   let(:game_stats_json) {
     JSON.parse '{
       "duration": 1334,

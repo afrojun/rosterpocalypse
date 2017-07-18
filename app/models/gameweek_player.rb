@@ -179,7 +179,7 @@ class GameweekPlayer < ApplicationRecord
       threshold = Player.role_stat_percentile role, stat, BONUS_AWARD_PERCENTILE
       if threshold < detail.send(stat.to_sym)
         renamed_stat = stat == "solo_kills" ? "kills" : stat
-        return ["#{BONUS_AWARD_PERCENTILE}th percentile in #{stat} for #{role} players"]
+        return ["#{BONUS_AWARD_PERCENTILE}th percentile in #{renamed_stat} for #{role} players"]
       end
     end
     []
@@ -200,7 +200,7 @@ class GameweekPlayer < ApplicationRecord
       threshold = detail.hero.stat_percentile stat, BONUS_AWARD_PERCENTILE
       if threshold < detail.send(stat.to_sym)
         renamed_stat = stat == "solo_kills" ? "kills" : stat
-        return ["#{BONUS_AWARD_PERCENTILE}th percentile in #{stat} for #{hero.name}"]
+        return ["#{BONUS_AWARD_PERCENTILE}th percentile in #{renamed_stat} for #{hero.name}"]
       end
     end
     []

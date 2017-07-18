@@ -9,7 +9,11 @@ shared_examples_for "an Identity" do
     end
 
     it "finds an existing Identity" do
-      response = Identity.find_or_create_for_oauth auth
+      expect(Identity.count).to eq 0
+      new_id = Identity.find_or_create_for_oauth auth
+      prev_id = Identity.find_or_create_for_oauth auth
+      expect(Identity.count).to eq 1
+      expect(prev_id).to eq new_id
     end
 
     it "sets nickname correctly" do

@@ -13,7 +13,7 @@ class Transfer < ApplicationRecord
     end
 
     def csv_attributes
-      attributes = %w{id player_in.slug player_out.slug roster.manager.slug gameweek.start_date gameweek.end_date created_at}
+      %w{id player_in.slug player_out.slug roster.manager.slug gameweek.start_date gameweek.end_date created_at}
     end
 
     def gameweek_transfers_in gameweek

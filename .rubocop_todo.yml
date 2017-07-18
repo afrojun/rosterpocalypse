@@ -297,24 +297,11 @@ Lint/UnusedBlockArgument:
 Lint/UnusedMethodArgument:
   Exclude:
     - 'app/controllers/registrations_controller.rb'
-    - 'app/helpers/team_helper.rb'
 
 # Offense count: 17
 Lint/UselessAssignment:
   Exclude:
-    - 'app/controllers/tournaments_controller.rb'
-    - 'app/controllers/welcome_controller.rb'
-    - 'app/models/concerns/csvable.rb'
-    - 'app/models/gameweek_player.rb'
-    - 'app/models/match.rb'
-    - 'app/models/transfer.rb'
-    - 'app/models/user.rb'
-    - 'app/services/game_stats_ingestion_service.rb'
     - 'lib/tasks/populate_hgc2017_phase1_matches.rake'
-    - 'spec/controllers/managers_controller_spec.rb'
-    - 'spec/models/identity_spec.rb'
-    - 'spec/models/player_spec.rb'
-    - 'spec/models/roster_spec.rb'
 
 # Offense count: 59
 Metrics/AbcSize:

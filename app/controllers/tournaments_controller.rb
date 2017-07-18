@@ -69,7 +69,7 @@ class TournamentsController < RosterpocalypseController
         logger.info "Adding games to this tournament: #{games_to_add.map(&:id)}"
         games_to_add.each do |game|
           gameweek = @tournament.gameweeks.where("start_date <= ? AND end_date >= ?", game.start_date, game.start_date).first
-          game.update_attribute(:gameweek, @gameweek)
+          game.update gameweek: gameweek
         end
       end
     end

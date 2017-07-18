@@ -190,9 +190,9 @@ class GameStatsIngestionService
           "KR" => ["Korea", "Super League"],
           "NA" => ["North America", "Austin", "Bloodlust"],
         }
-        region = regions.detect(lambda {[Tournament::GLOBAL_REGION]}) do |region, keywords|
-                   tournament_name.include?(region) || keywords.any? { |keyword| tournament_name.include?(keyword) }
-                 end.first
+        regions.detect(lambda {[Tournament::GLOBAL_REGION]}) do |region, keywords|
+          tournament_name.include?(region) || keywords.any? { |keyword| tournament_name.include?(keyword) }
+        end.first
       else
         ""
       end

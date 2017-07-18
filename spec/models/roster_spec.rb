@@ -180,7 +180,6 @@ RSpec.describe Roster, type: :model do
           end
 
           it "treats non-existent players as missing" do
-            player1 = FactoryGirl.create :player
             player_ids << 9999 << 10001
             expect(roster.update_including_players(players: player_ids)).to eq false
             expect(roster.players).to eq []

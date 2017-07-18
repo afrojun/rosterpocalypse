@@ -80,7 +80,8 @@ RSpec.describe Player, type: :model do
 
     context "#update_value" do
       it "updates the value for player1 correctly" do
-        init_details = [game_details1, game_details2]
+        game_details1
+        game_details2
 
         allow(game1).to receive(:players).and_return([player1, player2])
         player1.update_value
@@ -88,7 +89,8 @@ RSpec.describe Player, type: :model do
       end
 
       it "updates the value for player2 correctly" do
-        init_details = [game_details1, game_details2]
+        game_details1
+        game_details2
 
         allow(game1).to receive(:players).and_return([player1, player2])
         player2.update_value
