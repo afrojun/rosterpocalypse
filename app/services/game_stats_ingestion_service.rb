@@ -38,7 +38,7 @@ class GameStatsIngestionService
             # Otherwise update the current team to the player's team if the team name is "Unknown"
             most_recent_game = player.games.order(start_date: :desc).first
             if player.team.blank? || (team.name != "Unknown" && (player.team.name == "Unknown" || (most_recent_game && (game.start_date > most_recent_game.start_date))))
-              player.update_attribute(:team, team)
+              player.update team: team
             else
               team = player.team if team.name == "Unknown" && player.team.name != "Unknown"
             end
@@ -104,8 +104,8 @@ class GameStatsIngestionService
         end
 
         # Update the start and end dates of the tournament if the game's start_date is out of bounds
-        tnmnt.update_attribute(:start_date, start_date.beginning_of_day) if start_date < tnmnt.start_date
-        tnmnt.update_attribute(:end_date, start_date.end_of_day) if start_date > tnmnt.end_date
+        tnmnt.update(start_date: start_date.beginning_of_day) if start_date < tnmnt.start_date
+        tnmnt.update(end_date: start_date.end_of_day) if start_date > tnmnt.end_date
         tnmnt
       else
         Rails.logger.warn "Unable to infer the tournament for this game."
@@ -128,7 +128,7 @@ class GameStatsIngestionService
     if create_or_update_models
       Team.find_or_create_including_alternate_names(team_name(team_colour)).tap do |team|
         TeamAlternateName.find_or_create_by(team: team, alternate_name: team_name_prefix_by_team_colour[team_colour]) if team_name_prefix_by_team_colour[team_colour].present?
-        team.update_attribute(:region, region) if team.region.blank? && region != Tournament::GLOBAL_REGION
+        team.update(region: region) if team.region.blank? && region != Tournament::GLOBAL_REGION
       end
     else
       Team.find_including_alternate_names(team_name(team_colour)).first

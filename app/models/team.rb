@@ -34,7 +34,7 @@ class Team < ApplicationRecord
       throw :abort
     else
       players.each do |player|
-        player.update_attribute(:team, nil)
+        player.update team: nil
       end
     end
   end
@@ -71,12 +71,12 @@ class Team < ApplicationRecord
 
       # Change all game details for the merged team to point to this team
       other_team.game_details.each do |detail|
-        detail.update_attribute(:team, self)
+        detail.update team: self
       end
 
       # Replace the team in any associated Players
       other_team.players.each do |player|
-        player.update_attribute(:team, self)
+        player.update team: self
       end
 
       # Destroy the old team

@@ -364,32 +364,15 @@ Rails/OutputSafety:
     - 'app/helpers/game_helper.rb'
     - 'app/helpers/player_helper.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: NotNilAndNotEmpty, NotBlank, UnlessBlank.
-Rails/Present:
-  Exclude:
-    - 'app/controllers/api/sessions_controller.rb'
-    - 'app/controllers/registrations_controller.rb'
-
 # Offense count: 34
 # Configuration parameters: Blacklist.
 # Blacklist: decrement!, decrement_counter, increment!, increment_counter, toggle!, touch, update_all, update_attribute, update_column, update_columns, update_counters
 Rails/SkipsModelValidations:
   Exclude:
-    - 'app/controllers/omniauth_callbacks_controller.rb'
     - 'app/controllers/teams_controller.rb'
-    - 'app/controllers/tournaments_controller.rb'
-    - 'app/models/game.rb'
     - 'app/models/gameweek_player.rb'
-    - 'app/models/player.rb'
     - 'app/models/roster.rb'
-    - 'app/models/team.rb'
-    - 'app/services/game_stats_ingestion_service.rb'
     - 'db/migrate/20170625235758_add_premium_to_leagues.rb'
-    - 'spec/models/player_spec.rb'
-    - 'spec/models/roster_spec.rb'
-    - 'spec/models/tournament_spec.rb'
 
 # Offense count: 14
 # Configuration parameters: EnforcedStyle, SupportedStyles.

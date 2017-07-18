@@ -54,7 +54,7 @@ class Game < ApplicationRecord
     if teams.size == 2
       transaction do
         game_details.each do |detail|
-          detail.update_attribute(:team, other_team(detail.team))
+          detail.update(team: other_team(detail.team))
         end
       end
     else

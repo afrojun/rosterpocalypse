@@ -112,12 +112,12 @@ class Player < ApplicationRecord
 
       # Update the team if it is currently Unknown
       if team.name == "Unknown" && other_player.team.name != "Unknown"
-        update_attribute(:team, other_player.team)
+        update team: other_player.team
       end
 
       # Change all game details for the merged player to point to this player
       other_player.game_details.each do |detail|
-        detail.update_attribute :player, self
+        detail.update player: self
       end
 
       # Reload to pick up the newly associated game details
@@ -132,7 +132,7 @@ class Player < ApplicationRecord
           gameweek_player = gameweek_players.find_by(gameweek: gameweek)
           gameweek_player.refresh_all_games
         else
-          other_gameweek_player.update_attribute :player, self
+          other_gameweek_player.update player: self
         end
       end
 
@@ -144,10 +144,10 @@ class Player < ApplicationRecord
 
       # Update transfers
       other_player.transfers_in.each do |transfer|
-        transfer.update_attribute :player_in, self
+        transfer.update player_in: self
       end
       other_player.transfers_out.each do |transfer|
-        transfer.update_attribute :player_out, self
+        transfer.update player_out: self
       end
 
       # Destroy the old player
@@ -178,11 +178,11 @@ class Player < ApplicationRecord
     player_value = player_value.round(2) + inflation_adjustment_factor
 
     if player_value <= MAX_VALUE && player_value >= MIN_VALUE
-      update_attribute :value, player_value
+      update value: player_value
     elsif player_value > MAX_VALUE
-      update_attribute :value, MAX_VALUE
+      update value: MAX_VALUE
     elsif player_value < MIN_VALUE
-      update_attribute :value, MIN_VALUE
+      update value: MIN_VALUE
     end
   end
 
@@ -200,7 +200,7 @@ class Player < ApplicationRecord
 
   def set_role_from_class classification
     player_role = is_flex?(classification) ? "Flex" : classification
-    update_attribute :role, player_role
+    update role: player_role
   end
 
   private

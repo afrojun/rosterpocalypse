@@ -25,7 +25,7 @@ class Api::SessionsController < Api::BaseApiController
   protected
 
   def ensure_params_exist
-    return unless params[:user_login].blank?
+    return if params[:user_login].present?
     render json: {success: false, message: "missing user_login parameter"}, status: 422
   end
 

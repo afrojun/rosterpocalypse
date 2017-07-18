@@ -60,7 +60,7 @@ class TournamentsController < RosterpocalypseController
       if games_to_remove.present?
         logger.info "Removing previously associated games from this tournament: #{games_to_remove.map(&:id)}"
         games_to_remove.each do |game|
-          game.update_attribute(:gameweek, nil)
+          game.update gameweek: nil
         end
       end
 

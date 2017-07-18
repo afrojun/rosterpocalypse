@@ -64,7 +64,7 @@ RSpec.describe Tournament, type: :model do
           it "adds new gameweeks before the first one when the start_date is made earlier" do
             expect(tournament.gameweeks.count).to eq 3
             new_start_date = tournament.start_date - 2.weeks
-            tournament.update_attribute(:start_date, new_start_date)
+            tournament.update start_date: new_start_date
             expect(tournament.gameweeks.count).to eq 5
             expect(tournament.gameweeks.map(&:name)).to eq ["Gameweek 0", "Gameweek 1", "Gameweek 2", "Gameweek 3", "Gameweek 4"]
             expect(tournament.gameweeks.first.start_date). to eq(new_start_date.beginning_of_week - 1.week + 12.hours)
@@ -73,14 +73,14 @@ RSpec.describe Tournament, type: :model do
           it "handles tournaments with start dates between midnight on Monday and the start of the gameweek at noon" do
             expect(tournament.gameweeks.count).to eq 3
             new_start_date = Time.parse("2016-12-26 10:30:00 UTC")
-            tournament.update_attribute(:start_date, new_start_date)
+            tournament.update start_date: new_start_date
             expect(tournament.gameweeks.where('start_date <= ? AND end_date >= ?', new_start_date, new_start_date).first).to eq tournament.gameweeks.first
           end
 
           it "adds new gameweeks after the last one when the end_date is made later" do
             expect(tournament.gameweeks.count).to eq 3
             new_end_date = tournament.end_date + 2.weeks
-            tournament.update_attribute(:end_date, new_end_date)
+            tournament.update end_date: new_end_date
             expect(tournament.gameweeks.count).to eq 5
             expect(tournament.gameweeks.map(&:name)).to eq ["Gameweek 0", "Gameweek 1", "Gameweek 2", "Gameweek 3", "Gameweek 4"]
             expect(tournament.gameweeks.last.end_date.to_i). to eq((new_end_date.end_of_week + 12.hours).to_i)
@@ -90,7 +90,7 @@ RSpec.describe Tournament, type: :model do
             expect(tournament.gameweeks.count).to eq 3
             new_start_date = tournament.start_date - 2.weeks
             new_end_date = tournament.end_date + 2.weeks
-            tournament.update_attributes(start_date: new_start_date, end_date: new_end_date)
+            tournament.update start_date: new_start_date, end_date: new_end_date
             expect(tournament.gameweeks.count).to eq 7
             expect(tournament.gameweeks.map(&:name)).to eq ["Gameweek 0", "Gameweek 1", "Gameweek 2", "Gameweek 3", "Gameweek 4", "Gameweek 5", "Gameweek 6"]
             expect(tournament.gameweeks.first.start_date). to eq(new_start_date.beginning_of_week - 1.week + 12.hours)
@@ -100,7 +100,7 @@ RSpec.describe Tournament, type: :model do
           it "does not add new gameweeks when the new date is covered by an existing gameweek" do
             expect(tournament.gameweeks.count).to eq 3
             new_start_date = tournament.start_date + 10.minutes
-            tournament.update_attribute(:start_date, new_start_date)
+            tournament.update start_date: new_start_date
             expect(tournament.gameweeks.count).to eq 3
           end
         end
@@ -109,7 +109,7 @@ RSpec.describe Tournament, type: :model do
           it "removes gameweeks when the tournament has moved away from its date range" do
             expect(tournament.gameweeks.count).to eq 3
             new_start_date = tournament.start_date + 1.week + 12.hours
-            tournament.update_attribute(:start_date, new_start_date)
+            tournament.update start_date: new_start_date
             expect(tournament.gameweeks.count).to eq 2
           end
 
@@ -117,7 +117,7 @@ RSpec.describe Tournament, type: :model do
             expect(tournament.gameweeks.count).to eq 3
             FactoryGirl.create :game, gameweek: tournament.gameweeks.first
             new_start_date = tournament.start_date + 1.week + 12.hours
-            tournament.update_attribute(:start_date, new_start_date)
+            tournament.update start_date: new_start_date
             expect(tournament.gameweeks.count).to eq 3
           end
         end

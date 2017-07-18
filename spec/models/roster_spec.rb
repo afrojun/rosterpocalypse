@@ -53,7 +53,7 @@ RSpec.describe Roster, type: :model do
 
       roster.add_to league
       roster.add_to league2
-      roster.current_gameweek_roster.update_attribute :available_transfers, 5
+      roster.current_gameweek_roster.update available_transfers: 5
       expect(roster.available_transfers).to eq 5
     end
 

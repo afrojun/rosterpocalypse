@@ -58,11 +58,11 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
                 redirect_to new_user_registration_url
               end
 
-      @identity.update_attribute :user_id, @user.id
+      @identity.update user_id: @user.id
     end
 
     if @user.persisted?
-      @identity.update_attribute :user_id, @user.id
+      @identity.update user_id: @user.id
       # This is because we've created the user manually, and Device expects a
       # FormUser class (with the validations)
       @user = FormUser.find @user.id

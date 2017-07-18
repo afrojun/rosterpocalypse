@@ -12,7 +12,7 @@ RSpec.describe Player, type: :model do
     context "after update" do
       it "adds to the alternate name table if a new name is specified" do
         player = FactoryGirl.create :player, name: "Joe"
-        player.update_attribute :name, "Bob"
+        player.update name: "Bob"
         expect(player.alternate_names.map(&:alternate_name)).to eq ["Joe", "joe", "Bob", "bob"]
       end
     end
