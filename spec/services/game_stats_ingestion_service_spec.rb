@@ -178,36 +178,36 @@ describe GameStatsIngestionService do
 
   context "#tournament_name" do
     it "returns the expected tournament name" do
-      expect(service.send :tournament_name).to eq "Summer Global Championship"
+      expect(service.send(:tournament_name)).to eq "Summer Global Championship"
     end
 
     it "strips extra characters from the end of the tournament name if another tournament exists without them" do
       FactoryGirl.create :tournament, name: "Summer Europe Championship 2017", region: "EU"
       game_stats_json["filename"] = "02.12.16_mYinsanity_vs_Dignitas_game_1_at_Summer_Europe_Championship_2017_X8y27Lk.StormReplay"
-      expect(service.send :tournament_name).to eq "Summer Europe Championship 2017"
+      expect(service.send(:tournament_name)).to eq "Summer Europe Championship 2017"
     end
   end
 
   context "#region" do
     it "returns the expected region" do
-      expect(service.send :region).to eq "Global"
+      expect(service.send(:region)).to eq "Global"
     end
 
     it "handles simple regions" do
       game_stats_json["filename"] = "02.12.16_mYinsanity_vs_Dignitas_game_1_at_Summer_EU_Championship_2017.StormReplay"
-      expect(service.send :region).to eq "EU"
+      expect(service.send(:region)).to eq "EU"
     end
 
     it "detects regions by keyword" do
       game_stats_json["filename"] = "02.12.16_mYinsanity_vs_Dignitas_game_1_at_Summer_Europe_Championship_2017.StormReplay"
-      expect(service.send :region).to eq "EU"
+      expect(service.send(:region)).to eq "EU"
     end
   end
 
   context "#match_team_name?" do
     it "calls #fuzzy_match_name if an abbreviation is provided" do
       expect(service).not_to receive(:players_in_team?)
-      expect(service.send :match_team_name?, "Dignitas", "DIG", {}).to eq true
+      expect(service.send(:match_team_name?, "Dignitas", "DIG", {})).to eq true
     end
 
     it "calls #players_in_team? if no abbreviation is provided" do
@@ -218,30 +218,30 @@ describe GameStatsIngestionService do
 
   context "#fuzzy_match_name" do
     it "matches abbreviations with full names" do
-      expect(service.send :fuzzy_match_name, "Dignitas", "DIG").to eq "dig"
+      expect(service.send(:fuzzy_match_name, "Dignitas", "DIG")).to eq "dig"
     end
 
     it "returns an empty string when there is no match" do
-      expect(service.send :fuzzy_match_name, "Naventic", "DIG").to eq ""
+      expect(service.send(:fuzzy_match_name, "Naventic", "DIG")).to eq ""
     end
 
     it "returns an empty string when the abbreviation is empty" do
-      expect(service.send :fuzzy_match_name, "Dignitas", "").to eq ""
+      expect(service.send(:fuzzy_match_name, "Dignitas", "")).to eq ""
     end
 
     it "handles team names starting with 'Team'" do
-      expect(service.send :fuzzy_match_name, "Team Dignitas", "DIG").to eq "dig"
-      expect(service.send :fuzzy_match_name, "Team Naventic", "NAV").to eq "nav"
+      expect(service.send(:fuzzy_match_name, "Team Dignitas", "DIG")).to eq "dig"
+      expect(service.send(:fuzzy_match_name, "Team Naventic", "NAV")).to eq "nav"
     end
 
     it "handles abbreviations using initials" do
-      expect(service.send :fuzzy_match_name, "Team No Limit", "TNL").to eq "team no l"
-      expect(service.send :fuzzy_match_name, "Please Buff Arthas", "PBA").to eq "please buff artha"
+      expect(service.send(:fuzzy_match_name, "Team No Limit", "TNL")).to eq "team no l"
+      expect(service.send(:fuzzy_match_name, "Please Buff Arthas", "PBA")).to eq "please buff artha"
     end
 
     it "only matches from the start of the name, unless the first word is 'team'" do
-      expect(service.send :fuzzy_match_name, "Burning Rage", "BR").to eq "burning r"
-      expect(service.send :fuzzy_match_name, "Reborn", "BR").to eq ""
+      expect(service.send(:fuzzy_match_name, "Burning Rage", "BR")).to eq "burning r"
+      expect(service.send(:fuzzy_match_name, "Reborn", "BR")).to eq ""
     end
   end
 
@@ -254,58 +254,58 @@ describe GameStatsIngestionService do
     it "returns true if there is a match" do
       team
       details = service.send :player_details_by_team_colour
-      expect(service.send :players_in_team?, "Test Team", details["red"]).to eq true
+      expect(service.send(:players_in_team?, "Test Team", details["red"])).to eq true
     end
 
     it "returns false if no match is found" do
       team
       details = service.send :player_details_by_team_colour
-      expect(service.send :players_in_team?, "Test Team", details["blue"]).to eq false
+      expect(service.send(:players_in_team?, "Test Team", details["blue"])).to eq false
     end
 
     it "returns false if the team is not found" do
       team
       details = service.send :player_details_by_team_colour
-      expect(service.send :players_in_team?, "Non-existent Test", details["red"]).to eq false
+      expect(service.send(:players_in_team?, "Non-existent Test", details["red"])).to eq false
     end
   end
 
   context "#team_name_prefix" do
     it "gets the team name prefix" do
       player_names = ["MVPSign", "MVPKyocha", "MVPRich", "MVPSake", "MVPMerryday"]
-      expect(service.send :team_name_prefix, player_names).to eq "MVP"
+      expect(service.send(:team_name_prefix, player_names)).to eq "MVP"
     end
 
     it "returns an empty string when any name doesn't match" do
       player_names = ["MVPSign", "MVPKyocha", "MVPRich", "Sake", "MVPMerryday"]
-      expect(service.send :team_name_prefix, player_names).to eq ""
+      expect(service.send(:team_name_prefix, player_names)).to eq ""
     end
 
     it "returns the first name if it matches completely" do
       player_names = ["MVPSign", "MVPSigned"]
-      expect(service.send :team_name_prefix, player_names).to eq "MVPSign"
+      expect(service.send(:team_name_prefix, player_names)).to eq "MVPSign"
     end
   end
 
   context "#strip_team_name_prefix_from_player_name" do
     it "strips the team name from the player name" do
-      expect(service.send :strip_team_name_prefix_from_player_name, "MVP", "MVPSign").to eq "Sign"
+      expect(service.send(:strip_team_name_prefix_from_player_name, "MVP", "MVPSign")).to eq "Sign"
     end
 
     it "does not strip the name if it is not present" do
-      expect(service.send :strip_team_name_prefix_from_player_name, "MVP", "DIGBakery").to eq "DIGBakery"
+      expect(service.send(:strip_team_name_prefix_from_player_name, "MVP", "DIGBakery")).to eq "DIGBakery"
     end
 
     it "only removes the team name from the beginning of the player name" do
-      expect(service.send :strip_team_name_prefix_from_player_name, "MVP", "MVPSignMVP").to eq "SignMVP"
+      expect(service.send(:strip_team_name_prefix_from_player_name, "MVP", "MVPSignMVP")).to eq "SignMVP"
     end
 
     it "handles empty team names" do
-      expect(service.send :strip_team_name_prefix_from_player_name, "", "DIGBakery").to eq "DIGBakery"
+      expect(service.send(:strip_team_name_prefix_from_player_name, "", "DIGBakery")).to eq "DIGBakery"
     end
 
     it "handles null team names" do
-      expect(service.send :strip_team_name_prefix_from_player_name, nil, "DIGBakery").to eq "DIGBakery"
+      expect(service.send(:strip_team_name_prefix_from_player_name, nil, "DIGBakery")).to eq "DIGBakery"
     end
   end
 end

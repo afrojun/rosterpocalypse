@@ -435,27 +435,6 @@ Style/MultilineBlockChain:
   Exclude:
     - 'app/models/league_gameweek_player.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: both, prefix, postfix
-Style/NegatedIf:
-  Exclude:
-    - 'app/models/user.rb'
-
-# Offense count: 31
-# Cop supports --auto-correct.
-Style/NestedParenthesizedCalls:
-  Exclude:
-    - 'spec/models/player_spec.rb'
-    - 'spec/models/roster_spec.rb'
-    - 'spec/services/game_stats_ingestion_service_spec.rb'
-
-# Offense count: 2
-Style/NestedTernaryOperator:
-  Exclude:
-    - 'app/models/gameweek_roster.rb'
-
 # Offense count: 3
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, MinBodyLength, SupportedStyles.

@@ -14,12 +14,12 @@ class GameweekRoster < ApplicationRecord
 
   def next(safe = true)
     nxt = GameweekRoster.find_by gameweek: gameweek.next, roster: roster
-    safe ? (nxt.nil? ? self : nxt) : nxt
+    safe && nxt.nil? ? self : nxt
   end
 
   def previous(safe = true)
     prev = GameweekRoster.find_by gameweek: gameweek.previous, roster: roster
-    safe ? (prev.nil? ? self : prev) : prev
+    safe && prev.nil? ? self : prev
   end
 
   def create_snapshot(players_to_snapshot = roster.players, force = false)
