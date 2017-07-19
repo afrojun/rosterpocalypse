@@ -54,8 +54,8 @@ class Gameweek < ApplicationRecord
 
   def move_end_date(offset)
     next_gameweek = self.next
-    update end_date: end_date+offset
-    next_gameweek.update start_date: next_gameweek.start_date+offset
+    update end_date: end_date + offset
+    next_gameweek.update start_date: next_gameweek.start_date + offset
   end
 
   def refresh_all_gameweek_players

@@ -56,7 +56,7 @@ class RostersController < RosterpocalypseController
     authorize! :read, @roster
 
     respond_to do |format|
-      format.html { }
+      format.html {}
       format.json { render json: @gameweek_players }
       format.png do
                    kit = IMGKit.new(render_to_string, "quality" => 80, "crop-w" => 676)

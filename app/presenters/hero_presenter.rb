@@ -6,7 +6,7 @@ class HeroPresenter < BasePresenter
   def hero_stats
     n_games = details.size
     wins = details.select(&:win).size
-    win_percent = n_games.positive? ? ((wins.to_f/n_games.to_f) * 100).round(2) : 0
+    win_percent = n_games.positive? ? ((wins.to_f / n_games.to_f) * 100).round(2) : 0
 
     {
       n_games: n_games,

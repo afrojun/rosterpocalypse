@@ -75,7 +75,7 @@ class GamesController < RosterpocalypseController
       else
         message = "Some games failed to be destroyed."
         format.html { redirect_to games_url, notice: message }
-        format.json { render json: {error: message}, status: :unprocessable_entity }
+        format.json { render json: { error: message }, status: :unprocessable_entity }
       end
     end
   end

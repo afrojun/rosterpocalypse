@@ -89,13 +89,15 @@ gem 'devise'
 # OAuth gems
 gem 'omniauth'
 gem 'omniauth-oauth2', '~> 1.3.1'
+# OAuth clients
 gem 'omniauth-twitter'
 gem 'omniauth-facebook'
 gem 'omniauth-bnet'
 gem 'omniauth-reddit', git: 'https://github.com/jackdempsey/omniauth-reddit'
-gem 'twitter'
 gem 'omniauth-google-oauth2'
 # gem 'google-api-client', require: 'google/api_client'
+
+gem 'twitter'
 
 # https://github.com/jumph4x/canonical-rails
 # Set rel=canonical in the header for SEO

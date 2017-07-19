@@ -12,7 +12,7 @@ require 'rails_helper'
 # end
 RSpec.describe DeviseHelper, type: :helper do
   context "#identity_provider_logos" do
-    let(:fb_identity) { FactoryGirl.create :identity}
+    let(:fb_identity) { FactoryGirl.create :identity }
     let(:reddit_identity) { FactoryGirl.create :identity, provider: "reddit" }
 
     it "generates the HTML for displaying the identity logo" do

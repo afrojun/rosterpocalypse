@@ -13,7 +13,7 @@ RSpec.describe Player, type: :model do
       it "adds to the alternate name table if a new name is specified" do
         player = FactoryGirl.create :player, name: "Joe"
         player.update name: "Bob"
-        expect(player.alternate_names.map(&:alternate_name)).to eq ["Joe", "joe", "Bob", "bob"]
+        expect(player.alternate_names.map(&:alternate_name)).to eq %w[Joe joe Bob bob]
       end
     end
   end
@@ -32,7 +32,7 @@ RSpec.describe Player, type: :model do
 
     it "ignores case when finding players" do
       player = FactoryGirl.create :player, name: "BaR"
-      expect(player.alternate_names.map(&:alternate_name)).to eq ["BaR", "bar"]
+      expect(player.alternate_names.map(&:alternate_name)).to eq %w[BaR bar]
       found_player = Player.find_or_create_including_alternate_names "BAR"
       expect(found_player).to eql player
     end
@@ -137,15 +137,15 @@ RSpec.describe Player, type: :model do
     context "multi-hero classification players" do
       context "with a single role" do
         it "identifies majority Assassin players as Assassin" do
-          expect(player).to receive(:player_heroes_by_classification).at_least(:once).and_return("Assassin" => [1,2,3], "Specialist" => [9])
-          expect(player).to receive(:game_details).at_least(:once).and_return([1,2,3,9])
+          expect(player).to receive(:player_heroes_by_classification).at_least(:once).and_return("Assassin" => [1, 2, 3], "Specialist" => [9])
+          expect(player).to receive(:game_details).at_least(:once).and_return([1, 2, 3, 9])
           player.infer_role
           expect(player.role).to eq "Assassin"
         end
 
         it "identifies majority Specialist players as Flex" do
-          expect(player).to receive(:player_heroes_by_classification).at_least(:once).and_return("Assassin" => [3], "Specialist" => [1,2,9])
-          expect(player).to receive(:game_details).at_least(:once).and_return([1,2,3,9])
+          expect(player).to receive(:player_heroes_by_classification).at_least(:once).and_return("Assassin" => [3], "Specialist" => [1, 2, 9])
+          expect(player).to receive(:game_details).at_least(:once).and_return([1, 2, 3, 9])
           player.infer_role
           expect(player.role).to eq "Flex"
         end
@@ -153,8 +153,8 @@ RSpec.describe Player, type: :model do
 
       context "flexible role" do
         it "identifies mixed class players as Flex" do
-          expect(player).to receive(:player_heroes_by_classification).at_least(:once).and_return("Assassin" => [3,4,5], "Specialist" => [1,2,9])
-          expect(player).to receive(:game_details).at_least(:once).and_return([1,2,3,4,5,9])
+          expect(player).to receive(:player_heroes_by_classification).at_least(:once).and_return("Assassin" => [3, 4, 5], "Specialist" => [1, 2, 9])
+          expect(player).to receive(:game_details).at_least(:once).and_return([1, 2, 3, 4, 5, 9])
           player.infer_role
           expect(player.role).to eq "Flex"
         end

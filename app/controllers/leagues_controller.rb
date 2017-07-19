@@ -118,10 +118,10 @@ class LeaguesController < RosterpocalypseController
                                          :max_players_per_team, :use_representative_game,
                                          required_player_roles: [:assassin, :flex, :warrior, :support],
                                          role_stat_modifiers: [
-                                                                {assassin: [:solo_kills, :assists, :time_spent_dead, :win]},
-                                                                {flex:     [:solo_kills, :assists, :time_spent_dead, :win]},
-                                                                {warrior:  [:solo_kills, :assists, :time_spent_dead, :win]},
-                                                                {support:  [:solo_kills, :assists, :time_spent_dead, :win]}
+                                                                { assassin: [:solo_kills, :assists, :time_spent_dead, :win] },
+                                                                { flex:     [:solo_kills, :assists, :time_spent_dead, :win] },
+                                                                { warrior:  [:solo_kills, :assists, :time_spent_dead, :win] },
+                                                                { support:  [:solo_kills, :assists, :time_spent_dead, :win] }
                                                               ]
                                         ).tap do |lp|
       lp[:manager_id] = current_user.manager.id

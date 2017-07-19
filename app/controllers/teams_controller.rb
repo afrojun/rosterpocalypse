@@ -61,7 +61,7 @@ class TeamsController < RosterpocalypseController
         format.html { redirect_to teams_url, notice: "Team was successfully destroyed." }
         format.json { head :no_content }
       else
-        format.html { redirect_to teams_url, alert: @team.errors.details[:base].map{ |error| error[:error] }.to_sentence }
+        format.html { redirect_to teams_url, alert: @team.errors.details[:base].map { |error| error[:error] }.to_sentence }
         format.json { render json: @team.errors, status: :unprocessable_entity }
       end
     end

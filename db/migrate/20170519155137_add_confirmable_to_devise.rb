@@ -12,7 +12,7 @@ class AddConfirmableToDevise < ActiveRecord::Migration[5.0]
 
     execute("UPDATE users SET confirmed_at = NOW()")
     User.all.each do |user|
-      valid_email_providers = user.identities.map(&:provider) & ["google", "facebook", "twitter"]
+      valid_email_providers = user.identities.map(&:provider) & %w[google facebook twitter]
       user.update(unconfirmed_email: user.email) unless valid_email_providers.any?
     end
     # All existing user accounts should be able to log in after this.

@@ -68,7 +68,7 @@ class PlayersController < RosterpocalypseController
         format.html { redirect_to players_url, notice: "Player was successfully destroyed." }
         format.json { head :no_content }
       else
-        format.html { redirect_to players_url, alert: @player.errors.details[:base].map{ |error| error[:error] }.to_sentence }
+        format.html { redirect_to players_url, alert: @player.errors.details[:base].map { |error| error[:error] }.to_sentence }
         format.json { render json: @player.errors, status: :unprocessable_entity }
       end
     end
@@ -107,7 +107,7 @@ class PlayersController < RosterpocalypseController
 
     @teams_filter = {}
     @teams_filter[:region] = region if region && Team::REGIONS.include?(region)
-    @teams_filter[:active] = (active == "true") if active && ["true", "false"].include?(active)
+    @teams_filter[:active] = (active == "true") if active && %w[true false].include?(active)
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

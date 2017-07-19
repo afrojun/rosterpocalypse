@@ -51,14 +51,14 @@ RSpec.describe RostersController, type: :controller do
 
   describe "GET #show" do
     it "assigns the requested roster as @roster" do
-      get :show, params: {id: roster.id}, session: valid_session
+      get :show, params: { id: roster.id }, session: valid_session
       expect(assigns(:roster)).to eq(roster)
     end
   end
 
   describe "GET #manage" do
     it "assigns the requested roster as @roster" do
-      get :manage, params: {id: roster.id}, session: valid_session
+      get :manage, params: { id: roster.id }, session: valid_session
       expect(assigns(:roster)).to eq(roster)
     end
   end
@@ -72,36 +72,36 @@ RSpec.describe RostersController, type: :controller do
       end
 
       it "updates the requested roster" do
-        put :update, params: {id: roster.id, roster: new_attributes}, session: valid_session
+        put :update, params: { id: roster.id, roster: new_attributes }, session: valid_session
         roster.reload
         expect(roster.name).to eq "MehRoster"
       end
 
       it "assigns the requested roster as @roster" do
-        put :update, params: {id: roster.id, roster: valid_attributes}, session: valid_session
+        put :update, params: { id: roster.id, roster: valid_attributes }, session: valid_session
         expect(assigns(:roster)).to eq(roster)
       end
 
       it "redirects to the roster" do
-        put :update, params: {id: roster.id, roster: valid_attributes}, session: valid_session
+        put :update, params: { id: roster.id, roster: valid_attributes }, session: valid_session
         expect(response).to redirect_to(roster)
       end
     end
 
     context "with invalid params" do
       it "does not update the roster" do
-        put :update, params: {id: roster.id, roster: invalid_attributes}, session: valid_session
+        put :update, params: { id: roster.id, roster: invalid_attributes }, session: valid_session
         roster.reload
         expect(roster.name).to eq "AwesomeRoster"
       end
 
       it "assigns the roster as @roster" do
-        put :update, params: {id: roster.id, roster: invalid_attributes}, session: valid_session
+        put :update, params: { id: roster.id, roster: invalid_attributes }, session: valid_session
         expect(assigns(:roster)).to eq(roster)
       end
 
       it "re-renders the 'manage' template" do
-        put :update, params: {id: roster.id, roster: invalid_attributes}, session: valid_session
+        put :update, params: { id: roster.id, roster: invalid_attributes }, session: valid_session
         expect(response).to render_template("manage")
       end
     end
@@ -112,7 +112,7 @@ RSpec.describe RostersController, type: :controller do
       let(:other_roster) { FactoryGirl.create :roster, manager: other_manager }
 
       it "denies access" do
-        put :update, params: {id: other_roster.id, roster: valid_attributes}, session: valid_session
+        put :update, params: { id: other_roster.id, roster: valid_attributes }, session: valid_session
         expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to eq "You don't have permission to take this action."
       end
@@ -123,12 +123,12 @@ RSpec.describe RostersController, type: :controller do
     it "destroys the requested roster" do
       roster
       expect do
-        delete :destroy, params: {id: roster.id}, session: valid_session
+        delete :destroy, params: { id: roster.id }, session: valid_session
       end.to change(Roster, :count).by(-1)
     end
 
     it "redirects to the rosters list" do
-      delete :destroy, params: {id: roster.id}, session: valid_session
+      delete :destroy, params: { id: roster.id }, session: valid_session
       expect(response).to redirect_to(rosters_url)
     end
   end

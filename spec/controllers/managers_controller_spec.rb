@@ -52,7 +52,7 @@ RSpec.describe ManagersController, type: :controller do
   describe "GET #show" do
     it "assigns the requested manager as @manager" do
       manager = Manager.create! valid_attributes
-      get :show, params: {id: manager.to_param}, session: valid_session
+      get :show, params: { id: manager.to_param }, session: valid_session
       expect(response).to redirect_to root_path
       expect(flash[:alert]).to eq "You don't have permission to take this action."
     end

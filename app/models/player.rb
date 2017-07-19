@@ -189,7 +189,7 @@ class Player < ApplicationRecord
   def infer_role
     if player_heroes_by_classification.size > 1
       class_ratios = player_heroes_by_classification.reduce({}) do |class_counts, (classification, heroes)|
-                       class_counts.merge(classification => heroes.count.to_f/game_details.count)
+                       class_counts.merge(classification => heroes.count.to_f / game_details.count)
                      end
       majority_class = class_ratios.detect { |_, ratio| ratio > 0.5 }
       set_role_from_class(majority_class.present? ? majority_class.first : "Flex")
@@ -223,10 +223,10 @@ class Player < ApplicationRecord
   def value_change(details)
     game = details.game
     opposing_players = game.game_details.includes(:player).where('team_id != ?', details.team_id).map(&:player)
-    ave_opponent_value = opposing_players.sum(&:value)/opposing_players.size.to_f
+    ave_opponent_value = opposing_players.sum(&:value) / opposing_players.size.to_f
 
     team_players = game.game_details.includes(:player).where('team_id = ?', details.team_id).map(&:player)
-    ave_team_value = team_players.sum(&:value)/team_players.size.to_f
+    ave_team_value = team_players.sum(&:value) / team_players.size.to_f
 
     # This scales the win multiplier based on the relative strength of the two teams
     scaling_factor_string = "((#{ave_opponent_value} - #{ave_team_value}) * #{details.win_int_neg.to_f} * 0.05"
@@ -234,7 +234,7 @@ class Player < ApplicationRecord
     Rails.logger.debug "scaling_factor calculation: #{scaling_factor_string} = #{scaling_factor}"
 
     calculation_string = "(#{details.solo_kills.to_f} * 0.1) + (#{details.assists.to_f} * 0.02) + (#{details.win_int_neg.to_f} * (0.5 + #{scaling_factor})) - ((#{details.time_spent_dead.to_f}/15) * 0.05)"
-    result = (details.solo_kills.to_f * 0.1) + (details.assists.to_f * 0.02) + (details.win_int_neg.to_f * (0.5 + scaling_factor)) - ((details.time_spent_dead.to_f/15) * 0.05)
+    result = (details.solo_kills.to_f * 0.1) + (details.assists.to_f * 0.02) + (details.win_int_neg.to_f * (0.5 + scaling_factor)) - ((details.time_spent_dead.to_f / 15) * 0.05)
     Rails.logger.debug "value_change calculation: #{calculation_string} = #{result}"
     result
   end

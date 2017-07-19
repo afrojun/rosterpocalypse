@@ -42,7 +42,7 @@ RSpec.describe GameweeksController, type: :controller do
     it "assigns the requested gameweek as @gameweek" do
       gameweek
       league
-      get :show, params: {id: gameweek.to_param}, session: valid_session
+      get :show, params: { id: gameweek.to_param }, session: valid_session
       expect(assigns(:gameweek)).to eq(gameweek)
     end
   end

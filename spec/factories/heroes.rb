@@ -4,6 +4,6 @@ FactoryGirl.define do
   factory :hero do
     name { generate :hero_name }
     internal_name { name }
-    classification { ["Warrior", "Support", "Assassin", "Specialist"].sample }
+    classification { %w[Warrior Support Assassin Specialist].sample }
   end
 end

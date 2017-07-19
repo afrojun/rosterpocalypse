@@ -60,7 +60,7 @@ class HeroesController < RosterpocalypseController
         format.html { redirect_to heroes_url, notice: "Hero was successfully destroyed." }
         format.json { head :no_content }
       else
-        format.html { redirect_to heroes_url, alert: @hero.errors.details[:base].map{ |error| error[:error] }.to_sentence }
+        format.html { redirect_to heroes_url, alert: @hero.errors.details[:base].map { |error| error[:error] }.to_sentence }
         format.json { render json: @hero.errors, status: :unprocessable_entity }
       end
     end

@@ -48,7 +48,7 @@ RSpec.describe PublicLeaguesController, type: :controller do
 
     describe "GET #show" do
       it "assigns the requested league as @league" do
-        get :show, params: {id: league.to_param}, session: valid_session
+        get :show, params: { id: league.to_param }, session: valid_session
         expect(assigns(:league)).to eq(league)
       end
     end
@@ -62,7 +62,7 @@ RSpec.describe PublicLeaguesController, type: :controller do
 
     describe "GET #edit" do
       it "assigns the requested league as @league" do
-        get :edit, params: {id: league.to_param}, session: valid_session
+        get :edit, params: { id: league.to_param }, session: valid_session
         check_access_denied
       end
     end
@@ -70,7 +70,7 @@ RSpec.describe PublicLeaguesController, type: :controller do
     describe "POST #create" do
       context "with valid params" do
         it "assigns a newly created league as @league" do
-          post :create, params: {public_league: valid_attributes}, session: valid_session
+          post :create, params: { public_league: valid_attributes }, session: valid_session
           check_access_denied
         end
       end
@@ -78,14 +78,14 @@ RSpec.describe PublicLeaguesController, type: :controller do
 
     describe "PUT #update" do
       it "updates the requested league" do
-        put :update, params: {id: league.to_param, public_league: valid_attributes}, session: valid_session
+        put :update, params: { id: league.to_param, public_league: valid_attributes }, session: valid_session
         check_access_denied
       end
     end
 
     describe "DELETE #destroy" do
       it "redirects to the leagues list" do
-        delete :destroy, params: {id: league.to_param}, session: valid_session
+        delete :destroy, params: { id: league.to_param }, session: valid_session
         check_access_denied
       end
     end
@@ -104,7 +104,7 @@ RSpec.describe PublicLeaguesController, type: :controller do
 
     describe "GET #show" do
       it "assigns the requested league as @league" do
-        get :show, params: {id: league.to_param}, session: valid_session
+        get :show, params: { id: league.to_param }, session: valid_session
         expect(assigns(:league)).to eq(league)
       end
     end
@@ -118,7 +118,7 @@ RSpec.describe PublicLeaguesController, type: :controller do
 
     describe "GET #edit" do
       it "assigns the requested league as @league" do
-        get :edit, params: {id: league.to_param}, session: valid_session
+        get :edit, params: { id: league.to_param }, session: valid_session
         expect(assigns(:league)).to eq(league)
       end
     end
@@ -127,30 +127,30 @@ RSpec.describe PublicLeaguesController, type: :controller do
       context "with valid params" do
         it "creates a new League" do
           expect do
-            post :create, params: {public_league: valid_attributes}, session: valid_session
+            post :create, params: { public_league: valid_attributes }, session: valid_session
           end.to change(PublicLeague, :count).by(1)
         end
 
         it "assigns a newly created league as @league" do
-          post :create, params: {public_league: valid_attributes}, session: valid_session
+          post :create, params: { public_league: valid_attributes }, session: valid_session
           expect(assigns(:league)).to be_a(PublicLeague)
           expect(assigns(:league)).to be_persisted
         end
 
         it "redirects to the created league" do
-          post :create, params: {public_league: valid_attributes}, session: valid_session
+          post :create, params: { public_league: valid_attributes }, session: valid_session
           expect(response).to redirect_to(PublicLeague.last)
         end
       end
 
       context "with invalid params" do
         it "assigns a newly created but unsaved league as @league" do
-          post :create, params: {public_league: invalid_attributes}, session: valid_session
+          post :create, params: { public_league: invalid_attributes }, session: valid_session
           expect(assigns(:league)).to be_a_new(PublicLeague)
         end
 
         it "re-renders the 'new' template" do
-          post :create, params: {public_league: invalid_attributes}, session: valid_session
+          post :create, params: { public_league: invalid_attributes }, session: valid_session
           expect(response).to render_template("new")
         end
       end
@@ -163,30 +163,30 @@ RSpec.describe PublicLeaguesController, type: :controller do
         end
 
         it "updates the requested league" do
-          put :update, params: {id: league.to_param, public_league: new_attributes}, session: valid_session
+          put :update, params: { id: league.to_param, public_league: new_attributes }, session: valid_session
           league.reload
           skip("Add assertions for updated state")
         end
 
         it "assigns the requested league as @league" do
-          put :update, params: {id: league.to_param, public_league: valid_attributes}, session: valid_session
+          put :update, params: { id: league.to_param, public_league: valid_attributes }, session: valid_session
           expect(assigns(:league)).to eq(league)
         end
 
         it "redirects to the league" do
-          put :update, params: {id: league.to_param, public_league: valid_attributes}, session: valid_session
+          put :update, params: { id: league.to_param, public_league: valid_attributes }, session: valid_session
           expect(response).to redirect_to(league)
         end
       end
 
       context "with invalid params" do
         it "assigns the league as @league" do
-          put :update, params: {id: league.to_param, public_league: invalid_attributes}, session: valid_session
+          put :update, params: { id: league.to_param, public_league: invalid_attributes }, session: valid_session
           expect(assigns(:league)).to eq(league)
         end
 
         it "re-renders the 'edit' template" do
-          put :update, params: {id: league.to_param, public_league: invalid_attributes}, session: valid_session
+          put :update, params: { id: league.to_param, public_league: invalid_attributes }, session: valid_session
           expect(response).to render_template("edit")
         end
       end
@@ -196,12 +196,12 @@ RSpec.describe PublicLeaguesController, type: :controller do
       it "destroys the requested league" do
         league
         expect do
-          delete :destroy, params: {id: league.to_param}, session: valid_session
+          delete :destroy, params: { id: league.to_param }, session: valid_session
         end.to change(League, :count).by(-1)
       end
 
       it "redirects to the leagues list" do
-        delete :destroy, params: {id: league.to_param}, session: valid_session
+        delete :destroy, params: { id: league.to_param }, session: valid_session
         expect(response).to redirect_to(leagues_url)
       end
     end

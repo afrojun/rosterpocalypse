@@ -126,7 +126,7 @@ describe GameStatsIngestionService do
       expect(game.game_hash).to eq "31af3b750df2b90e51121833672747969fdd3a89c8bfa1303abd6fec9a8c7758"
       expect(game.tournament.gameweeks).to include game.gameweek
       expect(game.game_details.size).to eq 10
-      expect(game.players.map(&:name).sort).to eq ["KyoCha", "Sign", "Rich", "Sake", "merryday", "Bakery", "JayPL", "Snitch", "Athero", "Mene"].sort
+      expect(game.players.map(&:name).sort).to eq %w[KyoCha Sign Rich Sake merryday Bakery JayPL Snitch Athero Mene].sort
       expect(game.teams.map(&:name).sort).to eq ["Dignitas", "MVP BLACK"]
       expect(game.map.name).to eq "Tomb of the Spider Queen"
     end
@@ -138,7 +138,7 @@ describe GameStatsIngestionService do
       }
       expect(service).to receive(:team_names_by_team_colour).at_least(:once).and_return(team_names_by_colour)
       service.populate_from_json
-      expect(Team.all.map(&:name).sort).to eq ["DIG", "MVP"]
+      expect(Team.all.map(&:name).sort).to eq %w[DIG MVP]
     end
 
     it "falls back to use the Unknown team if prefix and filename matching fails" do
@@ -170,7 +170,7 @@ describe GameStatsIngestionService do
   context "#player_details_by_team_colour" do
     it "splits player details by team" do
       details = service.send :player_details_by_team_colour
-      expect(details.keys).to eq ["red", "blue"]
+      expect(details.keys).to eq %w[red blue]
       expect(details["red"].length).to eq 5
       expect(details["blue"].length).to eq 5
     end
@@ -272,17 +272,17 @@ describe GameStatsIngestionService do
 
   context "#team_name_prefix" do
     it "gets the team name prefix" do
-      player_names = ["MVPSign", "MVPKyocha", "MVPRich", "MVPSake", "MVPMerryday"]
+      player_names = %w[MVPSign MVPKyocha MVPRich MVPSake MVPMerryday]
       expect(service.send(:team_name_prefix, player_names)).to eq "MVP"
     end
 
     it "returns an empty string when any name doesn't match" do
-      player_names = ["MVPSign", "MVPKyocha", "MVPRich", "Sake", "MVPMerryday"]
+      player_names = %w[MVPSign MVPKyocha MVPRich Sake MVPMerryday]
       expect(service.send(:team_name_prefix, player_names)).to eq ""
     end
 
     it "returns the first name if it matches completely" do
-      player_names = ["MVPSign", "MVPSigned"]
+      player_names = %w[MVPSign MVPSigned]
       expect(service.send(:team_name_prefix, player_names)).to eq "MVPSign"
     end
   end

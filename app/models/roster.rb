@@ -163,11 +163,11 @@ class Roster < ApplicationRecord
 
     if allow_updates?
       if new_players = validate_roster_size(player_ids)
-        if(validate_teams_active(new_players) &&
+        if validate_teams_active(new_players) &&
            validate_transfers(new_players) &&
            validate_player_roles(new_players) &&
            validate_players_in_same_team(new_players) &&
-           validate_player_value(new_players))
+           validate_player_value(new_players)
           if allow_free_transfers?
             Rails.logger.info "Roster #{name}: Freely transferring in players: " \
                               "#{new_players.map(&:name)}"

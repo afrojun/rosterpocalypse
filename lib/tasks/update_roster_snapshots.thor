@@ -90,7 +90,7 @@ class GameweekRosterActions < Thor
     print "Updating Roster scores for the "
     puts(options.previous ? "previous gameweek" : " current gameweek")
     tournaments = begin
-      if ["NA", "EU"].include?(options.region)
+      if %w[NA EU].include?(options.region)
         Tournament.active_tournaments.where(region: options.region)
       else
         Tournament.active_tournaments

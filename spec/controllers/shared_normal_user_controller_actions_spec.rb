@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-shared_examples_for "a normal user" do |model_class, model_symbol, allow_read=false|
+shared_examples_for "a normal user" do |model_class, model_symbol, allow_read = false|
   describe "<<" do
     login_user
 
@@ -29,7 +29,7 @@ shared_examples_for "a normal user" do |model_class, model_symbol, allow_read=fa
     describe "GET #show" do
       it "assigns the requested #{model_symbol} as @#{model_symbol}" do
         model = model_class.create! valid_attributes
-        get :show, params: {id: model.to_param}, session: valid_session
+        get :show, params: { id: model.to_param }, session: valid_session
         if allow_read
           expect(assigns(model_symbol)).to eq(model)
         else
@@ -48,14 +48,14 @@ shared_examples_for "a normal user" do |model_class, model_symbol, allow_read=fa
     describe "GET #edit" do
       it "denies access" do
         model = model_class.create! valid_attributes
-        get :edit, params: {id: model.to_param}, session: valid_session
+        get :edit, params: { id: model.to_param }, session: valid_session
         check_access_denied
       end
     end
 
     describe "POST #create" do
       it "denies access" do
-        post :create, params: {model_symbol => valid_attributes}, session: valid_session
+        post :create, params: { model_symbol => valid_attributes }, session: valid_session
         check_access_denied
       end
     end
@@ -63,7 +63,7 @@ shared_examples_for "a normal user" do |model_class, model_symbol, allow_read=fa
     describe "PUT #update" do
       it "denies access" do
         model = model_class.create! valid_attributes
-        put :update, params: {id: model.to_param, model_symbol => valid_attributes}, session: valid_session
+        put :update, params: { id: model.to_param, model_symbol => valid_attributes }, session: valid_session
         check_access_denied
       end
     end
@@ -71,7 +71,7 @@ shared_examples_for "a normal user" do |model_class, model_symbol, allow_read=fa
     describe "DELETE #destroy" do
       it "denies access" do
         model = model_class.create! valid_attributes
-        delete :destroy, params: {id: model.to_param}, session: valid_session
+        delete :destroy, params: { id: model.to_param }, session: valid_session
         check_access_denied
       end
     end

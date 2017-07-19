@@ -181,12 +181,12 @@ class GameStatsIngestionService
     @region ||= begin
       if tournament_name
         regions = {
-          "CN" => ["China", "Gold Series"],
-          "EU" => ["Europe", "Valencia", "Tours", "ZOTAC"],
-          "KR" => ["Korea", "Super League"],
-          "NA" => ["North America", "Austin", "Bloodlust"]
+          "CN" => %w[China Gold\ Series],
+          "EU" => %w[Europe Valencia Tours ZOTAC],
+          "KR" => %w[Korea Super\ League],
+          "NA" => %w[North\ America Austin Bloodlust]
         }
-        regions.detect(-> {[Tournament::GLOBAL_REGION]}) do |region, keywords|
+        regions.detect(-> { [Tournament::GLOBAL_REGION] }) do |region, keywords|
           tournament_name.include?(region) || keywords.any? { |keyword| tournament_name.include?(keyword) }
         end.first
       else

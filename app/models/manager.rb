@@ -81,7 +81,7 @@ class Manager < ApplicationRecord
   end
 
   def allow_payment_source_removal?
-    ["unsubscribed", "canceled", "do_not_renew"].include?(subscription_status) ||
+    %w[unsubscribed canceled do_not_renew].include?(subscription_status) ||
       stripe_customer_sources.count > 1
   end
 

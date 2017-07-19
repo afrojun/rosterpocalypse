@@ -8,7 +8,7 @@ FactoryGirl.define do
     assists { rand 0..10 }
     deaths { rand 0..10 }
     time_spent_dead { rand 1..180 }
-    team_colour { ["red", "blue"].sample }
+    team_colour { %w[red blue].sample }
     win { [true, false].sample }
   end
 end

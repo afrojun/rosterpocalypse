@@ -62,7 +62,7 @@ class MapsController < RosterpocalypseController
       end
     else
       respond_to do |format|
-        format.html { redirect_to maps_url, alert: @map.errors.details[:base].map{ |error| error[:error] }.to_sentence }
+        format.html { redirect_to maps_url, alert: @map.errors.details[:base].map { |error| error[:error] }.to_sentence }
         format.json { render json: @map.errors, status: :unprocessable_entity }
       end
     end

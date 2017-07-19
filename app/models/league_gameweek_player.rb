@@ -19,13 +19,13 @@ class LeagueGameweekPlayer < ApplicationRecord
 
     max_points = gameweek_players.order(points: :desc).first.try :points
     min_value = gameweek.players.order(value: :asc).first.try :value
-    efficiency_factor = (max_points && min_value) ? max_points/min_value : 1
+    efficiency_factor = (max_points && min_value) ? max_points / min_value : 1
     Rails.logger.info "Player Efficiency factor = max_points/min_value = #{max_points}/#{min_value} = #{efficiency_factor}"
 
     gameweek_players.each do |gameweek_player|
       gameweek_player.update(
-        pick_rate: ((gameweek_player.gameweek_rosters.size.to_f/valid_gameweek_rosters.size.to_f) * 100).round(2),
-        efficiency: (((gameweek_player.points/gameweek_player.value)/efficiency_factor) * 100).round(2)
+        pick_rate: ((gameweek_player.gameweek_rosters.size.to_f / valid_gameweek_rosters.size.to_f) * 100).round(2),
+        efficiency: (((gameweek_player.points / gameweek_player.value) / efficiency_factor) * 100).round(2)
       )
     end
   end
@@ -143,7 +143,7 @@ class LeagueGameweekPlayer < ApplicationRecord
     breakdown = {
       solo_kills: detail.solo_kills * league.role_stat_modifiers[role]["solo_kills"].to_i,
       assists: detail.assists * league.role_stat_modifiers[role]["assists"].to_i,
-      time_spent_dead: -(detail.time_spent_dead.to_f/league.role_stat_modifiers[role]["time_spent_dead"].to_f).round,
+      time_spent_dead: -(detail.time_spent_dead.to_f / league.role_stat_modifiers[role]["time_spent_dead"].to_f).round,
       win: detail.win_int * league.role_stat_modifiers[role]["win"].to_i,
       bonus: gameweek_player.points_breakdown[game.game_hash][:bonus]
     }

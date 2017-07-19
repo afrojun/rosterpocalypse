@@ -12,11 +12,11 @@ RSpec.describe PlayerPresenter do
 
   let(:hero_stats) do
     {
-      hero1 => {win: 1, loss: 3, total: 4},
-      hero2 => {win: 3, loss: 2, total: 5},
-      hero3 => {win: 6, loss: 3, total: 9},
-      hero4 => {win: 4, loss: 3, total: 7},
-      hero5 => {win: 2, loss: 1, total: 3}
+      hero1 => { win: 1, loss: 3, total: 4 },
+      hero2 => { win: 3, loss: 2, total: 5 },
+      hero3 => { win: 6, loss: 3, total: 9 },
+      hero4 => { win: 4, loss: 3, total: 7 },
+      hero5 => { win: 2, loss: 1, total: 3 }
     }
   end
 
