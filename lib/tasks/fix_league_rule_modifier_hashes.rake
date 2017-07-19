@@ -8,7 +8,7 @@
 
 desc "Convert League required_player_roles and role_stat_modifiers keys and values to Strings"
 
-task :league_rules_to_string => :environment do
+task league_rules_to_string: :environment do
   puts "Updating leagues..."
   League.all.each do |league|
     if league.required_player_roles.keys.first.is_a? Symbol

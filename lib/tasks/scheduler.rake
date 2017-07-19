@@ -1,12 +1,12 @@
 desc "This task is called by the Heroku scheduler add-on"
 
-task :update_player_values => :environment do
+task update_player_values: :environment do
   puts "Updating player values..."
   Player.all.each { |player| player.update_value }
   puts "Done."
 end
 
-task :snapshot_gameweek_rosters => :environment do
+task snapshot_gameweek_rosters: :environment do
   puts "Snapshotting all valid Rosters for this Gameweek"
   rosters_to_snapshot = Roster.
         where(tournament: Tournament.active_tournaments).
@@ -25,7 +25,7 @@ task :snapshot_gameweek_rosters => :environment do
   puts "Done."
 end
 
-task :update_roster_scores => :environment do
+task update_roster_scores: :environment do
   puts "Updating Roster scores"
   Tournament.active_tournaments.each do |tournament|
     tournament.rosters.each do |roster|

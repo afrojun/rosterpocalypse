@@ -63,7 +63,7 @@ class User < ApplicationRecord
 
   # OAuth handlers
   def twitter
-    identities.find_by(:provider => "twitter")
+    identities.find_by(provider: "twitter")
   end
 
   def twitter_client
@@ -71,7 +71,7 @@ class User < ApplicationRecord
   end
 
   def facebook
-    identities.find_by(:provider => "facebook")
+    identities.find_by(provider: "facebook")
   end
 
   def facebook_client
@@ -79,7 +79,7 @@ class User < ApplicationRecord
   end
 
   def reddit
-    identities.find_by(:provider => "reddit")
+    identities.find_by(provider: "reddit")
   end
 
   def reddit_client
@@ -87,13 +87,13 @@ class User < ApplicationRecord
   end
 
   def google_oauth2
-    identities.find_by(:provider => "google_oauth2")
+    identities.find_by(provider: "google_oauth2")
   end
 
   def google_oauth2_client
     if !@google_oauth2_client
-      @google_oauth2_client = Google::APIClient.new(:application_name => 'HappySeed App', :application_version => "1.0.0" )
-      @google_oauth2_client.authorization.update_token!(:access_token => google_oauth2.accesstoken, :refresh_token => google_oauth2.refreshtoken)
+      @google_oauth2_client = Google::APIClient.new(application_name: 'HappySeed App', application_version: "1.0.0" )
+      @google_oauth2_client.authorization.update_token!(access_token: google_oauth2.accesstoken, refresh_token: google_oauth2.refreshtoken)
     end
     @google_oauth2_client
   end

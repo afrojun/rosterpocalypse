@@ -5,8 +5,8 @@ require "stripe_event_subscribers/customer_subscription_deleted"
 require "stripe_event_subscribers/customer_subscription_trial_will_end"
 
 Rails.configuration.stripe = {
-  :publishable_key => ENV['STRIPE_PUBLISHABLE_KEY'],
-  :secret_key      => ENV['STRIPE_SECRET_KEY']
+  publishable_key: ENV['STRIPE_PUBLISHABLE_KEY'],
+  secret_key: ENV['STRIPE_SECRET_KEY']
 }
 
 Stripe.api_key = Rails.configuration.stripe[:secret_key]

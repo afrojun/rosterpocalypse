@@ -1,6 +1,6 @@
 desc "This is a one-off task to create matches for the first phase of HGC 2017."
 
-task :populate_hgc2017_phase1_matches => :environment do
+task populate_hgc2017_phase1_matches: :environment do
   cal_path = Rails.root.join("app", "assets", "calendars", "hgc2017-phase1.ics")
   puts "Using calendar: #{cal_path}"
   cal_file = File.open(cal_path)

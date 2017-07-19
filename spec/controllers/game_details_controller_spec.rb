@@ -105,7 +105,7 @@ RSpec.describe GameDetailsController, type: :controller do
 
     describe "POST #create" do
       it "access denied" do
-        post :create, params: {game_id: game.id, :detail => valid_attributes}, session: valid_session
+        post :create, params: {game_id: game.id, detail: valid_attributes}, session: valid_session
         check_access_denied
       end
     end
@@ -113,7 +113,7 @@ RSpec.describe GameDetailsController, type: :controller do
     describe "PUT #update" do
       it "access denied" do
         game_detail = GameDetail.create! valid_attributes
-        put :update, params: {id: game_detail.to_param, :detail => valid_attributes}, session: valid_session
+        put :update, params: {id: game_detail.to_param, detail: valid_attributes}, session: valid_session
         check_access_denied
       end
     end
@@ -154,30 +154,30 @@ RSpec.describe GameDetailsController, type: :controller do
       context "with valid params" do
         it "creates a new GameDetail" do
           expect do
-            post :create, params: {game_id: game.id, :detail => valid_attributes}, session: valid_session
+            post :create, params: {game_id: game.id, detail: valid_attributes}, session: valid_session
           end.to change(GameDetail, :count).by(1)
         end
 
         it "assigns a newly created game_detail as @game_detail" do
-          post :create, params: {game_id: game.id, :detail => valid_attributes}, session: valid_session
+          post :create, params: {game_id: game.id, detail: valid_attributes}, session: valid_session
           expect(assigns(:game_detail)).to be_a(GameDetail)
           expect(assigns(:game_detail)).to be_persisted
         end
 
         it "redirects to the created game_detail" do
-          post :create, params: {game_id: game.id, :detail => valid_attributes}, session: valid_session
+          post :create, params: {game_id: game.id, detail: valid_attributes}, session: valid_session
           expect(response).to redirect_to(detail_url(GameDetail.last))
         end
       end
 
       context "with invalid params" do
         it "assigns a newly created but unsaved game_detail as @game_detail" do
-          post :create, params: {game_id: game.id, :detail => invalid_attributes}, session: valid_session
+          post :create, params: {game_id: game.id, detail: invalid_attributes}, session: valid_session
           expect(assigns(:game_detail)).to be_a_new(GameDetail)
         end
 
         it "re-renders the 'new' template" do
-          post :create, params: {game_id: game.id, :detail => invalid_attributes}, session: valid_session
+          post :create, params: {game_id: game.id, detail: invalid_attributes}, session: valid_session
           expect(response).to render_template("new")
         end
       end
@@ -187,20 +187,20 @@ RSpec.describe GameDetailsController, type: :controller do
       context "with valid params" do
         it "updates the requested game_detail" do
           game_detail = GameDetail.create! valid_attributes
-          put :update, params: {id: game_detail.to_param, :detail => new_attributes}, session: valid_session
+          put :update, params: {id: game_detail.to_param, detail: new_attributes}, session: valid_session
           game_detail.reload
           assert_update_successful game_detail
         end
 
         it "assigns the requested game_detail as @game_detail" do
           game_detail = GameDetail.create! valid_attributes
-          put :update, params: {id: game_detail.to_param, :detail => valid_attributes}, session: valid_session
+          put :update, params: {id: game_detail.to_param, detail: valid_attributes}, session: valid_session
           expect(assigns(:game_detail)).to eq(game_detail)
         end
 
         it "redirects to the game" do
           game_detail = GameDetail.create! valid_attributes
-          put :update, params: {id: game_detail.to_param, :detail => valid_attributes}, session: valid_session
+          put :update, params: {id: game_detail.to_param, detail: valid_attributes}, session: valid_session
           expect(response).to redirect_to(game_detail.game)
         end
       end
@@ -208,13 +208,13 @@ RSpec.describe GameDetailsController, type: :controller do
       context "with invalid params" do
         it "assigns the game_detail as @game_detail" do
           game_detail = GameDetail.create! valid_attributes
-          put :update, params: {id: game_detail.to_param, :detail => invalid_attributes}, session: valid_session
+          put :update, params: {id: game_detail.to_param, detail: invalid_attributes}, session: valid_session
           expect(assigns(:game_detail)).to eq(game_detail)
         end
 
         it "re-renders the 'edit' template" do
           game_detail = GameDetail.create! valid_attributes
-          put :update, params: {id: game_detail.to_param, :detail => invalid_attributes}, session: valid_session
+          put :update, params: {id: game_detail.to_param, detail: invalid_attributes}, session: valid_session
           expect(response).to render_template("edit")
         end
       end

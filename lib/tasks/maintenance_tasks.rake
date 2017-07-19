@@ -1,12 +1,12 @@
 desc "These tasks are used for initial set up and ongoing maintenance"
 
-task :infer_player_roles => :environment do
+task infer_player_roles: :environment do
   puts "Inferring player roles..."
   Player.all.each { |player| player.infer_role }
   puts "done."
 end
 
-task :list_duplicate_players => :environment do
+task list_duplicate_players: :environment do
   puts "Listing possible duplicate players..."
   Player.all.each do |player|
     if player.name.size > 1

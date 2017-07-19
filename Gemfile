@@ -71,7 +71,7 @@ gem "font-awesome-rails"
 
 # Gem to help with statistical calculations
 # https://github.com/thirtysixthspan/descriptive_statistics
-gem 'descriptive_statistics', '~> 2.4.0', :require => 'descriptive_statistics/safe'
+gem 'descriptive_statistics', '~> 2.4.0', require: 'descriptive_statistics/safe'
 
 # Robust alternative to Rake for building CLI tools
 gem 'thor-rails'
@@ -92,7 +92,7 @@ gem 'omniauth-oauth2', '~> 1.3.1'
 gem 'omniauth-twitter'
 gem 'omniauth-facebook'
 gem 'omniauth-bnet'
-gem 'omniauth-reddit', :git => 'https://github.com/jackdempsey/omniauth-reddit'
+gem 'omniauth-reddit', git: 'https://github.com/jackdempsey/omniauth-reddit'
 gem 'twitter'
 gem 'omniauth-google-oauth2'
 # gem 'google-api-client', require: 'google/api_client'
@@ -135,7 +135,7 @@ group :development, :test do
 end
 
 group :test do
-  gem 'cucumber-rails', :require => false
+  gem 'cucumber-rails', require: false
   # database_cleaner is not required, but highly recommended
   gem 'database_cleaner'
   gem 'rails-controller-testing'
