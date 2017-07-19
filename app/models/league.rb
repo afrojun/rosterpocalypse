@@ -153,8 +153,8 @@ class League < ApplicationRecord
 
   def limit_active_leagues_per_manager
     active_leagues_for_manager = manager.leagues.
-                                         includes(:tournament).
-                                         where(tournament: Tournament.active_tournaments)
+                                   includes(:tournament).
+                                   where(tournament: Tournament.active_tournaments)
 
     return unless !manager.user.admin? && active_leagues_for_manager.size >= MAX_ACTIVE_LEAGUES_PER_MANAGER
 

@@ -14,126 +14,23 @@ Bundler/OrderedGems:
   Exclude:
     - 'Gemfile'
 
-# Offense count: 29
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: leading, trailing
 Layout/DotPosition:
-  Exclude:
-    - 'app/controllers/gameweeks_controller.rb'
-    - 'app/controllers/rosters_controller.rb'
-    - 'app/models/gameweek_player.rb'
-    - 'app/models/league.rb'
-    - 'app/models/transfer.rb'
-    - 'db/migrate/20170625235758_add_premium_to_leagues.rb'
-    - 'lib/tasks/scheduler.rake'
-    - 'lib/tasks/update_roster_snapshots.thor'
+  EnforcedStyle: trailing
 
-# Offense count: 34
 # Cop supports --auto-correct.
 # Configuration parameters: AllowForAlignment, ForceEqualSignAlignment.
 Layout/ExtraSpacing:
   Exclude:
-    - 'db/migrate/20161116103301_create_gameweeks.rb'
-    - 'db/migrate/20161116103515_create_teams.rb'
-    - 'db/migrate/20161116110417_create_games.rb'
-    - 'db/migrate/20161116112125_create_heroes.rb'
-    - 'db/migrate/20161116112418_create_game_details.rb'
-    - 'db/migrate/20161230100348_create_leagues.rb'
-    - 'db/migrate/20170106150106_create_gameweek_players.rb'
-    - 'db/migrate/20170117211511_create_matches.rb'
-    - 'db/migrate/20170618014743_create_league_gameweek_players.rb'
-    - 'db/schema.rb'
+    - 'db/**/*'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
-# SupportedStyles: consistent, special_for_inner_method_call, special_for_inner_method_call_in_parentheses
-Layout/FirstParameterIndentation:
-  Exclude:
-    - 'app/controllers/rosters_controller.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: SupportedStyles, IndentationWidth.
-# SupportedStyles: special_inside_parentheses, consistent, align_brackets
-Layout/IndentArray:
-  EnforcedStyle: align_brackets
-
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: Width, IgnoredPatterns.
-Layout/IndentationWidth:
-  Exclude:
-    - 'app/models/roster.rb'
-    - 'lib/stripe_event_subscribers/customer_subscription_event.rb'
-    - 'lib/tasks/cucumber.rake'
-
-# Offense count: 3
-# Cop supports --auto-correct.
-Layout/LeadingCommentSpace:
-  Exclude:
-    - 'app/controllers/api/game_stats_ingestion_controller.rb'
-    - 'lib/stripe_event_subscribers/customer_subscription_deleted.rb'
-    - 'spec/models/gameweek_player_spec.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-Layout/MultilineBlockLayout:
-  Exclude:
-    - 'app/controllers/rosters_controller.rb'
-
-# Offense count: 6
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: symmetrical, new_line, same_line
-Layout/MultilineMethodCallBraceLayout:
-  Exclude:
-    - 'app/controllers/leagues_controller.rb'
-    - 'app/controllers/rosters_controller.rb'
-    - 'app/controllers/tournaments_controller.rb'
-    - 'spec/helpers/devise_helper_spec.rb'
-    - 'spec/models/identity_spec.rb'
-    - 'spec/models/tournament_spec.rb'
-
-# Offense count: 24
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
 # SupportedStyles: aligned, indented, indented_relative_to_receiver
 Layout/MultilineMethodCallIndentation:
-  Exclude:
-    - 'app/controllers/gameweeks_controller.rb'
-    - 'app/controllers/rosters_controller.rb'
-    - 'app/models/gameweek_player.rb'
-    - 'app/models/league.rb'
-    - 'app/models/transfer.rb'
-    - 'db/migrate/20170625235758_add_premium_to_leagues.rb'
-    - 'lib/tasks/scheduler.rake'
-    - 'lib/tasks/update_roster_snapshots.thor'
-
-# Offense count: 10
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles, IndentationWidth.
-# SupportedStyles: aligned, indented
-Layout/MultilineOperationIndentation:
-  Exclude:
-    - 'app/controllers/managers_controller.rb'
-    - 'app/controllers/rosters_controller.rb'
-    - 'app/models/identity.rb'
-    - 'lib/tasks/scheduler.rake'
-    - 'lib/tasks/update_roster_snapshots.thor'
-
-# Offense count: 7
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyleAlignWith, SupportedStylesAlignWith.
-# SupportedStylesAlignWith: either, start_of_block, start_of_line
-Lint/BlockAlignment:
-  Exclude:
-    - 'app/controllers/rosters_controller.rb'
-    - 'app/models/concerns/csvable.rb'
-    - 'app/models/match.rb'
-    - 'app/models/player.rb'
-    - 'app/services/game_stats_ingestion_service.rb'
+  EnforcedStyle: indented_relative_to_receiver
 
 # Offense count: 59
 Metrics/AbcSize:
@@ -238,7 +135,6 @@ Style/ClassAndModuleChildren:
 Style/Documentation:
   Enabled: false
 
-# Offense count: 15
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: compact, expanded
@@ -271,7 +167,8 @@ Style/Next:
 # Cop supports --auto-correct.
 # Configuration parameters: Strict.
 Style/NumericLiterals:
-  MinDigits: 15
+  Exclude:
+    - 'db/schema.rb'
 
 # Offense count: 2340
 # Cop supports --auto-correct.

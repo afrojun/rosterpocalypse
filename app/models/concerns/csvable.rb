@@ -10,10 +10,10 @@ module Csvable
 
         csv_collection.each do |user|
           csv << csv_attributes.map do |attr|
-                   attr.split(".").reduce(user) do |attr_val, attr_method|
-                     attr_val.send(attr_method)
-                   end
-                 end
+            attr.split(".").reduce(user) do |attr_val, attr_method|
+              attr_val.send(attr_method)
+            end
+          end
         end
       end
     end

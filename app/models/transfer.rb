@@ -18,16 +18,16 @@ class Transfer < ApplicationRecord
 
     def gameweek_transfers_in(gameweek)
       gameweek.transfers.
-               select("player_in_id, count(player_in_id)").
-               group(:player_in_id).
-               size
+        select("player_in_id, count(player_in_id)").
+        group(:player_in_id).
+        size
     end
 
     def gameweek_transfers_out(gameweek)
       gameweek.transfers.
-               select("player_out_id, count(player_out_id)").
-               group(:player_out_id).
-               size
+        select("player_out_id, count(player_out_id)").
+        group(:player_out_id).
+        size
     end
 
     def net_gameweek_transfers(gameweek)

@@ -30,7 +30,7 @@ RSpec.describe Identity, type: :model do
           provider: "reddit",
           uid: "123fgh",
           info: OpenStruct.new(name: "rosterpocalypse"),
-          credentials: OpenStruct.new(expires: true, expires_at: 1484498817, token: "T__8aisys_8AdnSias7_lo")
+          credentials: OpenStruct.new(expires: true, expires_at: 1_484_498_817, token: "T__8aisys_8AdnSias7_lo")
         )
       end
       let(:expected_nickname) { "rosterpocalypse" }
@@ -48,7 +48,7 @@ RSpec.describe Identity, type: :model do
             email: "rosterpocalypse@fb.com",
             image: "http://graph.facebook.com/v2.6/90876/picture"
           ),
-          credentials: OpenStruct.new(expires: true, expires_at: 1484498817, token: "XnrZCBJEmb78ZChTO4u60QxDQbi4CgGMB")
+          credentials: OpenStruct.new(expires: true, expires_at: 1_484_498_817, token: "XnrZCBJEmb78ZChTO4u60QxDQbi4CgGMB")
         )
       end
       let(:expected_nickname) { "rosterpocalypse" }
@@ -69,7 +69,7 @@ RSpec.describe Identity, type: :model do
             name: "Rosterpocalypse Esports",
             urls: OpenStruct.new(Google: "https://plus.google.com/9876352")
           ),
-          credentials: OpenStruct.new(expires: true, expires_at: 1489641616, refresh_token: "1/NH7GFD489", token: "ya29.98q7UI")
+          credentials: OpenStruct.new(expires: true, expires_at: 1_489_641_616, refresh_token: "1/NH7GFD489", token: "ya29.98q7UI")
         )
       end
       let(:expected_nickname) { "rosterpocalypse" }
@@ -89,7 +89,8 @@ RSpec.describe Identity, type: :model do
             image: "http://abs.twimg.com/idsneuybdf.png",
             location: "",
             nickname: "rosterpocalypse",
-            urls: OpenStruct.new(Twitter: "", Website: "")),
+            urls: OpenStruct.new(Twitter: "", Website: "")
+          ),
           credentials: OpenStruct.new(secret: "JBEUI8rsuyahdf87ehUId", token: "98749er4058-siufh89dhfe8H")
         )
       end
@@ -104,7 +105,7 @@ RSpec.describe Identity, type: :model do
           provider: "bnet",
           uid: "12546374",
           info: OpenStruct.new(id: "12546374", battletag: "Rosterpocalypse#12345"),
-          credentials: OpenStruct.new(expires: true, expires_at: 1487073964, token: "sdjsid8s9dhuysd")
+          credentials: OpenStruct.new(expires: true, expires_at: 1_487_073_964, token: "sdjsid8s9dhuysd")
         )
       end
       let(:expected_nickname) { "Rosterpocalypse.12345" }

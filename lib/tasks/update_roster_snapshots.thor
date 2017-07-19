@@ -8,12 +8,11 @@ class GameweekRosterActions < Thor
 
   def snapshot
     puts "Snapshotting all valid Rosters for this Gameweek"
-    rosters_to_snapshot = Roster.
-          where(tournament: Tournament.active_tournaments).
-          includes(:players, tournament: [:gameweeks]).select do |roster|
+    rosters_to_snapshot = Roster.where(tournament: Tournament.active_tournaments).
+                            includes(:players, tournament: [:gameweeks]).select do |roster|
       roster.full? &&
-      roster.created_at < roster.current_gameweek.roster_lock_date &&
-      roster.updated_at < roster.current_gameweek.roster_lock_date
+        roster.created_at < roster.current_gameweek.roster_lock_date &&
+        roster.updated_at < roster.current_gameweek.roster_lock_date
     end
 
     puts "Snapshotting #{rosters_to_snapshot.size} Rosters..."
@@ -36,9 +35,7 @@ class GameweekRosterActions < Thor
     Tournament.active_tournaments.each do |tournament|
       gameweek = options.previous ? tournament.previous_gameweek : tournament.current_gameweek
 
-      tournament.gameweek_rosters.
-                 where(gameweek: gameweek).
-                 each do |gameweek_roster|
+      tournament.gameweek_rosters.where(gameweek: gameweek).each do |gameweek_roster|
         gameweek_roster.add_gameweek_players
         print "."
       end

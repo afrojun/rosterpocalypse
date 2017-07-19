@@ -169,8 +169,8 @@ class Player < ApplicationRecord
 
   def update_value
     player_value = game_details.includes(:game).reduce(INITIAL_VALUE) do |tracking_value, details|
-                    tracking_value + value_change(details)
-                  end
+      tracking_value + value_change(details)
+    end
 
     inflation_adjustment_factor = -10
     player_value = player_value.round(2) + inflation_adjustment_factor
@@ -187,8 +187,8 @@ class Player < ApplicationRecord
   def infer_role
     if player_heroes_by_classification.size > 1
       class_ratios = player_heroes_by_classification.reduce({}) do |class_counts, (classification, heroes)|
-                       class_counts.merge(classification => heroes.count.to_f / game_details.count)
-                     end
+        class_counts.merge(classification => heroes.count.to_f / game_details.count)
+      end
       majority_class = class_ratios.detect { |_, ratio| ratio > 0.5 }
       set_role_from_class(majority_class.present? ? majority_class.first : "Flex")
     else

@@ -11,7 +11,8 @@ RSpec.describe Tournament, type: :model do
         it "creates one gameweek for every week of the tournament" do
           expect(tournament.gameweeks.map(&:name)).to eq ["Gameweek 0", "Gameweek 1", "Gameweek 2"]
           expect(tournament.gameweeks.map(&:start_date)).to eq(
-            [start_date.beginning_of_week - 1.week + 12.hours, start_date.beginning_of_week + 12.hours, start_date.beginning_of_week.advance(weeks: 1) + 12.hours])
+            [start_date.beginning_of_week - 1.week + 12.hours, start_date.beginning_of_week + 12.hours, start_date.beginning_of_week.advance(weeks: 1) + 12.hours]
+          )
         end
       end
 

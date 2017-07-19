@@ -15,9 +15,9 @@ class Identity < ApplicationRecord
       identity.name = auth.info.name || auth.info.battletag.tr("#", ".")
       identity.email = auth.info.email
       identity.nickname = auth.info.nickname ||
-                            (auth.info.email && auth.info.email.split("@").first) ||
-                            (auth.info.name && auth.info.name.split.first) ||
-                            auth.info.battletag.tr("#", ".")
+                          (auth.info.email && auth.info.email.split("@").first) ||
+                          (auth.info.name && auth.info.name.split.first) ||
+                          auth.info.battletag.tr("#", ".")
       identity.image = auth.info.image
       identity.phone = auth.info.phone
       identity.urls = (auth.info.urls || "").to_json

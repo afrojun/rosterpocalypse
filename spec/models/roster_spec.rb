@@ -180,7 +180,7 @@ RSpec.describe Roster, type: :model do
           end
 
           it "treats non-existent players as missing" do
-            player_ids << 9999 << 10001
+            player_ids << 9999 << 10_001
             expect(roster.update_including_players(players: player_ids)).to eq false
             expect(roster.players).to eq []
             expect(roster.errors.messages).to include(roster: ["must contain 5 players"])

@@ -46,12 +46,12 @@ class Match < ApplicationRecord
     # We filter for matches which are within 4 hours of the game start_date
     team_matches = Match.where("team_1_id in (?) AND team_2_id in (?)", game_team_ids, game_team_ids)
     candidate_matches = team_matches.to_a.select do |match|
-                          if match.games.any?
-                            (match.games.last.start_date - game.start_date).abs < 4.hours
-                          else
-                            (match.start_date - game.start_date).abs < 5.hours
-                          end
-                        end
+      if match.games.any?
+        (match.games.last.start_date - game.start_date).abs < 4.hours
+      else
+        (match.start_date - game.start_date).abs < 5.hours
+      end
+    end
 
     if candidate_matches.size.zero?
       Rails.logger.info "Creating a new Match..."

@@ -4,7 +4,7 @@ class AddPremiumToLeagues < ActiveRecord::Migration[5.0]
     add_index :leagues, :premium
 
     League.where(manager: Manager.paid).
-           where("created_at > '2017-06-15'").
-           each { |league| league.toggle! :premium }
+      where("created_at > '2017-06-15'").
+      each { |league| league.toggle! :premium }
   end
 end

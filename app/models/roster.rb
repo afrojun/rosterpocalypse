@@ -95,7 +95,7 @@ class Roster < ApplicationRecord
   def next_key_date
     @next_key_date ||= begin
       if current_gameweek.tournament_week? && Time.now.utc < current_gameweek.roster_lock_date
-          current_gameweek.roster_lock_date
+        current_gameweek.roster_lock_date
       else
         next_gameweek.start_date
       end

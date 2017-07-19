@@ -1,6 +1,6 @@
 module Api
   class GameStatsIngestionController < Api::BaseApiController
-    #before_action :authenticate_user!
+    # before_action :authenticate_user!
 
     # POST /replay_details
     def create

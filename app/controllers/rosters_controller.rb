@@ -13,14 +13,14 @@ class RostersController < RosterpocalypseController
   # GET /rosters.json
   def index
     @my_rosters = Roster.includes(:tournament).
-                         where("manager_id = ? AND tournament_id in (?)",
-                               current_user.manager.id,
-                               Tournament.active_tournaments.map(&:id))
+                    where("manager_id = ? AND tournament_id in (?)",
+                          current_user.manager.id,
+                          Tournament.active_tournaments.map(&:id))
 
     # Get leagues owned by the manager or in which they have rosters
     @my_leagues = League.includes(:tournament, manager: [:user]).
-                         where(id: current_user.manager.participating_in_leagues).
-                         where("tournament_id in (?)", Tournament.active_tournaments.map(&:id))
+                    where(id: current_user.manager.participating_in_leagues).
+                    where("tournament_id in (?)", Tournament.active_tournaments.map(&:id))
   end
 
   # GET /rosters/1
@@ -58,9 +58,9 @@ class RostersController < RosterpocalypseController
       format.html {}
       format.json { render json: @gameweek_players }
       format.png do
-                   kit = IMGKit.new(render_to_string, "quality" => 80, "crop-w" => 676)
-                   send_data(kit.to_png, type: "image/png", disposition: 'inline')
-                 end
+        kit = IMGKit.new(render_to_string, "quality" => 80, "crop-w" => 676)
+        send_data(kit.to_png, type: "image/png", disposition: 'inline')
+      end
     end
   end
 
@@ -75,8 +75,8 @@ class RostersController < RosterpocalypseController
         format.html { render :manage }
         format.json do
           roster_errors = @roster.errors.map do |key, message|
-                            "#{key.capitalize} #{message}"
-                          end.to_sentence
+            "#{key.capitalize} #{message}"
+          end.to_sentence
           render json: roster_errors, status: :unprocessable_entity
         end
       end
@@ -131,9 +131,8 @@ class RostersController < RosterpocalypseController
   end
 
   def set_gameweek
-    @gameweek = Gameweek.where(
-                  id: params[:gameweek]).first ||
-                  (@roster.current_gameweek_roster.points.present? ? @roster.current_gameweek : @roster.previous_gameweek)
+    @gameweek = Gameweek.where(id: params[:gameweek]).first ||
+                (@roster.current_gameweek_roster.points.present? ? @roster.current_gameweek : @roster.previous_gameweek)
   end
 
   def set_page_title

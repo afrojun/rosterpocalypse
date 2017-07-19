@@ -84,11 +84,11 @@ class GameStatsIngestionService
 
   def game
     @game ||= Game.find_or_create_by game_hash: json["unique_id"] do |g|
-                g.map = map
-                g.start_date = start_date
-                g.duration_s = json["duration"]
-                g.gameweek = gameweek
-              end
+      g.map = map
+      g.start_date = start_date
+      g.duration_s = json["duration"]
+      g.gameweek = gameweek
+    end
   end
 
   def tournament

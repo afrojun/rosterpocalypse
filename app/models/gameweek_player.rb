@@ -27,7 +27,7 @@ class GameweekPlayer < ApplicationRecord
 
   def self.create_all_gameweek_players_for_gameweek(gameweek)
     Player.active_players.joins(:team).
-           where(teams: { region: gameweek.tournament.region }).find_each do |player|
+      where(teams: { region: gameweek.tournament.region }).find_each do |player|
       gameweek_player = find_or_create_by(gameweek: gameweek, player: player) do |gwp|
         gwp.team  = player.team
         gwp.value = player.value
