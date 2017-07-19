@@ -7,9 +7,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def set_csrf_cookie
-    if protect_against_forgery?
-      cookies['csrftoken'] = form_authenticity_token
-    end
+    cookies['csrftoken'] = form_authenticity_token if protect_against_forgery?
   end
 
   def configure_permitted_parameters

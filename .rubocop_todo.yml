@@ -430,29 +430,6 @@ Style/GuardClause:
     - 'app/models/tournament.rb'
     - 'config/initializers/sidekiq.rb'
 
-# Offense count: 1
-Style/IfInsideElse:
-  Exclude:
-    - 'app/services/game_stats_ingestion_service.rb'
-
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: MaxLineLength.
-Style/IfUnlessModifier:
-  Exclude:
-    - 'app/controllers/application_controller.rb'
-    - 'app/controllers/registrations_controller.rb'
-    - 'app/services/game_stats_ingestion_service.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: line_count_dependent, lambda, literal
-Style/Lambda:
-  Exclude:
-    - 'app/services/game_stats_ingestion_service.rb'
-    - 'config/routes.rb'
-
 # Offense count: 17
 # Cop supports --auto-correct.
 Style/LineEndConcatenation:

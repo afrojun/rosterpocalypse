@@ -39,8 +39,8 @@ class GameStatsIngestionService
             most_recent_game = player.games.order(start_date: :desc).first
             if player.team.blank? || (team.name != "Unknown" && (player.team.name == "Unknown" || (most_recent_game && (game.start_date > most_recent_game.start_date))))
               player.update team: team
-            else
-              team = player.team if team.name == "Unknown" && player.team.name != "Unknown"
+            elsif team.name == "Unknown" && player.team.name != "Unknown"
+              team = player.team
             end
 
             game_detail = GameDetail.find_or_initialize_by player: player, game: game
@@ -59,9 +59,7 @@ class GameStatsIngestionService
 
         Rails.logger.info "Successfully added all game details."
 
-        if gameweek.present?
-          GameweekPlayer.update_from_game game, gameweek
-        end
+        GameweekPlayer.update_from_game(game, gameweek) if gameweek.present?
 
         # The last step is to add the game to a Match
         Match.add_game game
@@ -188,7 +186,7 @@ class GameStatsIngestionService
           "KR" => ["Korea", "Super League"],
           "NA" => ["North America", "Austin", "Bloodlust"],
         }
-        regions.detect(lambda {[Tournament::GLOBAL_REGION]}) do |region, keywords|
+        regions.detect(-> {[Tournament::GLOBAL_REGION]}) do |region, keywords|
           tournament_name.include?(region) || keywords.any? { |keyword| tournament_name.include?(keyword) }
         end.first
       else

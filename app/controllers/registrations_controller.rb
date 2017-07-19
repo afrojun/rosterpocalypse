@@ -13,9 +13,7 @@ class RegistrationsController < Devise::RegistrationsController
         resource.password = params[:password]
         resource.save
       end
-      if resource.valid?
-        resource.update_without_password(params)
-      end
+      resource.update_without_password(params) if resource.valid?
     else
       resource.update_with_password(params)
     end
