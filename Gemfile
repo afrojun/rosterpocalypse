@@ -63,8 +63,8 @@ source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.1.0'
 end
 # Better DateTime Picker
-gem 'momentjs-rails', '>= 2.9.0'
 gem 'bootstrap3-datetimepicker-rails', '~> 4.17.43'
+gem 'momentjs-rails', '>= 2.9.0'
 
 # font-awesome for web fonts CSS
 gem 'font-awesome-rails'
@@ -77,8 +77,8 @@ gem 'descriptive_statistics', '~> 2.4.0', require: 'descriptive_statistics/safe'
 gem 'thor-rails'
 
 # Used to create images dynamically from webpages
-gem 'wkhtmltoimage-binary'
 gem 'imgkit'
+gem 'wkhtmltoimage-binary'
 
 # https://github.com/icalendar/icalendar
 # Gem to create and read iCalendar files
@@ -90,11 +90,11 @@ gem 'devise'
 gem 'omniauth'
 gem 'omniauth-oauth2', '~> 1.3.1'
 # OAuth clients
-gem 'omniauth-twitter'
-gem 'omniauth-facebook'
 gem 'omniauth-bnet'
-gem 'omniauth-reddit', git: 'https://github.com/jackdempsey/omniauth-reddit'
+gem 'omniauth-facebook'
 gem 'omniauth-google-oauth2'
+gem 'omniauth-reddit', git: 'https://github.com/jackdempsey/omniauth-reddit'
+gem 'omniauth-twitter'
 # gem 'google-api-client', require: 'google/api_client'
 
 gem 'twitter'
@@ -131,9 +131,9 @@ gem 'jbuilder', '~> 2.5'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
-  gem 'rspec-rails', '~> 3.5'
-  gem 'factory_girl_rails'
   gem 'capybara'
+  gem 'factory_girl_rails'
+  gem 'rspec-rails', '~> 3.5'
 end
 
 group :test do
@@ -145,16 +145,16 @@ end
 
 group :development do
   # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
-  gem 'web-console'
   gem 'listen', '~> 3.0.5'
+  gem 'web-console'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.0.0'
-  gem 'binding_of_caller'
   gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'bullet'
   gem 'guard'
   gem 'guard-rspec'
-  gem 'bullet'
+  gem 'spring'
+  gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
