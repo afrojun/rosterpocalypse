@@ -1,5 +1,5 @@
 class GamesController < RosterpocalypseController
-  before_action :set_game, only: [:show, :edit, :update, :destroy, :swap_teams]
+  before_action :set_game, only: %i[show edit update destroy swap_teams]
 
   # GET /games
   # GET /games.json

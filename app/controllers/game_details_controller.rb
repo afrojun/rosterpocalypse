@@ -1,6 +1,6 @@
 class GameDetailsController < RosterpocalypseController
-  before_action :set_game_detail, only: [:edit, :update, :destroy]
-  before_action :set_game, only: [:new, :create]
+  before_action :set_game_detail, only: %i[edit update destroy]
+  before_action :set_game, only: %i[new create]
   before_action :set_page_title, only: []
 
   # GET /games/1/details/new

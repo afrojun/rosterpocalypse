@@ -48,13 +48,10 @@ class Tournament < ApplicationRecord
 
     if safe && gameweek.nil?
       first_gameweek = gameweeks.first
-      last_gameweek = gameweeks.last
+      return first_gameweek if date < first_gameweek.start_date
 
-      if date < first_gameweek.start_date
-        return first_gameweek
-      elsif date > last_gameweek.end_date
-        return last_gameweek
-      end
+      last_gameweek = gameweeks.last
+      return last_gameweek if date > last_gameweek.end_date
     end
 
     gameweek
@@ -102,7 +99,7 @@ class Tournament < ApplicationRecord
       gameweek = Gameweek.find_or_initialize_by tournament: self, start_date: gameweek_start_date, end_date: gameweek_end_date
       gameweek.update_attributes! name: gameweek_name, roster_lock_date: gameweek_roster_lock_date
 
-      gameweek_number = gameweek_number + 1
+      gameweek_number += 1
       gameweek_start_date = gameweek_start_date.advance(weeks: 1)
       gameweek_roster_lock_date = gameweek_roster_lock_date.advance(weeks: 1)
     end

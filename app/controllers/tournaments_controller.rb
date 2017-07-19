@@ -1,7 +1,7 @@
 class TournamentsController < RosterpocalypseController
-  before_action :set_tournament, only: [:show, :edit, :update, :destroy]
+  before_action :set_tournament, only: %i[show edit update destroy]
   before_action :set_gameweek, only: [:show]
-  before_action :set_page_title, only: [:show, :edit]
+  before_action :set_page_title, only: %i[show edit]
 
   # GET /tournaments
   # GET /tournaments.json
@@ -13,10 +13,10 @@ class TournamentsController < RosterpocalypseController
   # GET /tournaments/1.json
   def show
     @gameweeks = @tournament.gameweeks.includes(:games, matches: [:tournament]).select { |gameweek| gameweek.matches.any? }
-    if @gameweek.present?
-      @tournament_matches = @gameweek.matches.includes(:team_1, :team_2)
-      @tournament_players = @gameweek.gameweek_players
-    end
+    return if @gameweek.blank?
+
+    @tournament_matches = @gameweek.matches.includes(:team_1, :team_2)
+    @tournament_players = @gameweek.gameweek_players
   end
 
   # GET /tournaments/new

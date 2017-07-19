@@ -16,7 +16,7 @@ class Gameweek < ApplicationRecord
   end
 
   # Is the tournament running this week? This is used to filter out the first/last weeks
-  def is_tournament_week?
+  def tournament_week?
     end_date > tournament.start_date
   end
 
@@ -26,7 +26,7 @@ class Gameweek < ApplicationRecord
 
   def next_active(gameweek = self.next)
     if gameweek.blank?
-      return nil
+      nil
     else
       gameweek.matches.any? ? gameweek : next_active(gameweek.next)
     end
@@ -36,9 +36,9 @@ class Gameweek < ApplicationRecord
     tournament.find_gameweek start_date.advance(days: -1), false
   end
 
-  def previous_active(gameweek = self.previous)
+  def previous_active(gameweek = previous)
     if gameweek.blank?
-      return nil
+      nil
     else
       gameweek.matches.any? ? gameweek : previous_active(gameweek.previous)
     end

@@ -1,12 +1,12 @@
 class RosterpocalypseController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show]
-  before_action :authorize_read!, only: [:index, :show]
-  before_action :authorize_update!, only: [:edit, :update]
-  before_action :authorize_create!, only: [:new, :create]
+  before_action :authenticate_user!, except: %i[index show]
+  before_action :authorize_read!, only: %i[index show]
+  before_action :authorize_update!, only: %i[edit update]
+  before_action :authorize_create!, only: %i[new create]
   before_action :authorize_destroy!, only: [:destroy]
-  before_action :set_page_title, only: [:show, :edit]
+  before_action :set_page_title, only: %i[show edit]
 
-  rescue_from "AccessGranted::AccessDenied" do |exception|
+  rescue_from "AccessGranted::AccessDenied" do |_exception|
     redirect_back fallback_location: root_path, alert: "You don't have permission to take this action."
   end
 

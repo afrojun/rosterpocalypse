@@ -1,6 +1,6 @@
 class PlayersController < RosterpocalypseController
-  before_action :set_player, only: [:show, :edit, :update, :destroy]
-  before_action :set_team_filter, only: [:index, :merge]
+  before_action :set_player, only: %i[show edit update destroy]
+  before_action :set_team_filter, only: %i[index merge]
 
   # GET /players
   # GET /players.json

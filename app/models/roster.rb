@@ -43,7 +43,7 @@ class Roster < ApplicationRecord
   # gameweek_roster finder methods. This should generate 6 methods
   # for each combination of:
   # [:previous, :current, :next] * [gameweek, gameweek_roster]
-  [:previous, :current, :next].each do |attribute|
+  %i[previous current next].each do |attribute|
     gameweek_method = :"#{attribute}_gameweek"
     gameweek_roster_method = :"#{attribute}_gameweek_roster"
 
@@ -88,13 +88,13 @@ class Roster < ApplicationRecord
 
   def allow_free_transfers?
     players.size < MAX_PLAYERS ||
-      !current_gameweek.is_tournament_week? ||
+      !current_gameweek.tournament_week? ||
       (Time.now.utc < tournament.first_roster_lock_date)
   end
 
   def next_key_date
     @next_key_date ||= begin
-      if current_gameweek.is_tournament_week? && Time.now.utc < current_gameweek.roster_lock_date
+      if current_gameweek.tournament_week? && Time.now.utc < current_gameweek.roster_lock_date
           current_gameweek.roster_lock_date
       else
         next_gameweek.start_date
@@ -125,7 +125,7 @@ class Roster < ApplicationRecord
   end
 
   def unlocked?
-    if roster_lock_in_place? && current_gameweek.is_tournament_week?
+    if roster_lock_in_place? && current_gameweek.tournament_week?
       errors.add(:roster, "is currently locked until the end of the Gameweek")
       false
     else
@@ -162,7 +162,7 @@ class Roster < ApplicationRecord
     return true if players.map(&:id).sort == player_ids.sort
 
     if allow_updates?
-      if new_players = validate_roster_size(player_ids)
+      if (new_players = validate_roster_size(player_ids))
         if validate_teams_active(new_players) &&
            validate_transfers(new_players) &&
            validate_player_roles(new_players) &&
@@ -245,7 +245,7 @@ class Roster < ApplicationRecord
   def validate_players_in_same_team(players)
     if league.present?
       players_by_team = players.group_by(&:team)
-      if players_by_team.any? { |team, players| players.size > league.max_players_per_team }
+      if players_by_team.any? { |_, team_players| team_players.size > league.max_players_per_team }
         errors.add(:roster, "may not include more than #{league.max_players_per_team} " \
                             "players from the same team")
         false
@@ -284,12 +284,11 @@ class Roster < ApplicationRecord
     if allow_free_transfers? || (players_to_add.size == players_to_remove.size)
       diff = players_to_add - players_to_remove
       max_transfers = allow_free_transfers? ? 5 : available_transfers
-      if diff.size <= max_transfers
-        return true
-      else
-        errors.add(:roster, "has #{max_transfers} " \
-                   "#{'transfer'.pluralize(max_transfers)} available in this window")
-      end
+
+      return true if diff.size <= max_transfers
+
+      errors.add(:roster, "has #{max_transfers} " \
+                 "#{'transfer'.pluralize(max_transfers)} available in this window")
     else
       errors.add(:roster, "transfers must maintain the roster size, " \
                  "please ensure you are adding as many players as you remove")

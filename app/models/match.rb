@@ -74,7 +74,7 @@ class Match < ApplicationRecord
       Rails.logger.info "score: #{score}"
 
       match.update(
-        start_date: ((match.start_date < game.start_date) ? match.start_date : game.start_date),
+        start_date: match.start_date < game.start_date ? match.start_date : game.start_date,
         best_of: MATCH_SCORE_TO_BEST_OF[score]
       )
 

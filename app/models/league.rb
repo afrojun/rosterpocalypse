@@ -10,7 +10,7 @@ class League < ApplicationRecord
   has_many :gameweek_players, through: :league_gameweek_players
 
   validates :name, presence: true, uniqueness: true
-  validates :name, format: { with: /^[a-zA-Z0-9\/\- _\.]*$/, multiline: true }
+  validates :name, format: { with: %r{^[a-zA-Z0-9\/\- _\.]*$}, multiline: true }
   validates :name, length: { minimum: 4, maximum: 30 }
   validates :tournament, presence: true
   validates :type, presence: true
@@ -54,13 +54,8 @@ class League < ApplicationRecord
   end
 
   def populate_default_options
-    if role_stat_modifiers.blank?
-      update role_stat_modifiers: DEFAULT_ROLE_STAT_MODIFIERS
-    end
-
-    if required_player_roles.blank?
-      update required_player_roles: DEFAULT_REQUIRED_PLAYER_ROLES
-    end
+    update(role_stat_modifiers: DEFAULT_ROLE_STAT_MODIFIERS) if role_stat_modifiers.blank?
+    update(required_player_roles: DEFAULT_REQUIRED_PLAYER_ROLES) if required_player_roles.blank?
   end
 
   def numeric_required_player_roles
@@ -72,7 +67,7 @@ class League < ApplicationRecord
   end
 
   def active_required_player_role_limitations
-    numeric_required_player_roles.select do |role, num|
+    numeric_required_player_roles.select do |_, num|
       num.positive?
     end
   end
@@ -114,7 +109,7 @@ class League < ApplicationRecord
   end
 
   def leave(manager)
-    if roster = rosters.find_by(manager: manager)
+    if (roster = rosters.find_by(manager: manager))
       Rails.logger.info "Removing Roster '#{roster.slug}' from League '#{slug}'."
       remove roster
       roster.destroy
@@ -148,12 +143,12 @@ class League < ApplicationRecord
   private
 
   def check_required_player_roles
-    if required_player_roles.values.map(&:to_i).sum > 5
-      message = "role requirement specification is invalid. The maximum total value across all roles is 5."
-      errors.add(:league, message)
-      Rails.logger.warn message
-      false
-    end
+    return unless required_player_roles.values.map(&:to_i).sum > 5
+
+    message = "role requirement specification is invalid. The maximum total value across all roles is 5."
+    errors.add(:league, message)
+    Rails.logger.warn message
+    false
   end
 
   def limit_active_leagues_per_manager
@@ -161,12 +156,12 @@ class League < ApplicationRecord
                                          includes(:tournament).
                                          where(tournament: Tournament.active_tournaments)
 
-    if !manager.user.admin? && active_leagues_for_manager.size >= MAX_ACTIVE_LEAGUES_PER_MANAGER
-      message = "Creating more than #{MAX_ACTIVE_LEAGUES_PER_MANAGER} active leagues per manager is not permitted."
-      Rails.logger.warn message
-      errors.add(:base, message)
-      false
-    end
+    return unless !manager.user.admin? && active_leagues_for_manager.size >= MAX_ACTIVE_LEAGUES_PER_MANAGER
+
+    message = "Creating more than #{MAX_ACTIVE_LEAGUES_PER_MANAGER} active leagues per manager is not permitted."
+    Rails.logger.warn message
+    errors.add(:base, message)
+    false
   end
 
   def validate_one_roster_per_league(manager)

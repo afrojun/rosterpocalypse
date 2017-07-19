@@ -1,5 +1,5 @@
 class TeamsController < RosterpocalypseController
-  before_action :set_team, only: [:show, :edit, :update, :destroy, :toggle_active]
+  before_action :set_team, only: %i[show edit update destroy toggle_active]
 
   # GET /teams
   # GET /teams.json

@@ -21,10 +21,10 @@ class CustomerSubscriptionEvent < StripeEventHandler
 
         old_status = manager.subscription_status.to_sym
         new_status = if event.data.object.status != "canceled" && event.data.object.cancel_at_period_end
-                   :do_not_renew
+                       :do_not_renew
                      else
-                   event.data.object.status.to_sym
-                 end
+                       event.data.object.status.to_sym
+                     end
 
         if old_status != new_status
           logger.info "[Stripe Webhook] Changing subscription status for #{manager.slug} " \
@@ -37,9 +37,9 @@ class CustomerSubscriptionEvent < StripeEventHandler
             UserMailer.subscription_payment_past_due(manager.user).deliver_later
           elsif new_status == :do_not_renew
             UserMailer.subscription_cancelled(manager.user).deliver_later
-          elsif [:trialing, :active].include?(new_status) && old_status == :do_not_renew
+          elsif %i[trialing active].include?(new_status) && old_status == :do_not_renew
             UserMailer.subscription_reactivated(manager.user).deliver_later
-          elsif [:past_due, :unpaid].include?(old_status) && new_status == :active
+          elsif %i[past_due unpaid].include?(old_status) && new_status == :active
             manager.paid!
           end
         end

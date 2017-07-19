@@ -43,9 +43,7 @@ class Player < ApplicationRecord
     if game_count.positive?
       errors.add(:base, "Unable to delete #{name} since it has #{game_count} associated #{'game'.pluralize(game_count)}.")
       throw :abort
-    end
-
-    if roster_count.positive?
+    elsif roster_count.positive?
       errors.add(:base, "Unable to delete #{name} since it has #{roster_count} associated #{'roster'.pluralize(roster_count)}.")
       throw :abort
     end
@@ -199,7 +197,7 @@ class Player < ApplicationRecord
   end
 
   def set_role_from_class(classification)
-    player_role = is_flex?(classification) ? "Flex" : classification
+    player_role = flex?(classification) ? "Flex" : classification
     update role: player_role
   end
 
@@ -209,7 +207,7 @@ class Player < ApplicationRecord
     @player_heroes_by_classification ||= game_details.map(&:hero).group_by(&:classification)
   end
 
-  def is_flex?(classification)
+  def flex?(classification)
     FLEX_CLASSIFICATIONS.include? classification
   end
 

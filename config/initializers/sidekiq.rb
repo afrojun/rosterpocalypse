@@ -9,23 +9,21 @@ if Rails.env.production?
 
     database_url = ENV['DATABASE_URL']
 
-    if database_url
-      Rails.application.config.after_initialize do
-        Rails.logger.info("DB Connection Pool size for Sidekiq Server before disconnect is: #{ActiveRecord::Base.connection.pool.instance_variable_get('@size')}")
-        ActiveRecord::Base.connection_pool.disconnect!
+    raise "Unable to determine the Database URL. Bailing out." unless database_url
 
-        ActiveSupport.on_load(:active_record) do
-          reaping_frequency = ENV['DATABASE_REAP_FREQ'] || 10 # seconds
-          pool = ENV['WORKER_DB_POOL_SIZE'] || Sidekiq.options[:concurrency]
-          ENV['DATABASE_URL'] = "#{database_url}?pool=#{pool}&reaping_frequency=#{reaping_frequency}"
+    Rails.application.config.after_initialize do
+      Rails.logger.info("DB Connection Pool size for Sidekiq Server before disconnect is: #{ActiveRecord::Base.connection.pool.instance_variable_get('@size')}")
+      ActiveRecord::Base.connection_pool.disconnect!
 
-          ActiveRecord::Base.establish_connection
+      ActiveSupport.on_load(:active_record) do
+        reaping_frequency = ENV['DATABASE_REAP_FREQ'] || 10 # seconds
+        pool = ENV['WORKER_DB_POOL_SIZE'] || Sidekiq.options[:concurrency]
+        ENV['DATABASE_URL'] = "#{database_url}?pool=#{pool}&reaping_frequency=#{reaping_frequency}"
 
-          Rails.logger.info("DB Connection Pool size for Sidekiq Server is now: #{ActiveRecord::Base.connection.pool.instance_variable_get('@size')}")
-        end
+        ActiveRecord::Base.establish_connection
+
+        Rails.logger.info("DB Connection Pool size for Sidekiq Server is now: #{ActiveRecord::Base.connection.pool.instance_variable_get('@size')}")
       end
-    else
-      raise "Unable to determine the Database URL. Bailing out."
     end
   end
 

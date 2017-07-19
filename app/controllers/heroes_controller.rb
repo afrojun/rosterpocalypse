@@ -1,5 +1,5 @@
 class HeroesController < RosterpocalypseController
-  before_action :set_hero, only: [:show, :edit, :update, :destroy]
+  before_action :set_hero, only: %i[show edit update destroy]
 
   # GET /heroes
   # GET /heroes.json

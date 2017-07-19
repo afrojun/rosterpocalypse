@@ -12,7 +12,7 @@ task populate_hgc2017_phase1_matches: :environment do
       next
     end
 
-    summary, region, team_1_name, team_2_name = event.summary.match(/^(\w{2}) - (.+) vs. (.+)$/).to_a
+    _summary, region, team_1_name, team_2_name = event.summary.match(/^(\w{2}) - (.+) vs. (.+)$/).to_a
 
     puts "region: #{region}; team_1_name: #{team_1_name}; team_2_name: #{team_2_name}; event.dtstart: #{event.dtstart}"
     if region && team_1_name && team_2_name && event.dtstart
@@ -24,7 +24,7 @@ task populate_hgc2017_phase1_matches: :environment do
         tournament: tournament
       )
 
-      match = Match.find_or_create_by(
+      Match.find_or_create_by(
         team_1: Team.find_including_alternate_names(team_1_name).first,
         team_2: Team.find_including_alternate_names(team_2_name).first,
         gameweek: tournament.find_gameweek(date),

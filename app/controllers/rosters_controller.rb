@@ -1,12 +1,11 @@
 class RostersController < RosterpocalypseController
-  before_action :authenticate_user!, except: [:show, :details, :players]
-  before_action :set_roster, only: [:show, :manage, :players, :update, :destroy,
-                                    :status, :details]
-  before_action :set_gameweek, only: [:show, :players]
-  before_action :set_gameweek_roster, only: [:show, :players]
-  before_action :set_gameweek_players, only: [:show, :players]
+  before_action :authenticate_user!, except: %i[show details players]
+  before_action :set_roster, only: %i[show manage players update destroy status details]
+  before_action :set_gameweek, only: %i[show players]
+  before_action :set_gameweek_roster, only: %i[show players]
+  before_action :set_gameweek_players, only: %i[show players]
 
-  before_action :set_page_title, only: [:show, :edit]
+  before_action :set_page_title, only: %i[show edit]
 
   layout "simple_application_layout", only: [:players]
 

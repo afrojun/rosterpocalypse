@@ -15,11 +15,11 @@ class LeagueGameweekPlayer < ApplicationRecord
   # FIXME: Move from GameweekPlayer
   def self.update_pick_rate_and_efficiency_for_gameweek(gameweek)
     gameweek_players = gameweek.gameweek_players.includes(:player, :gameweek_rosters)
-    valid_gameweek_rosters = gameweek.gameweek_rosters.includes(transfers: [:player_in, :player_out]).where("points IS NOT NULL")
+    valid_gameweek_rosters = gameweek.gameweek_rosters.includes(transfers: %i[player_in player_out]).where("points IS NOT NULL")
 
     max_points = gameweek_players.order(points: :desc).first.try :points
     min_value = gameweek.players.order(value: :asc).first.try :value
-    efficiency_factor = (max_points && min_value) ? max_points / min_value : 1
+    efficiency_factor = max_points && min_value ? max_points / min_value : 1
     Rails.logger.info "Player Efficiency factor = max_points/min_value = #{max_points}/#{min_value} = #{efficiency_factor}"
 
     gameweek_players.each do |gameweek_player|

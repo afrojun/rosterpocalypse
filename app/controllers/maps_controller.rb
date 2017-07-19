@@ -1,5 +1,5 @@
 class MapsController < RosterpocalypseController
-  before_action :set_map, only: [:show, :edit, :update, :destroy]
+  before_action :set_map, only: %i[show edit update destroy]
 
   # GET /maps
   # GET /maps.json

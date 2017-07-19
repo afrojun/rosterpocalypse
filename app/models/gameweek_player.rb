@@ -57,11 +57,11 @@ class GameweekPlayer < ApplicationRecord
 
     gameweek_players = gameweek.gameweek_players.includes(:player, :gameweek_rosters)
     league_gameweek_players = league.league_gameweek_players.where(gameweek_player: gameweek_players).includes(:gameweek_player)
-    valid_gameweek_rosters = gameweek.gameweek_rosters.includes(transfers: [:player_in, :player_out]).where("points IS NOT NULL")
+    valid_gameweek_rosters = gameweek.gameweek_rosters.includes(transfers: %i[player_in player_out]).where("points IS NOT NULL")
 
     max_points = league_gameweek_players.order(points: :desc).first.try :points
     min_value = gameweek_players.order(value: :asc).first.try :value
-    efficiency_factor = (max_points && min_value) ? max_points / min_value : 1
+    efficiency_factor = max_points && min_value ? max_points / min_value : 1
     Rails.logger.info "Player Efficiency factor = max_points/min_value = #{max_points}/#{min_value} = #{efficiency_factor}"
 
     gameweek_players.each do |gameweek_player|

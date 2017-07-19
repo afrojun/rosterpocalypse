@@ -1,11 +1,11 @@
 class LeaguesController < RosterpocalypseController
-  before_action :set_league, only: [:show, :edit, :update, :destroy, :join, :leave]
+  before_action :set_league, only: %i[show edit update destroy join leave]
 
   # GET /leagues
   # GET /leagues.json
   def index
     @public_leagues = PublicLeague.active_leagues
-    @private_leagues = (current_user.present? && current_user.admin?) ? PrivateLeague.active_leagues : []
+    @private_leagues = current_user.present? && current_user.admin? ? PrivateLeague.active_leagues : []
     # Randomize the order of the featured leagues
     @featured_leagues = League.where(featured: true)
     @featured_leagues = @featured_leagues.sample(@featured_leagues.size)
@@ -74,7 +74,7 @@ class LeaguesController < RosterpocalypseController
   # POST /leagues/1/join.json
   def join
     respond_to do |format|
-      if roster = @league.join(current_user.manager)
+      if (roster = @league.join(current_user.manager))
         format.html do
           redirect_to manage_roster_path(roster),
                       notice: "Successfully joined League '#{@league.name}', now create a Roster for it!"
@@ -92,7 +92,7 @@ class LeaguesController < RosterpocalypseController
   # POST /leagues/1/leave.json
   def leave
     respond_to do |format|
-      if roster = @league.leave(current_user.manager)
+      if (roster = @league.leave(current_user.manager))
         format.html { redirect_to leagues_path, notice: "Roster '#{roster.name}' was removed from '#{@league.name}'." }
         format.json { render :show, status: :ok, location: @league }
       else
@@ -116,12 +116,12 @@ class LeaguesController < RosterpocalypseController
     params.require(league_symbol).permit(:name, :tournament_id, :description,
                                          :starting_budget, :num_transfers, :premium,
                                          :max_players_per_team, :use_representative_game,
-                                         required_player_roles: [:assassin, :flex, :warrior, :support],
+                                         required_player_roles: %i[assassin flex warrior support],
                                          role_stat_modifiers: [
-                                                                { assassin: [:solo_kills, :assists, :time_spent_dead, :win] },
-                                                                { flex:     [:solo_kills, :assists, :time_spent_dead, :win] },
-                                                                { warrior:  [:solo_kills, :assists, :time_spent_dead, :win] },
-                                                                { support:  [:solo_kills, :assists, :time_spent_dead, :win] }
+                                                                { assassin: %i[solo_kills assists time_spent_dead win] },
+                                                                { flex:     %i[solo_kills assists time_spent_dead win] },
+                                                                { warrior:  %i[solo_kills assists time_spent_dead win] },
+                                                                { support:  %i[solo_kills assists time_spent_dead win] }
                                                               ]
                                         ).tap do |lp|
       lp[:manager_id] = current_user.manager.id

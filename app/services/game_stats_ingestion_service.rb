@@ -147,7 +147,7 @@ class GameStatsIngestionService
   def find_or_create_hero(hero_name)
     if create_or_update_models
       Hero.find_or_create_by internal_name: hero_name do |h|
-        if hero_details = Hero::HEROES[hero_name]
+        if (hero_details = Hero::HEROES[hero_name])
           h.name = hero_details[:name]
           h.classification = hero_details[:classification]
         else
@@ -236,10 +236,10 @@ class GameStatsIngestionService
     @team_names_by_team_colour ||= begin
       if filename_regex_match && filename_regex_match.size == 4
         # We try to match the team names to colours based on the prefix and players in the team, but if that fails, we just guess the team colours
-        _, team_name1, team_name2, _ = filename_regex_match.to_a.map { |val| val.tr("_", " ") }
+        _, team_name1, team_name2, = filename_regex_match.to_a.map { |val| val.tr("_", " ") }
 
-        if (match_team_name?(team_name1, team_name_prefix_by_team_colour["red"], player_details_by_team_colour["red"]) ||
-            match_team_name?(team_name2, team_name_prefix_by_team_colour["blue"], player_details_by_team_colour["blue"]))
+        if match_team_name?(team_name1, team_name_prefix_by_team_colour["red"], player_details_by_team_colour["red"]) ||
+           match_team_name?(team_name2, team_name_prefix_by_team_colour["blue"], player_details_by_team_colour["blue"])
           {
             "red" => team_name1,
             "blue" => team_name2
@@ -264,7 +264,7 @@ class GameStatsIngestionService
     @player_details_by_team_colour ||= begin
       {}.tap do |player_details_by_team|
         json["player_details"].each do |_, player_detail|
-          if player_names = player_details_by_team[player_detail["team"]]
+          if (player_names = player_details_by_team[player_detail["team"]])
             player_names << player_detail
           else
             player_details_by_team[player_detail["team"]] = [player_detail]
@@ -304,15 +304,13 @@ class GameStatsIngestionService
   end
 
   def team_name_prefix(player_names)
-    first_name = player_names.first
-
-    first_name.each_char.with_index do |char, idx|
-      player_names.each do |player_name|
-        return first_name[0, idx] if player_name[idx] != char
+    player_names.first.tap do |first_name|
+      first_name.each_char.with_index do |char, idx|
+        player_names.each do |player_name|
+          return first_name[0, idx] if player_name[idx] != char
+        end
       end
     end
-
-    return first_name
   end
 
   def strip_team_name_prefix_from_player_name(team_name_prefix, player_name)

@@ -42,7 +42,7 @@ class User < ApplicationRecord
   end
 
   def registered?
-    self.persisted?
+    persisted?
   end
 
   def unconfirmed?

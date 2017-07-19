@@ -19,11 +19,11 @@ module Csvable
     end
 
     def csv_attributes
-      raise NotImplementedError.new "self.csv_attributes must be implemented"
+      raise NotImplementedError, "self.csv_attributes must be implemented"
     end
 
     def csv_collection
-      raise NotImplementedError.new "self.csv_collection must be implemented"
+      raise NotImplementedError, "self.csv_collection must be implemented"
     end
   end
 end

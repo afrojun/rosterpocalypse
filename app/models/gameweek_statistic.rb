@@ -14,26 +14,26 @@ class GameweekStatistic < ApplicationRecord
   def create_dream_team
     gameweek_players = gameweek.gameweek_players.includes(:player).order(efficiency: :desc)
 
-    if gameweek_players.any?
-      dream_team_gameweek_players = Set.new
-      dream_team_gameweek_players << gameweek_players.detect { |gameweek_player| gameweek_player.player.role == "Warrior" }
-      dream_team_gameweek_players << gameweek_players.detect { |gameweek_player| gameweek_player.player.role == "Support" }
-      index = 0
-      while gameweek_players[index].present? && dream_team_gameweek_players.size < Roster::MAX_PLAYERS
-        dream_team_gameweek_players << gameweek_players[index]
-        index = index + 1
-      end
+    return unless gameweek_players.any?
 
-      update!(
-        dream_team: {
-          gameweek_player_ids: dream_team_gameweek_players.map(&:id),
-          value: dream_team_gameweek_players.map(&:value).sum.round(2),
-          points: dream_team_gameweek_players.map do |gameweek_player|
-                    LeagueGameweekPlayer.find_by(league: gameweek.default_league, gameweek_player: gameweek_player).try(:points)
-                  end.compact.sum
-        }
-      )
+    dream_team_gameweek_players = Set.new
+    dream_team_gameweek_players << gameweek_players.detect { |gameweek_player| gameweek_player.player.role == "Warrior" }
+    dream_team_gameweek_players << gameweek_players.detect { |gameweek_player| gameweek_player.player.role == "Support" }
+    index = 0
+    while gameweek_players[index].present? && dream_team_gameweek_players.size < Roster::MAX_PLAYERS
+      dream_team_gameweek_players << gameweek_players[index]
+      index += 1
     end
+
+    update!(
+      dream_team: {
+        gameweek_player_ids: dream_team_gameweek_players.map(&:id),
+        value: dream_team_gameweek_players.map(&:value).sum.round(2),
+        points: dream_team_gameweek_players.map do |gameweek_player|
+                  LeagueGameweekPlayer.find_by(league: gameweek.default_league, gameweek_player: gameweek_player).try(:points)
+                end.compact.sum
+      }
+    )
   end
 
   def update_top_transfers

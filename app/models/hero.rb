@@ -16,10 +16,9 @@ class Hero < ApplicationRecord
 
   def validate_destroy
     game_count = game_details.size
-    if game_count.positive?
-      errors.add(:base, "Unable to delete #{name} since it has #{game_count} associated #{'game'.pluralize(game_count)}.")
-      throw :abort
-    end
+    return unless game_count.positive?
+    errors.add(:base, "Unable to delete #{name} since it has #{game_count} associated #{'game'.pluralize(game_count)}.")
+    throw :abort
   end
 
   def stat_percentile(stat, percentile)

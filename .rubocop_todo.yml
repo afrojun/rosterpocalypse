@@ -123,17 +123,6 @@ Layout/MultilineOperationIndentation:
     - 'lib/tasks/scheduler.rake'
     - 'lib/tasks/update_roster_snapshots.thor'
 
-# Offense count: 8
-# Configuration parameters: AllowSafeAssignment.
-Lint/AssignmentInCondition:
-  Exclude:
-    - 'app/controllers/leagues_controller.rb'
-    - 'app/models/league.rb'
-    - 'app/models/roster.rb'
-    - 'app/presenters/player_presenter.rb'
-    - 'app/services/game_stats_ingestion_service.rb'
-    - 'bin/spring'
-
 # Offense count: 7
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyleAlignWith, SupportedStylesAlignWith.
@@ -146,44 +135,6 @@ Lint/BlockAlignment:
     - 'app/models/player.rb'
     - 'app/services/game_stats_ingestion_service.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyleAlignWith, SupportedStylesAlignWith, AutoCorrect.
-# SupportedStylesAlignWith: keyword, variable, start_of_line
-Lint/EndAlignment:
-  Exclude:
-    - 'lib/stripe_event_subscribers/customer_subscription_event.rb'
-
-# Offense count: 2
-Lint/ShadowingOuterLocalVariable:
-  Exclude:
-    - 'app/models/roster.rb'
-    - 'app/services/game_stats_ingestion_service.rb'
-
-# Offense count: 7
-# Cop supports --auto-correct.
-# Configuration parameters: IgnoreEmptyBlocks, AllowUnusedKeywordArguments.
-Lint/UnusedBlockArgument:
-  Exclude:
-    - 'app/controllers/rosterpocalypse_controller.rb'
-    - 'app/models/league.rb'
-    - 'app/models/roster.rb'
-    - 'app/models/transfer.rb'
-    - 'app/policies/access_policy.rb'
-    - 'app/presenters/player_presenter.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: AllowUnusedKeywordArguments, IgnoreEmptyMethods.
-Lint/UnusedMethodArgument:
-  Exclude:
-    - 'app/controllers/registrations_controller.rb'
-
-# Offense count: 17
-Lint/UselessAssignment:
-  Exclude:
-    - 'lib/tasks/populate_hgc2017_phase1_matches.rake'
-
 # Offense count: 59
 Metrics/AbcSize:
   Max: 77
@@ -191,7 +142,14 @@ Metrics/AbcSize:
 # Offense count: 69
 # Configuration parameters: CountComments, ExcludedMethods.
 Metrics/BlockLength:
-  Max: 363
+  Max: 35
+  Exclude:
+    - 'spec/**/*'
+    - 'config/**/*'
+    - 'db/schema.rb'
+    - 'lib/tasks/populate_hgc2017_phase1_matches.rake'
+    - 'lib/tasks/cucumber.rake'
+    - 'Guardfile'
 
 # Offense count: 2
 # Configuration parameters: CountBlocks.
@@ -294,23 +252,6 @@ Style/EmptyMethod:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
-# Offense count: 15
-# Configuration parameters: MinBodyLength.
-Style/GuardClause:
-  Exclude:
-    - 'app/controllers/application_controller.rb'
-    - 'app/controllers/tournaments_controller.rb'
-    - 'app/helpers/league_helper.rb'
-    - 'app/models/gameweek.rb'
-    - 'app/models/gameweek_statistic.rb'
-    - 'app/models/hero.rb'
-    - 'app/models/league.rb'
-    - 'app/models/map.rb'
-    - 'app/models/player.rb'
-    - 'app/models/roster.rb'
-    - 'app/models/tournament.rb'
-    - 'config/initializers/sidekiq.rb'
-
 # Offense count: 1
 Style/MultilineBlockChain:
   Exclude:
@@ -332,62 +273,6 @@ Style/Next:
 Style/NumericLiterals:
   MinDigits: 15
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AllowSafeAssignment.
-Style/ParenthesesAroundCondition:
-  Exclude:
-    - 'app/services/game_stats_ingestion_service.rb'
-
-# Offense count: 2
-# Configuration parameters: NamePrefix, NamePrefixBlacklist, NameWhitelist.
-# NamePrefix: is_, has_, have_
-# NamePrefixBlacklist: is_, has_, have_
-# NameWhitelist: is_a?
-Style/PredicateName:
-  Exclude:
-    - 'spec/**/*'
-    - 'app/models/gameweek.rb'
-    - 'app/models/player.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: compact, exploded
-Style/RaiseArgs:
-  Exclude:
-    - 'app/models/concerns/csvable.rb'
-
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: AllowMultipleReturnValues.
-Style/RedundantReturn:
-  Exclude:
-    - 'app/models/gameweek.rb'
-    - 'app/services/game_stats_ingestion_service.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/RedundantSelf:
-  Exclude:
-    - 'app/models/gameweek.rb'
-    - 'app/models/user.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles, AllowInnerSlashes.
-# SupportedStyles: slashes, percent_r, mixed
-Style/RegexpLiteral:
-  Exclude:
-    - 'app/models/league.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/SelfAssignment:
-  Exclude:
-    - 'app/models/gameweek_statistic.rb'
-    - 'app/models/tournament.rb'
-
 # Offense count: 2340
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles, ConsistentQuotesInMultiline.
@@ -400,37 +285,13 @@ Style/StringLiterals:
 # Configuration parameters: MinSize, SupportedStyles.
 # SupportedStyles: percent, brackets
 Style/SymbolArray:
-  EnforcedStyle: brackets
-
-# Offense count: 4
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles, AllowSafeAssignment.
-# SupportedStyles: require_parentheses, require_no_parentheses, require_parentheses_when_complex
-Style/TernaryParentheses:
   Exclude:
-    - 'app/controllers/leagues_controller.rb'
-    - 'app/models/gameweek_player.rb'
-    - 'app/models/league_gameweek_player.rb'
-    - 'app/models/match.rb'
+    - 'db/migrate/*'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AllowNamedUnderscoreVariables.
-Style/TrailingUnderscoreVariable:
-  Exclude:
-    - 'app/services/game_stats_ingestion_service.rb'
-
-# Offense count: 31
 # Cop supports --auto-correct.
 # Configuration parameters: SupportedStyles, WordRegex.
 # SupportedStyles: percent, brackets
 Style/WordArray:
-  EnforcedStyle: percent
   Exclude:
     - 'db/schema.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/ZeroLengthPredicate:
-  Exclude:
-    - 'app/models/match.rb'

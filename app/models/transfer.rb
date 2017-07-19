@@ -38,7 +38,7 @@ class Transfer < ApplicationRecord
         end
       ]
 
-      transfers_in.merge(transfers_out) do |key, in_count, out_count|
+      transfers_in.merge(transfers_out) do |_, in_count, out_count|
         in_count + out_count
       end
     end

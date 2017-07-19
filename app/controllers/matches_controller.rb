@@ -1,6 +1,6 @@
 class MatchesController < RosterpocalypseController
-  before_action :set_match, only: [:show, :edit, :update, :destroy]
-  before_action :set_page_title, only: [:show, :edit]
+  before_action :set_match, only: %i[show edit update destroy]
+  before_action :set_page_title, only: %i[show edit]
 
   # GET /matches
   # GET /matches.json

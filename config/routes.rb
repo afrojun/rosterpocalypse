@@ -13,9 +13,9 @@ Rails.application.routes.draw do
   resources :tournaments
   resources :matches
 
-  resources :gameweeks, only: [:index, :show]
+  resources :gameweeks, only: %i[index show]
 
-  resources :rosters, except: [:new, :create, :edit] do
+  resources :rosters, except: %i[new create edit] do
     member do
       get "manage"
       get "details"
@@ -24,7 +24,7 @@ Rails.application.routes.draw do
   end
 
   resources :games do
-    resources :details, controller: 'game_details', shallow: true, only: [:new, :create, :edit, :update, :destroy]
+    resources :details, controller: 'game_details', shallow: true, only: %i[new create edit update destroy]
     collection do
       post "bulk_destroy"
     end
@@ -67,7 +67,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :managers, only: [:index, :show, :update] do
+  resources :managers, only: %i[index show update] do
     member do
       post "subscribe"
       post "unsubscribe"

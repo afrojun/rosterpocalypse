@@ -1,7 +1,7 @@
 class ManagersController < RosterpocalypseController
-  before_action :set_manager, only: [:show, :update, :subscribe, :unsubscribe,
-                                     :reactivate_subscription, :update_payment_details,
-                                     :remove_payment_source]
+  before_action :set_manager, only: %i[show update subscribe unsubscribe
+                                       reactivate_subscription update_payment_details
+                                       remove_payment_source]
 
   # GET /managers
   # GET /managers.json

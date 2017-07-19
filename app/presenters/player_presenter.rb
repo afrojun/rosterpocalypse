@@ -1,6 +1,6 @@
 class PlayerPresenter < BasePresenter
   def most_played_heroes
-    top_three = player_hero_win_loss_count.sort_by do |hero, stats|
+    top_three = player_hero_win_loss_count.sort_by do |_, stats|
       stats[:total]
     end.reverse.take(3)
 
@@ -10,7 +10,7 @@ class PlayerPresenter < BasePresenter
   end
 
   def top_winrate_heroes
-    top_three = player_hero_win_loss_count.sort_by do |hero, stats|
+    top_three = player_hero_win_loss_count.sort_by do |_, stats|
       ((stats[:win].to_f / stats[:total].to_f) * 100).ceil.tap do |win_percent|
         stats[:win_percent] = win_percent
       end
@@ -24,7 +24,7 @@ class PlayerPresenter < BasePresenter
   def player_hero_win_loss_count
     @player_hero_win_loss_count ||= {}.tap do |hero_details|
       player.game_details.includes(:hero).each do |details|
-        if win_loss = hero_details[details.hero]
+        if (win_loss = hero_details[details.hero])
           win_loss[:total] = win_loss[:total] + 1
           if details.win
             win_loss[:win] = win_loss[:win] + 1
