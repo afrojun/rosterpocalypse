@@ -8,7 +8,7 @@ class GamePresenter < BasePresenter
   end
 
   def teams_by_win
-    game.game_details.reduce({}) { |memo, detail| memo.merge({detail.win => detail.team.name}) }
+    game.game_details.reduce({}) { |memo, detail| memo.merge(detail.win => detail.team.name) }
   end
 
   alias game __getobj__

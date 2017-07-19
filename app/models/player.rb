@@ -189,7 +189,7 @@ class Player < ApplicationRecord
   def infer_role
     if player_heroes_by_classification.size > 1
       class_ratios = player_heroes_by_classification.reduce({}) do |class_counts, (classification, heroes)|
-                       class_counts.merge({ classification => heroes.count.to_f/game_details.count })
+                       class_counts.merge(classification => heroes.count.to_f/game_details.count)
                      end
       majority_class = class_ratios.detect { |_, ratio| ratio > 0.5 }
       set_role_from_class(majority_class.present? ? majority_class.first : "Flex")

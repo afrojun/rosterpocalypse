@@ -386,19 +386,6 @@ Style/BlockComments:
   Exclude:
     - 'spec/spec_helper.rb'
 
-# Offense count: 16
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: braces, no_braces, context_dependent
-Style/BracesAroundHashParameters:
-  Exclude:
-    - 'app/models/player.rb'
-    - 'app/models/user.rb'
-    - 'app/presenters/game_presenter.rb'
-    - 'spec/models/player_spec.rb'
-    - 'spec/presenters/player_presenter_spec.rb'
-    - 'spec/services/game_stats_ingestion_service_spec.rb'
-
 # Offense count: 3
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 # SupportedStyles: nested, compact

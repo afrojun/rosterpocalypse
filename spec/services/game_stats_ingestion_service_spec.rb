@@ -156,14 +156,14 @@ describe GameStatsIngestionService do
   context "#team_name_prefix_by_team_colour" do
     it "returns the respective team name prefixes" do
       prefixes = service.send :team_name_prefix_by_team_colour
-      expect(prefixes).to eq({"red" => "MVP", "blue" => "DIG"})
+      expect(prefixes).to eq("red" => "MVP", "blue" => "DIG")
     end
   end
 
   context "#team_names_by_team_colour" do
     it "extracts the team names and tournament name from the filename" do
       team_names_by_colour = service.send :team_names_by_team_colour
-      expect(team_names_by_colour).to eq({"red" => "MVP BLACK", "blue" => "Dignitas"})
+      expect(team_names_by_colour).to eq("red" => "MVP BLACK", "blue" => "Dignitas")
     end
   end
 
