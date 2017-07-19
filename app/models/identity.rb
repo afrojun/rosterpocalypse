@@ -1,8 +1,8 @@
 class Identity < ApplicationRecord
   belongs_to :user
 
-  validates_presence_of :uid, :provider
-  validates_uniqueness_of :uid, :scope => :provider
+  validates :uid, :provider, presence: true
+  validates :uid, uniqueness: { :scope => :provider }
 
   def self.find_for_oauth auth
     find_by(provider: auth.provider, uid: auth.uid)

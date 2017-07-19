@@ -374,18 +374,6 @@ Rails/SkipsModelValidations:
     - 'app/models/roster.rb'
     - 'db/migrate/20170625235758_add_premium_to_leagues.rb'
 
-# Offense count: 14
-# Cop supports --auto-correct.
-# Configuration parameters: Include.
-# Include: app/models/**/*.rb
-Rails/Validation:
-  Exclude:
-    - 'app/models/form_user.rb'
-    - 'app/models/identity.rb'
-    - 'app/models/league.rb'
-    - 'app/models/roster.rb'
-    - 'app/models/user.rb'
-
 # Offense count: 2
 Style/AccessorMethodName:
   Exclude:

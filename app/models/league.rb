@@ -10,8 +10,8 @@ class League < ApplicationRecord
   has_many :gameweek_players, through: :league_gameweek_players
 
   validates :name, presence: true, uniqueness: true
-  validates_format_of :name, with: /^[a-zA-Z0-9\/\- _\.]*$/, multiline: true
-  validates_length_of :name, minimum: 4, maximum: 30
+  validates :name, format: { with: /^[a-zA-Z0-9\/\- _\.]*$/, multiline: true }
+  validates :name, length: { minimum: 4, maximum: 30 }
   validates :tournament, presence: true
   validates :type, presence: true
   validates :starting_budget, presence: true

@@ -15,8 +15,8 @@ class Roster < ApplicationRecord
   has_many :gameweeks, through: :gameweek_rosters
 
   validates :name, presence: true, uniqueness: true
-  validates_format_of :name, with: /^[a-zA-Z0-9\- _\.]*$/, multiline: true
-  validates_length_of :name, minimum: 4, maximum: 65
+  validates :name, format: { with: /^[a-zA-Z0-9\- _\.]*$/, multiline: true }
+  validates :name, length: { minimum: 4, maximum: 65 }
 
   after_create :create_gameweek_rosters
 
