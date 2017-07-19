@@ -52,15 +52,15 @@ class GameweekRoster < ApplicationRecord
 
       total_value = snapshot_gameweek_players.map(&:value).sum
       if total_value > snapshot_budget
-        Rails.logger.warn "Total value of the players in roster '#{roster.name}' " +
-                          "(#{total_value}) exceeds the budget of #{snapshot_budget}." +
+        Rails.logger.warn "Total value of the players in roster '#{roster.name}' " \
+                          "(#{total_value}) exceeds the budget of #{snapshot_budget}." \
                           "Proceeding anyway..."
       end
 
       gameweek_players.clear
       gameweek_players << snapshot_gameweek_players
     else
-      Rails.logger.warn "No snapshot present for '#{roster.name}', " +
+      Rails.logger.warn "No snapshot present for '#{roster.name}', " \
                         "unable to associate gameweek players."
       false
     end

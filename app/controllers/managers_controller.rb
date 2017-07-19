@@ -48,7 +48,7 @@ class ManagersController < RosterpocalypseController
 
         "Card successfully removed"
       else
-        message = "Unable to remove the only card on record for an active subscription. " +
+        message = "Unable to remove the only card on record for an active subscription. " \
                   "Please add a new card first then remove this one."
         redirect_back(fallback_location: edit_user_registration_path,
                       alert: message) && return
@@ -87,7 +87,7 @@ class ManagersController < RosterpocalypseController
 
         "Subscription has been re-activated "
       else
-        message = "In order to re-activate the subscription we need a card on record. " +
+        message = "In order to re-activate the subscription we need a card on record. " \
                   "Please add a new card then try re-activating again."
         redirect_back(fallback_location: edit_user_registration_path,
                       alert: message) && return
@@ -107,8 +107,8 @@ class ManagersController < RosterpocalypseController
     body = e.json_body
     err  = body[:error]
 
-    logger.warn "[Stripe] [#{e.http_status}, #{err[:type]}] #{err[:message]} - " +
-                 "Charge ID(#{err[:charge]}), Error Code( #{err[:code]}), " +
+    logger.warn "[Stripe] [#{e.http_status}, #{err[:type]}] #{err[:message]} - " \
+                 "Charge ID(#{err[:charge]}), Error Code( #{err[:code]}), " \
                  "Decline Code(#{err[:decline_code]}), Error Param(#{err[:param]}), "
     logger.warn "[Stripe] #{e.message}"
 

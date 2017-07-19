@@ -430,17 +430,6 @@ Style/GuardClause:
     - 'app/models/tournament.rb'
     - 'config/initializers/sidekiq.rb'
 
-# Offense count: 17
-# Cop supports --auto-correct.
-Style/LineEndConcatenation:
-  Exclude:
-    - 'app/controllers/managers_controller.rb'
-    - 'app/models/gameweek_player.rb'
-    - 'app/models/gameweek_roster.rb'
-    - 'app/models/league_gameweek_player.rb'
-    - 'app/models/roster.rb'
-    - 'lib/stripe_event_subscribers/customer_subscription_event.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 Style/MethodCallWithoutArgsParentheses:

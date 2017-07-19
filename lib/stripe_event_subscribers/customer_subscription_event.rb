@@ -27,7 +27,7 @@ class CustomerSubscriptionEvent < StripeEventHandler
                  end
 
         if old_status != new_status
-          logger.info "[Stripe Webhook] Changing subscription status for #{manager.slug} " +
+          logger.info "[Stripe Webhook] Changing subscription status for #{manager.slug} " \
                       "from '#{old_status}' to '#{new_status}'."
           manager.update(subscription_status: new_status)
 
@@ -46,8 +46,8 @@ class CustomerSubscriptionEvent < StripeEventHandler
 
         yield(manager) if block_given?
       else
-        logger.error "[Stripe Webhook] Manager '#{manager.slug}' has a subscription ID of " +
-                     "'#{manager.stripe_subscription_id}', which does not match the webhook" +
+        logger.error "[Stripe Webhook] Manager '#{manager.slug}' has a subscription ID of " \
+                     "'#{manager.stripe_subscription_id}', which does not match the webhook" \
                      "event subscription ID of '#{stripe_object_id}'."
       end
     else

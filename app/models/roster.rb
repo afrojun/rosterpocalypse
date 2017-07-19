@@ -169,7 +169,7 @@ class Roster < ApplicationRecord
            validate_players_in_same_team(new_players) &&
            validate_player_value(new_players))
           if allow_free_transfers?
-            Rails.logger.info "Roster #{name}: Freely transferring in players: " +
+            Rails.logger.info "Roster #{name}: Freely transferring in players: " \
                               "#{new_players.map(&:name)}"
             players.clear
             players << new_players
@@ -193,7 +193,7 @@ class Roster < ApplicationRecord
     in_out_pairs = players_to_add.zip players_to_remove
 
     in_out_pairs.each do |player_in, player_out|
-      Rails.logger.info "Roster #{name}: Transferring #{player_in.name} IN " +
+      Rails.logger.info "Roster #{name}: Transferring #{player_in.name} IN " \
                         "and #{player_out.name} OUT"
       transaction do
         Transfer.create(gameweek_roster: current_gameweek_roster,
@@ -246,7 +246,7 @@ class Roster < ApplicationRecord
     if league.present?
       players_by_team = players.group_by(&:team)
       if players_by_team.any? { |team, players| players.size > league.max_players_per_team }
-        errors.add(:roster, "may not include more than #{league.max_players_per_team} " +
+        errors.add(:roster, "may not include more than #{league.max_players_per_team} " \
                             "players from the same team")
         false
       else
@@ -287,11 +287,11 @@ class Roster < ApplicationRecord
       if diff.size <= max_transfers
         return true
       else
-        errors.add(:roster, "has #{max_transfers} " +
+        errors.add(:roster, "has #{max_transfers} " \
                    "#{"transfer".pluralize(max_transfers)} available in this window")
       end
     else
-      errors.add(:roster, "transfers must maintain the roster size, " +
+      errors.add(:roster, "transfers must maintain the roster size, " \
                  "please ensure you are adding as many players as you remove")
     end
     false
