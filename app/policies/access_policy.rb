@@ -14,11 +14,11 @@ class AccessPolicy
     #
     # The most important role should be at the top.
     #
-    role :owner, proc { |user| user.present? && user.admin? && user.owner? } do
+    role(:owner, proc { |user| user.present? && user.admin? && user.owner? }) do
       can [:manage, :make_admin], User
     end
 
-    role :admin, proc { |user| user.present? && user.admin? } do
+    role(:admin, proc { |user| user.present? && user.admin? }) do
       can :manage, User do |target_user, user|
         !target_user.admin?
       end
@@ -42,7 +42,7 @@ class AccessPolicy
 
     # Role for subscribed users
     #
-    role :premium_member, proc { |user| user.present? && user.registered? && !user.unconfirmed? && user.manager.paid? } do
+    role(:premium_member, proc { |user| user.present? && user.registered? && !user.unconfirmed? && user.manager.paid? }) do
       can [:read, :create], PublicLeague
       can [:update, :destroy], PublicLeague do |league, user|
         league.manager.user.id == user.id
@@ -51,7 +51,7 @@ class AccessPolicy
 
     # More privileged role, applies to registered users.
     #
-    role :member, proc { |user| user.present? && user.registered? && !user.unconfirmed? } do
+    role(:member, proc { |user| user.present? && user.registered? && !user.unconfirmed? }) do
       can :update, Manager do |manager, user|
         manager.user.id == user.id
       end

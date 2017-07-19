@@ -79,7 +79,7 @@ class Roster < ApplicationRecord
   end
 
   def available_transfers
-    if current_gameweek_roster.remaining_transfers.positivve?
+    if current_gameweek_roster.remaining_transfers.positive?
       current_gameweek_roster.remaining_transfers
     else
       0

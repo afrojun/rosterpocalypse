@@ -99,13 +99,13 @@ RSpec.describe Roster, type: :model do
         it "updates the associated players" do
           players.push(warrior_player, support_player)
           expect(roster.update_including_players(players: player_ids)).to eq true
-          expect(roster.players).to contain_exactly *players
+          expect(roster.players).to contain_exactly(*players)
         end
 
         it "overwrites existing associated players" do
           players.push(warrior_player, support_player)
           expect(roster.update_including_players(players: player_ids)).to eq true
-          expect(roster.players).to contain_exactly *players
+          expect(roster.players).to contain_exactly(*players)
 
           players.shift
           players << cheap_player
@@ -125,7 +125,7 @@ RSpec.describe Roster, type: :model do
         it "allows free updates to empty rosters" do
           players.push(warrior_player, support_player)
           expect(roster.update_including_players(players: player_ids)).to eq true
-          expect(roster.players).to contain_exactly *players
+          expect(roster.players).to contain_exactly(*players)
         end
 
         it "restricts updates once the roster has been created" do
@@ -137,7 +137,7 @@ RSpec.describe Roster, type: :model do
           players.push sub_player, cheap_player
           new_player_ids = players.map(&:id)
           expect(roster.update_including_players(players: new_player_ids)).to be false
-          expect(roster.players).to contain_exactly *original_players
+          expect(roster.players).to contain_exactly(*original_players)
           expect(roster.errors.messages).to include(roster: ["has 1 transfer available in this window"])
         end
 
@@ -228,7 +228,7 @@ RSpec.describe Roster, type: :model do
             new_player_ids = players.map(&:id)
 
             expect(roster.update_including_players(players: new_player_ids)).to be false
-            expect(roster.players).to contain_exactly *original_players
+            expect(roster.players).to contain_exactly(*original_players)
             expect(roster.errors.messages).to include(roster: ["has 1 transfer available in this window"])
           end
         end
@@ -281,7 +281,7 @@ RSpec.describe Roster, type: :model do
             players.push cheap_player
 
             expect(roster.update_including_players(players: players.map(&:id))).to be false
-            expect(roster.players).to contain_exactly *original_players
+            expect(roster.players).to contain_exactly(*original_players)
             expect(roster.errors.messages).to include(roster: ["is currently locked until the end of the Gameweek"])
           end
         end

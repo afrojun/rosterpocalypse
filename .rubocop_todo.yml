@@ -123,24 +123,6 @@ Layout/MultilineOperationIndentation:
     - 'lib/tasks/scheduler.rake'
     - 'lib/tasks/update_roster_snapshots.thor'
 
-# Offense count: 6
-Lint/AmbiguousBlockAssociation:
-  Exclude:
-    - 'app/policies/access_policy.rb'
-    - 'config/initializers/friendly_id.rb'
-
-# Offense count: 7
-Lint/AmbiguousOperator:
-  Exclude:
-    - 'spec/models/player_spec.rb'
-    - 'spec/models/roster_spec.rb'
-
-# Offense count: 3
-Lint/AmbiguousRegexpLiteral:
-  Exclude:
-    - 'spec/models/league_spec.rb'
-    - 'spec/requests/shared_restricted_index_page_request_spec.rb'
-
 # Offense count: 8
 # Configuration parameters: AllowSafeAssignment.
 Lint/AssignmentInCondition:

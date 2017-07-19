@@ -7,7 +7,7 @@ shared_examples_for "a restricted index page request" do |model_index_path_metho
         send :get, send(model_index_path_method)
         expect(response).to have_http_status(302)
         expect(response).to redirect_to root_url
-        expect(flash["alert"]).to match /You don't have permission to take this action/
+        expect(flash["alert"]).to match(/You don't have permission to take this action/)
       end
     end
 
@@ -17,7 +17,7 @@ shared_examples_for "a restricted index page request" do |model_index_path_metho
         send :get, send(model_index_path_method)
         expect(response).to have_http_status(302)
         expect(response).to redirect_to root_url
-        expect(flash["alert"]).to match /You don't have permission to take this action/
+        expect(flash["alert"]).to match(/You don't have permission to take this action/)
       end
     end
 

@@ -81,7 +81,7 @@ RSpec.describe League, type: :model do
       other_roster = FactoryGirl.create :roster, tournament: other_tournament
 
       expect(league.add(other_roster)).to eq false
-      expect(league.errors[:base].first).to match /^Unable to add Roster '[\w-]+' to League '[\w-]+' since they are not for the same tournament/
+      expect(league.errors[:base].first).to match(/^Unable to add Roster '[\w-]+' to League '[\w-]+' since they are not for the same tournament/)
     end
 
     it "adds the roster to the league" do
