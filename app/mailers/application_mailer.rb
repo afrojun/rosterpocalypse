@@ -3,7 +3,7 @@ class ApplicationMailer < ActionMailer::Base
   layout 'mailer'
 
   # Inform admins when a Stripe webhook call fails
-  def stripe_webhook_failure event, error
+  def stripe_webhook_failure(event, error)
     @event = event
     @error = error
     mail(to: '"Rosterpocalypse" <rosterpocalypse@gmail.com>',

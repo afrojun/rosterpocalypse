@@ -5,7 +5,7 @@
 require "stripe_event_subscribers/customer_subscription_event"
 
 class CustomerSubscriptionDeleted < CustomerSubscriptionEvent
-  def call event
+  def call(event)
     super do |manager|
       logger.info "[Stripe Webhook] Cancelling subscription for Manager '#{manager.slug}'"
       manager.update(stripe_subscription_id: nil,

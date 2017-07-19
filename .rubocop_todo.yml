@@ -431,19 +431,6 @@ Style/GuardClause:
     - 'config/initializers/sidekiq.rb'
 
 # Offense count: 1
-# Cop supports --auto-correct.
-Style/MethodCallWithoutArgsParentheses:
-  Exclude:
-    - 'app/models/manager.rb'
-
-# Offense count: 138
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: require_parentheses, require_no_parentheses, require_no_parentheses_except_multiline
-Style/MethodDefParentheses:
-  Enabled: false
-
-# Offense count: 1
 Style/MultilineBlockChain:
   Exclude:
     - 'app/models/league_gameweek_player.rb'

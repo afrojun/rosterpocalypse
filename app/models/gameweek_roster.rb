@@ -12,17 +12,17 @@ class GameweekRoster < ApplicationRecord
     [remaining, 0].max
   end
 
-  def next safe = true
+  def next(safe = true)
     nxt = GameweekRoster.find_by gameweek: gameweek.next, roster: roster
     safe ? (nxt.nil? ? self : nxt) : nxt
   end
 
-  def previous safe = true
+  def previous(safe = true)
     prev = GameweekRoster.find_by gameweek: gameweek.previous, roster: roster
     safe ? (prev.nil? ? self : prev) : prev
   end
 
-  def create_snapshot players_to_snapshot = roster.players, force = false
+  def create_snapshot(players_to_snapshot = roster.players, force = false)
     if !force && roster_snapshot.present?
       Rails.logger.warn "Roster snapshot for '#{roster.name}' exists, not taking any action."
       return true

@@ -71,7 +71,7 @@ RSpec.describe GameDetailsController, type: :controller do
     }
   end
 
-  def assert_update_successful game_detail
+  def assert_update_successful(game_detail)
     expect(game_detail.team_colour).to eq "red"
   end
 

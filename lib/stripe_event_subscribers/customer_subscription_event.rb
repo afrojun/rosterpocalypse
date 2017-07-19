@@ -11,7 +11,7 @@
 require "stripe_event_subscribers/stripe_event_handler"
 
 class CustomerSubscriptionEvent < StripeEventHandler
-  def call event
+  def call(event)
     customer_id = event.data.object.customer
     stripe_object_id = event.data.object.id
     manager = Manager.where(stripe_customer_id: customer_id).first

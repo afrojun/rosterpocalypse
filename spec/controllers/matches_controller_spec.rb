@@ -59,7 +59,7 @@ RSpec.describe MatchesController, type: :controller do
     }
   end
 
-  def assert_update_successful match
+  def assert_update_successful(match)
     expect(match.best_of).to eq 5
     expect(match.team_1).to eq new_team
   end

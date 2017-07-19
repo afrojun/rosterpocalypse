@@ -21,7 +21,7 @@ class Game < ApplicationRecord
     gameweek_players.where(player: players).find_each { |gameweek_player| gameweek_player.remove_game(self) }
   end
 
-  def self.team_stat_percentile stat, percentile
+  def self.team_stat_percentile(stat, percentile)
     team_stats = Game.all.includes(game_details: [:team]).map { |game| game.team_stats.values }.flatten
     team_stats.extend(DescriptiveStatistics).percentile(percentile) { |team_stat| team_stat[stat.to_sym] }
   end
@@ -46,7 +46,7 @@ class Game < ApplicationRecord
     slug.blank? || game_hash_changed?
   end
 
-  def other_team team
+  def other_team(team)
     (teams - [team]).first
   end
 

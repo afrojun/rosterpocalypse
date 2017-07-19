@@ -47,7 +47,7 @@ RSpec.describe PlayersController, type: :controller do
     }
   end
 
-  def assert_update_successful player
+  def assert_update_successful(player)
     expect(player.name).to eq "AmateurGamer"
     expect(player.team).to eq new_team
   end

@@ -4,7 +4,7 @@
 require "stripe_event_subscribers/customer_subscription_event"
 
 class CustomerSubscriptionTrialWillEnd < CustomerSubscriptionEvent
-  def call event
+  def call(event)
     super do |manager|
       if manager.stripe_customer_sources.count == 0
         logger.info "[Stripe Webhook] Sending email to ask the user to add a card."

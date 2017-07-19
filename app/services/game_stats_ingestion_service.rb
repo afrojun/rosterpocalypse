@@ -11,7 +11,7 @@ class GameStatsIngestionService
 
   attr_accessor :json, :create_or_update_models
 
-  def initialize json, create_or_update_models = false
+  def initialize(json, create_or_update_models = false)
     @json = json
     @create_or_update_models = create_or_update_models
   end
@@ -120,7 +120,7 @@ class GameStatsIngestionService
     end
   end
 
-  def find_or_create_team team_colour
+  def find_or_create_team(team_colour)
     if create_or_update_models
       Team.find_or_create_including_alternate_names(team_name(team_colour)).tap do |team|
         TeamAlternateName.find_or_create_by(team: team, alternate_name: team_name_prefix_by_team_colour[team_colour]) if team_name_prefix_by_team_colour[team_colour].present?
@@ -131,7 +131,7 @@ class GameStatsIngestionService
     end
   end
 
-  def find_or_create_player player_name, hero, team_colour
+  def find_or_create_player(player_name, hero, team_colour)
     # If the team name is prefixed to player names, strip it out
     sanitized_player_name = strip_team_name_prefix_from_player_name team_name_prefix_by_team_colour[team_colour], player_name
 
@@ -144,7 +144,7 @@ class GameStatsIngestionService
     end
   end
 
-  def find_or_create_hero hero_name
+  def find_or_create_hero(hero_name)
     if create_or_update_models
       Hero.find_or_create_by internal_name: hero_name do |h|
         if hero_details = Hero::HEROES[hero_name]
@@ -207,7 +207,7 @@ class GameStatsIngestionService
   # 1. If we are able to detect team names from the filename, use those
   # 2. If not, use the team name prefix if available
   # 3. Finally, if both above options fail, use the team name "Unknown"
-  def team_name team_colour
+  def team_name(team_colour)
     if team_names_by_team_colour[team_colour].present?
       team_names_by_team_colour[team_colour]
     else
@@ -274,14 +274,14 @@ class GameStatsIngestionService
     end
   end
 
-  def match_team_name? full_name, abbreviation, player_details
+  def match_team_name?(full_name, abbreviation, player_details)
     team_name_match = fuzzy_match_name(full_name, abbreviation)
     return team_name_match.present? if team_name_match.present?
 
     players_in_team? full_name, player_details
   end
 
-  def players_in_team? team_name, player_details
+  def players_in_team?(team_name, player_details)
     # Use Player names to try to match the team name
     player_names = player_details.map { |detail| detail["name"] }
 
@@ -293,7 +293,7 @@ class GameStatsIngestionService
     end
   end
 
-  def fuzzy_match_name full_name, abbreviation
+  def fuzzy_match_name(full_name, abbreviation)
     lowercase_name = full_name.downcase
     # The "Team" prefix in many team names can cause issues with this matching, so we need to handle it separately
     if lowercase_name.start_with? "team"
@@ -303,7 +303,7 @@ class GameStatsIngestionService
     end
   end
 
-  def team_name_prefix player_names
+  def team_name_prefix(player_names)
     first_name = player_names.first
 
     first_name.each_char.with_index do |char, idx|
@@ -315,7 +315,7 @@ class GameStatsIngestionService
     return first_name
   end
 
-  def strip_team_name_prefix_from_player_name team_name_prefix, player_name
+  def strip_team_name_prefix_from_player_name(team_name_prefix, player_name)
     player_name.dup.tap do |name|
       name.slice!(team_name_prefix) if team_name_prefix.present?
     end

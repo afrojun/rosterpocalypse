@@ -47,7 +47,7 @@ RSpec.describe TeamsController, type: :controller do
     }
   end
 
-  def assert_update_successful team
+  def assert_update_successful(team)
     expect(team.name).to eq "CrazyTeam"
     expect(team.region).to eq "KR"
   end

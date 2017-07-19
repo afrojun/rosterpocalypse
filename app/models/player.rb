@@ -56,14 +56,14 @@ class Player < ApplicationRecord
   end
 
   # Accepts either a string or Array of names as input
-  def self.find_including_alternate_names player_names
+  def self.find_including_alternate_names(player_names)
     player_names = [player_names] if player_names.is_a?(String)
     downcase_names = player_names.map(&:downcase).uniq
     alternate_names = PlayerAlternateName.where(alternate_name: downcase_names).includes(:player)
     alternate_names.map(&:player).uniq
   end
 
-  def self.find_or_create_including_alternate_names player_name
+  def self.find_or_create_including_alternate_names(player_name)
     alternate_names = PlayerAlternateName.where alternate_name: player_name.downcase
     if alternate_names.any?
       alternate_names.first.player
@@ -72,18 +72,18 @@ class Player < ApplicationRecord
     end
   end
 
-  def self.players_in_role roles
+  def self.players_in_role(roles)
     Player.where(role: roles)
   end
 
-  def self.role_stat_percentile roles, stat, percentile
+  def self.role_stat_percentile(roles, stat, percentile)
     details = GameDetail.where(player: players_in_role(roles)).extend(DescriptiveStatistics)
     details.percentile(percentile) do |detail|
       detail.send stat.to_sym
     end
   end
 
-  def self.merge_players players
+  def self.merge_players(players)
     if players.size > 1
       player_names = []
 
@@ -105,7 +105,7 @@ class Player < ApplicationRecord
   end
 
   # Perform a destructive merge with another player
-  def merge! other_player
+  def merge!(other_player)
     transaction do
       # Save the alternate names to add them to this player once the other player is destroyed
       other_player_alternate_names = other_player.alternate_names.map(&:alternate_name)
@@ -163,7 +163,7 @@ class Player < ApplicationRecord
 
   # The 'transfers' parameter is a positive number if it refers to transfers IN
   # and negative if it refers to transfers OUT.
-  def update_value_from_gameweek_transfers transfers
+  def update_value_from_gameweek_transfers(transfers)
     new_value = (value + (transfers * VALUE_CHANGE_FACTOR)).round(2)
     Rails.logger.info "Updating player value for #{name}: #{value} -> #{new_value}"
     update value: new_value
@@ -198,7 +198,7 @@ class Player < ApplicationRecord
     end
   end
 
-  def set_role_from_class classification
+  def set_role_from_class(classification)
     player_role = is_flex?(classification) ? "Flex" : classification
     update role: player_role
   end
@@ -209,7 +209,7 @@ class Player < ApplicationRecord
     @player_heroes_by_classification ||= game_details.map(&:hero).group_by(&:classification)
   end
 
-  def is_flex? classification
+  def is_flex?(classification)
     FLEX_CLASSIFICATIONS.include? classification
   end
 
@@ -220,7 +220,7 @@ class Player < ApplicationRecord
   # Loss         = -0.5
   # 15s Dead     = -0.05
   # scaling factor = +/-0.05 * diff in ave team value
-  def value_change details
+  def value_change(details)
     game = details.game
     opposing_players = game.game_details.includes(:player).where('team_id != ?', details.team_id).map(&:player)
     ave_opponent_value = opposing_players.sum(&:value)/opposing_players.size.to_f

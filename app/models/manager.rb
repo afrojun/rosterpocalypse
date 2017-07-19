@@ -62,7 +62,7 @@ class Manager < ApplicationRecord
     end
   end
 
-  def create_stripe_customer stripe_token
+  def create_stripe_customer(stripe_token)
     customer = Stripe::Customer.create(
       email: user.email,
       description: "Customer for #{user.email}",
@@ -71,13 +71,13 @@ class Manager < ApplicationRecord
     update(stripe_customer_id: customer.id)
   end
 
-  def update_stripe_customer_source stripe_token
+  def update_stripe_customer_source(stripe_token)
     stripe_customer.source = stripe_token
     stripe_customer.save
   end
 
-  def remove_stripe_customer_source card_id
-    stripe_customer_sources.retrieve(card_id).delete()
+  def remove_stripe_customer_source(card_id)
+    stripe_customer_sources.retrieve(card_id).delete
   end
 
   def allow_payment_source_removal?

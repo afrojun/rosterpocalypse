@@ -54,7 +54,7 @@ RSpec.describe TournamentsController, type: :controller do
     }
   end
 
-  def assert_update_successful tournament
+  def assert_update_successful(tournament)
     expect(tournament.name).to eq "HGC NA Finals"
     expect(tournament.region).to eq "NA"
   end

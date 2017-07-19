@@ -21,7 +21,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   # This allows users who have previously used one of these services to log in, to continue to
   # do so, however we don't allow any new accounts to be created.
-  def login_only_callback provider
+  def login_only_callback(provider)
     @identity = Identity.find_for_oauth request.env["omniauth.auth"].except("extra")
     @user = @identity.try(:user) || current_user
 
@@ -38,7 +38,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   # Log in or create a new account based on the OAuth information provided
-  def generic_callback provider
+  def generic_callback(provider)
     @identity = Identity.find_or_create_for_oauth request.env["omniauth.auth"].except("extra")
 
     @user = @identity.user || current_user

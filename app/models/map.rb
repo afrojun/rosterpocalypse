@@ -8,7 +8,7 @@ class Map < ApplicationRecord
 
   before_destroy :validate_destroy
 
-  def duration_percentile percentile
+  def duration_percentile(percentile)
     games.extend(DescriptiveStatistics).percentile(percentile) { |game| game.duration_s }
   end
 

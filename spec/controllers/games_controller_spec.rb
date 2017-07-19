@@ -53,7 +53,7 @@ RSpec.describe GamesController, type: :controller do
     }
   end
 
-  def assert_update_successful game
+  def assert_update_successful(game)
     expect(game.map.name).to eq new_map.name
     expect(game.duration_s).to eq 650
     expect(game.game_hash).to eq "12345"

@@ -83,17 +83,17 @@ class League < ApplicationRecord
     role_stat_modifiers.values.map(&:values).flatten.uniq.sort.first.to_i < 0
   end
 
-  def roster_rank roster
+  def roster_rank(roster)
     rosters.select(:id, :score).order(score: :desc).to_a.index(roster).try(:+, 1)
   end
 
-  def historic_roster_rank gameweek, roster
+  def historic_roster_rank(gameweek, roster)
     league_gameweek_rosters = gameweek_rosters.select(:id, :points).where(gameweek: gameweek).order(points: :desc).to_a
     gameweek_roster = roster.gameweek_rosters.find_by(gameweek: gameweek)
     league_gameweek_rosters.index(gameweek_roster).try(:+, 1)
   end
 
-  def join manager
+  def join(manager)
     if tournament.active?
       if validate_one_roster_per_league manager
         roster_name = "#{manager.slug}_#{slug}"
@@ -113,7 +113,7 @@ class League < ApplicationRecord
     end
   end
 
-  def leave manager
+  def leave(manager)
     if roster = rosters.find_by(manager: manager)
       Rails.logger.info "Removing Roster '#{roster.slug}' from League '#{slug}'."
       remove roster
@@ -124,7 +124,7 @@ class League < ApplicationRecord
     end
   end
 
-  def add roster
+  def add(roster)
     if validate_one_roster_per_league roster.manager
       if roster.tournament == tournament
         rosters << roster
@@ -140,7 +140,7 @@ class League < ApplicationRecord
     end
   end
 
-  def remove roster
+  def remove(roster)
     rosters.delete roster
     true
   end
@@ -169,7 +169,7 @@ class League < ApplicationRecord
     end
   end
 
-  def validate_one_roster_per_league manager
+  def validate_one_roster_per_league(manager)
     if manager.roster_leagues.include?(self)
       message = "Only one roster per manager is allowed in a League."
       errors.add(:base, message)

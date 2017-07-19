@@ -24,7 +24,7 @@ class Gameweek < ApplicationRecord
     tournament.find_gameweek end_date.advance(days: 1), false
   end
 
-  def next_active gameweek = self.next
+  def next_active(gameweek = self.next)
     if gameweek.blank?
       return nil
     else
@@ -36,7 +36,7 @@ class Gameweek < ApplicationRecord
     tournament.find_gameweek start_date.advance(days: -1), false
   end
 
-  def previous_active gameweek = self.previous
+  def previous_active(gameweek = self.previous)
     if gameweek.blank?
       return nil
     else
@@ -44,7 +44,7 @@ class Gameweek < ApplicationRecord
     end
   end
 
-  def points_percentile percentile
+  def points_percentile(percentile)
     gameweek_rosters.extend(DescriptiveStatistics).percentile(percentile) { |gameweek_roster| gameweek_roster.points }
   end
 
@@ -52,7 +52,7 @@ class Gameweek < ApplicationRecord
     League.find_by(name: "HGC #{tournament.region} 2017 - Phase 2")
   end
 
-  def move_end_date offset
+  def move_end_date(offset)
     next_gameweek = self.next
     update end_date: end_date+offset
     next_gameweek.update start_date: next_gameweek.start_date+offset

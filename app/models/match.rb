@@ -40,7 +40,7 @@ class Match < ApplicationRecord
   }
 
   # Add a game to an existing match if one exists, otherwise create a Match for the game
-  def self.add_game game
+  def self.add_game(game)
     game_team_ids = game.teams.map(&:id)
     # Get a set of candidate matches that this game could be a part of.
     # We filter for matches which are within 4 hours of the game start_date

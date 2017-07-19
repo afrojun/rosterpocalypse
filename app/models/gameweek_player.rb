@@ -25,7 +25,7 @@ class GameweekPlayer < ApplicationRecord
   BONUS_AWARD_PERCENTILE = 90
   MIN_GAMES_FOR_BONUS_AWARD = 30
 
-  def self.create_all_gameweek_players_for_gameweek gameweek
+  def self.create_all_gameweek_players_for_gameweek(gameweek)
     Player.active_players.joins(:team).
            where(teams: {region: gameweek.tournament.region}).find_each do |player|
       gameweek_player = find_or_create_by(gameweek: gameweek, player: player) do |gwp|
@@ -37,7 +37,7 @@ class GameweekPlayer < ApplicationRecord
     end
   end
 
-  def self.update_from_game game, gameweek
+  def self.update_from_game(game, gameweek)
     game.game_details.each do |detail|
       gameweek_player = find_by(gameweek: gameweek, player: detail.player)
       if gameweek_player.present?
@@ -52,7 +52,7 @@ class GameweekPlayer < ApplicationRecord
   end
 
   # FIXME: This method needs to be updated to use LeagueGameweekPlayer instead
-  def self.update_pick_rate_and_efficiency_for_gameweek gameweek
+  def self.update_pick_rate_and_efficiency_for_gameweek(gameweek)
     league = gameweek.default_league
 
     gameweek_players = gameweek.gameweek_players.includes(:player, :gameweek_rosters)
@@ -74,7 +74,7 @@ class GameweekPlayer < ApplicationRecord
     end
   end
 
-  def remove_game game
+  def remove_game(game)
     all_points_breakdowns = points_breakdown || {}
     all_points_breakdowns.delete(game.game_hash)
     update points_breakdown: all_points_breakdowns
@@ -98,7 +98,7 @@ class GameweekPlayer < ApplicationRecord
     @player_game_details ||= game_details.where(player: player).includes(:team)
   end
 
-  def add game, detail
+  def add(game, detail)
     # Bonus point awards are common across all leagues, so calculate them first
     # and store them in the GameweekPlayer's points_breakdown Hash
     bonus_points_breakdown = points_breakdown || {}
@@ -154,7 +154,7 @@ class GameweekPlayer < ApplicationRecord
   # Support:
   #   :less_team_deaths_than_ave
   #
-  def bonus_awards game, detail
+  def bonus_awards(game, detail)
     bonuses = [] +
               player_role_awards(detail) +
               hero_awards(detail) +
@@ -165,7 +165,7 @@ class GameweekPlayer < ApplicationRecord
     bonuses
   end
 
-  def player_role_awards detail
+  def player_role_awards(detail)
     if Player.players_in_role(role).size > MIN_GAMES_FOR_BONUS_AWARD
       stat = case role
              when "Support"
@@ -185,7 +185,7 @@ class GameweekPlayer < ApplicationRecord
     []
   end
 
-  def hero_awards detail
+  def hero_awards(detail)
     hero = detail.hero
     if hero.game_details.size > MIN_GAMES_FOR_BONUS_AWARD
       stat = case hero.classification
@@ -206,7 +206,7 @@ class GameweekPlayer < ApplicationRecord
     []
   end
 
-  def team_awards game, detail
+  def team_awards(game, detail)
     if role == "Support" && Game.all.size > MIN_GAMES_FOR_BONUS_AWARD
       team = detail.team
       stat = "deaths"
@@ -222,7 +222,7 @@ class GameweekPlayer < ApplicationRecord
     []
   end
 
-  def map_awards game, detail
+  def map_awards(game, detail)
     map = game.map
     if map.games.size > MIN_GAMES_FOR_BONUS_AWARD
       # We want this to be low, so we take the inverse percentile

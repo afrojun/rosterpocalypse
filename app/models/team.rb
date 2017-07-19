@@ -48,14 +48,14 @@ class Team < ApplicationRecord
   end
 
   # Accepts either a string or Array of names as input, returns an array
-  def self.find_including_alternate_names team_names
+  def self.find_including_alternate_names(team_names)
     team_names = [team_names] if team_names.is_a?(String)
     downcase_names = team_names.map(&:downcase).uniq
     alternate_names = TeamAlternateName.where alternate_name: downcase_names
     alternate_names.map(&:team).uniq
   end
 
-  def self.find_or_create_including_alternate_names team_name
+  def self.find_or_create_including_alternate_names(team_name)
     alternate_names = TeamAlternateName.where alternate_name: team_name.downcase
     if alternate_names.any?
       alternate_names.first.team
@@ -64,7 +64,7 @@ class Team < ApplicationRecord
     end
   end
 
-  def merge! other_team
+  def merge!(other_team)
     transaction do
       # Save the alternate names to add them to this team once the other team is destroyed
       other_team_alternate_names = other_team.alternate_names.map(&:alternate_name)

@@ -13,7 +13,7 @@ class LeagueGameweekPlayer < ApplicationRecord
   REPRESENTATIVE_GAME_NAME = "representative_game"
 
   # FIXME: Move from GameweekPlayer
-  def self.update_pick_rate_and_efficiency_for_gameweek gameweek
+  def self.update_pick_rate_and_efficiency_for_gameweek(gameweek)
     gameweek_players = gameweek.gameweek_players.includes(:player, :gameweek_rosters)
     valid_gameweek_rosters = gameweek.gameweek_rosters.includes(transfers: [:player_in, :player_out]).where("points IS NOT NULL")
 
@@ -30,14 +30,14 @@ class LeagueGameweekPlayer < ApplicationRecord
     end
   end
 
-  def remove_game game
+  def remove_game(game)
     all_points_breakdowns = points_breakdown || {}
     all_points_breakdowns.delete(game.game_hash)
     update points_breakdown: all_points_breakdowns
     update_points
   end
 
-  def add game, detail
+  def add(game, detail)
     all_points_breakdowns = points_breakdown || {}
     all_points_breakdowns[game.game_hash] = points_breakdown_hash(game, detail)
     update points_breakdown: all_points_breakdowns
@@ -108,11 +108,11 @@ class LeagueGameweekPlayer < ApplicationRecord
   end
 
   # Check with the League as to whether overall points can be negative
-  def final_points total
+  def final_points(total)
     league.allow_negative_scores? ? total : [total, 0].max
   end
 
-  def points_for_game game_points_breakdown
+  def points_for_game(game_points_breakdown)
     game_points_breakdown[:solo_kills] +
       game_points_breakdown[:assists] +
       game_points_breakdown[:win] +
@@ -133,7 +133,7 @@ class LeagueGameweekPlayer < ApplicationRecord
   # bonus           |    variable   |  variable  |  variable
   #
 
-  def points_breakdown_hash game, detail
+  def points_breakdown_hash(game, detail)
     Rails.logger.info "Getting the points breakdown hash for the '#{league.name}' " \
                       "league using the role stat modifiers: #{league.role_stat_modifiers}."
 

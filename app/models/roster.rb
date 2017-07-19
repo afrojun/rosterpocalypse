@@ -22,7 +22,7 @@ class Roster < ApplicationRecord
 
   MAX_PLAYERS = 5
 
-  def self.find_by_manager_and_league manager, league
+  def self.find_by_manager_and_league(manager, league)
     tournament_rosters = Roster.where(manager: manager, tournament: league.tournament)
     tournament_rosters.detect { |r| r.league == league }
   end
@@ -72,7 +72,7 @@ class Roster < ApplicationRecord
     @public_leagues ||= leagues.where(type: "PublicLeague")
   end
 
-  def set_available_transfers number
+  def set_available_transfers(number)
     gameweek_rosters.each do |gameweek_roster|
       gameweek_roster.update available_transfers: number
     end
@@ -106,7 +106,7 @@ class Roster < ApplicationRecord
     update score: gameweek_rosters.map(&:points).compact.sum
   end
 
-  def update_budget gameweek_roster = current_gameweek_roster
+  def update_budget(gameweek_roster = current_gameweek_roster)
     if gameweek_roster.gameweek_players.any?
       old_total_player_value = gameweek_roster.gameweek_players.sum(&:value)
       new_total_player_value = players.sum(&:value)
@@ -137,15 +137,15 @@ class Roster < ApplicationRecord
     players.size == MAX_PLAYERS ? true : false
   end
 
-  def add_to league
+  def add_to(league)
     league.add(self) ? self : copy_errors(league)
   end
 
-  def remove_from league
+  def remove_from(league)
     league.remove(self) ? self : copy_errors(league)
   end
 
-  def update_including_players params
+  def update_including_players(params)
     transaction do
       if update params.slice(:name)
         params[:players].present? ? update_players(params[:players]) : true
@@ -157,7 +157,7 @@ class Roster < ApplicationRecord
 
   private
 
-  def update_players player_ids
+  def update_players(player_ids)
     # Short circuit when the players aren't changing
     return true if players.map(&:id).sort == player_ids.sort
 
@@ -189,7 +189,7 @@ class Roster < ApplicationRecord
     false
   end
 
-  def transfer_players players_to_add, players_to_remove
+  def transfer_players(players_to_add, players_to_remove)
     in_out_pairs = players_to_add.zip players_to_remove
 
     in_out_pairs.each do |player_in, player_out|
@@ -213,7 +213,7 @@ class Roster < ApplicationRecord
     end
   end
 
-  def validate_roster_size player_ids
+  def validate_roster_size(player_ids)
     new_players = Player.where(id: player_ids).includes(:team)
     if new_players.size == MAX_PLAYERS
       new_players
@@ -224,7 +224,7 @@ class Roster < ApplicationRecord
   end
 
   # The associated league specifies the role limitations
-  def validate_player_roles players
+  def validate_player_roles(players)
     if league.present?
       valid = true
       league.active_required_player_role_limitations.each do |role, min|
@@ -242,7 +242,7 @@ class Roster < ApplicationRecord
     end
   end
 
-  def validate_players_in_same_team players
+  def validate_players_in_same_team(players)
     if league.present?
       players_by_team = players.group_by(&:team)
       if players_by_team.any? { |team, players| players.size > league.max_players_per_team }
@@ -257,7 +257,7 @@ class Roster < ApplicationRecord
     end
   end
 
-  def validate_teams_active players
+  def validate_teams_active(players)
     teams = players.map(&:team).uniq
     if teams.all?(&:active)
       true
@@ -267,7 +267,7 @@ class Roster < ApplicationRecord
     end
   end
 
-  def validate_player_value players
+  def validate_player_value(players)
     total_value = players.sum(&:value).round(2)
     if total_value <= budget
       true
@@ -277,7 +277,7 @@ class Roster < ApplicationRecord
     end
   end
 
-  def validate_transfers new_players
+  def validate_transfers(new_players)
     players_to_add = new_players - players
     players_to_remove = players - new_players
 
@@ -301,7 +301,7 @@ class Roster < ApplicationRecord
     current_gameweek.roster_lock_date < Time.now.utc
   end
 
-  def copy_errors league
+  def copy_errors(league)
     league.errors[:base].each do |message|
       errors.add(:base, message)
     end

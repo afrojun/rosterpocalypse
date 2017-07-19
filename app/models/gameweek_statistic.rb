@@ -5,7 +5,7 @@ class GameweekStatistic < ApplicationRecord
   serialize :top_transfers_in, Array
   serialize :top_transfers_out, Array
 
-  def self.update_all_stats_for_gameweek gameweek
+  def self.update_all_stats_for_gameweek(gameweek)
     gameweek_stat = GameweekStatistic.find_or_create_by gameweek: gameweek
     gameweek_stat.create_dream_team
     gameweek_stat.update_top_transfers

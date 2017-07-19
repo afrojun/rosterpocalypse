@@ -81,7 +81,7 @@ FriendlyId.defaults do |config|
   # ASCII. If you use this, don't forget to add "babosa" to your Gemfile.
   #
   config.use Module.new {
-    def normalize_friendly_id text
+    def normalize_friendly_id(text)
       text.to_slug.normalize! transliterations: [:russian, :latin]
     end
   }

@@ -5,7 +5,7 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
-  def update_resource resource, params
+  def update_resource(resource, params)
     if resource.encrypted_password.blank? # || params[:password].blank?
       resource.email = params[:email] if params[:email]
       if params[:password].present? && params[:password] == params[:password_confirmation]
@@ -21,11 +21,11 @@ class RegistrationsController < Devise::RegistrationsController
 
   protected
 
-  def after_update_path_for resource
+  def after_update_path_for(resource)
     edit_user_registration_path
   end
 
-  def track_sign_up resource
+  def track_sign_up(resource)
     mixpanel_params = {
       email: resource.email,
       nickname: resource.username,

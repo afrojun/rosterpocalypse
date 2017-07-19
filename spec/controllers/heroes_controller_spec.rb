@@ -48,7 +48,7 @@ RSpec.describe HeroesController, type: :controller do
     }
   end
 
-  def assert_update_successful hero
+  def assert_update_successful(hero)
     expect(hero.name).to eq "EvilHero"
     expect(hero.internal_name).to eq "EvilHero"
     expect(hero.classification).to eq "Assassin"

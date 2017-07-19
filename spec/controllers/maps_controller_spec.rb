@@ -44,7 +44,7 @@ RSpec.describe MapsController, type: :controller do
     }
   end
 
-  def assert_update_successful map
+  def assert_update_successful(map)
     expect(map.name).to eq "Blackheart's Bay"
   end
 

@@ -3,7 +3,7 @@
 require "stripe_event_subscribers/customer_subscription_event"
 
 class CustomerSubscriptionUpdated < CustomerSubscriptionEvent
-  def call event
+  def call(event)
     super
   end
 end
