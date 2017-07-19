@@ -1,1 +1,1 @@
-json.partial! "leagues/league", league: @league
+json.partial! 'leagues/league', league: @league

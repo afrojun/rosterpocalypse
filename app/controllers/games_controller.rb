@@ -73,7 +73,7 @@ class GamesController < RosterpocalypseController
         format.html { redirect_to games_url, notice: "All #{n_games} games were successfully destroyed." }
         format.json { head :no_content }
       else
-        message = "Some games failed to be destroyed."
+        message = 'Some games failed to be destroyed.'
         format.html { redirect_to games_url, notice: message }
         format.json { render json: { error: message }, status: :unprocessable_entity }
       end
@@ -85,10 +85,10 @@ class GamesController < RosterpocalypseController
 
     respond_to do |format|
       if @game.swap_teams
-        format.html { redirect_to @game, notice: "Successfully swapped teams." }
+        format.html { redirect_to @game, notice: 'Successfully swapped teams.' }
         format.json { render :show, status: :ok, location: @game }
       else
-        format.html { redirect_to @game, notice: "Failed to swap teams." }
+        format.html { redirect_to @game, notice: 'Failed to swap teams.' }
         format.json { render json: @game.errors, status: :unprocessable_entity }
       end
     end

@@ -8,7 +8,7 @@
 # It then yields to allow further processing of the incoming webhook if a block
 # is passed in.
 
-require "stripe_event_subscribers/stripe_event_handler"
+require 'stripe_event_subscribers/stripe_event_handler'
 
 class CustomerSubscriptionEvent < StripeEventHandler
   def call(event)
@@ -20,7 +20,7 @@ class CustomerSubscriptionEvent < StripeEventHandler
       if stripe_object_id == manager.stripe_subscription_id
 
         old_status = manager.subscription_status.to_sym
-        new_status = if event.data.object.status != "canceled" && event.data.object.cancel_at_period_end
+        new_status = if event.data.object.status != 'canceled' && event.data.object.cancel_at_period_end
                        :do_not_renew
                      else
                        event.data.object.status.to_sym

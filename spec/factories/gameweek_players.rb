@@ -5,6 +5,6 @@ FactoryGirl.define do
     team
     points 15
     value 100
-    role "role"
+    role 'role'
   end
 end

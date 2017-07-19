@@ -10,6 +10,6 @@ module TeamHelper
   end
 
   def team_logo_filename(team)
-    team.name.start_with?("Team") ? "#{team.slug.underscore}_logo.png" : "team_#{team.slug.underscore}_logo.png"
+    team.name.start_with?('Team') ? "#{team.slug.underscore}_logo.png" : "team_#{team.slug.underscore}_logo.png"
   end
 end

@@ -4,11 +4,11 @@ RSpec.describe PlayerPresenter do
   let(:player) { FactoryGirl.create :player }
   let(:presenter) { PlayerPresenter.new player, nil }
 
-  let(:hero1) { FactoryGirl.create :hero, name: "hero1" }
-  let(:hero2) { FactoryGirl.create :hero, name: "hero2" }
-  let(:hero3) { FactoryGirl.create :hero, name: "hero3" }
-  let(:hero4) { FactoryGirl.create :hero, name: "hero4" }
-  let(:hero5) { FactoryGirl.create :hero, name: "hero5" }
+  let(:hero1) { FactoryGirl.create :hero, name: 'hero1' }
+  let(:hero2) { FactoryGirl.create :hero, name: 'hero2' }
+  let(:hero3) { FactoryGirl.create :hero, name: 'hero3' }
+  let(:hero4) { FactoryGirl.create :hero, name: 'hero4' }
+  let(:hero5) { FactoryGirl.create :hero, name: 'hero5' }
 
   let(:hero_stats) do
     {
@@ -20,12 +20,12 @@ RSpec.describe PlayerPresenter do
     }
   end
 
-  context "#player_hero_win_loss_count" do
-    it "returns an empty hash for players with no games" do
+  context '#player_hero_win_loss_count' do
+    it 'returns an empty hash for players with no games' do
       expect(presenter.player_hero_win_loss_count).to eq({})
     end
 
-    it "correctly populates the win/loss/total counts" do
+    it 'correctly populates the win/loss/total counts' do
       FactoryGirl.create :game_detail, player: player, hero: hero1, win: true
       FactoryGirl.create :game_detail, player: player, hero: hero1, win: false
       FactoryGirl.create :game_detail, player: player, hero: hero2, win: true
@@ -36,15 +36,15 @@ RSpec.describe PlayerPresenter do
     end
   end
 
-  context "#most_played_heroes" do
-    it "returns the most played heroes" do
+  context '#most_played_heroes' do
+    it 'returns the most played heroes' do
       expect(presenter).to receive(:player_hero_win_loss_count).and_return(hero_stats)
       expect(presenter.most_played_heroes).to eq [[hero3, 9], [hero4, 7], [hero2, 5]]
     end
   end
 
-  context "#top_winrate_heroes" do
-    it "returns the highest winrate heroes" do
+  context '#top_winrate_heroes' do
+    it 'returns the highest winrate heroes' do
       expect(presenter).to receive(:player_hero_win_loss_count).and_return(hero_stats)
       expect(presenter.top_winrate_heroes).to eq [[hero5, 67], [hero3, 67], [hero2, 60]]
     end

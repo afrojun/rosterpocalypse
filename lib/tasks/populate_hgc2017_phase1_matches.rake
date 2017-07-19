@@ -1,13 +1,13 @@
-desc "This is a one-off task to create matches for the first phase of HGC 2017."
+desc 'This is a one-off task to create matches for the first phase of HGC 2017.'
 
 task populate_hgc2017_phase1_matches: :environment do
-  cal_path = Rails.root.join("app", "assets", "calendars", "hgc2017-phase1.ics")
+  cal_path = Rails.root.join('app', 'assets', 'calendars', 'hgc2017-phase1.ics')
   puts "Using calendar: #{cal_path}"
   cal_file = File.open(cal_path)
   events = Icalendar::Event.parse(cal_file)
 
   events.each do |event|
-    if ["bye week", "mid-season brawl", "hgc crucible", "hgc playoffs", "eastern clash", "western clash"].include?(event.summary.downcase)
+    if ['bye week', 'mid-season brawl', 'hgc crucible', 'hgc playoffs', 'eastern clash', 'western clash'].include?(event.summary.downcase)
       puts "Skipping Event: #{event.summary}"
       next
     end
@@ -20,7 +20,7 @@ task populate_hgc2017_phase1_matches: :environment do
       date = Time.parse(event.dtstart.to_s).utc
 
       stage = Stage.find_or_create_by(
-        name: "League Play",
+        name: 'League Play',
         tournament: tournament
       )
 
@@ -32,7 +32,7 @@ task populate_hgc2017_phase1_matches: :environment do
         start_date: date,
         best_of: 5
       )
-      puts "Match loaded successfully."
+      puts 'Match loaded successfully.'
     else
       puts "ERROR: Unable to load match - #{event.summary}"
     end

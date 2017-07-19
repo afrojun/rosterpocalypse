@@ -1,1 +1,1 @@
-json.partial! "rosters/roster_details", roster: @roster
+json.partial! 'rosters/roster_details', roster: @roster

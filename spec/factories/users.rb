@@ -5,14 +5,14 @@ FactoryGirl.define do
   factory :user do
     email { generate :email }
     username { generate :username }
-    password "password"
-    password_confirmation "password"
+    password 'password'
+    password_confirmation 'password'
   end
 
   factory :form_user do
     email { generate :email }
     username { generate :username }
-    password "password"
-    password_confirmation "password"
+    password 'password'
+    password_confirmation 'password'
   end
 end

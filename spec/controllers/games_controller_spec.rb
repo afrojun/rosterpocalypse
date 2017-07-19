@@ -30,7 +30,7 @@ RSpec.describe GamesController, type: :controller do
       map_id: map.id,
       start_date: Time.now.utc.to_datetime,
       duration_s: 1000,
-      game_hash: "abcde"
+      game_hash: 'abcde'
     }
   end
 
@@ -49,21 +49,21 @@ RSpec.describe GamesController, type: :controller do
       map_id: new_map.id,
       start_date: Time.now.utc.to_datetime,
       duration_s: 650,
-      game_hash: "12345"
+      game_hash: '12345'
     }
   end
 
   def assert_update_successful(game)
     expect(game.map.name).to eq new_map.name
     expect(game.duration_s).to eq 650
-    expect(game.game_hash).to eq "12345"
+    expect(game.game_hash).to eq '12345'
   end
 
-  context "a normal user" do
-    it_should_behave_like "a normal user", Game, :game
+  context 'a normal user' do
+    it_should_behave_like 'a normal user', Game, :game
   end
 
-  context "an admin user" do
-    it_should_behave_like "an admin user", Game, :game
+  context 'an admin user' do
+    it_should_behave_like 'an admin user', Game, :game
   end
 end

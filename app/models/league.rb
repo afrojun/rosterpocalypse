@@ -29,23 +29,23 @@ class League < ApplicationRecord
   MAX_ACTIVE_LEAGUES_PER_MANAGER = 10
 
   DEFAULT_ROLE_STAT_MODIFIERS = {
-    "assassin" => { "solo_kills" => "2", "assists" => "1", "time_spent_dead" => "20", "win" => "5" },
-    "flex"     => { "solo_kills" => "2", "assists" => "1", "time_spent_dead" => "20", "win" => "5" },
-    "warrior"  => { "solo_kills" => "1", "assists" => "1", "time_spent_dead" => "40", "win" => "5" },
-    "support"  => { "solo_kills" => "1", "assists" => "1", "time_spent_dead" => "30", "win" => "5" }
+    'assassin' => { 'solo_kills' => '2', 'assists' => '1', 'time_spent_dead' => '20', 'win' => '5' },
+    'flex'     => { 'solo_kills' => '2', 'assists' => '1', 'time_spent_dead' => '20', 'win' => '5' },
+    'warrior'  => { 'solo_kills' => '1', 'assists' => '1', 'time_spent_dead' => '40', 'win' => '5' },
+    'support'  => { 'solo_kills' => '1', 'assists' => '1', 'time_spent_dead' => '30', 'win' => '5' }
   }.freeze
 
   DEFAULT_REQUIRED_PLAYER_ROLES = {
-    "assassin" => "0",
-    "flex"     => "0",
-    "warrior"  => "1",
-    "support"  => "1"
+    'assassin' => '0',
+    'flex'     => '0',
+    'warrior'  => '1',
+    'support'  => '1'
   }.freeze
 
   def self.active_leagues
     includes(:tournament).
       where(tournament: Tournament.active_tournaments).
-      order("manager_id asc")
+      order('manager_id asc')
   end
 
   # Override name setter to strip whitespace
@@ -101,7 +101,7 @@ class League < ApplicationRecord
         false
       end
     else
-      message = "Unable to join a league for an inactive tournament."
+      message = 'Unable to join a league for an inactive tournament.'
       errors.add(:base, message)
       Rails.logger.warn message
       false
@@ -114,7 +114,7 @@ class League < ApplicationRecord
       remove roster
       roster.destroy
     else
-      errors.add(:base, "You do not have any Rosters in this League.")
+      errors.add(:base, 'You do not have any Rosters in this League.')
       false
     end
   end
@@ -145,7 +145,7 @@ class League < ApplicationRecord
   def check_required_player_roles
     return unless required_player_roles.values.map(&:to_i).sum > 5
 
-    message = "role requirement specification is invalid. The maximum total value across all roles is 5."
+    message = 'role requirement specification is invalid. The maximum total value across all roles is 5.'
     errors.add(:league, message)
     Rails.logger.warn message
     false
@@ -166,7 +166,7 @@ class League < ApplicationRecord
 
   def validate_one_roster_per_league(manager)
     if manager.roster_leagues.include?(self)
-      message = "Only one roster per manager is allowed in a League."
+      message = 'Only one roster per manager is allowed in a League.'
       errors.add(:base, message)
       Rails.logger.warn message
       false

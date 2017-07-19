@@ -170,13 +170,6 @@ Style/NumericLiterals:
   Exclude:
     - 'db/schema.rb'
 
-# Offense count: 2340
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles, ConsistentQuotesInMultiline.
-# SupportedStyles: single_quotes, double_quotes
-Style/StringLiterals:
-  Enabled: false
-
 # Offense count: 65
 # Cop supports --auto-correct.
 # Configuration parameters: MinSize, SupportedStyles.

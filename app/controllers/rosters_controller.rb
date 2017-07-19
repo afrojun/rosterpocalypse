@@ -7,27 +7,27 @@ class RostersController < RosterpocalypseController
 
   before_action :set_page_title, only: %i[show edit]
 
-  layout "simple_application_layout", only: [:players]
+  layout 'simple_application_layout', only: [:players]
 
   # GET /rosters
   # GET /rosters.json
   def index
     @my_rosters = Roster.includes(:tournament).
-                    where("manager_id = ? AND tournament_id in (?)",
+                    where('manager_id = ? AND tournament_id in (?)',
                           current_user.manager.id,
                           Tournament.active_tournaments.map(&:id))
 
     # Get leagues owned by the manager or in which they have rosters
     @my_leagues = League.includes(:tournament, manager: [:user]).
                     where(id: current_user.manager.participating_in_leagues).
-                    where("tournament_id in (?)", Tournament.active_tournaments.map(&:id))
+                    where('tournament_id in (?)', Tournament.active_tournaments.map(&:id))
   end
 
   # GET /rosters/1
   # GET /rosters/1.json
   def show
     @league = @roster.league
-    @gameweek_rosters = @gameweek.gameweek_rosters.where(roster: @league.rosters).order("points")
+    @gameweek_rosters = @gameweek.gameweek_rosters.where(roster: @league.rosters).order('points')
     @sidebar_props = {
       rosterPath: roster_url(@roster),
       rosterDetailsPath: details_roster_url(@roster),
@@ -58,8 +58,8 @@ class RostersController < RosterpocalypseController
       format.html {}
       format.json { render json: @gameweek_players }
       format.png do
-        kit = IMGKit.new(render_to_string, "quality" => 80, "crop-w" => 676)
-        send_data(kit.to_png, type: "image/png", disposition: 'inline')
+        kit = IMGKit.new(render_to_string, 'quality' => 80, 'crop-w' => 676)
+        send_data(kit.to_png, type: 'image/png', disposition: 'inline')
       end
     end
   end
@@ -69,7 +69,7 @@ class RostersController < RosterpocalypseController
   def update
     respond_to do |format|
       if @roster.update_including_players(roster_params)
-        format.html { redirect_to @roster, notice: "Roster was successfully updated." }
+        format.html { redirect_to @roster, notice: 'Roster was successfully updated.' }
         format.json { render :details, status: :ok, location: @roster }
       else
         format.html { render :manage }
@@ -88,7 +88,7 @@ class RostersController < RosterpocalypseController
   def destroy
     @roster.destroy
     respond_to do |format|
-      format.html { redirect_to rosters_url, notice: "Roster was successfully destroyed." }
+      format.html { redirect_to rosters_url, notice: 'Roster was successfully destroyed.' }
       format.json { head :no_content }
     end
   end

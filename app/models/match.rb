@@ -1,12 +1,12 @@
 class Match < ApplicationRecord
   include ActiveModel::Validations
 
-  belongs_to :team_1, class_name: "Team"
-  belongs_to :team_2, class_name: "Team"
+  belongs_to :team_1, class_name: 'Team'
+  belongs_to :team_2, class_name: 'Team'
   belongs_to :gameweek
   has_one :tournament, through: :gameweek
   belongs_to :stage
-  has_many :games, -> { order "start_date" }
+  has_many :games, -> { order 'start_date' }
 
   validate :start_date_in_gameweek
 
@@ -44,7 +44,7 @@ class Match < ApplicationRecord
     game_team_ids = game.teams.map(&:id)
     # Get a set of candidate matches that this game could be a part of.
     # We filter for matches which are within 4 hours of the game start_date
-    team_matches = Match.where("team_1_id in (?) AND team_2_id in (?)", game_team_ids, game_team_ids)
+    team_matches = Match.where('team_1_id in (?) AND team_2_id in (?)', game_team_ids, game_team_ids)
     candidate_matches = team_matches.to_a.select do |match|
       if match.games.any?
         (match.games.last.start_date - game.start_date).abs < 4.hours
@@ -54,7 +54,7 @@ class Match < ApplicationRecord
     end
 
     if candidate_matches.size.zero?
-      Rails.logger.info "Creating a new Match..."
+      Rails.logger.info 'Creating a new Match...'
       match = Match.new(
         team_1: game.teams.first,
         team_2: game.teams.last,
@@ -66,7 +66,7 @@ class Match < ApplicationRecord
       game.update(match: match)
 
     elsif candidate_matches.size == 1
-      Rails.logger.info "Updating an existing Match..."
+      Rails.logger.info 'Updating an existing Match...'
       match = candidate_matches.first
       game.update(match: match)
       match.reload
@@ -97,11 +97,11 @@ class Match < ApplicationRecord
   end
 
   def description
-    score.map { |team, score| "#{team.name} (#{score})" }.join(" vs. ")
+    score.map { |team, score| "#{team.name} (#{score})" }.join(' vs. ')
   end
 
   def short_description
-    teams.map(&:short_name).join(" vs. ")
+    teams.map(&:short_name).join(' vs. ')
   end
 
   def score

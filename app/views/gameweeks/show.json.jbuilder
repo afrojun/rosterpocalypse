@@ -1,1 +1,1 @@
-json.partial! "gameweeks/gameweek", gameweek: @gameweek
+json.partial! 'gameweeks/gameweek', gameweek: @gameweek

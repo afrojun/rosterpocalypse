@@ -3,16 +3,16 @@ class Player < ApplicationRecord
   friendly_id :name
 
   has_many :game_details
-  has_many :games, -> { order "start_date DESC" }, through: :game_details
+  has_many :games, -> { order 'start_date DESC' }, through: :game_details
   has_many :heroes, through: :game_details
-  has_many :alternate_names, class_name: "PlayerAlternateName", dependent: :destroy
+  has_many :alternate_names, class_name: 'PlayerAlternateName', dependent: :destroy
   belongs_to :team
   has_and_belongs_to_many :rosters
   has_many :gameweek_rosters, through: :rosters
   has_many :gameweek_players, dependent: :destroy
   has_many :gameweeks, through: :gameweek_players
-  has_many :transfers_in, dependent: :destroy, class_name: "Transfer", foreign_key: "player_in_id"
-  has_many :transfers_out, dependent: :destroy, class_name: "Transfer", foreign_key: "player_out_id"
+  has_many :transfers_in, dependent: :destroy, class_name: 'Transfer', foreign_key: 'player_in_id'
+  has_many :transfers_out, dependent: :destroy, class_name: 'Transfer', foreign_key: 'player_out_id'
 
   validates :name, presence: true, uniqueness: true
 
@@ -98,7 +98,7 @@ class Player < ApplicationRecord
       end
       [true, "Merge successful! Merged #{player_names.to_sentence} with #{primary.name}."]
     else
-      [false, "Please choose more than 1 player to merge."]
+      [false, 'Please choose more than 1 player to merge.']
     end
   end
 
@@ -109,7 +109,7 @@ class Player < ApplicationRecord
       other_player_alternate_names = other_player.alternate_names.map(&:alternate_name)
 
       # Update the team if it is currently Unknown
-      if team.name == "Unknown" && other_player.team.name != "Unknown"
+      if team.name == 'Unknown' && other_player.team.name != 'Unknown'
         update team: other_player.team
       end
 
@@ -190,14 +190,14 @@ class Player < ApplicationRecord
         class_counts.merge(classification => heroes.count.to_f / game_details.count)
       end
       majority_class = class_ratios.detect { |_, ratio| ratio > 0.5 }
-      set_role_from_class(majority_class.present? ? majority_class.first : "Flex")
+      set_role_from_class(majority_class.present? ? majority_class.first : 'Flex')
     else
       set_role_from_class player_heroes_by_classification.keys.first
     end
   end
 
   def set_role_from_class(classification)
-    player_role = flex?(classification) ? "Flex" : classification
+    player_role = flex?(classification) ? 'Flex' : classification
     update role: player_role
   end
 

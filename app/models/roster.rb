@@ -5,13 +5,13 @@ class Roster < ApplicationRecord
   friendly_id :name
 
   belongs_to :manager
-  has_and_belongs_to_many :players, -> { order "slug" }
+  has_and_belongs_to_many :players, -> { order 'slug' }
   # For now we are limiting this to only allow one roster per league,
   # even though we can support more
-  has_and_belongs_to_many :leagues, -> { order "slug" }
+  has_and_belongs_to_many :leagues, -> { order 'slug' }
   belongs_to :tournament
   has_many :gameweek_rosters, dependent: :destroy
-  has_many :transfers, -> { order "created_at DESC" }, through: :gameweek_rosters
+  has_many :transfers, -> { order 'created_at DESC' }, through: :gameweek_rosters
   has_many :gameweeks, through: :gameweek_rosters
 
   validates :name, presence: true, uniqueness: true
@@ -65,11 +65,11 @@ class Roster < ApplicationRecord
   end
 
   def private_leagues
-    @private_leagues ||= leagues.where(type: "PrivateLeague")
+    @private_leagues ||= leagues.where(type: 'PrivateLeague')
   end
 
   def public_leagues
-    @public_leagues ||= leagues.where(type: "PublicLeague")
+    @public_leagues ||= leagues.where(type: 'PublicLeague')
   end
 
   def set_available_transfers(number)
@@ -126,7 +126,7 @@ class Roster < ApplicationRecord
 
   def unlocked?
     if roster_lock_in_place? && current_gameweek.tournament_week?
-      errors.add(:roster, "is currently locked until the end of the Gameweek")
+      errors.add(:roster, 'is currently locked until the end of the Gameweek')
       false
     else
       true
@@ -247,7 +247,7 @@ class Roster < ApplicationRecord
       players_by_team = players.group_by(&:team)
       if players_by_team.any? { |_, team_players| team_players.size > league.max_players_per_team }
         errors.add(:roster, "may not include more than #{league.max_players_per_team} " \
-                            "players from the same team")
+                            'players from the same team')
         false
       else
         true
@@ -262,7 +262,7 @@ class Roster < ApplicationRecord
     if teams.all?(&:active)
       true
     else
-      errors.add(:roster, "may not include players from inactive teams")
+      errors.add(:roster, 'may not include players from inactive teams')
       false
     end
   end
@@ -290,8 +290,8 @@ class Roster < ApplicationRecord
       errors.add(:roster, "has #{max_transfers} " \
                  "#{'transfer'.pluralize(max_transfers)} available in this window")
     else
-      errors.add(:roster, "transfers must maintain the roster size, " \
-                 "please ensure you are adding as many players as you remove")
+      errors.add(:roster, 'transfers must maintain the roster size, ' \
+                 'please ensure you are adding as many players as you remove')
     end
     false
   end

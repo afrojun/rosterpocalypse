@@ -6,9 +6,9 @@ class UserMailer < ApplicationMailer
   # deliver_by needs to be a RFC2822 formatted timestamp
   def phase_2_announcement(user, deliver_by = nil)
     @user = user
-    headers["X-Mailgun-Deliver-By"] = deliver_by if deliver_by
+    headers['X-Mailgun-Deliver-By'] = deliver_by if deliver_by
     mail(to: %("#{@user.username}" <#{@user.email}>),
-         subject: "Rosterpocalypse: HGC Phase 2 has begun!")
+         subject: 'Rosterpocalypse: HGC Phase 2 has begun!')
   end
 
   # New subscription confirmation email
@@ -48,7 +48,7 @@ class UserMailer < ApplicationMailer
   def send_email(user, subject)
     @user = user
     mail(to: %("#{@user.username}" <#{@user.email}>),
-         bcc: "rosterpocalypse@gmail.com",
+         bcc: 'rosterpocalypse@gmail.com',
          subject: "Rosterpocalypse: #{subject}")
   end
 end

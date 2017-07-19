@@ -54,14 +54,14 @@ class GameweekRoster < ApplicationRecord
       if total_value > snapshot_budget
         Rails.logger.warn "Total value of the players in roster '#{roster.name}' " \
                           "(#{total_value}) exceeds the budget of #{snapshot_budget}." \
-                          "Proceeding anyway..."
+                          'Proceeding anyway...'
       end
 
       gameweek_players.clear
       gameweek_players << snapshot_gameweek_players
     else
       Rails.logger.warn "No snapshot present for '#{roster.name}', " \
-                        "unable to associate gameweek players."
+                        'unable to associate gameweek players.'
       false
     end
   end
@@ -93,6 +93,6 @@ class GameweekRoster < ApplicationRecord
   end
 
   def points_string
-    points.present? ? points.to_s : "-"
+    points.present? ? points.to_s : '-'
   end
 end

@@ -22,13 +22,13 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   # This allows users who have previously used one of these services to log in, to continue to
   # do so, however we don't allow any new accounts to be created.
   def login_only_callback(provider)
-    @identity = Identity.find_for_oauth request.env["omniauth.auth"].except("extra")
+    @identity = Identity.find_for_oauth request.env['omniauth.auth'].except('extra')
     @user = @identity.try(:user) || current_user
 
     if @user.present? && @user.persisted?
       @user = FormUser.find @user.id
       sign_in_and_redirect @user, event: :authentication
-      set_flash_message(:notice, :success, kind: provider.humanize.split(" ").first) if is_navigational_format?
+      set_flash_message(:notice, :success, kind: provider.humanize.split(' ').first) if is_navigational_format?
     else
       message = "Creation of new accounts using #{provider.capitalize} is no longer supported."
       logger.warn message.to_s
@@ -39,7 +39,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   # Log in or create a new account based on the OAuth information provided
   def generic_callback(provider)
-    @identity = Identity.find_or_create_for_oauth request.env["omniauth.auth"].except("extra")
+    @identity = Identity.find_or_create_for_oauth request.env['omniauth.auth'].except('extra')
 
     @user = @identity.user || current_user
     if @user.nil?
@@ -67,9 +67,9 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       # FormUser class (with the validations)
       @user = FormUser.find @user.id
       sign_in_and_redirect @user, event: :authentication
-      set_flash_message(:notice, :success, kind: provider.humanize.split(" ").first) if is_navigational_format?
+      set_flash_message(:notice, :success, kind: provider.humanize.split(' ').first) if is_navigational_format?
     else
-      session["devise.#{provider}_data"] = request.env["omniauth.auth"].except("extra")
+      session["devise.#{provider}_data"] = request.env['omniauth.auth'].except('extra')
       redirect_to new_user_registration_url
     end
   end

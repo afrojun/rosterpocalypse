@@ -11,16 +11,16 @@ require 'rails_helper'
 #   end
 # end
 RSpec.describe DeviseHelper, type: :helper do
-  context "#identity_provider_logos" do
+  context '#identity_provider_logos' do
     let(:fb_identity) { FactoryGirl.create :identity }
-    let(:reddit_identity) { FactoryGirl.create :identity, provider: "reddit" }
+    let(:reddit_identity) { FactoryGirl.create :identity, provider: 'reddit' }
 
-    it "generates the HTML for displaying the identity logo" do
+    it 'generates the HTML for displaying the identity logo' do
       user = FactoryGirl.create :user, identities: [fb_identity]
       expect(helper.identity_provider_logos(user)).to eq '<i class="fa fa-2x fa-facebook facebook-blue" title="Facebook"></i>'
     end
 
-    it "generates the HTML for displaying multiple identity logos" do
+    it 'generates the HTML for displaying multiple identity logos' do
       user = FactoryGirl.create :user, identities: [fb_identity, reddit_identity]
       expect(helper.identity_provider_logos(user)).to eq(
         '<i class="fa fa-2x fa-facebook facebook-blue" title="Facebook"></i> <i class="fa fa-2x fa-reddit-alien reddit-red" title="Reddit"></i>'

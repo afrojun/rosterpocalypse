@@ -58,12 +58,12 @@ class Game < ApplicationRecord
         end
       end
     else
-      errors.add(:base, "Only games with exactly 2 teams can be swapped.")
+      errors.add(:base, 'Only games with exactly 2 teams can be swapped.')
       false
     end
   end
 
   def pretty_start_date
-    start_date.strftime("%b %-d %Y %H:%M")
+    start_date.strftime('%b %-d %Y %H:%M')
   end
 end

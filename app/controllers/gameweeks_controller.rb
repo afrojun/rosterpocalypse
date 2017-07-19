@@ -15,7 +15,7 @@ class GameweeksController < RosterpocalypseController
     @gameweek_statistics = GameweekStatistic.find_or_initialize_by(gameweek: @gameweek)
     @league_gameweek_players = @gameweek.default_league.league_gameweek_players.
                                  joins(:gameweek_player).
-                                 where("gameweek_players.gameweek_id = ?", @gameweek.id).
+                                 where('gameweek_players.gameweek_id = ?', @gameweek.id).
                                  includes(:gameweek_player).
                                  order(points: :desc)
   end

@@ -26,9 +26,9 @@ RSpec.describe HeroesController, type: :controller do
   # adjust the attributes here as well.
   let(:valid_attributes) do
     {
-      name: "SuperHero",
-      internal_name: "SuperHero",
-      classification: "Warrior"
+      name: 'SuperHero',
+      internal_name: 'SuperHero',
+      classification: 'Warrior'
     }
   end
 
@@ -42,23 +42,23 @@ RSpec.describe HeroesController, type: :controller do
 
   let(:new_attributes) do
     {
-      name: "EvilHero",
-      internal_name: "EvilHero",
-      classification: "Assassin"
+      name: 'EvilHero',
+      internal_name: 'EvilHero',
+      classification: 'Assassin'
     }
   end
 
   def assert_update_successful(hero)
-    expect(hero.name).to eq "EvilHero"
-    expect(hero.internal_name).to eq "EvilHero"
-    expect(hero.classification).to eq "Assassin"
+    expect(hero.name).to eq 'EvilHero'
+    expect(hero.internal_name).to eq 'EvilHero'
+    expect(hero.classification).to eq 'Assassin'
   end
 
-  context "a normal user" do
-    it_should_behave_like "a normal user", Hero, :hero
+  context 'a normal user' do
+    it_should_behave_like 'a normal user', Hero, :hero
   end
 
-  context "an admin user" do
-    it_should_behave_like "an admin user", Hero, :hero
+  context 'an admin user' do
+    it_should_behave_like 'an admin user', Hero, :hero
   end
 end

@@ -1,1 +1,1 @@
-json.partial! "heroes/hero", hero: @hero
+json.partial! 'heroes/hero', hero: @hero

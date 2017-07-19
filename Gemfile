@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby "2.3.0"
+ruby '2.3.0'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.0', '>= 5.0.0.1'
@@ -67,7 +67,7 @@ gem 'momentjs-rails', '>= 2.9.0'
 gem 'bootstrap3-datetimepicker-rails', '~> 4.17.43'
 
 # font-awesome for web fonts CSS
-gem "font-awesome-rails"
+gem 'font-awesome-rails'
 
 # Gem to help with statistical calculations
 # https://github.com/thirtysixthspan/descriptive_statistics
@@ -82,7 +82,7 @@ gem 'imgkit'
 
 # https://github.com/icalendar/icalendar
 # Gem to create and read iCalendar files
-gem "icalendar"
+gem 'icalendar'
 
 # Devise for authentication
 gem 'devise'

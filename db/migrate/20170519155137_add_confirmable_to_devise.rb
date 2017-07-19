@@ -10,7 +10,7 @@ class AddConfirmableToDevise < ActiveRecord::Migration[5.0]
     # To avoid a short time window between running the migration and updating all existing
     # users as confirmed, do the following
 
-    execute("UPDATE users SET confirmed_at = NOW()")
+    execute('UPDATE users SET confirmed_at = NOW()')
     User.all.each do |user|
       valid_email_providers = user.identities.map(&:provider) & %w[google facebook twitter]
       user.update(unconfirmed_email: user.email) unless valid_email_providers.any?

@@ -27,7 +27,7 @@ RSpec.describe PlayersController, type: :controller do
   let(:team) { FactoryGirl.create(:team) }
   let(:valid_attributes) do
     {
-      name: "ProGamer",
+      name: 'ProGamer',
       team_id: team.id
     }
   end
@@ -42,21 +42,21 @@ RSpec.describe PlayersController, type: :controller do
   let(:new_team) { FactoryGirl.create(:team) }
   let(:new_attributes) do
     {
-      name: "AmateurGamer",
+      name: 'AmateurGamer',
       team_id: new_team.id
     }
   end
 
   def assert_update_successful(player)
-    expect(player.name).to eq "AmateurGamer"
+    expect(player.name).to eq 'AmateurGamer'
     expect(player.team).to eq new_team
   end
 
-  context "a normal user" do
-    it_should_behave_like "a normal user", Player, :player, true
+  context 'a normal user' do
+    it_should_behave_like 'a normal user', Player, :player, true
   end
 
-  context "an admin user" do
-    it_should_behave_like "an admin user", Player, :player
+  context 'an admin user' do
+    it_should_behave_like 'an admin user', Player, :player
   end
 end

@@ -17,8 +17,8 @@ class GameweekStatistic < ApplicationRecord
     return unless gameweek_players.any?
 
     dream_team_gameweek_players = Set.new
-    dream_team_gameweek_players << gameweek_players.detect { |gameweek_player| gameweek_player.player.role == "Warrior" }
-    dream_team_gameweek_players << gameweek_players.detect { |gameweek_player| gameweek_player.player.role == "Support" }
+    dream_team_gameweek_players << gameweek_players.detect { |gameweek_player| gameweek_player.player.role == 'Warrior' }
+    dream_team_gameweek_players << gameweek_players.detect { |gameweek_player| gameweek_player.player.role == 'Support' }
     index = 0
     while gameweek_players[index].present? && dream_team_gameweek_players.size < Roster::MAX_PLAYERS
       dream_team_gameweek_players << gameweek_players[index]

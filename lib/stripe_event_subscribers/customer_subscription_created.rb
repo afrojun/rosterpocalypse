@@ -1,7 +1,7 @@
 # Set the Manager.customer_type field to :paid when a subscription is created.
 # Email the customer to let them know that the subscription has begun
 
-require "stripe_event_subscribers/customer_subscription_event"
+require 'stripe_event_subscribers/customer_subscription_event'
 
 class CustomerSubscriptionCreated < CustomerSubscriptionEvent
   def call(event)

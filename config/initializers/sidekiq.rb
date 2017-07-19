@@ -9,7 +9,7 @@ if Rails.env.production?
 
     database_url = ENV['DATABASE_URL']
 
-    raise "Unable to determine the Database URL. Bailing out." unless database_url
+    raise 'Unable to determine the Database URL. Bailing out.' unless database_url
 
     Rails.application.config.after_initialize do
       Rails.logger.info("DB Connection Pool size for Sidekiq Server before disconnect is: #{ActiveRecord::Base.connection.pool.instance_variable_get('@size')}")

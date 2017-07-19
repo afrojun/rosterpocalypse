@@ -10,12 +10,12 @@ class LeagueGameweekPlayer < ApplicationRecord
 
   serialize :points_breakdown, Hash
 
-  REPRESENTATIVE_GAME_NAME = "representative_game".freeze
+  REPRESENTATIVE_GAME_NAME = 'representative_game'.freeze
 
   # FIXME: Move from GameweekPlayer
   def self.update_pick_rate_and_efficiency_for_gameweek(gameweek)
     gameweek_players = gameweek.gameweek_players.includes(:player, :gameweek_rosters)
-    valid_gameweek_rosters = gameweek.gameweek_rosters.includes(transfers: %i[player_in player_out]).where("points IS NOT NULL")
+    valid_gameweek_rosters = gameweek.gameweek_rosters.includes(transfers: %i[player_in player_out]).where('points IS NOT NULL')
 
     max_points = gameweek_players.order(points: :desc).first.try :points
     min_value = gameweek.players.order(value: :asc).first.try :value
@@ -141,10 +141,10 @@ class LeagueGameweekPlayer < ApplicationRecord
     role = gameweek_player.role.downcase
     Rails.logger.info "League Gameweek Player role: #{role}"
     breakdown = {
-      solo_kills: detail.solo_kills * league.role_stat_modifiers[role]["solo_kills"].to_i,
-      assists: detail.assists * league.role_stat_modifiers[role]["assists"].to_i,
-      time_spent_dead: -(detail.time_spent_dead.to_f / league.role_stat_modifiers[role]["time_spent_dead"].to_f).round,
-      win: detail.win_int * league.role_stat_modifiers[role]["win"].to_i,
+      solo_kills: detail.solo_kills * league.role_stat_modifiers[role]['solo_kills'].to_i,
+      assists: detail.assists * league.role_stat_modifiers[role]['assists'].to_i,
+      time_spent_dead: -(detail.time_spent_dead.to_f / league.role_stat_modifiers[role]['time_spent_dead'].to_f).round,
+      win: detail.win_int * league.role_stat_modifiers[role]['win'].to_i,
       bonus: gameweek_player.points_breakdown[game.game_hash][:bonus]
     }
     breakdown[:total] = points_for_game(breakdown)

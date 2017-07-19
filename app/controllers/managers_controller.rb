@@ -37,7 +37,7 @@ class ManagersController < RosterpocalypseController
         @manager.create_stripe_customer update_payment_params[:stripeToken]
       end
 
-      "Card details updated successfully"
+      'Card details updated successfully'
     end
   end
 
@@ -46,10 +46,10 @@ class ManagersController < RosterpocalypseController
       if @manager.allow_payment_source_removal?
         @manager.remove_stripe_customer_source(remove_payment_params[:card_id])
 
-        "Card successfully removed"
+        'Card successfully removed'
       else
-        message = "Unable to remove the only card on record for an active subscription. " \
-                  "Please add a new card first then remove this one."
+        message = 'Unable to remove the only card on record for an active subscription. ' \
+                  'Please add a new card first then remove this one.'
         redirect_back(fallback_location: edit_user_registration_path,
                       alert: message) && return
       end
@@ -64,7 +64,7 @@ class ManagersController < RosterpocalypseController
       end
       @manager.create_stripe_subscription
 
-      "Subscription request being processed."
+      'Subscription request being processed.'
     end
   end
 
@@ -74,7 +74,7 @@ class ManagersController < RosterpocalypseController
 
       UserMailer.subscription_cancelled(@manager.user).deliver_later
 
-      "Successfully unsubscribed"
+      'Successfully unsubscribed'
     end
   end
 
@@ -85,10 +85,10 @@ class ManagersController < RosterpocalypseController
 
         UserMailer.subscription_reactivated(@manager.user).deliver_later
 
-        "Subscription has been re-activated "
+        'Subscription has been re-activated '
       else
-        message = "In order to re-activate the subscription we need a card on record. " \
-                  "Please add a new card then try re-activating again."
+        message = 'In order to re-activate the subscription we need a card on record. ' \
+                  'Please add a new card then try re-activating again.'
         redirect_back(fallback_location: edit_user_registration_path,
                       alert: message) && return
       end
@@ -113,15 +113,15 @@ class ManagersController < RosterpocalypseController
     logger.warn "[Stripe] #{e.message}"
 
     redirect_back(fallback_location: edit_user_registration_path,
-                  alert: "There was an error trying to use the card details provided.")
+                  alert: 'There was an error trying to use the card details provided.')
   rescue Stripe::RateLimitError => e
     logger.error "[Stripe] Too many requests made to the Stripe API too quickly: #{e.message}"
     redirect_back(fallback_location: edit_user_registration_path,
-                  alert: "We were unable to complete the transaction, please try again.")
+                  alert: 'We were unable to complete the transaction, please try again.')
   rescue Stripe::StripeError => e
     logger.error "[Stripe] [#{e.http_status}, #{e.class}] - #{e.message}"
     redirect_back(fallback_location: edit_user_registration_path,
-                  alert: "There was an internal error while processing the payment.")
+                  alert: 'There was an internal error while processing the payment.')
   end
 
   # Use callbacks to share common setup or constraints between actions.

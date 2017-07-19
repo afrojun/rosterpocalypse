@@ -5,7 +5,7 @@ class AddValueAndTeamToGameweekPlayer < ActiveRecord::Migration[5.0]
 
     GameweekPlayer.reset_column_information
 
-    say_with_time "Copying player values and team to the new columns" do
+    say_with_time 'Copying player values and team to the new columns' do
       GameweekPlayer.all.includes(:player).each do |gameweek_player|
         gameweek_player.update value: gameweek_player.player.value, team: gameweek_player.player.team
       end

@@ -2,8 +2,8 @@ class Manager < ApplicationRecord
   extend FriendlyId
   friendly_id :name
 
-  STRIPE_SUBSCRIPTION_PLAN_ID = "rosterpocalypse-season-pass-1.0".freeze
-  STRIPE_SUBSCRIPTION_TRIAL_PLAN_ID = "rosterpocalypse-season-pass-with-trial-1.0".freeze
+  STRIPE_SUBSCRIPTION_PLAN_ID = 'rosterpocalypse-season-pass-1.0'.freeze
+  STRIPE_SUBSCRIPTION_TRIAL_PLAN_ID = 'rosterpocalypse-season-pass-with-trial-1.0'.freeze
 
   enum customer_type: %i[free paid]
   enum subscription_status: %i[unsubscribed pending trialing active past_due canceled unpaid do_not_renew]
@@ -18,10 +18,10 @@ class Manager < ApplicationRecord
   end
 
   def sanitized_name
-    if name.include? "_bnet"
-      name.split(".").first
-    elsif name.ends_with? "_reddit"
-      name.split("_reddit").first
+    if name.include? '_bnet'
+      name.split('.').first
+    elsif name.ends_with? '_reddit'
+      name.split('_reddit').first
     else
       name
     end
@@ -32,7 +32,7 @@ class Manager < ApplicationRecord
   end
 
   def private_leagues
-    leagues.where(type: "PrivateLeague")
+    leagues.where(type: 'PrivateLeague')
   end
 
   def participating_in_leagues
@@ -56,7 +56,7 @@ class Manager < ApplicationRecord
   def stripe_customer_default_source
     @stripe_customer_default_source ||= begin
       if any_stripe_customer_sources?
-        card_id = stripe_customer["default_source"]
+        card_id = stripe_customer['default_source']
         stripe_customer_sources.retrieve card_id
       end
     end

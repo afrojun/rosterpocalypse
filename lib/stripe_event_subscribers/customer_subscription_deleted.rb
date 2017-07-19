@@ -2,7 +2,7 @@
 # field to :free when a subscription is deleted
 # Email the customer to let them know that the subscription has ended
 
-require "stripe_event_subscribers/customer_subscription_event"
+require 'stripe_event_subscribers/customer_subscription_event'
 
 class CustomerSubscriptionDeleted < CustomerSubscriptionEvent
   def call(event)

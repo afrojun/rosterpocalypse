@@ -28,7 +28,7 @@ RSpec.describe MapsController, type: :controller do
   # adjust the attributes here as well.
   let(:valid_attributes) do
     {
-      name: "Cursed Hollow"
+      name: 'Cursed Hollow'
     }
   end
 
@@ -48,11 +48,11 @@ RSpec.describe MapsController, type: :controller do
     expect(map.name).to eq "Blackheart's Bay"
   end
 
-  context "a normal user" do
-    it_should_behave_like "a normal user", Map, :map
+  context 'a normal user' do
+    it_should_behave_like 'a normal user', Map, :map
   end
 
-  context "an admin user" do
-    it_should_behave_like "an admin user", Map, :map
+  context 'an admin user' do
+    it_should_behave_like 'an admin user', Map, :map
   end
 end

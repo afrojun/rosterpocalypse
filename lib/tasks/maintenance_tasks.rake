@@ -1,13 +1,13 @@
-desc "These tasks are used for initial set up and ongoing maintenance"
+desc 'These tasks are used for initial set up and ongoing maintenance'
 
 task infer_player_roles: :environment do
-  puts "Inferring player roles..."
+  puts 'Inferring player roles...'
   Player.all.each(&:infer_role)
-  puts "done."
+  puts 'done.'
 end
 
 task list_duplicate_players: :environment do
-  puts "Listing possible duplicate players..."
+  puts 'Listing possible duplicate players...'
   Player.all.each do |player|
     if player.name.size > 1
       players_with_similar_name = Player.where("name ILIKE '%#{player.name}%'").to_a
@@ -16,5 +16,5 @@ task list_duplicate_players: :environment do
       end
     end
   end
-  puts "done."
+  puts 'done.'
 end

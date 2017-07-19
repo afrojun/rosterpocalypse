@@ -9,7 +9,7 @@ class GameweekPlayer < ApplicationRecord
   has_many :league_gameweek_players, dependent: :destroy
   has_many :leagues, through: :league_gameweek_players
   has_many :games, through: :gameweek
-  has_many :game_details, -> { order "games.start_date DESC" }, through: :games
+  has_many :game_details, -> { order 'games.start_date DESC' }, through: :games
   has_and_belongs_to_many :gameweek_rosters
 
   validates :gameweek, presence: true
@@ -43,7 +43,7 @@ class GameweekPlayer < ApplicationRecord
       if gameweek_player.present?
         gameweek_player.add game, detail
       else
-        message = "Unable to find gameweek player for " \
+        message = 'Unable to find gameweek player for ' \
                   "gameweek: #{gameweek.id}, player: #{detail.player.slug}"
         Rails.logger.error message
         raise message
@@ -57,7 +57,7 @@ class GameweekPlayer < ApplicationRecord
 
     gameweek_players = gameweek.gameweek_players.includes(:player, :gameweek_rosters)
     league_gameweek_players = league.league_gameweek_players.where(gameweek_player: gameweek_players).includes(:gameweek_player)
-    valid_gameweek_rosters = gameweek.gameweek_rosters.includes(transfers: %i[player_in player_out]).where("points IS NOT NULL")
+    valid_gameweek_rosters = gameweek.gameweek_rosters.includes(transfers: %i[player_in player_out]).where('points IS NOT NULL')
 
     max_points = league_gameweek_players.order(points: :desc).first.try :points
     min_value = gameweek_players.order(value: :asc).first.try :value
@@ -168,17 +168,17 @@ class GameweekPlayer < ApplicationRecord
   def player_role_awards(detail)
     if Player.players_in_role(role).size > MIN_GAMES_FOR_BONUS_AWARD
       stat = case role
-             when "Support"
-               "assists"
-             when "Warrior"
-               "assists"
+             when 'Support'
+               'assists'
+             when 'Warrior'
+               'assists'
              else
-               "solo_kills"
+               'solo_kills'
              end
 
       threshold = Player.role_stat_percentile role, stat, BONUS_AWARD_PERCENTILE
       if threshold < detail.send(stat.to_sym)
-        renamed_stat = stat == "solo_kills" ? "kills" : stat
+        renamed_stat = stat == 'solo_kills' ? 'kills' : stat
         return ["#{BONUS_AWARD_PERCENTILE}th percentile in #{renamed_stat} for #{role} players"]
       end
     end
@@ -189,17 +189,17 @@ class GameweekPlayer < ApplicationRecord
     hero = detail.hero
     if hero.game_details.size > MIN_GAMES_FOR_BONUS_AWARD
       stat = case hero.classification
-             when "Support"
-               "assists"
-             when "Warrior"
-               "assists"
+             when 'Support'
+               'assists'
+             when 'Warrior'
+               'assists'
              else
-               "solo_kills"
+               'solo_kills'
              end
 
       threshold = detail.hero.stat_percentile stat, BONUS_AWARD_PERCENTILE
       if threshold < detail.send(stat.to_sym)
-        renamed_stat = stat == "solo_kills" ? "kills" : stat
+        renamed_stat = stat == 'solo_kills' ? 'kills' : stat
         return ["#{BONUS_AWARD_PERCENTILE}th percentile in #{renamed_stat} for #{hero.name}"]
       end
     end
@@ -207,9 +207,9 @@ class GameweekPlayer < ApplicationRecord
   end
 
   def team_awards(game, detail)
-    if role == "Support" && Game.all.size > MIN_GAMES_FOR_BONUS_AWARD
+    if role == 'Support' && Game.all.size > MIN_GAMES_FOR_BONUS_AWARD
       team = detail.team
-      stat = "deaths"
+      stat = 'deaths'
       Rails.logger.info "Team stats: #{game.team_stats.inspect}"
       team_deaths = game.team_stats[team.name][:deaths]
       # We want this to be low, so we take the inverse percentile

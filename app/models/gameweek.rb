@@ -7,11 +7,11 @@ class Gameweek < ApplicationRecord
   has_many :rosters, through: :gameweek_rosters
   has_many :transfers, through: :gameweek_rosters
   has_many :leagues, through: :tournament
-  has_many :games, -> { order "games.start_date ASC" }
-  has_many :matches, -> { order "matches.start_date ASC" }, dependent: :destroy
+  has_many :games, -> { order 'games.start_date ASC' }
+  has_many :matches, -> { order 'matches.start_date ASC' }, dependent: :destroy
 
   def name_including_dates
-    format = "%Y-%m-%d"
+    format = '%Y-%m-%d'
     "#{name}: #{start_date.strftime(format)} - #{end_date.strftime(format)} (#{games.size})"
   end
 

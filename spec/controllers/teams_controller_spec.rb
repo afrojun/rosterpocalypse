@@ -28,35 +28,35 @@ RSpec.describe TeamsController, type: :controller do
   # adjust the attributes here as well.
   let(:valid_attributes) do
     {
-      name: "AwesomeTeam",
-      region: "NA"
+      name: 'AwesomeTeam',
+      region: 'NA'
     }
   end
 
   let(:invalid_attributes) do
     {
-      name: "BadTeam",
-      region: "Foo"
+      name: 'BadTeam',
+      region: 'Foo'
     }
   end
 
   let(:new_attributes) do
     {
-      name: "CrazyTeam",
-      region: "KR"
+      name: 'CrazyTeam',
+      region: 'KR'
     }
   end
 
   def assert_update_successful(team)
-    expect(team.name).to eq "CrazyTeam"
-    expect(team.region).to eq "KR"
+    expect(team.name).to eq 'CrazyTeam'
+    expect(team.region).to eq 'KR'
   end
 
-  context "a normal user" do
-    it_should_behave_like "a normal user", Team, :team
+  context 'a normal user' do
+    it_should_behave_like 'a normal user', Team, :team
   end
 
-  context "an admin user" do
-    it_should_behave_like "an admin user", Team, :team
+  context 'an admin user' do
+    it_should_behave_like 'an admin user', Team, :team
   end
 end

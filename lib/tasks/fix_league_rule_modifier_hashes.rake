@@ -6,10 +6,10 @@
 # the keys and values to strings. To ensure consistency, we need to go back and
 # update all the defaults to also use only strings.
 
-desc "Convert League required_player_roles and role_stat_modifiers keys and values to Strings"
+desc 'Convert League required_player_roles and role_stat_modifiers keys and values to Strings'
 
 task league_rules_to_string: :environment do
-  puts "Updating leagues..."
+  puts 'Updating leagues...'
   League.all.each do |league|
     if league.required_player_roles.keys.first.is_a? Symbol
       sym_required_player_roles = league.required_player_roles
@@ -30,8 +30,8 @@ task league_rules_to_string: :environment do
 
       league.update required_player_roles: str_required_player_roles,
                     role_stat_modifiers: str_role_stat_modifiers
-      print "."
+      print '.'
     end
   end
-  puts "done."
+  puts 'done.'
 end

@@ -17,7 +17,7 @@ class GameStatsIngestionService
   end
 
   def populate_from_json
-    if json && json["unique_id"] && Game.where(game_hash: json["unique_id"]).blank?
+    if json && json['unique_id'] && Game.where(game_hash: json['unique_id']).blank?
       ActiveRecord::Base.transaction do
         # Find or create the Map, Game and Tournament
         map
@@ -28,8 +28,8 @@ class GameStatsIngestionService
           team = find_or_create_team team_colour
 
           player_details.each do |player_detail|
-            hero = find_or_create_hero player_detail["hero"]
-            player = find_or_create_player player_detail["name"], hero, team_colour
+            hero = find_or_create_hero player_detail['hero']
+            player = find_or_create_player player_detail['name'], hero, team_colour
 
             # Update the player's team if:
             # 1. the player's team is not yet defined
@@ -37,9 +37,9 @@ class GameStatsIngestionService
             #
             # Otherwise update the current team to the player's team if the team name is "Unknown"
             most_recent_game = player.games.order(start_date: :desc).first
-            if player.team.blank? || (team.name != "Unknown" && (player.team.name == "Unknown" || (most_recent_game && (game.start_date > most_recent_game.start_date))))
+            if player.team.blank? || (team.name != 'Unknown' && (player.team.name == 'Unknown' || (most_recent_game && (game.start_date > most_recent_game.start_date))))
               player.update team: team
-            elsif team.name == "Unknown" && player.team.name != "Unknown"
+            elsif team.name == 'Unknown' && player.team.name != 'Unknown'
               team = player.team
             end
 
@@ -47,17 +47,17 @@ class GameStatsIngestionService
             game_detail.update_attributes!(
               hero: hero,
               team: team,
-              solo_kills: player_detail["SoloKill"],
-              assists: player_detail["Assists"],
-              deaths: player_detail["Deaths"],
-              time_spent_dead: player_detail["TimeSpentDead"],
+              solo_kills: player_detail['SoloKill'],
+              assists: player_detail['Assists'],
+              deaths: player_detail['Deaths'],
+              time_spent_dead: player_detail['TimeSpentDead'],
               team_colour: team_colour,
-              win: player_detail["result"] == "win" ? true : false
+              win: player_detail['result'] == 'win' ? true : false
             )
           end
         end
 
-        Rails.logger.info "Successfully added all game details."
+        Rails.logger.info 'Successfully added all game details.'
 
         GameweekPlayer.update_from_game(game, gameweek) if gameweek.present?
 
@@ -67,7 +67,7 @@ class GameStatsIngestionService
 
       game
     else
-      Rails.logger.warn "No json input provided, or this game has already been ingested."
+      Rails.logger.warn 'No json input provided, or this game has already been ingested.'
       nil
     end
   end
@@ -75,18 +75,18 @@ class GameStatsIngestionService
   private
 
   def start_date
-    @start_date ||= Time.at(json["start_epoch_time_utc"]).utc.to_datetime
+    @start_date ||= Time.at(json['start_epoch_time_utc']).utc.to_datetime
   end
 
   def map
-    @map ||= Map.find_or_create_by name: json["map_name"]
+    @map ||= Map.find_or_create_by name: json['map_name']
   end
 
   def game
-    @game ||= Game.find_or_create_by game_hash: json["unique_id"] do |g|
+    @game ||= Game.find_or_create_by game_hash: json['unique_id'] do |g|
       g.map = map
       g.start_date = start_date
-      g.duration_s = json["duration"]
+      g.duration_s = json['duration']
       g.gameweek = gameweek
     end
   end
@@ -106,7 +106,7 @@ class GameStatsIngestionService
         tnmnt.update(end_date: start_date.end_of_day) if start_date > tnmnt.end_date
         tnmnt
       else
-        Rails.logger.warn "Unable to infer the tournament for this game."
+        Rails.logger.warn 'Unable to infer the tournament for this game.'
         nil
       end
     end
@@ -162,17 +162,17 @@ class GameStatsIngestionService
   def tournament_name
     @tournament_name ||= begin
       if filename_regex_match && filename_regex_match.size == 4
-        tournament_name = filename_regex_match.to_a.last.tr("_", " ")
+        tournament_name = filename_regex_match.to_a.last.tr('_', ' ')
 
         # Sometimes the tournament name has some extra characters at the end of it, try to remove them if we can
         unless Tournament.where(name: tournament_name).any?
-          alternate_name = tournament_name.split(" ").tap(&:pop).join(" ")
+          alternate_name = tournament_name.split(' ').tap(&:pop).join(' ')
           tournament_name = alternate_name if Tournament.where(name: alternate_name).any?
         end
 
         tournament_name
       else
-        ""
+        ''
       end
     end
   end
@@ -181,22 +181,22 @@ class GameStatsIngestionService
     @region ||= begin
       if tournament_name
         regions = {
-          "CN" => %w[China Gold\ Series],
-          "EU" => %w[Europe Valencia Tours ZOTAC],
-          "KR" => %w[Korea Super\ League],
-          "NA" => %w[North\ America Austin Bloodlust]
+          'CN' => %w[China Gold\ Series],
+          'EU' => %w[Europe Valencia Tours ZOTAC],
+          'KR' => %w[Korea Super\ League],
+          'NA' => %w[North\ America Austin Bloodlust]
         }
         regions.detect(-> { [Tournament::GLOBAL_REGION] }) do |region, keywords|
           tournament_name.include?(region) || keywords.any? { |keyword| tournament_name.include?(keyword) }
         end.first
       else
-        ""
+        ''
       end
     end
   end
 
   def basename
-    File.basename json["filename"]
+    File.basename json['filename']
   end
 
   def filename_regex_match
@@ -211,8 +211,8 @@ class GameStatsIngestionService
     if team_names_by_team_colour[team_colour].present?
       team_names_by_team_colour[team_colour]
     else
-      Rails.logger.warn "Unable to get figure out the full team names, falling back to name prefix or Unknown"
-      team_name_prefix_by_team_colour[team_colour].present? ? team_name_prefix_by_team_colour[team_colour] : "Unknown"
+      Rails.logger.warn 'Unable to get figure out the full team names, falling back to name prefix or Unknown'
+      team_name_prefix_by_team_colour[team_colour].present? ? team_name_prefix_by_team_colour[team_colour] : 'Unknown'
     end
   end
 
@@ -224,7 +224,7 @@ class GameStatsIngestionService
     @team_name_prefix_by_team_colour ||= begin
       {}.tap do |team_name_prefix_by_team|
         player_details_by_team_colour.each do |team, player_details|
-          player_names = player_details.map { |player_detail| player_detail["name"] }
+          player_names = player_details.map { |player_detail| player_detail['name'] }
           team_name = team_name_prefix player_names
           team_name_prefix_by_team[team] = team_name
         end
@@ -236,25 +236,25 @@ class GameStatsIngestionService
     @team_names_by_team_colour ||= begin
       if filename_regex_match && filename_regex_match.size == 4
         # We try to match the team names to colours based on the prefix and players in the team, but if that fails, we just guess the team colours
-        _, team_name1, team_name2, = filename_regex_match.to_a.map { |val| val.tr("_", " ") }
+        _, team_name1, team_name2, = filename_regex_match.to_a.map { |val| val.tr('_', ' ') }
 
-        if match_team_name?(team_name1, team_name_prefix_by_team_colour["red"], player_details_by_team_colour["red"]) ||
-           match_team_name?(team_name2, team_name_prefix_by_team_colour["blue"], player_details_by_team_colour["blue"])
+        if match_team_name?(team_name1, team_name_prefix_by_team_colour['red'], player_details_by_team_colour['red']) ||
+           match_team_name?(team_name2, team_name_prefix_by_team_colour['blue'], player_details_by_team_colour['blue'])
           {
-            "red" => team_name1,
-            "blue" => team_name2
+            'red' => team_name1,
+            'blue' => team_name2
           }
         else
           {
-            "blue" => team_name1,
-            "red" => team_name2
+            'blue' => team_name1,
+            'red' => team_name2
           }
         end
       else
         Rails.logger.warn "Guessing team colour->name mapping for #{basename}."
         {
-          "red" => "",
-          "blue" => ""
+          'red' => '',
+          'blue' => ''
         }
       end
     end
@@ -263,11 +263,11 @@ class GameStatsIngestionService
   def player_details_by_team_colour
     @player_details_by_team_colour ||= begin
       {}.tap do |player_details_by_team|
-        json["player_details"].each do |_, player_detail|
-          if (player_names = player_details_by_team[player_detail["team"]])
+        json['player_details'].each do |_, player_detail|
+          if (player_names = player_details_by_team[player_detail['team']])
             player_names << player_detail
           else
-            player_details_by_team[player_detail["team"]] = [player_detail]
+            player_details_by_team[player_detail['team']] = [player_detail]
           end
         end
       end
@@ -283,7 +283,7 @@ class GameStatsIngestionService
 
   def players_in_team?(team_name, player_details)
     # Use Player names to try to match the team name
-    player_names = player_details.map { |detail| detail["name"] }
+    player_names = player_details.map { |detail| detail['name'] }
 
     team = TeamAlternateName.where(alternate_name: team_name).first.try :team
     if team.present?
@@ -296,10 +296,10 @@ class GameStatsIngestionService
   def fuzzy_match_name(full_name, abbreviation)
     lowercase_name = full_name.downcase
     # The "Team" prefix in many team names can cause issues with this matching, so we need to handle it separately
-    if lowercase_name.start_with? "team"
+    if lowercase_name.start_with? 'team'
       lowercase_name.match(abbreviation.downcase.chars.join('.*')).to_s
     else
-      lowercase_name.match("^" + abbreviation.downcase.chars.join('.*')).to_s
+      lowercase_name.match('^' + abbreviation.downcase.chars.join('.*')).to_s
     end
   end
 

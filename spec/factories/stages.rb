@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :stage do
-    name "MyString"
+    name 'MyString'
     tournament nil
   end
 end

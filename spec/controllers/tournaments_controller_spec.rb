@@ -26,44 +26,44 @@ RSpec.describe TournamentsController, type: :controller do
   # adjust the attributes here as well.
   let(:valid_attributes) do
     {
-      name: "Blizzcon",
-      region: "Global",
+      name: 'Blizzcon',
+      region: 'Global',
       cycle_hours: 6,
-      start_date: "2016-10-26 00:00:00",
-      end_date: "2016-11-06 00:00:00"
+      start_date: '2016-10-26 00:00:00',
+      end_date: '2016-11-06 00:00:00'
     }
   end
 
   let(:invalid_attributes) do
     {
-      name: "Blizzcon",
-      region: "Foo",
+      name: 'Blizzcon',
+      region: 'Foo',
       cycle_hours: 6,
-      start_date: "2016-10-26 00:00:00",
-      end_date: "2016-11-06 00:00:00"
+      start_date: '2016-10-26 00:00:00',
+      end_date: '2016-11-06 00:00:00'
     }
   end
 
   let(:new_attributes) do
     {
-      name: "HGC NA Finals",
-      region: "NA",
+      name: 'HGC NA Finals',
+      region: 'NA',
       cycle_hours: 128,
-      start_date: "2016-09-14 00:00:00",
-      end_date: "2016-10-06 00:00:00"
+      start_date: '2016-09-14 00:00:00',
+      end_date: '2016-10-06 00:00:00'
     }
   end
 
   def assert_update_successful(tournament)
-    expect(tournament.name).to eq "HGC NA Finals"
-    expect(tournament.region).to eq "NA"
+    expect(tournament.name).to eq 'HGC NA Finals'
+    expect(tournament.region).to eq 'NA'
   end
 
-  context "a normal user" do
-    it_should_behave_like "a normal user", Tournament, :tournament
+  context 'a normal user' do
+    it_should_behave_like 'a normal user', Tournament, :tournament
   end
 
-  context "an admin user" do
-    it_should_behave_like "an admin user", Tournament, :tournament
+  context 'an admin user' do
+    it_should_behave_like 'an admin user', Tournament, :tournament
   end
 end

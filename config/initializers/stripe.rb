@@ -1,8 +1,8 @@
-require "stripe_event_subscribers/stripe_event_logger"
-require "stripe_event_subscribers/customer_subscription_created"
-require "stripe_event_subscribers/customer_subscription_updated"
-require "stripe_event_subscribers/customer_subscription_deleted"
-require "stripe_event_subscribers/customer_subscription_trial_will_end"
+require 'stripe_event_subscribers/stripe_event_logger'
+require 'stripe_event_subscribers/customer_subscription_created'
+require 'stripe_event_subscribers/customer_subscription_updated'
+require 'stripe_event_subscribers/customer_subscription_deleted'
+require 'stripe_event_subscribers/customer_subscription_trial_will_end'
 
 Rails.configuration.stripe = {
   publishable_key: ENV['STRIPE_PUBLISHABLE_KEY'],

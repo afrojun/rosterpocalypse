@@ -32,7 +32,7 @@ RSpec.describe MatchesController, type: :controller do
     {
       team_1_id: team_1.id,
       team_2_id: team_2.id,
-      start_date: "2017-01-06 21:00:00",
+      start_date: '2017-01-06 21:00:00',
       best_of: 3,
       gameweek_id: gameweek.id
     }
@@ -42,7 +42,7 @@ RSpec.describe MatchesController, type: :controller do
     {
       team_1_id: team_1.id,
       team_2_id: team_2.id,
-      start_date: "2017-01-18 21:00:00",
+      start_date: '2017-01-18 21:00:00',
       best_of: 3,
       gameweek_id: gameweek.id
     }
@@ -53,7 +53,7 @@ RSpec.describe MatchesController, type: :controller do
     {
       team_1_id: new_team.id,
       team_2_id: team_2.id,
-      start_date: "2017-01-06 21:00:00",
+      start_date: '2017-01-06 21:00:00',
       best_of: 5,
       gameweek_id: gameweek.id
     }
@@ -64,11 +64,11 @@ RSpec.describe MatchesController, type: :controller do
     expect(match.team_1).to eq new_team
   end
 
-  context "a normal user" do
-    it_should_behave_like "a normal user", Match, :match
+  context 'a normal user' do
+    it_should_behave_like 'a normal user', Match, :match
   end
 
-  context "an admin user" do
-    it_should_behave_like "an admin user", Match, :match
+  context 'an admin user' do
+    it_should_behave_like 'an admin user', Match, :match
   end
 end

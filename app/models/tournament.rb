@@ -10,7 +10,7 @@ class Tournament < ApplicationRecord
   has_many :matches, -> { order 'start_date ASC' }, through: :gameweeks
   has_many :gameweek_rosters, through: :gameweeks
 
-  GLOBAL_REGION = "Global".freeze
+  GLOBAL_REGION = 'Global'.freeze
   REGIONS = Team::REGIONS + [GLOBAL_REGION]
 
   validates :name, presence: true, uniqueness: true
@@ -20,12 +20,12 @@ class Tournament < ApplicationRecord
   after_update :update_gameweeks
 
   REGION_TIME_ZONE_MAP = {
-    "CN" => "Asia/Shanghai",
-    "EU" => "UTC",
-    "KR" => "Asia/Seoul",
-    "NA" => "America/Los_Angeles",
-    "Global" => "UTC",
-    "" => "UTC"
+    'CN' => 'Asia/Shanghai',
+    'EU' => 'UTC',
+    'KR' => 'Asia/Seoul',
+    'NA' => 'America/Los_Angeles',
+    'Global' => 'UTC',
+    '' => 'UTC'
   }.freeze
 
   def self.active_tournaments
@@ -44,7 +44,7 @@ class Tournament < ApplicationRecord
   # When 'safe', we always return a gameweek, the first one for dates before the start
   # of the tournament, and the last one for dates after the end of the tournament
   def find_gameweek(date, safe = true)
-    gameweek = gameweeks.find_by("start_date <= ? AND end_date >= ?", date, date)
+    gameweek = gameweeks.find_by('start_date <= ? AND end_date >= ?', date, date)
 
     if safe && gameweek.nil?
       first_gameweek = gameweeks.first
@@ -70,11 +70,11 @@ class Tournament < ApplicationRecord
   end
 
   def private_leagues
-    @private_leagues ||= leagues.where(type: "PrivateLeague")
+    @private_leagues ||= leagues.where(type: 'PrivateLeague')
   end
 
   def public_leagues
-    @public_leagues ||= leagues.where(type: "PublicLeague")
+    @public_leagues ||= leagues.where(type: 'PublicLeague')
   end
 
   def update_gameweeks
@@ -107,7 +107,7 @@ class Tournament < ApplicationRecord
 
   def destroy_gameweeks
     # Gameweeks where the Tournament start_date is after the Gameweek end_date OR the Gameweek start_date is after the Tournament end_date
-    gameweeks.where("start_date > ? OR end_date < ?", end_date, start_date - 1.week).find_each do |gameweek|
+    gameweeks.where('start_date > ? OR end_date < ?', end_date, start_date - 1.week).find_each do |gameweek|
       if gameweek.games.blank? && gameweek.gameweek_rosters.blank? && gameweek.gameweek_players.blank?
         Rails.logger.info "Destroying orphaned gameweek: #{gameweek.inspect}."
         gameweek.destroy

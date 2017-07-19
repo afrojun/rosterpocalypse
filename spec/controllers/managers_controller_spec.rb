@@ -41,16 +41,16 @@ RSpec.describe ManagersController, type: :controller do
   # ManagersController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
-  describe "GET #index" do
-    it "assigns all managers as @managers" do
+  describe 'GET #index' do
+    it 'assigns all managers as @managers' do
       get :index, params: {}, session: valid_session
       expect(response).to redirect_to root_path
       expect(flash[:alert]).to eq "You don't have permission to take this action."
     end
   end
 
-  describe "GET #show" do
-    it "assigns the requested manager as @manager" do
+  describe 'GET #show' do
+    it 'assigns the requested manager as @manager' do
       manager = Manager.create! valid_attributes
       get :show, params: { id: manager.to_param }, session: valid_session
       expect(response).to redirect_to root_path

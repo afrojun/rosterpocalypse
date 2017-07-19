@@ -57,7 +57,7 @@ class HeroesController < RosterpocalypseController
   def destroy
     respond_to do |format|
       if @hero.destroy
-        format.html { redirect_to heroes_url, notice: "Hero was successfully destroyed." }
+        format.html { redirect_to heroes_url, notice: 'Hero was successfully destroyed.' }
         format.json { head :no_content }
       else
         format.html { redirect_to heroes_url, alert: @hero.errors.details[:base].map { |error| error[:error] }.to_sentence }

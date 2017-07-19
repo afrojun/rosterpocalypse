@@ -17,63 +17,63 @@ Rails.application.routes.draw do
 
   resources :rosters, except: %i[new create edit] do
     member do
-      get "manage"
-      get "details"
-      get "players"
+      get 'manage'
+      get 'details'
+      get 'players'
     end
   end
 
   resources :games do
     resources :details, controller: 'game_details', shallow: true, only: %i[new create edit update destroy]
     collection do
-      post "bulk_destroy"
+      post 'bulk_destroy'
     end
     member do
-      post "swap_teams"
+      post 'swap_teams'
     end
   end
 
   resources :teams do
     collection do
-      post "merge"
+      post 'merge'
     end
     member do
-      post "toggle_active"
+      post 'toggle_active'
     end
   end
 
   resources :players do
     collection do
-      post "merge"
+      post 'merge'
     end
   end
 
   resources :leagues do
     member do
-      post "join"
-      post "leave"
+      post 'join'
+      post 'leave'
     end
   end
   resources :private_leagues do
     member do
-      post "join"
-      post "leave"
+      post 'join'
+      post 'leave'
     end
   end
   resources :public_leagues do
     member do
-      post "join"
-      post "leave"
+      post 'join'
+      post 'leave'
     end
   end
 
   resources :managers, only: %i[index show update] do
     member do
-      post "subscribe"
-      post "unsubscribe"
-      post "reactivate_subscription"
-      put "update_payment_details"
-      put "remove_payment_source"
+      post 'subscribe'
+      post 'unsubscribe'
+      post 'reactivate_subscription'
+      put 'update_payment_details'
+      put 'remove_payment_source'
     end
   end
 

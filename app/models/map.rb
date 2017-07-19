@@ -2,7 +2,7 @@ class Map < ApplicationRecord
   extend FriendlyId
   friendly_id :name, use: :finders
 
-  has_many :games, -> { order "start_date DESC" }
+  has_many :games, -> { order 'start_date DESC' }
 
   validates :name, presence: true, uniqueness: true
 

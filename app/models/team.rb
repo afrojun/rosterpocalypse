@@ -4,14 +4,14 @@ class Team < ApplicationRecord
 
   has_many :game_details
   has_many :games, -> { distinct }, through: :game_details
-  has_many :alternate_names, class_name: "TeamAlternateName", dependent: :destroy
+  has_many :alternate_names, class_name: 'TeamAlternateName', dependent: :destroy
   has_many :players
   has_many :gameweek_players
 
   REGIONS = %w[CN EU KR NA].freeze
 
   validates :name, presence: true, uniqueness: true
-  validates :region, inclusion: { in: REGIONS + [nil, ""] }
+  validates :region, inclusion: { in: REGIONS + [nil, ''] }
 
   after_create :update_alternate_names
   after_update :update_alternate_names
@@ -24,7 +24,7 @@ class Team < ApplicationRecord
   end
 
   def matches
-    Match.where("team_1_id = ? OR team_2_id = ?", id, id)
+    Match.where('team_1_id = ? OR team_2_id = ?', id, id)
   end
 
   def validate_destroy

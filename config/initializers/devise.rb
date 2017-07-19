@@ -9,9 +9,9 @@ Devise.setup do |config|
   # config.secret_key = '8ce5082d56d860ee2242e76fc7bac663231fd880c52a56c1c84c44c7ad3e33fbe15e091697ee6364c513217ad81c310aba4a3c30ab79bad7aa5a726bee9027fd'
 
   config.omniauth :google_oauth2, ENV['GOOGLE_APP_ID'], ENV['GOOGLE_APP_SECRET']
-  config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV['FACEBOOK_APP_SECRET'], scope: "email"
+  config.omniauth :facebook, ENV['FACEBOOK_APP_ID'], ENV['FACEBOOK_APP_SECRET'], scope: 'email'
   config.omniauth :twitter, ENV['TWITTER_APP_ID'], ENV['TWITTER_APP_SECRET']
-  config.omniauth :reddit, ENV['REDDIT_APP_ID'], ENV['REDDIT_APP_SECRET'], scope: "identity"
+  config.omniauth :reddit, ENV['REDDIT_APP_ID'], ENV['REDDIT_APP_SECRET'], scope: 'identity'
   config.omniauth :bnet, ENV['BNET_APP_ID'], ENV['BNET_APP_SECRET']
 
   # ==> Mailer Configuration

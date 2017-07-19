@@ -7,6 +7,6 @@ class ApplicationMailer < ActionMailer::Base
     @event = event
     @error = error
     mail(to: '"Rosterpocalypse" <rosterpocalypse@gmail.com>',
-         subject: "Stripe Webhook Failure")
+         subject: 'Stripe Webhook Failure')
   end
 end

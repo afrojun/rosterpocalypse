@@ -4,20 +4,20 @@ FactoryGirl.define do
 
   factory :public_league do
     name { generate :private_league_name }
-    description "League description"
+    description 'League description'
     manager
     tournament
-    type "PublicLeague"
+    type 'PublicLeague'
     role_stat_modifiers League::DEFAULT_ROLE_STAT_MODIFIERS
     required_player_roles League::DEFAULT_REQUIRED_PLAYER_ROLES
   end
 
   factory :private_league do
     name { generate :public_league_name }
-    description "League description"
+    description 'League description'
     manager
     tournament
-    type "PrivateLeague"
+    type 'PrivateLeague'
     role_stat_modifiers League::DEFAULT_ROLE_STAT_MODIFIERS
     required_player_roles League::DEFAULT_REQUIRED_PLAYER_ROLES
   end

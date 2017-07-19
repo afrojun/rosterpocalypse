@@ -8,7 +8,7 @@ class WelcomeController < ApplicationController
          end
 
     if id.present?
-      mixpanel = Mixpanel::Tracker.new(ENV["MIXPANEL_ID"])
+      mixpanel = Mixpanel::Tracker.new(ENV['MIXPANEL_ID'])
       mixpanel.track id, 'View Homepage'
     end
   rescue => e
@@ -17,6 +17,6 @@ class WelcomeController < ApplicationController
   end
 
   def letsencrypt
-    render text: "YtiJ5nqc1BuJ2bx01r9RbF3FdJaylGfUerJcncm2VTU.aU9Em34vTjJHcU9PAwtUa-O7NTQhQnJoA6FXlp6xtw0"
+    render text: 'YtiJ5nqc1BuJ2bx01r9RbF3FdJaylGfUerJcncm2VTU.aU9Em34vTjJHcU9PAwtUa-O7NTQhQnJoA6FXlp6xtw0'
   end
 end
