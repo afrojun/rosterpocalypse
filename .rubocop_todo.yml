@@ -74,6 +74,14 @@ Rails/FilePath:
   Exclude:
     - 'lib/tasks/cucumber.rake'
 
+# Offense count: 1
+# Cop supports --auto-correct.
+# Configuration parameters: Whitelist.
+# Whitelist: find_by_sql
+Rails/DynamicFindBy:
+  Exclude:
+    - 'app/helpers/league_helper.rb'
+
 # Offense count: 6
 # Configuration parameters: Include.
 # Include: app/models/**/*.rb
