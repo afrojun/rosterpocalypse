@@ -23,11 +23,11 @@ class PlayersController < RosterpocalypseController
 
   # GET /players/1/edit
   def edit
-    if @player.team.try(:region).present?
-      @teams = Team.where(region: @player.team.region).order(:name)
-    else
-      @teams = Team.order(:name)
-    end
+    @teams = if @player.team.try(:region).present?
+               Team.where(region: @player.team.region).order(:name)
+             else
+               Team.order(:name)
+             end
   end
 
   # POST /players

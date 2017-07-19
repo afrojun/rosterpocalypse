@@ -50,7 +50,7 @@ RSpec.describe GameweekRoster, type: :model do
   context "#create_snapshot" do
     it "returns false if there are no players" do
       expect(gameweek_roster.create_snapshot).to eq false
-      expect(gameweek_roster.roster_snapshot).to eq Hash.new
+      expect(gameweek_roster.roster_snapshot).to eq({})
     end
 
     it "creates the snapshot if there are 5 players" do

@@ -27,7 +27,7 @@ class Game < ApplicationRecord
   end
 
   def team_stats
-    Hash.new.tap do |stats|
+    {}.tap do |stats|
       game_details.to_a.group_by(&:team_id).each do |_, details|
         team_name = details.first.team.name
         stats[team_name] = {

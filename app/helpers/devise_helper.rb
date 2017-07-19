@@ -1,11 +1,7 @@
 module DeviseHelper
   # This returns the confirmation email if it is valid, or nil otherwise
   def valid_confirmation_email user
-    if valid_email? user.confirmation_email
-      user.confirmation_email
-    else
-      nil
-    end
+    user.confirmation_email if valid_email?(user.confirmation_email)
   end
 
   def user_manage_payments_url

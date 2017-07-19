@@ -22,7 +22,7 @@ class PlayerPresenter < BasePresenter
   end
 
   def player_hero_win_loss_count
-    @player_hero_win_loss_count ||= Hash.new.tap do |hero_details|
+    @player_hero_win_loss_count ||= {}.tap do |hero_details|
       player.game_details.includes(:hero).each do |details|
         if win_loss = hero_details[details.hero]
           win_loss[:total] = win_loss[:total]+1

@@ -64,7 +64,7 @@ class League < ApplicationRecord
   end
 
   def numeric_required_player_roles
-    @numeric_required_player_roles ||= Hash.new.tap do |req|
+    @numeric_required_player_roles ||= {}.tap do |req|
       required_player_roles.each do |role, num|
         req[role] = num.to_i
       end

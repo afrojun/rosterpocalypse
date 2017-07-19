@@ -58,8 +58,6 @@ class Manager < ApplicationRecord
       if any_stripe_customer_sources?
         card_id = stripe_customer["default_source"]
         stripe_customer_sources.retrieve card_id
-      else
-        nil
       end
     end
   end

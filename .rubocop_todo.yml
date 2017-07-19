@@ -395,37 +395,9 @@ Style/ClassAndModuleChildren:
     - 'app/controllers/api/sessions_controller.rb'
     - 'test/test_helper.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles, SingleLineConditionsOnly, IncludeTernaryExpressions.
-# SupportedStyles: assign_to_condition, assign_inside_condition
-Style/ConditionalAssignment:
-  Exclude:
-    - 'app/controllers/players_controller.rb'
-
 # Offense count: 115
 Style/Documentation:
   Enabled: false
-
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: empty, nil, both
-Style/EmptyElse:
-  Exclude:
-    - 'app/helpers/devise_helper.rb'
-    - 'app/models/manager.rb'
-    - 'app/services/game_stats_ingestion_service.rb'
-
-# Offense count: 6
-# Cop supports --auto-correct.
-Style/EmptyLiteral:
-  Exclude:
-    - 'app/models/game.rb'
-    - 'app/models/league.rb'
-    - 'app/presenters/player_presenter.rb'
-    - 'app/services/game_stats_ingestion_service.rb'
-    - 'spec/models/gameweek_roster_spec.rb'
 
 # Offense count: 15
 # Cop supports --auto-correct.
@@ -433,14 +405,6 @@ Style/EmptyLiteral:
 # SupportedStyles: compact, expanded
 Style/EmptyMethod:
   EnforcedStyle: expanded
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: format, sprintf, percent
-Style/FormatString:
-  Exclude:
-    - 'spec/factories/players.rb'
 
 # Offense count: 301
 # Cop supports --auto-correct.

@@ -118,8 +118,6 @@ class GameStatsIngestionService
     @gameweek ||= begin
       if tournament.present?
         tournament.gameweeks.where('start_date <= ? AND end_date >= ?', start_date, start_date).first
-      else
-        nil
       end
     end
   end
@@ -226,7 +224,7 @@ class GameStatsIngestionService
   # in each team separately
   def team_name_prefix_by_team_colour
     @team_name_prefix_by_team_colour ||= begin
-      Hash.new.tap do |team_name_prefix_by_team|
+      {}.tap do |team_name_prefix_by_team|
         player_details_by_team_colour.each do |team, player_details|
           player_names = player_details.map { |player_detail| player_detail["name"] }
           team_name = team_name_prefix player_names
@@ -266,7 +264,7 @@ class GameStatsIngestionService
 
   def player_details_by_team_colour
     @player_details_by_team_colour ||= begin
-      Hash.new.tap do |player_details_by_team|
+      {}.tap do |player_details_by_team|
         json["player_details"].each do |_, player_detail|
           if player_names = player_details_by_team[player_detail["team"]]
             player_names << player_detail

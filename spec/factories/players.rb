@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  sequence(:player_name) { |n| sprintf("Player%03d", n) }
+  sequence(:player_name) { |n| format("Player%03d", n) }
 
   factory :player do
     name { generate :player_name }
