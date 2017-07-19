@@ -380,30 +380,11 @@ Style/AccessorMethodName:
     - 'app/models/player.rb'
     - 'app/models/roster.rb'
 
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: always, conditionals
-Style/AndOr:
-  Exclude:
-    - 'app/controllers/managers_controller.rb'
-    - 'app/models/player.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 Style/BlockComments:
   Exclude:
     - 'spec/spec_helper.rb'
-
-# Offense count: 58
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles, ProceduralMethods, FunctionalMethods, IgnoredMethods.
-# SupportedStyles: line_count_based, semantic, braces_for_chaining
-# ProceduralMethods: benchmark, bm, bmbm, create, each_with_object, measure, new, realtime, tap, with_object
-# FunctionalMethods: let, let!, subject, watch
-# IgnoredMethods: lambda, proc, it
-Style/BlockDelimiters:
-  Enabled: false
 
 # Offense count: 16
 # Cop supports --auto-correct.

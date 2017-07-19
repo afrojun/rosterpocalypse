@@ -2,7 +2,7 @@ require "rails_helper"
 
 describe GameStatsIngestionService do
   let(:service) { GameStatsIngestionService.new(game_stats_json, true) }
-  let(:game_stats_json) {
+  let(:game_stats_json) do
     JSON.parse '{
       "duration": 1334,
       "map_name": "Tomb of the Spider Queen",
@@ -112,7 +112,7 @@ describe GameStatsIngestionService do
       "filename": "../replays/02.12.16_MVP_BLACK_vs_Dignitas_game_1_at_Summer_Global_Championship.StormReplay",
       "unique_id": "31af3b750df2b90e51121833672747969fdd3a89c8bfa1303abd6fec9a8c7758"
     }'
-  }
+  end
 
   context "#populate_from_json" do
     it "handles null json input" do

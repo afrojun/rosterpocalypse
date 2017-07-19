@@ -28,7 +28,7 @@ RSpec.describe MatchesController, type: :controller do
   let(:team_2) { FactoryGirl.create :team }
   let(:gameweek) { FactoryGirl.create :gameweek }
 
-  let(:valid_attributes) {
+  let(:valid_attributes) do
     {
       team_1_id: team_1.id,
       team_2_id: team_2.id,
@@ -36,9 +36,9 @@ RSpec.describe MatchesController, type: :controller do
       best_of: 3,
       gameweek_id: gameweek.id
     }
-  }
+  end
 
-  let(:invalid_attributes) {
+  let(:invalid_attributes) do
     {
       team_1_id: team_1.id,
       team_2_id: team_2.id,
@@ -46,10 +46,10 @@ RSpec.describe MatchesController, type: :controller do
       best_of: 3,
       gameweek_id: gameweek.id
     }
-  }
+  end
 
   let(:new_team) { FactoryGirl.create :team }
-  let(:new_attributes) {
+  let(:new_attributes) do
     {
       team_1_id: new_team.id,
       team_2_id: team_2.id,
@@ -57,7 +57,7 @@ RSpec.describe MatchesController, type: :controller do
       best_of: 5,
       gameweek_id: gameweek.id
     }
-  }
+  end
 
   def assert_update_successful match
     expect(match.best_of).to eq 5

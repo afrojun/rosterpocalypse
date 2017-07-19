@@ -24,29 +24,29 @@ RSpec.describe HeroesController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Hero. As you add validations to Hero, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) {
+  let(:valid_attributes) do
     {
       name: "SuperHero",
       internal_name: "SuperHero",
       classification: "Warrior"
     }
-  }
+  end
 
-  let(:invalid_attributes) {
+  let(:invalid_attributes) do
     {
       name: nil,
       internal_name: nil,
       classification: nil
     }
-  }
+  end
 
-  let(:new_attributes) {
+  let(:new_attributes) do
     {
       name: "EvilHero",
       internal_name: "EvilHero",
       classification: "Assassin"
     }
-  }
+  end
 
   def assert_update_successful hero
     expect(hero.name).to eq "EvilHero"

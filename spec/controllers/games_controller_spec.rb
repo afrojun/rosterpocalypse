@@ -25,33 +25,33 @@ RSpec.describe GamesController, type: :controller do
   # Game. As you add validations to Game, be sure to
   # adjust the attributes here as well.
   let(:map) { FactoryGirl.create(:map) }
-  let(:valid_attributes) {
+  let(:valid_attributes) do
     {
       map_id: map.id,
       start_date: Time.now.utc.to_datetime,
       duration_s: 1000,
       game_hash: "abcde"
     }
-  }
+  end
 
-  let(:invalid_attributes) {
+  let(:invalid_attributes) do
     {
       map_id: FactoryGirl.create(:map).id,
       start_date: Time.now.utc.to_datetime,
       duration_s: 1000,
       game_hash: nil
     }
-  }
+  end
 
   let(:new_map) { FactoryGirl.create(:map) }
-  let(:new_attributes) {
+  let(:new_attributes) do
     {
       map_id: new_map.id,
       start_date: Time.now.utc.to_datetime,
       duration_s: 650,
       game_hash: "12345"
     }
-  }
+  end
 
   def assert_update_successful game
     expect(game.map.name).to eq new_map.name

@@ -24,17 +24,17 @@ RSpec.describe ManagersController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Manager. As you add validations to Manager, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) {
+  let(:valid_attributes) do
     {
       user_id: User.first.id
     }
-  }
+  end
 
-  let(:invalid_attributes) {
+  let(:invalid_attributes) do
     {
       user_id: nil
     }
-  }
+  end
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in

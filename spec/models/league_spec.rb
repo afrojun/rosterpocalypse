@@ -14,9 +14,9 @@ RSpec.describe League, type: :model do
       10.times do
         FactoryGirl.create :private_league, manager: manager, tournament: tournament
       end
-      expect {
+      expect do
         FactoryGirl.create :private_league, manager: manager, tournament: tournament
-      }.to raise_error(ActiveRecord::RecordInvalid)
+      end.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "allows site admins to create more than 10 active leagues" do
@@ -25,9 +25,9 @@ RSpec.describe League, type: :model do
       10.times do
         FactoryGirl.create :private_league, manager: manager, tournament: tournament
       end
-      expect {
+      expect do
         FactoryGirl.create :private_league, manager: manager, tournament: tournament
-      }.not_to raise_error
+      end.not_to raise_error
     end
   end
 

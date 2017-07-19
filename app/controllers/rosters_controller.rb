@@ -58,10 +58,10 @@ class RostersController < RosterpocalypseController
     respond_to do |format|
       format.html { }
       format.json { render json: @gameweek_players }
-      format.png {
+      format.png do
                    kit = IMGKit.new(render_to_string, "quality" => 80, "crop-w" => 676)
                    send_data(kit.to_png, :type => "image/png", :disposition => 'inline')
-                 }
+                 end
     end
   end
 
@@ -74,11 +74,12 @@ class RostersController < RosterpocalypseController
         format.json { render :details, status: :ok, location: @roster }
       else
         format.html { render :manage }
-        format.json { render json: @roster.errors.map { |key, message|
-                                     "#{key.capitalize} #{message}"
-                                   }.to_sentence,
-                             status: :unprocessable_entity
-        }
+        format.json do
+          roster_errors = @roster.errors.map do |key, message|
+                            "#{key.capitalize} #{message}"
+                          end.to_sentence
+          render json: roster_errors, status: :unprocessable_entity
+        end
       end
     end
   end

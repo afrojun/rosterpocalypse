@@ -26,26 +26,26 @@ RSpec.describe TeamsController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Team. As you add validations to Team, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) {
+  let(:valid_attributes) do
     {
       name: "AwesomeTeam",
       region: "NA"
     }
-  }
+  end
 
-  let(:invalid_attributes) {
+  let(:invalid_attributes) do
     {
       name: "BadTeam",
       region: "Foo"
     }
-  }
+  end
 
-  let(:new_attributes) {
+  let(:new_attributes) do
     {
       name: "CrazyTeam",
       region: "KR"
     }
-  }
+  end
 
   def assert_update_successful team
     expect(team.name).to eq "CrazyTeam"

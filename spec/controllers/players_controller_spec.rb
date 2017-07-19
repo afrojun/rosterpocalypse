@@ -25,27 +25,27 @@ RSpec.describe PlayersController, type: :controller do
   # Player. As you add validations to Player, be sure to
   # adjust the attributes here as well.
   let(:team) { FactoryGirl.create(:team) }
-  let(:valid_attributes) {
+  let(:valid_attributes) do
     {
       name: "ProGamer",
       team_id: team.id
     }
-  }
+  end
 
-  let(:invalid_attributes) {
+  let(:invalid_attributes) do
     {
       name: nil,
       team_id: nil
     }
-  }
+  end
 
   let(:new_team) { FactoryGirl.create(:team) }
-  let(:new_attributes) {
+  let(:new_attributes) do
     {
       name: "AmateurGamer",
       team_id: new_team.id
     }
-  }
+  end
 
   def assert_update_successful player
     expect(player.name).to eq "AmateurGamer"

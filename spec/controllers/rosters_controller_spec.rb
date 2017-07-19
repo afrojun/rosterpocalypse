@@ -8,19 +8,19 @@ RSpec.describe RostersController, type: :controller do
   # adjust the attributes here as well.
   let(:now) { Time.now.utc }
   let(:tournament) { FactoryGirl.create :tournament, start_date: now - 1.day, end_date: now + 1.day }
-  let(:valid_attributes) {
+  let(:valid_attributes) do
     {
       name: "AwesomeRoster",
       tournament: tournament
     }
-  }
+  end
 
-  let(:invalid_attributes) {
+  let(:invalid_attributes) do
     {
       name: "Bad",
       tournament: tournament
     }
-  }
+  end
 
   let(:manager) { FactoryGirl.create :manager, user: subject.current_user }
   let(:roster) { FactoryGirl.create :roster, valid_attributes.merge(manager: manager) }
@@ -65,11 +65,11 @@ RSpec.describe RostersController, type: :controller do
 
   describe "PUT #update" do
     context "with valid params" do
-      let(:new_attributes) {
+      let(:new_attributes) do
         {
           name: "MehRoster"
         }
-      }
+      end
 
       it "updates the requested roster" do
         put :update, params: {id: roster.id, roster: new_attributes}, session: valid_session
@@ -122,9 +122,9 @@ RSpec.describe RostersController, type: :controller do
   describe "DELETE #destroy" do
     it "destroys the requested roster" do
       roster
-      expect {
+      expect do
         delete :destroy, params: {id: roster.id}, session: valid_session
-      }.to change(Roster, :count).by(-1)
+      end.to change(Roster, :count).by(-1)
     end
 
     it "redirects to the rosters list" do

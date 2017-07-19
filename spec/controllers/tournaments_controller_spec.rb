@@ -24,7 +24,7 @@ RSpec.describe TournamentsController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Tournament. As you add validations to Tournament, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) {
+  let(:valid_attributes) do
     {
       name: "Blizzcon",
       region: "Global",
@@ -32,9 +32,9 @@ RSpec.describe TournamentsController, type: :controller do
       start_date: "2016-10-26 00:00:00",
       end_date: "2016-11-06 00:00:00"
     }
-  }
+  end
 
-  let(:invalid_attributes) {
+  let(:invalid_attributes) do
     {
       name: "Blizzcon",
       region: "Foo",
@@ -42,9 +42,9 @@ RSpec.describe TournamentsController, type: :controller do
       start_date: "2016-10-26 00:00:00",
       end_date: "2016-11-06 00:00:00"
     }
-  }
+  end
 
-  let(:new_attributes) {
+  let(:new_attributes) do
     {
       name: "HGC NA Finals",
       region: "NA",
@@ -52,7 +52,7 @@ RSpec.describe TournamentsController, type: :controller do
       start_date: "2016-09-14 00:00:00",
       end_date: "2016-10-06 00:00:00"
     }
-  }
+  end
 
   def assert_update_successful tournament
     expect(tournament.name).to eq "HGC NA Finals"

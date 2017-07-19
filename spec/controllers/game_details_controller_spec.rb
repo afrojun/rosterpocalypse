@@ -26,7 +26,7 @@ RSpec.describe GameDetailsController, type: :controller do
   # adjust the attributes here as well.
   let(:game) { FactoryGirl.create :game }
   let(:player) { FactoryGirl.create :player }
-  let(:valid_attributes) {
+  let(:valid_attributes) do
     {
       player_id: player.id,
       game_id: game.id,
@@ -39,9 +39,9 @@ RSpec.describe GameDetailsController, type: :controller do
       team_colour: "blue",
       win: true,
     }
-  }
+  end
 
-  let(:invalid_attributes) {
+  let(:invalid_attributes) do
     {
       player_id: player.id,
       game_id: game.id,
@@ -54,9 +54,9 @@ RSpec.describe GameDetailsController, type: :controller do
       team_colour: "blue",
       win: nil,
     }
-  }
+  end
 
-  let(:new_attributes) {
+  let(:new_attributes) do
     {
       player_id: FactoryGirl.create(:player).id,
       game_id: game.id,
@@ -69,7 +69,7 @@ RSpec.describe GameDetailsController, type: :controller do
       team_colour: "red",
       win: true,
     }
-  }
+  end
 
   def assert_update_successful game_detail
     expect(game_detail.team_colour).to eq "red"
@@ -153,9 +153,9 @@ RSpec.describe GameDetailsController, type: :controller do
     describe "POST #create" do
       context "with valid params" do
         it "creates a new GameDetail" do
-          expect {
+          expect do
             post :create, params: {game_id: game.id, :detail => valid_attributes}, session: valid_session
-          }.to change(GameDetail, :count).by(1)
+          end.to change(GameDetail, :count).by(1)
         end
 
         it "assigns a newly created game_detail as @game_detail" do
@@ -223,9 +223,9 @@ RSpec.describe GameDetailsController, type: :controller do
     describe "DELETE #destroy" do
       it "destroys the requested game_detail" do
         game_detail = GameDetail.create! valid_attributes
-        expect {
+        expect do
           delete :destroy, params: {id: game_detail.to_param}, session: valid_session
-        }.to change(GameDetail, :count).by(-1)
+        end.to change(GameDetail, :count).by(-1)
       end
 
       it "redirects to the game_details list" do

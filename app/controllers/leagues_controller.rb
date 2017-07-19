@@ -75,10 +75,10 @@ class LeaguesController < RosterpocalypseController
   def join
     respond_to do |format|
       if roster = @league.join(current_user.manager)
-        format.html {
+        format.html do
           redirect_to manage_roster_path(roster),
                       notice: "Successfully joined League '#{@league.name}', now create a Roster for it!"
-        }
+        end
         format.json { render :show, status: :ok, location: @league }
       else
         message = @league.errors[:base].to_sentence

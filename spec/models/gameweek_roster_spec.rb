@@ -8,16 +8,16 @@ RSpec.describe GameweekRoster, type: :model do
   let(:gameweek) { gameweek_roster.gameweek }
   let(:num_players) { 5 }
   let(:players) { FactoryGirl.create_list :player, num_players }
-  let(:gameweek_players) {
+  let(:gameweek_players) do
     players.map do |player|
       FactoryGirl.create :gameweek_player, player: player, gameweek: gameweek
     end
-  }
-  let(:league_gameweek_players) {
+  end
+  let(:league_gameweek_players) do
     gameweek_players.map do |gameweek_player|
       FactoryGirl.create :league_gameweek_player, gameweek_player: gameweek_player, league: league
     end
-  }
+  end
 
   context "#next" do
     it "returns the gameweek_roster for the next gameweek" do

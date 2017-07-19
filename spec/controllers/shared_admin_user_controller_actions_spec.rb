@@ -43,9 +43,9 @@ shared_examples_for "an admin user" do |model_class, model_symbol|
     describe "POST #create" do
       context "with valid params" do
         it "creates a new #{model_class}" do
-          expect {
+          expect do
             post :create, params: {model_symbol => valid_attributes}, session: valid_session
-          }.to change(model_class, :count).by(1)
+          end.to change(model_class, :count).by(1)
         end
 
         it "assigns a newly created #{model_symbol} as @#{model_symbol}" do
@@ -113,9 +113,9 @@ shared_examples_for "an admin user" do |model_class, model_symbol|
     describe "DELETE #destroy" do
       it "destroys the requested #{model_symbol}" do
         model = model_class.create! valid_attributes
-        expect {
+        expect do
           delete :destroy, params: {id: model.to_param}, session: valid_session
-        }.to change(model_class, :count).by(-1)
+        end.to change(model_class, :count).by(-1)
       end
 
       it "redirects to the #{model_symbol.to_s.pluralize} list" do

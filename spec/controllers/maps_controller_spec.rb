@@ -26,23 +26,23 @@ RSpec.describe MapsController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Map. As you add validations to Map, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) {
+  let(:valid_attributes) do
     {
       name: "Cursed Hollow"
     }
-  }
+  end
 
-  let(:invalid_attributes) {
+  let(:invalid_attributes) do
     {
       name: nil
     }
-  }
+  end
 
-  let(:new_attributes) {
+  let(:new_attributes) do
     {
       name: "Blackheart's Bay"
     }
-  }
+  end
 
   def assert_update_successful map
     expect(map.name).to eq "Blackheart's Bay"

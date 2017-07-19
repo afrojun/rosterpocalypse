@@ -10,7 +10,7 @@ RSpec.describe PlayerPresenter do
   let(:hero4) { FactoryGirl.create :hero, name: "hero4" }
   let(:hero5) { FactoryGirl.create :hero, name: "hero5" }
 
-  let(:hero_stats) {
+  let(:hero_stats) do
     {
       hero1 => {win: 1, loss: 3, total: 4},
       hero2 => {win: 3, loss: 2, total: 5},
@@ -18,7 +18,7 @@ RSpec.describe PlayerPresenter do
       hero4 => {win: 4, loss: 3, total: 7},
       hero5 => {win: 2, loss: 1, total: 3}
     }
-  }
+  end
 
   context "#player_hero_win_loss_count" do
     it "returns an empty hash for players with no games" do

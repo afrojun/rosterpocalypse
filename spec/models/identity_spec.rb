@@ -25,21 +25,21 @@ end
 RSpec.describe Identity, type: :model do
   context "#find_or_create_for_oauth" do
     context "reddit" do
-      let(:auth) {
+      let(:auth) do
         OpenStruct.new(
           provider: "reddit",
           uid: "123fgh",
           info: OpenStruct.new(name: "rosterpocalypse"),
           credentials: OpenStruct.new(expires: true, expires_at: 1484498817, token: "T__8aisys_8AdnSias7_lo")
         )
-      }
+      end
       let(:expected_nickname) { "rosterpocalypse" }
 
       it_behaves_like "an Identity"
     end
 
     context "facebook" do
-      let(:auth) {
+      let(:auth) do
         OpenStruct.new(
           provider: "facebook",
           uid: "1231245",
@@ -50,14 +50,14 @@ RSpec.describe Identity, type: :model do
           ),
           credentials: OpenStruct.new(expires: true, expires_at: 1484498817, token: "XnrZCBJEmb78ZChTO4u60QxDQbi4CgGMB")
         )
-      }
+      end
       let(:expected_nickname) { "rosterpocalypse" }
 
       it_behaves_like "an Identity"
     end
 
     context "google" do
-      let(:auth) {
+      let(:auth) do
         OpenStruct.new(
           provider: "google_oauth2",
           uid: "11137893404",
@@ -71,14 +71,14 @@ RSpec.describe Identity, type: :model do
           ),
           credentials: OpenStruct.new(expires: true, expires_at: 1489641616, refresh_token: "1/NH7GFD489", token: "ya29.98q7UI")
         )
-      }
+      end
       let(:expected_nickname) { "rosterpocalypse" }
 
       it_behaves_like "an Identity"
     end
 
     context "twitter" do
-      let(:auth) {
+      let(:auth) do
         OpenStruct.new(
           provider: "twitter",
           uid: "182923769823",
@@ -92,21 +92,21 @@ RSpec.describe Identity, type: :model do
             urls: OpenStruct.new(Twitter: "", Website: "")),
           credentials: OpenStruct.new(secret: "JBEUI8rsuyahdf87ehUId", token: "98749er4058-siufh89dhfe8H")
         )
-      }
+      end
       let(:expected_nickname) { "rosterpocalypse" }
 
       it_behaves_like "an Identity"
     end
 
     context "bnet" do
-      let(:auth) {
+      let(:auth) do
         OpenStruct.new(
           provider: "bnet",
           uid: "12546374",
           info: OpenStruct.new(id: "12546374", battletag: "Rosterpocalypse#12345"),
           credentials: OpenStruct.new(expires: true, expires_at: 1487073964, token: "sdjsid8s9dhuysd")
         )
-      }
+      end
       let(:expected_nickname) { "Rosterpocalypse.12345" }
 
       it_behaves_like "an Identity"

@@ -11,21 +11,21 @@ RSpec.describe PrivateLeaguesController, type: :controller do
   let(:manager) { FactoryGirl.create :manager, user: subject.current_user }
   let(:league) { FactoryGirl.create :private_league, valid_attributes.merge(manager: manager) }
 
-  let(:valid_attributes) {
+  let(:valid_attributes) do
     {
       name: "Big League",
       tournament_id: tournament.id,
       role_stat_modifiers: League::DEFAULT_ROLE_STAT_MODIFIERS,
       required_player_roles: League::DEFAULT_REQUIRED_PLAYER_ROLES
     }
-  }
+  end
 
-  let(:invalid_attributes) {
+  let(:invalid_attributes) do
     {
       name: "a",
       tournament_id: tournament.id
     }
-  }
+  end
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
@@ -56,9 +56,9 @@ RSpec.describe PrivateLeaguesController, type: :controller do
   describe "POST #create" do
     context "with valid params" do
       it "creates a new League" do
-        expect {
+        expect do
           post :create, params: {private_league: valid_attributes}, session: valid_session
-        }.to change(PrivateLeague, :count).by(1)
+        end.to change(PrivateLeague, :count).by(1)
       end
 
       it "assigns a newly created league as @league" do
@@ -88,9 +88,9 @@ RSpec.describe PrivateLeaguesController, type: :controller do
 
   describe "PUT #update" do
     context "with valid params" do
-      let(:new_attributes) {
+      let(:new_attributes) do
         skip("Add a hash of attributes valid for your model")
-      }
+      end
 
       it "updates the requested league" do
         put :update, params: {id: league.to_param, private_league: new_attributes}, session: valid_session
@@ -125,9 +125,9 @@ RSpec.describe PrivateLeaguesController, type: :controller do
   describe "DELETE #destroy" do
     it "destroys the requested league" do
       league
-      expect {
+      expect do
         delete :destroy, params: {id: league.to_param}, session: valid_session
-      }.to change(League, :count).by(-1)
+      end.to change(League, :count).by(-1)
     end
 
     it "redirects to the leagues list" do
