@@ -6,7 +6,7 @@ class Hero < ApplicationRecord
   has_many :players, through: :game_details
   has_many :games, through: :game_details
 
-  HERO_CLASSIFICATIONS = ["Warrior", "Support", "Specialist", "Assassin", "Multiclass"]
+  HERO_CLASSIFICATIONS = ["Warrior", "Support", "Specialist", "Assassin", "Multiclass"].freeze
 
   validates :name, presence: true, uniqueness: true
   validates :internal_name, presence: true, uniqueness: true
@@ -97,5 +97,5 @@ class Hero < ApplicationRecord
 
     # Multiclass
     "Varian" => { name: "Varian", classification: "Multiclass" }
-  }
+  }.freeze
 end

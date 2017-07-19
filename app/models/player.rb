@@ -20,8 +20,8 @@ class Player < ApplicationRecord
   after_update :update_alternate_names
   before_destroy :validate_destroy
 
-  ROLES = %w{ Support Warrior Assassin Flex }
-  FLEX_CLASSIFICATIONS = %w{ Specialist Multiclass Flex }
+  ROLES = %w{ Support Warrior Assassin Flex }.freeze
+  FLEX_CLASSIFICATIONS = %w{ Specialist Multiclass Flex }.freeze
 
   # This is the maximum and minimum values that a player can have to
   # ensure that the best players don't become overly expensive and

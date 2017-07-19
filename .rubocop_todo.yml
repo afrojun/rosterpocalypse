@@ -435,19 +435,6 @@ Style/MultilineBlockChain:
   Exclude:
     - 'app/models/league_gameweek_player.rb'
 
-# Offense count: 13
-# Cop supports --auto-correct.
-Style/MutableConstant:
-  Exclude:
-    - 'app/models/hero.rb'
-    - 'app/models/league.rb'
-    - 'app/models/league_gameweek_player.rb'
-    - 'app/models/manager.rb'
-    - 'app/models/match.rb'
-    - 'app/models/player.rb'
-    - 'app/models/team.rb'
-    - 'app/models/tournament.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.

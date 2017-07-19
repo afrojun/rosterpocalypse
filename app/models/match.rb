@@ -37,7 +37,7 @@ class Match < ApplicationRecord
     [2, 5] => 9,
     [3, 5] => 9,
     [4, 5] => 9
-  }
+  }.freeze
 
   # Add a game to an existing match if one exists, otherwise create a Match for the game
   def self.add_game(game)

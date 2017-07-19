@@ -8,7 +8,7 @@ class Team < ApplicationRecord
   has_many :players
   has_many :gameweek_players
 
-  REGIONS = %w{ CN EU KR NA }
+  REGIONS = %w{ CN EU KR NA }.freeze
 
   validates :name, presence: true, uniqueness: true
   validates :region, inclusion: { in: REGIONS + [nil, ""] }

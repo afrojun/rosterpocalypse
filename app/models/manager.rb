@@ -2,8 +2,8 @@ class Manager < ApplicationRecord
   extend FriendlyId
   friendly_id :name
 
-  STRIPE_SUBSCRIPTION_PLAN_ID = "rosterpocalypse-season-pass-1.0"
-  STRIPE_SUBSCRIPTION_TRIAL_PLAN_ID = "rosterpocalypse-season-pass-with-trial-1.0"
+  STRIPE_SUBSCRIPTION_PLAN_ID = "rosterpocalypse-season-pass-1.0".freeze
+  STRIPE_SUBSCRIPTION_TRIAL_PLAN_ID = "rosterpocalypse-season-pass-with-trial-1.0".freeze
 
   enum customer_type: [:free, :paid]
   enum subscription_status: [:unsubscribed, :pending, :trialing, :active, :past_due, :canceled, :unpaid, :do_not_renew]

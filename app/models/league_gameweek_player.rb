@@ -10,7 +10,7 @@ class LeagueGameweekPlayer < ApplicationRecord
 
   serialize :points_breakdown, Hash
 
-  REPRESENTATIVE_GAME_NAME = "representative_game"
+  REPRESENTATIVE_GAME_NAME = "representative_game".freeze
 
   # FIXME: Move from GameweekPlayer
   def self.update_pick_rate_and_efficiency_for_gameweek(gameweek)

@@ -10,7 +10,7 @@ class Tournament < ApplicationRecord
   has_many :matches, -> { order 'start_date ASC' }, through: :gameweeks
   has_many :gameweek_rosters, through: :gameweeks
 
-  GLOBAL_REGION = "Global"
+  GLOBAL_REGION = "Global".freeze
   REGIONS = Team::REGIONS + [GLOBAL_REGION]
 
   validates :name, presence: true, uniqueness: true
@@ -26,7 +26,7 @@ class Tournament < ApplicationRecord
     "NA" => "America/Los_Angeles",
     "Global" => "UTC",
     "" => "UTC"
-  }
+  }.freeze
 
   def self.active_tournaments
     Tournament.where('end_date > ?', Time.now.utc)
