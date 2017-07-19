@@ -112,8 +112,8 @@ class GameweekPlayer < ApplicationRecord
     # greatly reduces the number of actual league_gameweek_players we need to process.
     # Once we finish processing the sample one, we simply copy the key attributes
     # (points_breakdown and points) to all the other league_gameweek_players.
-    leagues.group_by { |l| l.role_stat_modifiers }.each do |_, same_mods_leagues|
-      same_mods_leagues.group_by { |l| l.use_representative_game }.each do |_, rep_game_leagues|
+    leagues.group_by(&:role_stat_modifiers).each do |_, same_mods_leagues|
+      same_mods_leagues.group_by(&:use_representative_game).each do |_, rep_game_leagues|
         sample_league = rep_game_leagues.shift
         sample_league_gameweek_player = league_gameweek_players.find_by league: sample_league
         sample_league_gameweek_player.add game, detail

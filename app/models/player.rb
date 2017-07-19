@@ -20,8 +20,8 @@ class Player < ApplicationRecord
   after_update :update_alternate_names
   before_destroy :validate_destroy
 
-  ROLES = %w{ Support Warrior Assassin Flex }.freeze
-  FLEX_CLASSIFICATIONS = %w{ Specialist Multiclass Flex }.freeze
+  ROLES = %w[Support Warrior Assassin Flex].freeze
+  FLEX_CLASSIFICATIONS = %w[Specialist Multiclass Flex].freeze
 
   # This is the maximum and minimum values that a player can have to
   # ensure that the best players don't become overly expensive and
@@ -40,13 +40,13 @@ class Player < ApplicationRecord
   def validate_destroy
     roster_count = rosters.count
     game_count = game_details.count
-    if game_count > 0
-      errors.add(:base, "Unable to delete #{name} since it has #{game_count} associated #{"game".pluralize(game_count)}.")
+    if game_count.positive?
+      errors.add(:base, "Unable to delete #{name} since it has #{game_count} associated #{'game'.pluralize(game_count)}.")
       throw :abort
     end
 
-    if roster_count > 0
-      errors.add(:base, "Unable to delete #{name} since it has #{roster_count} associated #{"roster".pluralize(roster_count)}.")
+    if roster_count.positive?
+      errors.add(:base, "Unable to delete #{name} since it has #{roster_count} associated #{'roster'.pluralize(roster_count)}.")
       throw :abort
     end
   end

@@ -13,6 +13,6 @@ module FantasyHots
     # -- all .rb files in that directory are automatically loaded.
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.autoload_paths += %W(#{config.root}/lib)
+    config.autoload_paths += %W[#{config.root}/lib]
   end
 end

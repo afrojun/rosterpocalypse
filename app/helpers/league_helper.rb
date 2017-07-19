@@ -21,7 +21,7 @@ module LeagueHelper
   def link_to_manage_league_membership(league, action, button_size_class)
     join_path = "#{action}_#{league.class.to_s.underscore}_path"
     button_colour_class = action.to_sym == :join ? "btn-info" : "btn-danger"
-    link_to "#{action.to_s.titleize}",
+    link_to action.to_s.titleize,
             send(join_path.to_sym, league),
             method: :post,
             class: "btn #{button_colour_class} #{button_size_class}"

@@ -451,47 +451,12 @@ Style/Next:
 Style/NumericLiterals:
   MinDigits: 15
 
-# Offense count: 12
-# Cop supports --auto-correct.
-# Configuration parameters: AutoCorrect, EnforcedStyle, SupportedStyles.
-# SupportedStyles: predicate, comparison
-Style/NumericPredicate:
-  Exclude:
-    - 'spec/**/*'
-    - 'app/controllers/managers_controller.rb'
-    - 'app/models/hero.rb'
-    - 'app/models/league.rb'
-    - 'app/models/map.rb'
-    - 'app/models/match.rb'
-    - 'app/models/player.rb'
-    - 'app/models/roster.rb'
-    - 'app/models/team.rb'
-    - 'app/presenters/hero_presenter.rb'
-    - 'lib/stripe_event_subscribers/customer_subscription_trial_will_end.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: AllowSafeAssignment.
 Style/ParenthesesAroundCondition:
   Exclude:
     - 'app/services/game_stats_ingestion_service.rb'
-
-# Offense count: 13
-# Cop supports --auto-correct.
-# Configuration parameters: PreferredDelimiters.
-Style/PercentLiteralDelimiters:
-  Exclude:
-    - 'Guardfile'
-    - 'app/models/player.rb'
-    - 'app/models/roster.rb'
-    - 'app/models/team.rb'
-    - 'app/models/transfer.rb'
-    - 'app/models/user.rb'
-    - 'config/application.rb'
-    - 'config/initializers/friendly_id.rb'
-    - 'config/initializers/react_on_rails.rb'
-    - 'config/spring.rb'
-    - 'lib/tasks/cucumber.rake'
 
 # Offense count: 2
 # Configuration parameters: NamePrefix, NamePrefixBlacklist, NameWhitelist.
@@ -549,45 +514,12 @@ Style/SelfAssignment:
 Style/StringLiterals:
   Enabled: false
 
-# Offense count: 15
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, SupportedStyles.
-# SupportedStyles: single_quotes, double_quotes
-Style/StringLiteralsInInterpolation:
-  Exclude:
-    - 'app/controllers/omniauth_callbacks_controller.rb'
-    - 'app/controllers/registrations_controller.rb'
-    - 'app/controllers/rosters_controller.rb'
-    - 'app/controllers/tournaments_controller.rb'
-    - 'app/controllers/welcome_controller.rb'
-    - 'app/models/hero.rb'
-    - 'app/models/map.rb'
-    - 'app/models/player.rb'
-    - 'app/models/roster.rb'
-    - 'app/models/team.rb'
-    - 'spec/requests/shared_restricted_index_page_request_spec.rb'
-
 # Offense count: 65
 # Cop supports --auto-correct.
 # Configuration parameters: MinSize, SupportedStyles.
 # SupportedStyles: percent, brackets
 Style/SymbolArray:
   EnforcedStyle: brackets
-
-# Offense count: 9
-# Cop supports --auto-correct.
-# Configuration parameters: IgnoredMethods.
-# IgnoredMethods: respond_to, define_method
-Style/SymbolProc:
-  Exclude:
-    - 'app/controllers/games_controller.rb'
-    - 'app/models/gameweek.rb'
-    - 'app/models/gameweek_player.rb'
-    - 'app/models/map.rb'
-    - 'app/presenters/hero_presenter.rb'
-    - 'app/services/game_stats_ingestion_service.rb'
-    - 'lib/tasks/maintenance_tasks.rake'
-    - 'lib/tasks/scheduler.rake'
 
 # Offense count: 4
 # Cop supports --auto-correct.
@@ -600,33 +532,12 @@ Style/TernaryParentheses:
     - 'app/models/league_gameweek_player.rb'
     - 'app/models/match.rb'
 
-# Offense count: 8
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyleForMultiline, SupportedStylesForMultiline.
-# SupportedStylesForMultiline: comma, consistent_comma, no_comma
-Style/TrailingCommaInLiteral:
-  Exclude:
-    - 'app/models/league.rb'
-    - 'app/services/game_stats_ingestion_service.rb'
-    - 'db/migrate/20170618025959_add_league_customisation_options_to_league.rb'
-    - 'spec/controllers/game_details_controller_spec.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: AllowNamedUnderscoreVariables.
 Style/TrailingUnderscoreVariable:
   Exclude:
     - 'app/services/game_stats_ingestion_service.rb'
-
-# Offense count: 5
-# Cop supports --auto-correct.
-Style/UnneededInterpolation:
-  Exclude:
-    - 'app/controllers/omniauth_callbacks_controller.rb'
-    - 'app/controllers/registrations_controller.rb'
-    - 'app/controllers/welcome_controller.rb'
-    - 'app/helpers/league_helper.rb'
-    - 'app/models/roster.rb'
 
 # Offense count: 31
 # Cop supports --auto-correct.
@@ -635,6 +546,8 @@ Style/UnneededInterpolation:
 Style/WordArray:
   EnforcedStyle: percent
   MinSize: 11
+  Exclude:
+    - 'db/schema.rb'
 
 # Offense count: 1
 # Cop supports --auto-correct.

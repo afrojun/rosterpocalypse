@@ -16,8 +16,8 @@ class Hero < ApplicationRecord
 
   def validate_destroy
     game_count = game_details.size
-    if game_count > 0
-      errors.add(:base, "Unable to delete #{name} since it has #{game_count} associated #{"game".pluralize(game_count)}.")
+    if game_count.positive?
+      errors.add(:base, "Unable to delete #{name} since it has #{game_count} associated #{'game'.pluralize(game_count)}.")
       throw :abort
     end
   end

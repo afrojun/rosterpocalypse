@@ -80,7 +80,7 @@ class ManagersController < RosterpocalypseController
 
   def reactivate_subscription
     stripe_api_call do
-      if @manager.stripe_customer_sources.count > 0
+      if @manager.stripe_customer_sources.count.positive?
         @manager.reactivate_stripe_subscription
 
         UserMailer.subscription_reactivated(@manager.user).deliver_later

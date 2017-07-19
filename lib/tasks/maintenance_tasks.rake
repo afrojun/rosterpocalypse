@@ -2,7 +2,7 @@ desc "These tasks are used for initial set up and ongoing maintenance"
 
 task infer_player_roles: :environment do
   puts "Inferring player roles..."
-  Player.all.each { |player| player.infer_role }
+  Player.all.each(&:infer_role)
   puts "done."
 end
 

@@ -53,7 +53,7 @@ class Match < ApplicationRecord
                           end
                         end
 
-    if candidate_matches.size == 0
+    if candidate_matches.size.zero?
       Rails.logger.info "Creating a new Match..."
       match = Match.new(
         team_1: game.teams.first,

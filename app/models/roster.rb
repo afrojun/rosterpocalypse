@@ -36,7 +36,7 @@ class Roster < ApplicationRecord
   end
 
   def self.csv_attributes
-    %w{id manager.user.id manager.slug tournament.slug tournament.region leagues.size players.size transfers.size created_at}
+    %w[id manager.user.id manager.slug tournament.slug tournament.region leagues.size players.size transfers.size created_at]
   end
 
   # Dynamically define the current, previous and next gameweek and
@@ -79,7 +79,7 @@ class Roster < ApplicationRecord
   end
 
   def available_transfers
-    if current_gameweek_roster.remaining_transfers > 0
+    if current_gameweek_roster.remaining_transfers.positivve?
       current_gameweek_roster.remaining_transfers
     else
       0
@@ -230,7 +230,7 @@ class Roster < ApplicationRecord
       league.active_required_player_role_limitations.each do |role, min|
         role_players = players.select { |player| player.role.downcase == role.to_s }
         unless role_players.size >= min
-          errors.add :roster, "needs #{min} #{role} #{"player".pluralize min}"
+          errors.add :roster, "needs #{min} #{role} #{'player'.pluralize min}"
           valid = false
         end
       end
@@ -288,7 +288,7 @@ class Roster < ApplicationRecord
         return true
       else
         errors.add(:roster, "has #{max_transfers} " \
-                   "#{"transfer".pluralize(max_transfers)} available in this window")
+                   "#{'transfer'.pluralize(max_transfers)} available in this window")
       end
     else
       errors.add(:roster, "transfers must maintain the roster size, " \

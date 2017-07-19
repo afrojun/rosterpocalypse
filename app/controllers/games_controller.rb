@@ -66,7 +66,7 @@ class GamesController < RosterpocalypseController
 
     games = Game.where(id: params[:game_ids])
     n_games = games.size
-    result = games.all? { |game| game.destroy }
+    result = games.all?(&:destroy)
 
     respond_to do |format|
       if result

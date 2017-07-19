@@ -32,14 +32,14 @@ class League < ApplicationRecord
     "assassin" => { "solo_kills" => "2", "assists" => "1", "time_spent_dead" => "20", "win" => "5" },
     "flex"     => { "solo_kills" => "2", "assists" => "1", "time_spent_dead" => "20", "win" => "5" },
     "warrior"  => { "solo_kills" => "1", "assists" => "1", "time_spent_dead" => "40", "win" => "5" },
-    "support"  => { "solo_kills" => "1", "assists" => "1", "time_spent_dead" => "30", "win" => "5" },
+    "support"  => { "solo_kills" => "1", "assists" => "1", "time_spent_dead" => "30", "win" => "5" }
   }.freeze
 
   DEFAULT_REQUIRED_PLAYER_ROLES = {
     "assassin" => "0",
     "flex"     => "0",
     "warrior"  => "1",
-    "support"  => "1",
+    "support"  => "1"
   }.freeze
 
   def self.active_leagues
@@ -73,14 +73,14 @@ class League < ApplicationRecord
 
   def active_required_player_role_limitations
     numeric_required_player_roles.select do |role, num|
-      num > 0
+      num.positive?
     end
   end
 
   # If any of the role_stat_modifiers are negative numbers, we assume that
   # the league admin allows overall roster scores to also be negative
   def allow_negative_scores?
-    role_stat_modifiers.values.map(&:values).flatten.uniq.sort.first.to_i < 0
+    role_stat_modifiers.values.map(&:values).flatten.uniq.sort.first.to_i.negative?
   end
 
   def roster_rank(roster)

@@ -166,7 +166,7 @@ class GameStatsIngestionService
 
         # Sometimes the tournament name has some extra characters at the end of it, try to remove them if we can
         unless Tournament.where(name: tournament_name).any?
-          alternate_name = tournament_name.split(" ").tap{|t| t.pop}.join(" ")
+          alternate_name = tournament_name.split(" ").tap(&:pop).join(" ")
           tournament_name = alternate_name if Tournament.where(name: alternate_name).any?
         end
 
@@ -184,7 +184,7 @@ class GameStatsIngestionService
           "CN" => ["China", "Gold Series"],
           "EU" => ["Europe", "Valencia", "Tours", "ZOTAC"],
           "KR" => ["Korea", "Super League"],
-          "NA" => ["North America", "Austin", "Bloodlust"],
+          "NA" => ["North America", "Austin", "Bloodlust"]
         }
         regions.detect(-> {[Tournament::GLOBAL_REGION]}) do |region, keywords|
           tournament_name.include?(region) || keywords.any? { |keyword| tournament_name.include?(keyword) }

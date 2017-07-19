@@ -112,6 +112,6 @@ class TournamentsController < RosterpocalypseController
   end
 
   def set_page_title
-    @page_title = "#{@tournament.name}#{@gameweek.present? ? " : #{@gameweek.name}" : ""}"
+    @page_title = "#{@tournament.name}#{@gameweek.present? ? " : #{@gameweek.name}" : ''}"
   end
 end

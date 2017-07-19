@@ -31,7 +31,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       set_flash_message(:notice, :success, kind: provider.humanize.split(" ").first) if is_navigational_format?
     else
       message = "Creation of new accounts using #{provider.capitalize} is no longer supported."
-      logger.warn "#{message}"
+      logger.warn message.to_s
       flash[:alert] = "#{message}. Please use one of the other supported services or email."
       redirect_to new_user_registration_url
     end
@@ -53,7 +53,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
                 end
               else
                 message = "Unable to retrieve the email address from the OAuth details provided by #{provider}"
-                logger.error "#{message}: #{request.env["omniauth.auth"].except("extra")}"
+                logger.error "#{message}: #{request.env['omniauth.auth'].except('extra')}"
                 flash[:alert] = "#{message}."
                 redirect_to new_user_registration_url
               end

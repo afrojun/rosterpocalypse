@@ -11,13 +11,13 @@ class AddLeagueCustomisationOptionsToLeague < ActiveRecord::Migration[5.0]
       assassin: { solo_kills: 3, assists: 1, time_spent_dead: 20, win: 5 },
       flex:     { solo_kills: 3, assists: 1, time_spent_dead: 20, win: 5 },
       warrior:  { solo_kills: 1, assists: 1, time_spent_dead: 30, win: 5 },
-      support:  { solo_kills: 1, assists: 1, time_spent_dead: 30, win: 5 },
+      support:  { solo_kills: 1, assists: 1, time_spent_dead: 30, win: 5 }
     }
     required_player_roles = {
       assassin: 0,
       flex:     0,
       warrior:  1,
-      support:  1,
+      support:  1
     }
     League.all.each do |league|
       league.update role_stat_modifiers: role_stat_modifiers,

@@ -45,7 +45,7 @@ class Gameweek < ApplicationRecord
   end
 
   def points_percentile(percentile)
-    gameweek_rosters.extend(DescriptiveStatistics).percentile(percentile) { |gameweek_roster| gameweek_roster.points }
+    gameweek_rosters.extend(DescriptiveStatistics).percentile(percentile, &:points)
   end
 
   def default_league

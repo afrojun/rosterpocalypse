@@ -33,7 +33,7 @@ class RegistrationsController < Devise::RegistrationsController
       ip: resource.current_sign_in_ip
     }
 
-    attributes = JSON.parse cookies["mp_#{ENV["MIXPANEL_ID"]}_mixpanel"]
+    attributes = JSON.parse cookies["mp_#{ENV['MIXPANEL_ID']}_mixpanel"]
     distinct_id = attributes.delete('distinct_id')
 
     mixpanel = Mixpanel::Tracker.new(ENV["MIXPANEL_ID"])
@@ -46,6 +46,6 @@ class RegistrationsController < Devise::RegistrationsController
     mixpanel.track resource.id, 'User Signed Up'
   rescue => e
     logger.error "Failed to track user with Mixpanel: [#{e.class}] #{e.message}"
-    logger.error "#{e.backtrace}"
+    logger.error e.backtrace.to_s
   end
 end

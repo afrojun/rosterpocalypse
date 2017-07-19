@@ -25,7 +25,7 @@ class User < ApplicationRecord
   end
 
   def self.csv_attributes
-    %w{id username manager.slug unconfirmed? created_at manager.rosters.size}
+    %w[id username manager.slug unconfirmed? created_at manager.rosters.size]
   end
 
   def create_manager

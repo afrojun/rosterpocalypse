@@ -8,7 +8,7 @@ class Team < ApplicationRecord
   has_many :players
   has_many :gameweek_players
 
-  REGIONS = %w{ CN EU KR NA }.freeze
+  REGIONS = %w[CN EU KR NA].freeze
 
   validates :name, presence: true, uniqueness: true
   validates :region, inclusion: { in: REGIONS + [nil, ""] }
@@ -29,8 +29,8 @@ class Team < ApplicationRecord
 
   def validate_destroy
     game_count = games.size
-    if game_count > 0
-      errors.add(:base, "Unable to delete #{name} since it has #{game_count} associated #{"game".pluralize(game_count)}.")
+    if game_count.positive?
+      errors.add(:base, "Unable to delete #{name} since it has #{game_count} associated #{'game'.pluralize(game_count)}.")
       throw :abort
     else
       players.each do |player|

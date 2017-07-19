@@ -37,7 +37,7 @@ RSpec.describe GameDetailsController, type: :controller do
       deaths: 3,
       time_spent_dead: 50,
       team_colour: "blue",
-      win: true,
+      win: true
     }
   end
 
@@ -52,7 +52,7 @@ RSpec.describe GameDetailsController, type: :controller do
       deaths: 3,
       time_spent_dead: 50,
       team_colour: "blue",
-      win: nil,
+      win: nil
     }
   end
 
@@ -67,7 +67,7 @@ RSpec.describe GameDetailsController, type: :controller do
       deaths: 3,
       time_spent_dead: 50,
       team_colour: "red",
-      win: true,
+      win: true
     }
   end
 
