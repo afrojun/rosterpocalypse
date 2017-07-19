@@ -141,6 +141,8 @@ group :test do
   # database_cleaner is not required, but highly recommended
   gem 'database_cleaner'
   gem 'rails-controller-testing'
+  # Code coverage stats
+  gem 'simplecov', require: false
 end
 
 group :development do
