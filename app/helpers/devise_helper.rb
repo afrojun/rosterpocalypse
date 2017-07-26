@@ -22,11 +22,14 @@ module DeviseHelper
     !invalid_email_domains.include?(email_domain)
   end
 
-  def identity_provider_logo(provider)
+  def identity_provider_logo(provider, large = true)
     if provider == :bnet
       battlenet_logo
     else
-      content_tag :i, '', class: "fa fa-2x #{identity_provider_logo_class_map[provider]}", title: provider.to_s.split('_').first.capitalize
+      identity_class = identity_provider_logo_class_map[provider]
+      provider_name = provider.to_s.split('_').first.capitalize
+      size_class = large ? "fa-2x" : ""
+      content_tag :i, '', class: "identity-provider-logo fa #{size_class} #{identity_class}", title: provider_name
     end
   end
 

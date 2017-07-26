@@ -70,7 +70,7 @@
 
 .container
   .row
-    .col-md-6.footer-links
+    .col-md-4.footer-links
       = link_to "About & FAQ", about_path
       -# %b &#8226;
       -# = link_to "Credits", credits_path
@@ -78,7 +78,16 @@
       -# = link_to "Privacy Policy", privacy_path
       -# %b &#8226;
       -# = link_to "Terms and Conditions", terms_path
-    .col-md-6
+
+    .col-md-4.center
+      = link_to "https://twitter.com/rosterpocalypse" do
+        = identity_provider_logo :twitter
+      = link_to "https://reddit.com/r/rosterpocalypse" do
+        = identity_provider_logo :reddit
+      = link_to "https://facebook.com/rosterpocalypse" do
+        = identity_provider_logo :facebook
+
+    .col-md-4
       .float-xs-right
         %i.fa.fa-copyright
         2017 Rosterpocalypse
