@@ -4,7 +4,15 @@ module Mixpanelable
   private
 
   def mp_track(event_name, options = {})
-    mp_track_for_user(current_user, event_name, options)
+    if user_signed_in?
+      mp_track_for_user(current_user, event_name, options)
+    else
+      if (id = @mp_properties && @mp_properties['distinct_id'])
+        mp_track_for_id(id, event_name, options)
+      else
+        logger.warn "Unable to track a vist using Mixpanel, ID is missing"
+      end
+    end
   end
 
   def mp_track_charge(amount, options = {})
@@ -15,19 +23,19 @@ module Mixpanelable
   end
 
   def mp_track_for_user(user, event_name, options = {})
+    options[:ip] = user.current_sign_in_ip.to_s
+    mp_track_for_id(user.id, event_name, options)
+  end
+
+  def mp_track_for_id(id, event_name, options = {})
     return if token.blank?
 
-    options[:ip] = user.current_sign_in_ip.to_s
-    mixpanel.track(user.id, event_name, options)
+    mixpanel.track(id, event_name, options.merge(campaign_tracking_params.to_h))
   end
 
   def set_mp_cookie_information
-    # In your case, the cookies will be namespaced differently
-    # so remember to use your own namespace.
-    mp_cookies = cookies[namespace]
-    return if mp_cookies.blank?
-
     @mp_properties = safely_retrieve_attributes
+    Rails.logger.info "Set up @mp_properties: #{@mp_properties.inspect}"
   end
 
   def identify_on_mixpanel(user)
@@ -37,7 +45,7 @@ module Mixpanelable
 
     # attributes is existing Mixpanel Params that are cookie'd by
     # Mixpanel Javascript
-    attributes = safely_retrieve_attributes
+    attributes = @mp_properties
     mixpanel_params = {
       '$email': user.email,
       '$created': user.created_at.as_json,
@@ -70,11 +78,16 @@ module Mixpanelable
   end
 
   def safely_retrieve_attributes
-    JSON.parse(cookies[namespace]) || {}
-  rescue JSON::ParserError => e
+    JSON.parse(cookies.fetch(namespace)) || {}
+  rescue => e
     Rails.logger.error 'Mixpanel Analytics Cookie Retrieval Error: ' \
-      "message: #{e.message}; " \
-      "cookie: #{cookies[namespace]}"
+      "[#{e.class}] #{e.message}; " \
+      "cookie: #{cookies[namespace].inspect}; " \
+      "user_agent: #{request.user_agent}"
     {}
+  end
+
+  def campaign_tracking_params
+    params.permit(:ref, :source, :utm_content, :utm_medium, :utm_source, :utm_campaign)
   end
 end

@@ -12,12 +12,14 @@ class LeaguesController < RosterpocalypseController
     @featured_leagues = League.where(featured: true).order('id')
     # Randommize the order of featured leagues
     # @featured_leagues = @featured_leagues.sample(@featured_leagues.size)
+    mp_track 'League Index Page'
   end
 
   # GET /leagues/1
   # GET /leagues/1.json
   def show
     @rosters = @league.rosters.includes(manager: [:user]).order(score: :desc).page params[:page]
+    mp_track 'League Details Page', @league.attributes
   end
 
   # GET /leagues/new

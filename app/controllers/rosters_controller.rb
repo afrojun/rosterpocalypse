@@ -36,6 +36,7 @@ class RostersController < RosterpocalypseController
       rosterDetailsPath: details_roster_url(@roster),
       showManageRoster: current_user.present? && current_user.manager == @roster.manager
     }
+    mp_track 'Roster Details Page', @roster.attributes
   end
 
   # GET /rosters/1/manage

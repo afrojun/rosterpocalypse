@@ -6,7 +6,6 @@ class SessionsController < Devise::SessionsController
     super do |resource|
       if resource.persisted?
         if resource.mp_properties.blank?
-          Rails.logger.info "Set initial Mixpanel properties: #{@mp_properties.inspect}"
           resource.update mp_properties: @mp_properties
           identify_on_mixpanel resource
         end
