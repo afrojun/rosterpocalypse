@@ -27,7 +27,7 @@ module Mixpanelable
     mp_cookies = cookies[namespace]
     return if mp_cookies.blank?
 
-    @mp_properties = JSON.parse(mp_cookies)
+    @mp_properties = safely_retrieve_attributes
   end
 
   def identify_on_mixpanel(user)

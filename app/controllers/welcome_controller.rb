@@ -4,7 +4,11 @@ class WelcomeController < ApplicationController
 
   def index
     id = user_signed_in? ? current_user.id : safely_retrieve_attributes['distinct_id']
-    mixpanel.track id, 'View Homepage', welcome_params if id.present?
+    if id.present?
+      mixpanel.track id, 'View Homepage', welcome_params
+    else
+      logger.warn "Unable to track a vist using Mixpanel, user ID is missing: #{@mp_properties}"
+    end
   end
 
   def letsencrypt
