@@ -1,6 +1,6 @@
 module LeagueHelper
   def league_membership_change(league, button_size_class)
-    return unless user_signed_in?
+    return unless user_signed_in? && league.joinable?
 
     roster = Roster.find_by_manager_and_league current_user.manager, league
     if league.rosters.include? roster

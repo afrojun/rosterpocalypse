@@ -16,8 +16,8 @@ class Tournament < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :region, inclusion: { in: REGIONS }
 
-  after_create :update_gameweeks
-  after_update :update_gameweeks
+  after_create :create_gameweeks
+  after_update :create_gameweeks
 
   REGION_TIME_ZONE_MAP = {
     'CN' => 'Asia/Shanghai',
@@ -77,11 +77,6 @@ class Tournament < ApplicationRecord
     @public_leagues ||= leagues.where(type: 'PublicLeague')
   end
 
-  def update_gameweeks
-    create_gameweeks
-    destroy_gameweeks
-  end
-
   def create_gameweeks
     gameweek_number = 0
     # Gameweeks start at midday UTC on Mondays
@@ -102,18 +97,6 @@ class Tournament < ApplicationRecord
       gameweek_number += 1
       gameweek_start_date = gameweek_start_date.advance(weeks: 1)
       gameweek_roster_lock_date = gameweek_roster_lock_date.advance(weeks: 1)
-    end
-  end
-
-  def destroy_gameweeks
-    # Gameweeks where the Tournament start_date is after the Gameweek end_date OR the Gameweek start_date is after the Tournament end_date
-    gameweeks.where('start_date > ? OR end_date < ?', end_date, start_date - 1.week).find_each do |gameweek|
-      if gameweek.games.blank? && gameweek.gameweek_rosters.blank? && gameweek.gameweek_players.blank?
-        Rails.logger.info "Destroying orphaned gameweek: #{gameweek.inspect}."
-        gameweek.destroy
-      else
-        Rails.logger.info "Unable to delete orphaned Gameweek since there are still some resources referring to it: #{gameweek.inspect}."
-      end
     end
   end
 end

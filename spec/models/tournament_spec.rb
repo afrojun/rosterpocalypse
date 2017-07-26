@@ -105,23 +105,6 @@ RSpec.describe Tournament, type: :model do
             expect(tournament.gameweeks.count).to eq 3
           end
         end
-
-        context 'should remove gameweeks' do
-          it 'removes gameweeks when the tournament has moved away from its date range' do
-            expect(tournament.gameweeks.count).to eq 3
-            new_start_date = tournament.start_date + 1.week + 12.hours
-            tournament.update start_date: new_start_date
-            expect(tournament.gameweeks.count).to eq 2
-          end
-
-          it 'does not remove gameweeks which have associated resources' do
-            expect(tournament.gameweeks.count).to eq 3
-            FactoryGirl.create :game, gameweek: tournament.gameweeks.first
-            new_start_date = tournament.start_date + 1.week + 12.hours
-            tournament.update start_date: new_start_date
-            expect(tournament.gameweeks.count).to eq 3
-          end
-        end
       end
     end
   end

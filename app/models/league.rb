@@ -53,6 +53,10 @@ class League < ApplicationRecord
     super(nom.squish)
   end
 
+  def joinable?
+    tournament.gameweeks.last.roster_lock_date > Time.now.utc
+  end
+
   def populate_default_options
     update(role_stat_modifiers: DEFAULT_ROLE_STAT_MODIFIERS) if role_stat_modifiers.blank?
     update(required_player_roles: DEFAULT_REQUIRED_PLAYER_ROLES) if required_player_roles.blank?

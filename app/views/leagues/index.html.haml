@@ -7,18 +7,20 @@
   #featuredLeaguesCarouselContainer
 
     #featuredLeaguesCarouselSlides.carousel.slide{"data-ride" => "carousel"}
-      %a.carousel-control-arrow{"data-slide" => "prev", :href => "#featuredLeaguesCarouselSlides", :role => "button"}
-        %i.fa.fa-chevron-left{"aria-hidden" => "true"}
-        %span.sr-only Previous
+      - if @featured_leagues.size > 1
+        %a.carousel-control-arrow{"data-slide" => "prev", :href => "#featuredLeaguesCarouselSlides", :role => "button"}
+          %i.fa.fa-chevron-left{"aria-hidden" => "true"}
+          %span.sr-only Previous
 
       .carousel-inner{:role => "listbox"}
         - @featured_leagues.each_with_index do |featured_league, index|
           .carousel-item{ class: index == 0 ? "active" : "" }
             = render "featured_league", league: featured_league
 
-      %a.carousel-control-arrow{"data-slide" => "next", :href => "#featuredLeaguesCarouselSlides", :role => "button"}
-        %i.fa.fa-chevron-right{"aria-hidden" => "true"}
-        %span.sr-only Next
+      - if @featured_leagues.size > 1
+        %a.carousel-control-arrow{"data-slide" => "next", :href => "#featuredLeaguesCarouselSlides", :role => "button"}
+          %i.fa.fa-chevron-right{"aria-hidden" => "true"}
+          %span.sr-only Next
 
       -#%ol.carousel-indicators
       -#  - @featured_leagues.each_with_index do |featured_league, index|

@@ -7,8 +7,9 @@ class LeaguesController < RosterpocalypseController
     @public_leagues = PublicLeague.active_leagues
     @private_leagues = current_user.present? && current_user.admin? ? PrivateLeague.active_leagues : []
     # Randomize the order of the featured leagues
-    @featured_leagues = League.where(featured: true)
-    @featured_leagues = @featured_leagues.sample(@featured_leagues.size)
+    @featured_leagues = League.where(featured: true).order("id")
+    # Randommize the order of featured leagues
+    # @featured_leagues = @featured_leagues.sample(@featured_leagues.size)
   end
 
   # GET /leagues/1
