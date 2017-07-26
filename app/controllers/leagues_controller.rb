@@ -1,4 +1,6 @@
 class LeaguesController < RosterpocalypseController
+  include Mixpanelable
+  before_action :set_mp_cookie_information
   before_action :set_league, only: %i[show edit update destroy join leave]
 
   # GET /leagues
@@ -7,7 +9,7 @@ class LeaguesController < RosterpocalypseController
     @public_leagues = PublicLeague.active_leagues
     @private_leagues = current_user.present? && current_user.admin? ? PrivateLeague.active_leagues : []
     # Randomize the order of the featured leagues
-    @featured_leagues = League.where(featured: true).order("id")
+    @featured_leagues = League.where(featured: true).order('id')
     # Randommize the order of featured leagues
     # @featured_leagues = @featured_leagues.sample(@featured_leagues.size)
   end
@@ -22,6 +24,7 @@ class LeaguesController < RosterpocalypseController
   def new
     authorize! :create, league_class
     @league = league_class.new
+    mp_track 'League New Page', { league_class: league_class.to_s }
   end
 
   # GET /leagues/1/edit
@@ -38,6 +41,7 @@ class LeaguesController < RosterpocalypseController
 
     respond_to do |format|
       if @league.save
+        mp_track 'League Created', @league.attributes
         format.html { redirect_to @league, notice: 'League was successfully created.' }
         format.json { render :show, status: :created, location: @league }
       else
@@ -76,6 +80,8 @@ class LeaguesController < RosterpocalypseController
   def join
     respond_to do |format|
       if (roster = @league.join(current_user.manager))
+        mp_track 'League Joined', @league.attributes
+        mp_track 'Roster Created', roster.attributes
         format.html do
           redirect_to manage_roster_path(roster),
                       notice: "Successfully joined League '#{@league.name}', now create a Roster for it!"
@@ -94,6 +100,8 @@ class LeaguesController < RosterpocalypseController
   def leave
     respond_to do |format|
       if (roster = @league.leave(current_user.manager))
+        mp_track 'League Left', @league.attributes
+        mp_track 'Roster Orphaned', roster.attributes
         format.html { redirect_to leagues_path, notice: "Roster '#{roster.name}' was removed from '#{@league.name}'." }
         format.json { render :show, status: :ok, location: @league }
       else

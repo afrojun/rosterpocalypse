@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170704145255) do
+ActiveRecord::Schema.define(version: 20170726131637) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'plpgsql'
   enable_extension 'pg_stat_statements'
@@ -369,6 +369,7 @@ ActiveRecord::Schema.define(version: 20170704145255) do
     t.datetime 'confirmed_at'
     t.datetime 'confirmation_sent_at'
     t.string   'unconfirmed_email'
+    t.text     'mp_properties'
     t.index ['confirmation_token'], name: 'index_users_on_confirmation_token', unique: true, using: :btree
     t.index ['email'], name: 'index_users_on_email', unique: true, using: :btree
     t.index ['reset_password_token'], name: 'index_users_on_reset_password_token', unique: true, using: :btree

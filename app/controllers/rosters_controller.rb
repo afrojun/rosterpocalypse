@@ -1,4 +1,7 @@
 class RostersController < RosterpocalypseController
+  include Mixpanelable
+  before_action :set_mp_cookie_information
+
   before_action :authenticate_user!, except: %i[show details players]
   before_action :set_roster, only: %i[show manage players update destroy status details]
   before_action :set_gameweek, only: %i[show players]
@@ -49,6 +52,7 @@ class RostersController < RosterpocalypseController
       maxRosterValue: @roster.budget,
       showManageRoster: current_user.present? && current_user.manager == @roster.manager
     }
+    mp_track 'Roster Manage Page', @roster.attributes
   end
 
   def players
@@ -69,6 +73,7 @@ class RostersController < RosterpocalypseController
   def update
     respond_to do |format|
       if @roster.update_including_players(roster_params)
+        mp_track 'Roster Updated', @roster.attributes.merge(players: @roster.players.map(&:id))
         format.html { redirect_to @roster, notice: 'Roster was successfully updated.' }
         format.json { render :details, status: :ok, location: @roster }
       else
@@ -88,6 +93,7 @@ class RostersController < RosterpocalypseController
   def destroy
     @roster.destroy
     respond_to do |format|
+      mp_track 'Roster Destroyed', @roster.attributes
       format.html { redirect_to rosters_url, notice: 'Roster was successfully destroyed.' }
       format.json { head :no_content }
     end

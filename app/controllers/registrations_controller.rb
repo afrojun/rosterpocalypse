@@ -1,7 +1,15 @@
 class RegistrationsController < Devise::RegistrationsController
+  include Mixpanelable
+  before_action :set_mp_cookie_information
+
   def create
     super do |resource|
-      track_sign_up resource
+      if resource.persisted?
+        resource.mp_properties = @mp_properties
+        resource.save
+        identify_on_mixpanel resource
+        mp_track_for_user resource, 'User Signed Up'
+      end
     end
   end
 
@@ -23,29 +31,5 @@ class RegistrationsController < Devise::RegistrationsController
 
   def after_update_path_for(*)
     edit_user_registration_path
-  end
-
-  def track_sign_up(resource)
-    mixpanel_params = {
-      email: resource.email,
-      nickname: resource.username,
-      created: resource.created_at.as_json,
-      ip: resource.current_sign_in_ip
-    }
-
-    attributes = JSON.parse cookies["mp_#{ENV['MIXPANEL_ID']}_mixpanel"]
-    distinct_id = attributes.delete('distinct_id')
-
-    mixpanel = Mixpanel::Tracker.new(ENV['MIXPANEL_ID'])
-
-    # Alias the User with the old distinct ID
-    mixpanel.alias resource.id, distinct_id: distinct_id if distinct_id
-    # Set user properties
-    ip = resource.current_sign_in_ip.present? ? resource.current_sign_in_ip.to_s : 0
-    mixpanel.people.set resource.id, mixpanel_params, ip
-    mixpanel.track resource.id, 'User Signed Up'
-  rescue => e
-    logger.error "Failed to track user with Mixpanel: [#{e.class}] #{e.message}"
-    logger.error e.backtrace.to_s
   end
 end

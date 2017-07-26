@@ -1,4 +1,6 @@
 class ManagersController < RosterpocalypseController
+  include Mixpanelable
+  before_action :set_mp_cookie_information
   before_action :set_manager, only: %i[show update subscribe unsubscribe
                                        reactivate_subscription update_payment_details
                                        remove_payment_source]
@@ -12,6 +14,7 @@ class ManagersController < RosterpocalypseController
   # GET /managers/1
   # GET /managers/1.json
   def show
+    mp_track 'User Account Page'
   end
 
   # PATCH/PUT /managers/1
@@ -19,6 +22,7 @@ class ManagersController < RosterpocalypseController
   def update
     respond_to do |format|
       if @manager.update(manager_params)
+        mp_track 'Manager Preferences Updated', @manager.attributes
         format.html { redirect_back(fallback_location: edit_user_registration_path, notice: 'Successfully updated.') }
         format.json { render :show, status: :ok, location: @manager }
       else
@@ -37,6 +41,7 @@ class ManagersController < RosterpocalypseController
         @manager.create_stripe_customer update_payment_params[:stripeToken]
       end
 
+      mp_track 'Manager Card Updated', @manager.attributes
       'Card details updated successfully'
     end
   end
@@ -46,6 +51,7 @@ class ManagersController < RosterpocalypseController
       if @manager.allow_payment_source_removal?
         @manager.remove_stripe_customer_source(remove_payment_params[:card_id])
 
+        mp_track 'Manager Card Removed'
         'Card successfully removed'
       else
         message = 'Unable to remove the only card on record for an active subscription. ' \
@@ -64,6 +70,7 @@ class ManagersController < RosterpocalypseController
       end
       @manager.create_stripe_subscription
 
+      mp_track 'Manager Subscribed', @manager.attributes
       'Subscription request being processed.'
     end
   end
@@ -74,6 +81,7 @@ class ManagersController < RosterpocalypseController
 
       UserMailer.subscription_cancelled(@manager.user).deliver_later
 
+      mp_track 'Manager Unsubscribed', @manager.attributes
       'Successfully unsubscribed'
     end
   end
@@ -85,6 +93,7 @@ class ManagersController < RosterpocalypseController
 
         UserMailer.subscription_reactivated(@manager.user).deliver_later
 
+        mp_track 'Manager Subscription Reactivated'
         'Subscription has been re-activated '
       else
         message = 'In order to re-activate the subscription we need a card on record. ' \

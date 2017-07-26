@@ -17,6 +17,8 @@ class User < ApplicationRecord
   validates :username, format: { with: /^[a-zA-Z0-9_\.]*$/, multiline: true }
   validates :username, length: { minimum: 3, maximum: 30 }
 
+  serialize :mp_properties, Hash
+
   after_create :create_manager
   before_update :update_manager
 

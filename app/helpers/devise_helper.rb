@@ -28,7 +28,7 @@ module DeviseHelper
     else
       identity_class = identity_provider_logo_class_map[provider]
       provider_name = provider.to_s.split('_').first.capitalize
-      size_class = large ? "fa-2x" : ""
+      size_class = large ? 'fa-2x' : ''
       content_tag :i, '', class: "identity-provider-logo fa #{size_class} #{identity_class}", title: provider_name
     end
   end
