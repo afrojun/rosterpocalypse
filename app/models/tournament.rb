@@ -24,6 +24,10 @@ class Tournament < ApplicationRecord
     'EU' => 'UTC',
     'KR' => 'Asia/Seoul',
     'NA' => 'America/Los_Angeles',
+    'ANZ' => 'Australia/Melbourne',
+    'TW' => 'Asia/Taipei',
+    'LAM' => 'America/Sao_Paulo',
+    'SEA' => 'Asia/Singapore',
     'Global' => 'UTC',
     '' => 'UTC'
   }.freeze
