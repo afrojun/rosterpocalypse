@@ -5,9 +5,9 @@ module Mixpanelable
 
   def mp_track(event_name, options = {})
     if user_signed_in?
-      mp_track_for_user(current_user, event_name, options)
+      mp_track_for_user current_user, event_name, options
     elsif (id = @mp_properties && @mp_properties['distinct_id'])
-      mp_track_for_id(id, event_name, options)
+      mp_track_for_id id, event_name, options
     else
       logger.warn 'Unable to track a vist using Mixpanel, ID is missing'
     end
@@ -17,7 +17,7 @@ module Mixpanelable
     return if token.blank?
 
     options[:ip] = current_user.current_sign_in_ip.to_s
-    mixpanel.people.track_charge(current_user.id, amount.to_f, options)
+    mixpanel.people.track_charge current_user.id, amount.to_f, options
   end
 
   def mp_track_for_user(user, event_name, options = {})
@@ -27,7 +27,7 @@ module Mixpanelable
     end
 
     options[:sign_in_ip] = user.current_sign_in_ip.to_s
-    mp_track_for_id(user.id, event_name, options)
+    mp_track_for_id user.id, event_name, options
   end
 
   def mp_track_for_id(id, event_name, options = {})
@@ -47,10 +47,10 @@ module Mixpanelable
       merge!(campaign_tracking_params.to_h).
       merge!(@mp_properties)
 
-    Rails.logger.info "Sending '#{event_name}' event to Mixpanel with options: " \
-      "#{options.inspect}"
+    Rails.logger.info "Sending '#{event_name}' event to Mixpanel " \
+      "for ID '#{id}' with options: #{options.inspect}"
 
-    mixpanel.track(id, event_name, options)
+    mixpanel.track id, event_name, options
   end
 
   def set_mp_cookie_information
@@ -65,7 +65,6 @@ module Mixpanelable
 
     # attributes is existing Mixpanel Params that are cookie'd by
     # Mixpanel Javascript
-    attributes = @mp_properties
     mixpanel_params = {
       '$name': user.username,
       '$email': user.email,
@@ -76,7 +75,7 @@ module Mixpanelable
       '$os': browser.platform.name,
       'user_id': user.id,
       'manager_id': user.manager.id
-    }.merge(attributes)
+    }.merge(@mp_properties)
 
     distinct_id = mixpanel_params['distinct_id']
 
@@ -87,7 +86,7 @@ module Mixpanelable
     Rails.logger.info "Current Mixpanel User IP: #{user.current_sign_in_ip}"
     mixpanel.people.set user.id, mixpanel_params, user.current_sign_in_ip.to_s
 
-    mp_track_for_user user, 'User Identified'
+    mp_track_for_id user.id, 'User Identified'
   end
 
   def mixpanel
@@ -113,6 +112,6 @@ module Mixpanelable
   end
 
   def campaign_tracking_params
-    params.permit(:ref, :source, :utm_content, :utm_medium, :utm_source, :utm_campaign)
+    params.permit :ref, :source, :utm_content, :utm_medium, :utm_source, :utm_campaign
   end
 end
