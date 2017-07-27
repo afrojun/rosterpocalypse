@@ -73,7 +73,7 @@ module Mixpanelable
       '$ip': user.current_sign_in_ip.to_s,
       '$browser': browser.name,
       '$browser_version': browser.full_version,
-      '$os': browser.platform.name
+      '$os': browser.platform.name,
       'user_id': user.id,
       'manager_id': user.manager.id
     }.merge(attributes)
