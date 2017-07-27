@@ -4,13 +4,7 @@ class SessionsController < Devise::SessionsController
 
   def create
     super do |resource|
-      if resource.persisted?
-        if resource.mp_properties.blank?
-          resource.update mp_properties: @mp_properties
-          identify_on_mixpanel resource
-        end
-        mp_track_for_user resource, 'User Signed In'
-      end
+      mp_track_for_user resource, 'User Signed In' if resource.persisted?
     end
   end
 end

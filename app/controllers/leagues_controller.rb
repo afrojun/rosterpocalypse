@@ -19,14 +19,14 @@ class LeaguesController < RosterpocalypseController
   # GET /leagues/1.json
   def show
     @rosters = @league.rosters.includes(manager: [:user]).order(score: :desc).page params[:page]
-    mp_track 'League Details Page', @league.attributes
+    mp_track 'League Details Page', league_id: @league.id, league_name: @league.name
   end
 
   # GET /leagues/new
   def new
     authorize! :create, league_class
     @league = league_class.new
-    mp_track 'League New Page', { league_class: league_class.to_s }
+    mp_track 'League New Page', league_class: league_class.to_s
   end
 
   # GET /leagues/1/edit
@@ -43,7 +43,7 @@ class LeaguesController < RosterpocalypseController
 
     respond_to do |format|
       if @league.save
-        mp_track 'League Created', @league.attributes
+        mp_track 'League Created', league_id: @league.id, league_name: @league.name
         format.html { redirect_to @league, notice: 'League was successfully created.' }
         format.json { render :show, status: :created, location: @league }
       else
@@ -82,7 +82,7 @@ class LeaguesController < RosterpocalypseController
   def join
     respond_to do |format|
       if (roster = @league.join(current_user.manager))
-        mp_track 'League Joined', @league.attributes
+        mp_track 'League Joined', league_id: @league.id, league_name: @league.name
         mp_track 'Roster Created', roster.attributes
         format.html do
           redirect_to manage_roster_path(roster),
@@ -102,7 +102,7 @@ class LeaguesController < RosterpocalypseController
   def leave
     respond_to do |format|
       if (roster = @league.leave(current_user.manager))
-        mp_track 'League Left', @league.attributes
+        mp_track 'League Left', league_id: @league.id, league_name: @league.name
         mp_track 'Roster Orphaned', roster.attributes
         format.html { redirect_to leagues_path, notice: "Roster '#{roster.name}' was removed from '#{@league.name}'." }
         format.json { render :show, status: :ok, location: @league }

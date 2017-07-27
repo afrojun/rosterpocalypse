@@ -4,12 +4,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   def create
     super do |resource|
-      if resource.persisted?
-        resource.mp_properties = @mp_properties
-        resource.save
-        identify_on_mixpanel resource
-        mp_track_for_user resource, 'User Signed Up'
-      end
+      mp_track_for_user resource, 'User Signed Up' if resource.persisted?
     end
   end
 

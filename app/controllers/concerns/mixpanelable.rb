@@ -6,12 +6,10 @@ module Mixpanelable
   def mp_track(event_name, options = {})
     if user_signed_in?
       mp_track_for_user(current_user, event_name, options)
+    elsif (id = @mp_properties && @mp_properties['distinct_id'])
+      mp_track_for_id(id, event_name, options)
     else
-      if (id = @mp_properties && @mp_properties['distinct_id'])
-        mp_track_for_id(id, event_name, options)
-      else
-        logger.warn "Unable to track a vist using Mixpanel, ID is missing"
-      end
+      logger.warn 'Unable to track a vist using Mixpanel, ID is missing'
     end
   end
 
@@ -23,14 +21,36 @@ module Mixpanelable
   end
 
   def mp_track_for_user(user, event_name, options = {})
-    options[:ip] = user.current_sign_in_ip.to_s
+    if user.mp_properties.blank?
+      user.update mp_properties: @mp_properties
+      identify_on_mixpanel user
+    end
+
+    options[:sign_in_ip] = user.current_sign_in_ip.to_s
     mp_track_for_id(user.id, event_name, options)
   end
 
   def mp_track_for_id(id, event_name, options = {})
     return if token.blank?
 
-    mixpanel.track(id, event_name, options.merge(campaign_tracking_params.to_h))
+    session_params = {
+      ip: request.ip,
+      '$browser': browser.name,
+      '$browser_version': browser.full_version,
+      '$device': browser.device.name,
+      '$current_url': request.original_url,
+      '$os': browser.platform.name
+    }
+
+    options.
+      merge!(session_params).
+      merge!(campaign_tracking_params.to_h).
+      merge!(@mp_properties)
+
+    Rails.logger.info "Sending '#{event_name}' event to Mixpanel with options: " \
+      "#{options.inspect}"
+
+    mixpanel.track(id, event_name, options)
   end
 
   def set_mp_cookie_information
@@ -47,10 +67,15 @@ module Mixpanelable
     # Mixpanel Javascript
     attributes = @mp_properties
     mixpanel_params = {
+      '$name': user.username,
       '$email': user.email,
       '$created': user.created_at.as_json,
       '$ip': user.current_sign_in_ip.to_s,
-      'user_id': user.id
+      '$browser': browser.name,
+      '$browser_version': browser.full_version,
+      '$os': browser.platform.name
+      'user_id': user.id,
+      'manager_id': user.manager.id
     }.merge(attributes)
 
     distinct_id = mixpanel_params['distinct_id']

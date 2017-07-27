@@ -32,6 +32,9 @@ gem 'kaminari'
 # Mixpanel to track user engagement
 gem 'mixpanel-ruby'
 
+# Get Browser and OS info
+gem 'browser'
+
 # Use Haml for cleaner view templates
 gem 'haml'
 gem 'html2haml'
