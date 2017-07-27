@@ -26,8 +26,9 @@ class GameweekPlayer < ApplicationRecord
   MIN_GAMES_FOR_BONUS_AWARD = 30
 
   def self.create_all_gameweek_players_for_gameweek(gameweek)
+    regions = gameweek.tournament.region == 'Global' ? Team::REGIONS : gameweek.tournament.region
     Player.active_players.joins(:team).
-      where(teams: { region: gameweek.tournament.region }).find_each do |player|
+      where(teams: { region: regions }).find_each do |player|
       gameweek_player = find_or_create_by(gameweek: gameweek, player: player) do |gwp|
         gwp.team  = player.team
         gwp.value = player.value

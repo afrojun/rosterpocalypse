@@ -49,7 +49,7 @@ class Gameweek < ApplicationRecord
   end
 
   def default_league
-    League.find_by(name: "HGC #{tournament.region} 2017 - Phase 2")
+    tournament.leagues.first
   end
 
   def move_end_date(offset)

@@ -46,12 +46,21 @@ class GameweekRosterActions < Thor
 
   desc 'create_gameweek_players', 'Create all GameweekPlayers for the current gameweek'
   method_option :previous, default: false, aliases: '-p', type: :boolean, desc: 'Creates gameweek players for the previous gameweek'
+  method_option :region, default: 'all', aliases: '-r', type: :string, desc: 'Update points for a region'
 
   def create_gameweek_players
     print 'Creating gameweek players for the '
     puts(options.previous ? 'previous gameweek' : 'current gameweek')
+    tournaments = begin
+      if %w[NA EU Global].include?(options.region)
+        Tournament.active_tournaments.where(region: options.region)
+      else
+        Tournament.active_tournaments
+      end
+    end
+    puts "Updating tournaments: #{tournaments.map(&:name)}"
 
-    Tournament.active_tournaments.each do |tournament|
+    tournaments.each do |tournament|
       gameweek = options.previous ? tournament.previous_gameweek : tournament.current_gameweek
       GameweekPlayer.create_all_gameweek_players_for_gameweek gameweek
     end
@@ -87,7 +96,7 @@ class GameweekRosterActions < Thor
     print 'Updating Roster scores for the '
     puts(options.previous ? 'previous gameweek' : ' current gameweek')
     tournaments = begin
-      if %w[NA EU].include?(options.region)
+      if %w[NA EU Global].include?(options.region)
         Tournament.active_tournaments.where(region: options.region)
       else
         Tournament.active_tournaments
