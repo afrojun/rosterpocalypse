@@ -1,4 +1,4 @@
-$(document).on('turbolinks:load', function() {
+$(function() {
   // Hide Stripe-styled payment buttons and use our buttons instead
   var stripeButtons = $(".stripe-button-el")
   for(var i=0; i<stripeButtons.length; i++ ) {

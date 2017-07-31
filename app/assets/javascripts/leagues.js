@@ -1,4 +1,4 @@
-$(document).on("turbolinks:load", function() {
+$(function() {
   // Show value adjustment range sliders when the "Edit" link is clicked
   $(".edit_role_stat_modifiers").on("click", function(event) {
     event.preventDefault();
