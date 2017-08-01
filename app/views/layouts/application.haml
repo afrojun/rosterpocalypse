@@ -7,6 +7,7 @@
     = yield :header
 
   %body
+    = render "layouts/facebook"
     - if Rails.env == "production"
       = render "layouts/google_analytics"
 
@@ -86,6 +87,8 @@
         = identity_provider_logo :reddit
       = link_to "https://facebook.com/rosterpocalypse" do
         = identity_provider_logo :facebook
+
+      .fb-like{data: { href: "https://facebook.com/rosterpocalypse", layout: "button_count", action: "like", size: "small", 'show-faces': "false", share: "true"} }
 
     .col-md-4
       .float-xs-right
