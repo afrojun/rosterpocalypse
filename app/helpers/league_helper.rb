@@ -24,6 +24,7 @@ module LeagueHelper
     link_to action.to_s.titleize,
             send(join_path.to_sym, league),
             method: :post,
-            class: "btn #{button_colour_class} #{button_size_class}"
+            class: "btn #{button_colour_class} #{button_size_class} #{action}-league-button",
+            data: { league_name: league.name }
   end
 end
