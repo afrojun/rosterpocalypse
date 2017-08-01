@@ -8,6 +8,7 @@
 
   %body
     = render "layouts/facebook"
+    = render "layouts/twitter"
     - if Rails.env == "production"
       = render "layouts/google_analytics"
 
@@ -81,14 +82,16 @@
       -# = link_to "Terms and Conditions", terms_path
 
     .col-md-4.center
-      = link_to "https://twitter.com/rosterpocalypse" do
-        = identity_provider_logo :twitter
       = link_to "https://reddit.com/r/rosterpocalypse" do
         = identity_provider_logo :reddit
+
+      = link_to "https://twitter.com/rosterpocalypse" do
+        = identity_provider_logo :twitter
+      %a.twitter-follow-button{href: "https://twitter.com/rosterpocalypse", 'data-show-count': "false"}
+
       = link_to "https://facebook.com/rosterpocalypse" do
         = identity_provider_logo :facebook
-
-      .fb-like{data: { href: "https://facebook.com/rosterpocalypse", layout: "button_count", action: "like", size: "small", 'show-faces': "false", share: "true"} }
+      .fb-like{data: { href: "https://facebook.com/rosterpocalypse", layout: "button_count", action: "like", size: "small", 'show-faces': "false", share: "false"} }
 
     .col-md-4
       .float-xs-right
