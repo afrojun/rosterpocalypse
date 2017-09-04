@@ -3,13 +3,27 @@ require 'thor/rails'
 class GameweekRosterActions < Thor
   include Thor::Rails
 
+  no_commands do
+    def tournaments_for_region region
+      tournaments = if %w[NA EU Global].include?(region)
+        Tournament.active_tournaments.where(region: region)
+      else
+        Tournament.active_tournaments
+      end
+      puts "Updating tournaments: #{tournaments.map(&:name)}"
+      tournaments
+    end
+  end
+
   desc 'snapshot', 'Create roster snapshots for the current gameweek'
   method_option :force, default: false, aliases: '-f', type: :boolean, desc: 'Force snapshot updates'
+  method_option :region, default: 'all', aliases: '-r', type: :string, desc: 'Update snapshots for a region'
 
   def snapshot
     puts 'Snapshotting all valid Rosters for this Gameweek'
-    rosters_to_snapshot = Roster.where(tournament: Tournament.active_tournaments).
-                            includes(:players, tournament: [:gameweeks]).select do |roster|
+    rosters_to_snapshot = Roster.where(tournament: tournaments_for_region(options.region)).
+                            includes(:players, tournament: [:gameweeks]).
+                            select do |roster|
       roster.full? &&
         roster.created_at < roster.current_gameweek.roster_lock_date &&
         roster.updated_at < roster.current_gameweek.roster_lock_date
@@ -27,12 +41,13 @@ class GameweekRosterActions < Thor
 
   desc 'add_gameweek_players_from_snapshot', 'Associate gameweek_players with gameweek_rosters based on the snapshot data'
   method_option :previous, default: false, aliases: '-p', type: :boolean, desc: 'Adds gameweek players for the previous gameweek'
+  method_option :region, default: 'all', aliases: '-r', type: :string, desc: 'Update gameweek players for a region'
 
   def add_gameweek_players_from_snapshot
     print 'Adding gameweek players to gameweek rosters based on snapshots for the '
     puts(options.previous ? 'previous gameweek' : ' current gameweek')
 
-    Tournament.active_tournaments.each do |tournament|
+    tournaments_for_region(options.region).each do |tournament|
       gameweek = options.previous ? tournament.previous_gameweek : tournament.current_gameweek
 
       tournament.gameweek_rosters.where(gameweek: gameweek).each do |gameweek_roster|
@@ -51,16 +66,8 @@ class GameweekRosterActions < Thor
   def create_gameweek_players
     print 'Creating gameweek players for the '
     puts(options.previous ? 'previous gameweek' : 'current gameweek')
-    tournaments = begin
-      if %w[NA EU Global].include?(options.region)
-        Tournament.active_tournaments.where(region: options.region)
-      else
-        Tournament.active_tournaments
-      end
-    end
-    puts "Updating tournaments: #{tournaments.map(&:name)}"
 
-    tournaments.each do |tournament|
+    tournaments_for_region(options.region).each do |tournament|
       gameweek = options.previous ? tournament.previous_gameweek : tournament.current_gameweek
       GameweekPlayer.create_all_gameweek_players_for_gameweek gameweek
     end
@@ -95,16 +102,8 @@ class GameweekRosterActions < Thor
   def update_points
     print 'Updating Roster scores for the '
     puts(options.previous ? 'previous gameweek' : ' current gameweek')
-    tournaments = begin
-      if %w[NA EU Global].include?(options.region)
-        Tournament.active_tournaments.where(region: options.region)
-      else
-        Tournament.active_tournaments
-      end
-    end
-    puts "Updating tournaments: #{tournaments.map(&:name)}"
 
-    tournaments.each do |tournament|
+    tournaments_for_region(options.region).each do |tournament|
       tournament.rosters.each do |roster|
         gwr = options.previous ? roster.previous_gameweek_roster : roster.current_gameweek_roster
         next if gwr.roster_snapshot.blank?
@@ -120,12 +119,13 @@ class GameweekRosterActions < Thor
 
   desc 'update_gameweek_stats', 'Update stats for the gameweek'
   method_option :previous, default: false, aliases: '-p', type: :boolean, desc: 'Use the previous gameweek'
+  method_option :region, default: 'all', aliases: '-r', type: :string, desc: 'Update stats for a region'
 
   def update_gameweek_stats
     print 'Updating Gameweek stats for the '
     puts(options.previous ? 'previous gameweek' : ' current gameweek')
 
-    Tournament.active_tournaments.each do |tournament|
+    tournaments_for_region(options.region).each do |tournament|
       gameweek = options.previous ? tournament.previous_gameweek : tournament.current_gameweek
       GameweekPlayer.update_pick_rate_and_efficiency_for_gameweek gameweek
       GameweekStatistic.update_all_stats_for_gameweek gameweek
