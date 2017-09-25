@@ -17,7 +17,6 @@ class Tournament < ApplicationRecord
   validates :region, inclusion: { in: REGIONS }
 
   after_create :create_gameweeks
-  after_update :create_gameweeks
 
   REGION_TIME_ZONE_MAP = {
     'CN' => 'Asia/Shanghai',
