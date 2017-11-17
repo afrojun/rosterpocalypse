@@ -31,8 +31,10 @@ class Tournament < ApplicationRecord
     '' => 'UTC'
   }.freeze
 
+  # Show active tournaments or fallback to showing the 2 most recently completed tournaments.
   def self.active_tournaments
-    Tournament.where('end_date > ?', Time.now.utc)
+    tournaments = Tournament.where('end_date > ?', Time.now.utc)
+    tournaments.any? ? tournaments : Tournament.order(:end_date).last(2)
   end
 
   def active?
