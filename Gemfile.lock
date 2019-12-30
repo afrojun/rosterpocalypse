@@ -70,10 +70,9 @@ GEM
     bindex (0.8.1)
     binding_of_caller (0.8.0)
       debug_inspector (>= 0.0.1)
-    bootstrap (4.0.0)
+    bootstrap (4.0.0.alpha5)
       autoprefixer-rails (>= 6.0.3)
-      popper_js (>= 1.12.9, < 2)
-      sass (>= 3.5.2)
+      sass (>= 3.4.19)
     bootstrap3-datetimepicker-rails (4.17.47)
       momentjs-rails (>= 2.8.1)
     browser (2.7.1)
@@ -294,7 +293,6 @@ GEM
     parser (2.7.0.0)
       ast (~> 2.4.0)
     pg (1.2.0)
-    popper_js (1.14.5)
     pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
@@ -479,7 +477,7 @@ DEPENDENCIES
   babosa
   better_errors
   binding_of_caller
-  bootstrap (~> 4.0.0.alpha5)
+  bootstrap (= 4.0.0.alpha5)
   bootstrap3-datetimepicker-rails (~> 4.17.43)
   browser
   bullet
