@@ -21,9 +21,9 @@ require 'rails_helper'
 RSpec.describe GameweeksController, type: :controller do
   login_user
 
-  let(:tournament) { FactoryGirl.create :tournament, region: 'EU', start_date: Time.now.utc - 1.hour, end_date: Time.now.utc + 1.hour }
-  let(:gameweek) { FactoryGirl.create :gameweek, tournament: tournament }
-  let(:league) { FactoryGirl.create(:private_league, name: 'HGC EU 2017 - Phase 2', tournament: tournament) }
+  let(:tournament) { FactoryBot.create :tournament, region: 'EU', start_date: Time.now.utc - 1.hour, end_date: Time.now.utc + 1.hour }
+  let(:gameweek) { FactoryBot.create :gameweek, tournament: tournament }
+  let(:league) { FactoryBot.create(:private_league, name: 'HGC EU 2017 - Phase 2', tournament: tournament) }
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in

@@ -59,7 +59,13 @@ class GameStatsIngestionService
 
         Rails.logger.info 'Successfully added all game details.'
 
-        GameweekPlayer.update_from_game(game, gameweek) if gameweek.present?
+        if gameweek.present?
+          # Ensure all GameweekPlayers exist
+          GameweekPlayer.create_all_gameweek_players_for_gameweek(gameweek) if create_or_update_models
+
+          # Update GameweekPlayers with details from game
+          GameweekPlayer.update_from_game(game, gameweek)
+        end
 
         # The last step is to add the game to a Match
         Match.add_game game
@@ -122,8 +128,13 @@ class GameStatsIngestionService
 
   def find_or_create_team(team_colour)
     if create_or_update_models
-      Team.find_or_create_including_alternate_names(team_name(team_colour)).tap do |team|
-        TeamAlternateName.find_or_create_by(team: team, alternate_name: team_name_prefix_by_team_colour[team_colour]) if team_name_prefix_by_team_colour[team_colour].present?
+      Team.find_or_create_including_alternate_names(team_name(team_colour), region).tap do |team|
+        if team_name_prefix_by_team_colour[team_colour].present?
+          TeamAlternateName.find_or_create_by(
+            team: team,
+            alternate_name: team_name_prefix_by_team_colour[team_colour]
+          )
+        end
         team.update(region: region) if team.region.blank? && region != Tournament::GLOBAL_REGION
       end
     else

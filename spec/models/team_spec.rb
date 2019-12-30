@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Team, type: :model do
   it 'creates an entry in the alternate name table via a callback' do
-    team = FactoryGirl.create :team
+    team = FactoryBot.create :team
     expect(TeamAlternateName.where(alternate_name: team.name).first.team).to eq team
   end
 
@@ -13,13 +13,13 @@ RSpec.describe Team, type: :model do
     end
 
     it 'finds an existing team if one exists' do
-      team = FactoryGirl.create :team, name: 'bar'
+      team = FactoryBot.create :team, name: 'bar'
       found_team = Team.find_or_create_including_alternate_names 'bar'
       expect(found_team).to eql team
     end
 
     it 'ignores case when finding teams' do
-      team = FactoryGirl.create :team, name: 'BaR Team'
+      team = FactoryBot.create :team, name: 'BaR Team'
       expect(team.alternate_names.map(&:alternate_name)).to eq ['BaR Team', 'bar team', 'bar-team']
       found_team = Team.find_or_create_including_alternate_names 'BAR TEaM'
       expect(found_team).to eql team
@@ -27,7 +27,7 @@ RSpec.describe Team, type: :model do
   end
 
   context '#destroy' do
-    let(:team) { FactoryGirl.create :team }
+    let(:team) { FactoryBot.create :team }
 
     it 'succeeds if there are no associated games' do
       id = team.id
@@ -36,7 +36,7 @@ RSpec.describe Team, type: :model do
     end
 
     it 'fails if there are any associated games' do
-      FactoryGirl.create :game_detail, team: team
+      FactoryBot.create :game_detail, team: team
       id = team.id
       team.destroy
       expect(Team.where(id: id).first).to eq team

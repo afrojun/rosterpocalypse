@@ -7,7 +7,7 @@ RSpec.describe RostersController, type: :controller do
   # Roster. As you add validations to Roster, be sure to
   # adjust the attributes here as well.
   let(:now) { Time.now.utc }
-  let(:tournament) { FactoryGirl.create :tournament, start_date: now - 1.day, end_date: now + 1.day }
+  let(:tournament) { FactoryBot.create :tournament, start_date: now - 1.day, end_date: now + 1.day }
   let(:valid_attributes) do
     {
       name: 'AwesomeRoster',
@@ -22,9 +22,9 @@ RSpec.describe RostersController, type: :controller do
     }
   end
 
-  let(:manager) { FactoryGirl.create :manager, user: subject.current_user }
-  let(:roster) { FactoryGirl.create :roster, valid_attributes.merge(manager: manager) }
-  let(:league) { FactoryGirl.create :private_league, tournament: tournament }
+  let(:manager) { FactoryBot.create :manager, user: subject.current_user }
+  let(:roster) { FactoryBot.create :roster, valid_attributes.merge(manager: manager) }
+  let(:league) { FactoryBot.create :private_league, tournament: tournament }
 
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
@@ -107,9 +107,9 @@ RSpec.describe RostersController, type: :controller do
     end
 
     context 'for a roster that does not belong to the user' do
-      let(:other_user) { FactoryGirl.create :user }
-      let(:other_manager) { FactoryGirl.create :manager, user: other_user }
-      let(:other_roster) { FactoryGirl.create :roster, manager: other_manager }
+      let(:other_user) { FactoryBot.create :user }
+      let(:other_manager) { FactoryBot.create :manager, user: other_user }
+      let(:other_roster) { FactoryBot.create :roster, manager: other_manager }
 
       it 'denies access' do
         put :update, params: { id: other_roster.id, roster: valid_attributes }, session: valid_session

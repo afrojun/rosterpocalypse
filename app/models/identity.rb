@@ -8,8 +8,8 @@ class Identity < ApplicationRecord
     find_by(provider: auth.provider, uid: auth.uid)
   end
 
-  def self.find_or_create_for_oauth(auth)
-    find_or_create_by(provider: auth.provider, uid: auth.uid) do |identity|
+  def self.find_or_initialize_for_oauth(auth)
+    find_or_initialize_by(provider: auth.provider, uid: auth.uid) do |identity|
       identity.accesstoken = auth.credentials.token
       identity.refreshtoken = auth.credentials.refresh_token
       identity.name = auth.info.name || auth.info.battletag.tr('#', '.')

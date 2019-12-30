@@ -1,6 +1,6 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :player_alternate_name do
     player
-    alternate_name 'MyString'
+    alternate_name { 'MyString' }
   end
 end

@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Tournament, type: :model do
   let(:date) { '2017-01-05' }
   let(:region) { 'EU' }
-  let(:tournament) { FactoryGirl.create :tournament, region: region, start_date: start_date, end_date: end_date }
+  let(:tournament) { FactoryBot.create :tournament, region: region, start_date: start_date, end_date: end_date }
 
   shared_examples_for 'a tournament' do
     describe '<<' do
@@ -61,49 +61,13 @@ RSpec.describe Tournament, type: :model do
       end
 
       context 'change start_date and/or end_date' do
-        context 'should add new gameweeks' do
-          it 'adds new gameweeks before the first one when the start_date is made earlier' do
-            expect(tournament.gameweeks.count).to eq 3
-            new_start_date = tournament.start_date - 2.weeks
-            tournament.update start_date: new_start_date
-            expect(tournament.gameweeks.count).to eq 5
-            expect(tournament.gameweeks.map(&:name)).to eq ['Gameweek 0', 'Gameweek 1', 'Gameweek 2', 'Gameweek 3', 'Gameweek 4']
-            expect(tournament.gameweeks.first.start_date). to eq(new_start_date.beginning_of_week - 1.week + 12.hours)
-          end
-
-          it 'handles tournaments with start dates between midnight on Monday and the start of the gameweek at noon' do
-            expect(tournament.gameweeks.count).to eq 3
-            new_start_date = Time.parse('2016-12-26 10:30:00 UTC').utc
-            tournament.update start_date: new_start_date
-            expect(tournament.gameweeks.where('start_date <= ? AND end_date >= ?', new_start_date, new_start_date).first).to eq tournament.gameweeks.first
-          end
-
-          it 'adds new gameweeks after the last one when the end_date is made later' do
-            expect(tournament.gameweeks.count).to eq 3
-            new_end_date = tournament.end_date + 2.weeks
-            tournament.update end_date: new_end_date
-            expect(tournament.gameweeks.count).to eq 5
-            expect(tournament.gameweeks.map(&:name)).to eq ['Gameweek 0', 'Gameweek 1', 'Gameweek 2', 'Gameweek 3', 'Gameweek 4']
-            expect(tournament.gameweeks.last.end_date.to_i). to eq((new_end_date.end_of_week + 12.hours).to_i)
-          end
-
-          it 'adds new gameweeks when both start and end dates are moved' do
-            expect(tournament.gameweeks.count).to eq 3
-            new_start_date = tournament.start_date - 2.weeks
-            new_end_date = tournament.end_date + 2.weeks
-            tournament.update start_date: new_start_date, end_date: new_end_date
-            expect(tournament.gameweeks.count).to eq 7
-            expect(tournament.gameweeks.map(&:name)).to eq ['Gameweek 0', 'Gameweek 1', 'Gameweek 2', 'Gameweek 3', 'Gameweek 4', 'Gameweek 5', 'Gameweek 6']
-            expect(tournament.gameweeks.first.start_date). to eq(new_start_date.beginning_of_week - 1.week + 12.hours)
-            expect(tournament.gameweeks.last.end_date.to_i). to eq((new_end_date.end_of_week + 12.hours).to_i)
-          end
-
-          it 'does not add new gameweeks when the new date is covered by an existing gameweek' do
-            expect(tournament.gameweeks.count).to eq 3
-            new_start_date = tournament.start_date + 10.minutes
-            tournament.update start_date: new_start_date
-            expect(tournament.gameweeks.count).to eq 3
-          end
+        it 'does not add any new gameweeks' do
+          expect(tournament.gameweeks.count).to eq 3
+          new_start_date = tournament.start_date - 2.weeks
+          tournament.update start_date: new_start_date
+          expect(tournament.gameweeks.count).to eq 3
+          expect(tournament.gameweeks.map(&:name)).to eq ['Gameweek 0', 'Gameweek 1', 'Gameweek 2']
+          expect(tournament.gameweeks.first.start_date). to eq(start_date.beginning_of_week - 1.week + 12.hours)
         end
       end
     end

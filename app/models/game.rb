@@ -4,7 +4,7 @@ class Game < ApplicationRecord
 
   belongs_to :map
   belongs_to :gameweek
-  belongs_to :match
+  belongs_to :match, optional: true
   has_one :tournament, through: :gameweek
   has_many :gameweek_players, through: :gameweek
   has_many :gameweek_rosters, through: :gameweek

@@ -24,14 +24,14 @@ RSpec.describe GameDetailsController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Game. As you add validations to Game, be sure to
   # adjust the attributes here as well.
-  let(:game) { FactoryGirl.create :game }
-  let(:player) { FactoryGirl.create :player }
+  let(:game) { FactoryBot.create :game }
+  let(:player) { FactoryBot.create :player }
   let(:valid_attributes) do
     {
       player_id: player.id,
       game_id: game.id,
-      team_id: FactoryGirl.create(:team).id,
-      hero_id: FactoryGirl.create(:hero).id,
+      team_id: FactoryBot.create(:team).id,
+      hero_id: FactoryBot.create(:hero).id,
       solo_kills: 2,
       assists: 5,
       deaths: 3,
@@ -45,8 +45,8 @@ RSpec.describe GameDetailsController, type: :controller do
     {
       player_id: player.id,
       game_id: game.id,
-      team_id: FactoryGirl.create(:team).id,
-      hero_id: FactoryGirl.create(:hero).id,
+      team_id: FactoryBot.create(:team).id,
+      hero_id: FactoryBot.create(:hero).id,
       solo_kills: 2,
       assists: 5,
       deaths: 3,
@@ -58,10 +58,10 @@ RSpec.describe GameDetailsController, type: :controller do
 
   let(:new_attributes) do
     {
-      player_id: FactoryGirl.create(:player).id,
+      player_id: FactoryBot.create(:player).id,
       game_id: game.id,
-      team_id: FactoryGirl.create(:team).id,
-      hero_id: FactoryGirl.create(:hero).id,
+      team_id: FactoryBot.create(:team).id,
+      hero_id: FactoryBot.create(:hero).id,
       solo_kills: 2,
       assists: 5,
       deaths: 3,

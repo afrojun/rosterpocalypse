@@ -11,7 +11,7 @@ class Team < ApplicationRecord
   REGIONS = %w[CN EU KR NA ANZ TW LAM SEA].freeze
 
   validates :name, presence: true, uniqueness: true
-  validates :region, inclusion: { in: REGIONS + [nil, ''] }
+  validates :region, inclusion: { in: REGIONS + [nil, '', Tournament::GLOBAL_REGION] }
 
   after_create :update_alternate_names
   after_update :update_alternate_names
@@ -55,12 +55,15 @@ class Team < ApplicationRecord
     alternate_names.map(&:team).uniq
   end
 
-  def self.find_or_create_including_alternate_names(team_name)
+  def self.find_or_create_including_alternate_names(team_name, region = nil)
     alternate_names = TeamAlternateName.where alternate_name: team_name.downcase
     if alternate_names.any?
       alternate_names.first.team
     else
-      Team.find_or_create_by name: team_name
+      Team.find_or_create_by(name: team_name) do |team|
+        team.active = true
+        team.region = region
+      end
     end
   end
 

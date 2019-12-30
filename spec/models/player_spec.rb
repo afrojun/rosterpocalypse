@@ -4,14 +4,14 @@ RSpec.describe Player, type: :model do
   context '#update_alternate_names' do
     context 'after create' do
       it 'creates an entry in the alternate name table' do
-        player = FactoryGirl.create :player
+        player = FactoryBot.create :player
         expect(player.alternate_names.map(&:alternate_name)).to eq [player.name, player.name.downcase]
       end
     end
 
     context 'after update' do
       it 'adds to the alternate name table if a new name is specified' do
-        player = FactoryGirl.create :player, name: 'Joe'
+        player = FactoryBot.create :player, name: 'Joe'
         player.update name: 'Bob'
         expect(player.alternate_names.map(&:alternate_name)).to eq %w[Joe joe Bob bob]
       end
@@ -25,13 +25,13 @@ RSpec.describe Player, type: :model do
     end
 
     it 'finds an existing player if one exists' do
-      player = FactoryGirl.create :player, name: 'bar'
+      player = FactoryBot.create :player, name: 'bar'
       found_player = Player.find_or_create_including_alternate_names 'bar'
       expect(found_player).to eql player
     end
 
     it 'ignores case when finding players' do
-      player = FactoryGirl.create :player, name: 'BaR'
+      player = FactoryBot.create :player, name: 'BaR'
       expect(player.alternate_names.map(&:alternate_name)).to eq %w[BaR bar]
       found_player = Player.find_or_create_including_alternate_names 'BAR'
       expect(found_player).to eql player
@@ -39,7 +39,7 @@ RSpec.describe Player, type: :model do
   end
 
   context '#destroy' do
-    let(:player) { FactoryGirl.create :player }
+    let(:player) { FactoryBot.create :player }
 
     it 'succeeds if there are no associated games' do
       id = player.id
@@ -48,7 +48,7 @@ RSpec.describe Player, type: :model do
     end
 
     it 'fails if there are any associated games' do
-      FactoryGirl.create :game_detail, player: player
+      FactoryBot.create :game_detail, player: player
       id = player.id
       player.destroy
       expect(Player.where(id: id).first).to eq player
@@ -57,15 +57,15 @@ RSpec.describe Player, type: :model do
   end
 
   context 'updating player value' do
-    let(:hero1) { FactoryGirl.create :hero }
-    let(:hero2) { FactoryGirl.create :hero }
-    let(:team1) { FactoryGirl.create :team }
-    let(:team2) { FactoryGirl.create :team }
-    let(:player1) { FactoryGirl.create :player, team: team1, value: 100 }
-    let(:player2) { FactoryGirl.create :player, team: team2, value: 100 }
-    let(:game1) { FactoryGirl.create :game }
-    let(:game_details1) { FactoryGirl.create :game_detail, game: game1, player: player1, team: team1, hero: hero1, solo_kills: 1, assists: 3, deaths: 2, time_spent_dead: 65, win: true }
-    let(:game_details2) { FactoryGirl.create :game_detail, game: game1, player: player2, team: team2, hero: hero2, solo_kills: 3, assists: 2, deaths: 4, time_spent_dead: 165, win: false }
+    let(:hero1) { FactoryBot.create :hero }
+    let(:hero2) { FactoryBot.create :hero }
+    let(:team1) { FactoryBot.create :team }
+    let(:team2) { FactoryBot.create :team }
+    let(:player1) { FactoryBot.create :player, team: team1, value: 100 }
+    let(:player2) { FactoryBot.create :player, team: team2, value: 100 }
+    let(:game1) { FactoryBot.create :game }
+    let(:game_details1) { FactoryBot.create :game_detail, game: game1, player: player1, team: team1, hero: hero1, solo_kills: 1, assists: 3, deaths: 2, time_spent_dead: 65, win: true }
+    let(:game_details2) { FactoryBot.create :game_detail, game: game1, player: player2, team: team2, hero: hero2, solo_kills: 3, assists: 2, deaths: 4, time_spent_dead: 165, win: false }
 
     context '#value_change' do
       it 'calculates the value change correctly' do
@@ -100,7 +100,7 @@ RSpec.describe Player, type: :model do
   end
 
   context '#infer_role' do
-    let(:player) { FactoryGirl.create :player }
+    let(:player) { FactoryBot.create :player }
 
     context 'single hero classification players' do
       it 'identifies Specialist players as Flex' do

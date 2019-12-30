@@ -1,6 +1,6 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :stage do
-    name 'MyString'
-    tournament nil
+    name { 'MyString' }
+    tournament
   end
 end

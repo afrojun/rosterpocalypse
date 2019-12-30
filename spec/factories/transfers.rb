@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :transfer do
     gameweek_roster
     association :player_in, factory: :player

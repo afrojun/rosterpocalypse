@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   sequence(:game_hash) { |n| "Hash#{n}" }
 
   factory :game do
@@ -11,11 +11,11 @@ FactoryGirl.define do
 
   trait :with_details do
     transient do
-      number_of_details 10
+      number_of_details { 10 }
     end
 
     after :create do |game, evaluator|
-      FactoryGirl.create_list :game_details, evaluator.number_of_details, game: game
+      FactoryBot.create_list :game_details, evaluator.number_of_details, game: game
     end
   end
 end

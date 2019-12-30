@@ -13,7 +13,7 @@ shared_examples_for 'a restricted index page request' do |model_index_path_metho
 
     context 'normal user signed in' do
       it 'redirects to the welcome page' do
-        sign_in :user, FactoryGirl.create(:user)
+        sign_in :user, FactoryBot.create(:user)
         send :get, send(model_index_path_method)
         expect(response).to have_http_status(302)
         expect(response).to redirect_to root_url
@@ -23,7 +23,7 @@ shared_examples_for 'a restricted index page request' do |model_index_path_metho
 
     context 'admin user signed in' do
       it 'loads the games index page' do
-        sign_in :user, FactoryGirl.create(:user, admin: true)
+        sign_in :user, FactoryBot.create(:user, admin: true)
         send :get, send(model_index_path_method)
         expect(response).to have_http_status(200)
         expect(flash['alert']).to eq nil

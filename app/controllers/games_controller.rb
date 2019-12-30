@@ -103,7 +103,7 @@ class GamesController < RosterpocalypseController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def game_params
-    params.require(:game).permit(:map_id, :start_date, :duration_s, :game_hash, :match_id)
+    params.require(:game).permit(:map_id, :start_date, :duration_s, :game_hash, :match_id, :gameweek_id)
   end
 
   # We use the presenter to set this from the view

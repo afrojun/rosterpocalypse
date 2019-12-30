@@ -1,21 +1,21 @@
 require 'rails_helper'
 
 RSpec.describe GameweekRoster, type: :model do
-  let(:tournament) { FactoryGirl.create :tournament }
-  let(:league) { FactoryGirl.create :private_league, tournament: tournament }
-  let(:roster) { FactoryGirl.create :roster, tournament: tournament }
+  let(:tournament) { FactoryBot.create :tournament }
+  let(:league) { FactoryBot.create :private_league, tournament: tournament }
+  let(:roster) { FactoryBot.create :roster, tournament: tournament }
   let(:gameweek_roster) { roster.gameweek_rosters[1] }
   let(:gameweek) { gameweek_roster.gameweek }
   let(:num_players) { 5 }
-  let(:players) { FactoryGirl.create_list :player, num_players }
+  let(:players) { FactoryBot.create_list :player, num_players }
   let(:gameweek_players) do
     players.map do |player|
-      FactoryGirl.create :gameweek_player, player: player, gameweek: gameweek
+      FactoryBot.create :gameweek_player, player: player, gameweek: gameweek
     end
   end
   let(:league_gameweek_players) do
     gameweek_players.map do |gameweek_player|
-      FactoryGirl.create :league_gameweek_player, gameweek_player: gameweek_player, league: league
+      FactoryBot.create :league_gameweek_player, gameweek_player: gameweek_player, league: league
     end
   end
 
@@ -82,7 +82,7 @@ RSpec.describe GameweekRoster, type: :model do
       end
 
       context 'expensive players' do
-        let(:players) { FactoryGirl.create_list :player, num_players, value: 110 }
+        let(:players) { FactoryBot.create_list :player, num_players, value: 110 }
 
         it 'returns false' do
           gameweek_roster.create_snapshot(players)

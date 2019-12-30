@@ -119,7 +119,7 @@ describe GameStatsIngestionService do
       expect { GameStatsIngestionService.new(nil).populate_from_json }.not_to raise_error
     end
 
-    it 'populates game details from the JSON' do
+    fit 'populates game details from the JSON' do
       game = service.populate_from_json
       expect(game).to be_persisted
       expect(game.tournament.name).to eq 'Summer Global Championship'
@@ -182,7 +182,7 @@ describe GameStatsIngestionService do
     end
 
     it 'strips extra characters from the end of the tournament name if another tournament exists without them' do
-      FactoryGirl.create :tournament, name: 'Summer Europe Championship 2017', region: 'EU'
+      FactoryBot.create :tournament, name: 'Summer Europe Championship 2017', region: 'EU'
       game_stats_json['filename'] = '02.12.16_mYinsanity_vs_Dignitas_game_1_at_Summer_Europe_Championship_2017_X8y27Lk.StormReplay'
       expect(service.send(:tournament_name)).to eq 'Summer Europe Championship 2017'
     end
@@ -246,10 +246,10 @@ describe GameStatsIngestionService do
   end
 
   context '#players_in_team?' do
-    let(:player1) { FactoryGirl.create :player, name: game_stats_json['player_details']['5']['name'] }
-    let(:player2) { FactoryGirl.create :player, name: game_stats_json['player_details']['6']['name'] }
-    let(:player3) { FactoryGirl.create :player, name: game_stats_json['player_details']['7']['name'] }
-    let(:team) { FactoryGirl.create :team, name: 'Test Team', players: [player1, player2, player3] }
+    let(:player1) { FactoryBot.create :player, name: game_stats_json['player_details']['5']['name'] }
+    let(:player2) { FactoryBot.create :player, name: game_stats_json['player_details']['6']['name'] }
+    let(:player3) { FactoryBot.create :player, name: game_stats_json['player_details']['7']['name'] }
+    let(:team) { FactoryBot.create :team, name: 'Test Team', players: [player1, player2, player3] }
 
     it 'returns true if there is a match' do
       team

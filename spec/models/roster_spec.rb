@@ -4,10 +4,10 @@ RSpec.describe Roster, type: :model do
   let(:region) { 'EU' }
   let(:start_date) { Time.parse('2017-01-20').utc }
   let(:end_date) { Time.parse('2017-02-20').utc }
-  let(:tournament) { FactoryGirl.create :tournament, region: region, start_date: start_date, end_date: end_date }
-  let(:manager) { FactoryGirl.create :manager }
-  let(:league) { FactoryGirl.create :public_league, tournament: tournament }
-  let(:roster) { FactoryGirl.create :roster, tournament: tournament, manager: manager }
+  let(:tournament) { FactoryBot.create :tournament, region: region, start_date: start_date, end_date: end_date }
+  let(:manager) { FactoryBot.create :manager }
+  let(:league) { FactoryBot.create :public_league, tournament: tournament }
+  let(:roster) { FactoryBot.create :roster, tournament: tournament, manager: manager }
 
   before :each do
     allow(Time).to receive(:now).and_return(Time.parse('2017-02-01').utc)
@@ -26,7 +26,7 @@ RSpec.describe Roster, type: :model do
   context 'validations' do
     context 'region must be one of the pre-defined regions' do
       it 'fails to create rosters with an invalid region' do
-        expect { FactoryGirl.create :roster, tournament: nil }.to raise_error ActiveRecord::StatementInvalid
+        expect { FactoryBot.create :roster, tournament: nil }.to raise_error ActiveRecord::RecordInvalid
       end
     end
 
@@ -35,7 +35,7 @@ RSpec.describe Roster, type: :model do
         roster.add_to league
         expect(league.rosters).to include(roster)
         manager.rosters = [roster]
-        another_roster = FactoryGirl.create :roster, tournament: tournament, manager: manager
+        another_roster = FactoryBot.create :roster, tournament: tournament, manager: manager
         another_roster.add_to league
         expect(league.rosters).not_to include(another_roster)
       end
@@ -49,7 +49,7 @@ RSpec.describe Roster, type: :model do
     end
 
     it 'returns the max number of available transfers across multiple leagues' do
-      league2 = FactoryGirl.create :private_league, tournament: tournament
+      league2 = FactoryBot.create :private_league, tournament: tournament
 
       roster.add_to league
       roster.add_to league2
@@ -60,24 +60,24 @@ RSpec.describe Roster, type: :model do
     it 'deducts completed transfers from the original number' do
       roster.add_to league
       expect(roster.available_transfers).to eq 1
-      FactoryGirl.create :transfer, gameweek_roster: roster.current_gameweek_roster
+      FactoryBot.create :transfer, gameweek_roster: roster.current_gameweek_roster
       expect(roster.available_transfers).to eq 0
     end
   end
 
   context '#update_including_players' do
-    let(:active_team) { FactoryGirl.create :team, active: true }
-    let(:inactive_team) { FactoryGirl.create :team, active: false }
-    let(:player1) { FactoryGirl.create :player, team: active_team }
-    let(:player2) { FactoryGirl.create :player, team: active_team }
-    let(:player3) { FactoryGirl.create :player, team: active_team }
-    let(:sub_player) { FactoryGirl.create :player, team: active_team }
+    let(:active_team) { FactoryBot.create :team, active: true }
+    let(:inactive_team) { FactoryBot.create :team, active: false }
+    let(:player1) { FactoryBot.create :player, team: active_team }
+    let(:player2) { FactoryBot.create :player, team: active_team }
+    let(:player3) { FactoryBot.create :player, team: active_team }
+    let(:sub_player) { FactoryBot.create :player, team: active_team }
 
-    let(:support_player) { FactoryGirl.create :player, role: 'Support', team: active_team }
-    let(:warrior_player) { FactoryGirl.create :player, role: 'Warrior', team: active_team }
-    let(:expensive_player) { FactoryGirl.create :player, value: Player::MAX_VALUE, team: active_team }
-    let(:cheap_player) { FactoryGirl.create :player, value: Player::MIN_VALUE, team: active_team }
-    let(:inactive_player) { FactoryGirl.create :player, team: inactive_team }
+    let(:support_player) { FactoryBot.create :player, role: 'Support', team: active_team }
+    let(:warrior_player) { FactoryBot.create :player, role: 'Warrior', team: active_team }
+    let(:expensive_player) { FactoryBot.create :player, value: Player::MAX_VALUE, team: active_team }
+    let(:cheap_player) { FactoryBot.create :player, value: Player::MIN_VALUE, team: active_team }
+    let(:inactive_player) { FactoryBot.create :player, team: inactive_team }
 
     let(:players) { [player1, player2, player3] }
     let(:player_ids) { players.map(&:id) }
@@ -110,7 +110,7 @@ RSpec.describe Roster, type: :model do
           players.shift
           players << cheap_player
           players.each do |player|
-            FactoryGirl.create :gameweek_player, gameweek: roster.current_gameweek, player: player
+            FactoryBot.create :gameweek_player, gameweek: roster.current_gameweek, player: player
           end
           expect(roster.update_including_players(players: players.map(&:id))).to eq true
           expect(roster.players).to include cheap_player

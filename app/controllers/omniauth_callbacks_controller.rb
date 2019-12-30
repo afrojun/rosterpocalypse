@@ -39,7 +39,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   # Log in or create a new account based on the OAuth information provided
   def generic_callback(provider)
-    @identity = Identity.find_or_create_for_oauth request.env['omniauth.auth'].except('extra')
+    @identity = Identity.find_or_initialize_for_oauth request.env['omniauth.auth'].except('extra')
 
     @user = @identity.user || current_user
     if @user.nil?

@@ -1,14 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe PlayerPresenter do
-  let(:player) { FactoryGirl.create :player }
+  let(:player) { FactoryBot.create :player }
   let(:presenter) { PlayerPresenter.new player, nil }
 
-  let(:hero1) { FactoryGirl.create :hero, name: 'hero1' }
-  let(:hero2) { FactoryGirl.create :hero, name: 'hero2' }
-  let(:hero3) { FactoryGirl.create :hero, name: 'hero3' }
-  let(:hero4) { FactoryGirl.create :hero, name: 'hero4' }
-  let(:hero5) { FactoryGirl.create :hero, name: 'hero5' }
+  let(:hero1) { FactoryBot.create :hero, name: 'hero1' }
+  let(:hero2) { FactoryBot.create :hero, name: 'hero2' }
+  let(:hero3) { FactoryBot.create :hero, name: 'hero3' }
+  let(:hero4) { FactoryBot.create :hero, name: 'hero4' }
+  let(:hero5) { FactoryBot.create :hero, name: 'hero5' }
 
   let(:hero_stats) do
     {
@@ -26,10 +26,10 @@ RSpec.describe PlayerPresenter do
     end
 
     it 'correctly populates the win/loss/total counts' do
-      FactoryGirl.create :game_detail, player: player, hero: hero1, win: true
-      FactoryGirl.create :game_detail, player: player, hero: hero1, win: false
-      FactoryGirl.create :game_detail, player: player, hero: hero2, win: true
-      FactoryGirl.create :game_detail, player: player, hero: hero3, win: false
+      FactoryBot.create :game_detail, player: player, hero: hero1, win: true
+      FactoryBot.create :game_detail, player: player, hero: hero1, win: false
+      FactoryBot.create :game_detail, player: player, hero: hero2, win: true
+      FactoryBot.create :game_detail, player: player, hero: hero3, win: false
       expect(presenter.player_hero_win_loss_count[hero1]).to eq(win: 1, loss: 1, total: 2)
       expect(presenter.player_hero_win_loss_count[hero2]).to eq(win: 1, loss: 0, total: 1)
       expect(presenter.player_hero_win_loss_count[hero3]).to eq(win: 0, loss: 1, total: 1)

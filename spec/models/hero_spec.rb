@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Hero, type: :model do
   context '#destroy' do
-    let(:hero) { FactoryGirl.create :hero }
+    let(:hero) { FactoryBot.create :hero }
 
     it 'succeeds if there are no associated games' do
       id = hero.id
@@ -11,7 +11,7 @@ RSpec.describe Hero, type: :model do
     end
 
     it 'fails if there are any associated games' do
-      FactoryGirl.create :game_detail, hero: hero
+      FactoryBot.create :game_detail, hero: hero
       id = hero.id
       hero.destroy
       expect(Hero.where(id: id).first).to eq hero

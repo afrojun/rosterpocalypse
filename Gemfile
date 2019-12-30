@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
-ruby '2.3.0'
+ruby '2.6.5'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.0.0', '>= 5.0.0.1'
+gem 'rails', '~> 5.1.0'
 # Use Postgres as the database for Active Record
 gem 'pg'
 # Use Puma as the app server
@@ -77,7 +77,7 @@ gem 'font-awesome-rails'
 gem 'descriptive_statistics', '~> 2.4.0', require: 'descriptive_statistics/safe'
 
 # Robust alternative to Rake for building CLI tools
-gem 'thor-rails'
+gem 'thor'
 
 # Used to create images dynamically from webpages
 gem 'imgkit'
@@ -133,7 +133,7 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
   gem 'capybara'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'rspec-rails', '~> 3.5'
 end
 

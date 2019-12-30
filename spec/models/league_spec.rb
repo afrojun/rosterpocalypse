@@ -2,20 +2,20 @@ require 'rails_helper'
 
 RSpec.describe League, type: :model do
   let(:region) { 'EU' }
-  let(:manager) { FactoryGirl.create :manager }
+  let(:manager) { FactoryBot.create :manager }
   let(:now) { Time.now.utc }
-  let(:tournament) { FactoryGirl.create :tournament, region: region, start_date: now - 1.day, end_date: now + 1.day }
-  let(:roster) { FactoryGirl.create :roster, manager: manager, tournament: tournament }
-  let(:league) { FactoryGirl.create :public_league, tournament: tournament }
-  let(:private_league) { FactoryGirl.create :private_league, tournament: tournament, manager: manager }
+  let(:tournament) { FactoryBot.create :tournament, region: region, start_date: now - 1.day, end_date: now + 1.day }
+  let(:roster) { FactoryBot.create :roster, manager: manager, tournament: tournament }
+  let(:league) { FactoryBot.create :public_league, tournament: tournament }
+  let(:private_league) { FactoryBot.create :private_league, tournament: tournament, manager: manager }
 
   context 'validations' do
     it "doesn't allow creation of more than 10 active leagues per manager" do
       10.times do
-        FactoryGirl.create :private_league, manager: manager, tournament: tournament
+        FactoryBot.create :private_league, manager: manager, tournament: tournament
       end
       expect do
-        FactoryGirl.create :private_league, manager: manager, tournament: tournament
+        FactoryBot.create :private_league, manager: manager, tournament: tournament
       end.to raise_error(ActiveRecord::RecordInvalid)
     end
 
@@ -23,10 +23,10 @@ RSpec.describe League, type: :model do
       allow(manager.user).to receive(:admin?).and_return true
 
       10.times do
-        FactoryGirl.create :private_league, manager: manager, tournament: tournament
+        FactoryBot.create :private_league, manager: manager, tournament: tournament
       end
       expect do
-        FactoryGirl.create :private_league, manager: manager, tournament: tournament
+        FactoryBot.create :private_league, manager: manager, tournament: tournament
       end.not_to raise_error
     end
   end
@@ -77,8 +77,8 @@ RSpec.describe League, type: :model do
 
   context '#add' do
     it "doesn't allow adding a roster for a different region to the league" do
-      other_tournament = FactoryGirl.create :tournament, region: 'NA'
-      other_roster = FactoryGirl.create :roster, tournament: other_tournament
+      other_tournament = FactoryBot.create :tournament, region: 'NA'
+      other_roster = FactoryBot.create :roster, tournament: other_tournament
 
       expect(league.add(other_roster)).to eq false
       expect(league.errors[:base].first).to match(/^Unable to add Roster '[\w-]+' to League '[\w-]+' since they are not for the same tournament/)

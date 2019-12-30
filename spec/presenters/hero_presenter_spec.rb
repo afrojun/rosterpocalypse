@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe HeroPresenter do
-  let(:hero) { FactoryGirl.create :hero }
+  let(:hero) { FactoryBot.create :hero }
   let(:presenter) { HeroPresenter.new hero, nil }
 
   context '#hero_stats' do
@@ -10,14 +10,14 @@ RSpec.describe HeroPresenter do
     end
 
     it 'calculates the correct win % with 1 game played' do
-      FactoryGirl.create :game_detail, hero: hero, win: true
+      FactoryBot.create :game_detail, hero: hero, win: true
       expect(presenter.hero_stats[:win_percent]).to eq 100
     end
 
     it 'calculates the correct win % with 3 games played' do
-      FactoryGirl.create :game_detail, hero: hero, win: true
-      FactoryGirl.create :game_detail, hero: hero, win: false
-      FactoryGirl.create :game_detail, hero: hero, win: true
+      FactoryBot.create :game_detail, hero: hero, win: true
+      FactoryBot.create :game_detail, hero: hero, win: false
+      FactoryBot.create :game_detail, hero: hero, win: true
       expect(presenter.hero_stats[:win_percent]).to eq 66.67
     end
   end

@@ -24,9 +24,10 @@ RSpec.describe MatchesController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Match. As you add validations to Match, be sure to
   # adjust the attributes here as well.
-  let(:team_1) { FactoryGirl.create :team }
-  let(:team_2) { FactoryGirl.create :team }
-  let(:gameweek) { FactoryGirl.create :gameweek }
+  let(:team_1) { FactoryBot.create :team }
+  let(:team_2) { FactoryBot.create :team }
+  let(:gameweek) { FactoryBot.create :gameweek }
+  let(:stage) { FactoryBot.create :stage }
 
   let(:valid_attributes) do
     {
@@ -34,7 +35,8 @@ RSpec.describe MatchesController, type: :controller do
       team_2_id: team_2.id,
       start_date: '2017-01-06 21:00:00',
       best_of: 3,
-      gameweek_id: gameweek.id
+      gameweek_id: gameweek.id,
+      stage_id: stage.id
     }
   end
 
@@ -44,18 +46,20 @@ RSpec.describe MatchesController, type: :controller do
       team_2_id: team_2.id,
       start_date: '2017-01-18 21:00:00',
       best_of: 3,
-      gameweek_id: gameweek.id
+      gameweek_id: gameweek.id,
+      stage_id: stage.id
     }
   end
 
-  let(:new_team) { FactoryGirl.create :team }
+  let(:new_team) { FactoryBot.create :team }
   let(:new_attributes) do
     {
       team_1_id: new_team.id,
       team_2_id: team_2.id,
       start_date: '2017-01-06 21:00:00',
       best_of: 5,
-      gameweek_id: gameweek.id
+      gameweek_id: gameweek.id,
+      stage_id: stage.id
     }
   end
 

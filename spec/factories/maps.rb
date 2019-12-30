@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   sequence(:map_name) { |n| "Map#{n}" }
 
   factory :map do

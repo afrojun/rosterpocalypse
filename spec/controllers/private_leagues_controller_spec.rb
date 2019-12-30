@@ -7,9 +7,9 @@ RSpec.describe PrivateLeaguesController, type: :controller do
   # League. As you add validations to League, be sure to
   # adjust the attributes here as well.
   let(:now) { Time.now.utc }
-  let(:tournament) { FactoryGirl.create :tournament, start_date:  now - 1.day, end_date: now + 1.day }
-  let(:manager) { FactoryGirl.create :manager, user: subject.current_user }
-  let(:league) { FactoryGirl.create :private_league, valid_attributes.merge(manager: manager) }
+  let(:tournament) { FactoryBot.create :tournament, start_date:  now - 1.day, end_date: now + 1.day }
+  let(:manager) { FactoryBot.create :manager, user: subject.current_user }
+  let(:league) { FactoryBot.create :private_league, valid_attributes.merge(manager: manager) }
 
   let(:valid_attributes) do
     {

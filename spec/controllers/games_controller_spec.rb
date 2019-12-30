@@ -24,32 +24,41 @@ RSpec.describe GamesController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Game. As you add validations to Game, be sure to
   # adjust the attributes here as well.
-  let(:map) { FactoryGirl.create(:map) }
+  let(:map) { FactoryBot.create(:map) }
+  let(:match) { FactoryBot.create(:match) }
+  let(:gameweek) { match.gameweek }
+
   let(:valid_attributes) do
     {
       map_id: map.id,
-      start_date: Time.now.utc.to_datetime,
+      start_date: match.start_date,
       duration_s: 1000,
-      game_hash: 'abcde'
+      game_hash: 'abcde',
+      gameweek_id: gameweek.id,
+      match_id: match.id
     }
   end
 
   let(:invalid_attributes) do
     {
-      map_id: FactoryGirl.create(:map).id,
+      map_id: FactoryBot.create(:map).id,
       start_date: Time.now.utc.to_datetime,
       duration_s: 1000,
-      game_hash: nil
+      game_hash: nil,
+      gameweek_id: gameweek.id,
+      match_id: match.id
     }
   end
 
-  let(:new_map) { FactoryGirl.create(:map) }
+  let(:new_map) { FactoryBot.create(:map) }
   let(:new_attributes) do
     {
       map_id: new_map.id,
-      start_date: Time.now.utc.to_datetime,
+      start_date: match.start_date,
       duration_s: 650,
-      game_hash: '12345'
+      game_hash: '12345',
+      gameweek_id: gameweek.id,
+      match_id: match.id
     }
   end
 

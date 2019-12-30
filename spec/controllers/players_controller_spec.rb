@@ -24,7 +24,7 @@ RSpec.describe PlayersController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Player. As you add validations to Player, be sure to
   # adjust the attributes here as well.
-  let(:team) { FactoryGirl.create(:team) }
+  let(:team) { FactoryBot.create(:team) }
   let(:valid_attributes) do
     {
       name: 'ProGamer',
@@ -39,7 +39,7 @@ RSpec.describe PlayersController, type: :controller do
     }
   end
 
-  let(:new_team) { FactoryGirl.create(:team) }
+  let(:new_team) { FactoryBot.create(:team) }
   let(:new_attributes) do
     {
       name: 'AmateurGamer',

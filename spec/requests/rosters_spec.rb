@@ -12,7 +12,7 @@ RSpec.describe 'Rosters', type: :request do
 
     context 'user signed in' do
       it 'loads the games index page' do
-        sign_in :user, FactoryGirl.create(:user)
+        sign_in :user, FactoryBot.create(:user)
         get rosters_path
         expect(response).to have_http_status(200)
       end

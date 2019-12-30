@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   sequence(:team_name) { |n| "Team#{n}" }
 
   factory :team do

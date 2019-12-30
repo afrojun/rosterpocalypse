@@ -6,8 +6,9 @@ abort('The Rails environment is running in production mode!') if Rails.env.produ
 require 'spec_helper'
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
-require 'devise'
 require 'support/controller_macros'
+require 'support/factory_bot'
+require 'devise'
 require 'support/devise_request_spec_helpers'
 require 'capybara/rails'
 
