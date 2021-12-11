@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.6.5'
+ruby '2.6.7'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.0'
@@ -26,7 +26,7 @@ gem 'rubocop', require: false
 
 # Add helpful information on page performance to the bottom of pages
 # https://github.com/josevalim/rails-footnotes
-gem 'rails-footnotes', '~> 4.0'
+# gem 'rails-footnotes', '~> 4.0'
 
 # Kaminari for pagination
 gem 'kaminari'
