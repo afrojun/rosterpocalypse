@@ -27,6 +27,12 @@ To run the test suite, run:
 bundle exec rspec
 ```
 
+To run the app locally, first install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli), then run:
+
+```
+heroku local -f Procfile.dev
+```
+
 ## Contact
 
 [Rosterpocalypse on Twitter](https://twitter.com/rosterpocalypse)
