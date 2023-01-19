@@ -13,8 +13,12 @@ GIT
       rails (>= 4.1, <= 7.0)
 
 GEM
-  remote: https://rubygems.org/
   remote: https://rails-assets.org/
+  specs:
+    rails-assets-tether (2.0.0)
+
+GEM
+  remote: https://rubygems.org/
   specs:
     access-granted (1.1.2)
     actioncable (5.2.6)
@@ -104,7 +108,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    concurrent-ruby (1.1.9)
+    concurrent-ruby (1.1.10)
     connection_pool (2.2.5)
     crass (1.0.6)
     cucumber (7.1.0)
@@ -204,7 +208,7 @@ GEM
     formatador (0.3.0)
     friendly_id (5.2.5)
       activerecord (>= 4.0.0)
-    globalid (1.0.0)
+    globalid (1.0.1)
       activesupport (>= 5.0)
     guard (2.18.0)
       formatador (>= 0.2.4)
@@ -240,7 +244,7 @@ GEM
     http-parser (1.2.3)
       ffi-compiler (>= 1.0, < 2.0)
     http_parser.rb (0.6.0)
-    i18n (1.8.11)
+    i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     icalendar (2.7.1)
       ice_cube (~> 0.16)
@@ -289,7 +293,7 @@ GEM
     mini_portile2 (2.6.1)
     mini_racer (0.5.0)
       libv8-node (~> 16.10.0.0)
-    minitest (5.14.4)
+    minitest (5.17.0)
     mixpanel-ruby (2.2.2)
     momentjs-rails (2.20.1)
       railties (>= 3.1)
@@ -372,7 +376,6 @@ GEM
       bundler (>= 1.3.0)
       railties (= 5.2.6)
       sprockets-rails (>= 2.0.0)
-    rails-assets-tether (2.0.0)
     rails-controller-testing (1.0.5)
       actionpack (>= 5.0.1.rc1)
       actionview (>= 5.0.1.rc1)
@@ -504,7 +507,7 @@ GEM
       multipart-post (~> 2.0)
       naught (~> 1.0)
       simple_oauth (~> 0.3.0)
-    tzinfo (1.2.9)
+    tzinfo (1.2.10)
       thread_safe (~> 0.1)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
